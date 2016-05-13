@@ -1,12 +1,12 @@
 'use strict';
 
-var path = require('path');
-var rootPath = path.normalize(__dirname + '/../..');
+//var path = require('path');
+//var rootPath = path.normalize(__dirname + '/../..');
 
 const REVIEW_STATE_FIELD = ''; // TODO: Adjust this to a new field GUID.
 
 module.exports = {
-  root: rootPath,
+  //root: rootPath,
   ip:   process.env.IP || '0.0.0.0',
   port: process.env.PORT || 9000,
   cip: {
