@@ -8,7 +8,9 @@ var fs = require('fs');
 
 const CONFIG_DIR = path.join(__dirname, '..');
 const TAGS_BLACKLIST_PATH = path.join(CONFIG_DIR, 'tags-blacklist.txt');
-var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH).toString();
+var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH);
+// Get the content, replace windows new-lines and split on new-lines.
+tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm,'\n').split('\n');
 
 const REVIEW_STATE_FIELD = ''; // TODO: Adjust this to a new field GUID.
 
