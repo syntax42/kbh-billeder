@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-var rootPath = path.normalize(__dirname + '/../../..');
+var rootPath = path.normalize(__dirname + '/../..');
 
 const REVIEW_STATE_FIELD = ''; // TODO: Adjust this to a new field GUID.
 
@@ -29,6 +29,7 @@ module.exports = {
   sortOptions: require('../sort-options.json'),
   assetFields: require('../asset-fields.json'),
   assetLayout: require('../asset-layout.json'),
+  licenseMapping: require('../license-mapping.json'),
   themeColor: '#262626',
   appName: 'KBH Billeder',
 };
