@@ -7,6 +7,4 @@ var config = require('./config');
 var express = require('express');
 var app = express();
 
-var co = require('collections-online')(config);
-
-app.use('/', co);
+var co = require('collections-online')(app, config);
