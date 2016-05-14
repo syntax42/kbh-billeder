@@ -1,9 +1,11 @@
 'use strict';
 
-module.exports = {
+var _ = require('lodash');
+var base = require('./base');
+
+module.exports = _.merge(base, {
   env: 'development',
-  viewsPath: '/app/views',
   siteTitle: 'KBH Billeder (dev)',
-  googleAnalyticsPropertyID: 'no-please',
-  esAssetsIndex: 'kbh-billeder-assets'
-};
+  esAssetsIndex: 'kbh-billeder-assets',
+  googleAnalyticsPropertyID: false,
+});
