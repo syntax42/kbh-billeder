@@ -24,7 +24,8 @@ module.exports = {
     password: process.env.CIP_PASSWORD,
     proxyMaxSockets: 10,
     // rotationCategoryName: 'Rotationsbilleder', // TODO: Disable in indexing.
-    indexingRestriction: REVIEW_STATE_FIELD + ' is 3'
+    indexingRestriction: REVIEW_STATE_FIELD + ' is 3',
+    catalogs: require('../cip-catalogs.json'),
   },
   googleAnalyticsPropertyID: null,
   // googleMapsAPIKey: '',
