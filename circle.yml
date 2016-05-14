@@ -8,6 +8,8 @@ machine:
     GCLOUD_CLUSTER: kbh-billeder-staging-cluster
     GCLOUD_COMPUTE_ZONE: europe-west1-b
     GCLOUD: sudo /opt/google-cloud-sdk/bin/gcloud
+  services:
+    - docker
 dependencies:
   pre:
     # Upgrading the gcloud command and installing kubectl
