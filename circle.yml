@@ -1,23 +1,25 @@
+# This circle.yml is heavily inspired from the guide at
+# https://circleci.com/docs/continuous-deployment-with-google-container-engine/
 machine:
   node:
     version: 5.7.0
   environment:
     GCLOUD_PROJECT: kbh-billeder
-    GCLOUD_CLUSTER: kbh-billeder-cluster
-    GCLOUD_COMPUTE_ZONE: europe-west1-d
+    GCLOUD_CLUSTER: kbh-billeder-staging-cluster
+    GCLOUD_COMPUTE_ZONE: europe-west1-b
 dependencies:
   pre:
     # Upgrading the gcloud command and installing kubectl
-    - sudo gcloud --quiet components update
-    - sudo gcloud --quiet components update kubectl
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update kubectl
     # Decode the gcloud service account key and authenticate gcloud
     - echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
-    - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
     # Setup gcloud configuration
-    - gcloud config set project $GCLOUD_PROJECT
-    - gcloud config set compute/zone $GCLOUD_COMPUTE_ZONE
+    - /opt/google-cloud-sdk/bin/gcloud config set project $GCLOUD_PROJECT
+    - /opt/google-cloud-sdk/bin/gcloud config set compute/zone $GCLOUD_COMPUTE_ZONE
     # Get the credentials for the cluster
-    - gcloud container clusters get-credentials $GCLOUD_CLUSTER
+    - /opt/google-cloud-sdk/bin/gcloud container clusters get-credentials $GCLOUD_CLUSTER
 deployment:
   staging:
     branch: master
