@@ -1,8 +1,5 @@
 'use strict';
 
-//var path = require('path');
-//var rootPath = path.normalize(__dirname + '/../..');
-
 var path = require('path');
 var fs = require('fs');
 
@@ -18,6 +15,12 @@ module.exports = {
   //root: rootPath,
   ip:   process.env.IP || '0.0.0.0',
   port: process.env.PORT || 9000,
+  // A list of directories to look for static files and /views
+  appPaths: path.join(__dirname, '..', '..', 'app'),
+  // Elasticsearch
+  esHost: process.env.ES_HOST || 'localhost:9200',
+  esAssetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
+  // CIP
   cip: {
     baseURL: 'http://www.neaonline.dk/CIP',
     username: process.env.CIP_USERNAME,
@@ -31,8 +34,6 @@ module.exports = {
   // googleMapsAPIKey: '',
   googleAPIKey: process.env.GOOGLE_API_KEY,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
-  esHost: process.env.ES_HOST || 'localhost:9200',
-  esAssetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
   categoryBlacklist: require('../category-blacklist.js'),
   enableGeotagging: false,
   filterOptions: require('../filter-options.json'),
