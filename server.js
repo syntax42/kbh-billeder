@@ -1,5 +1,6 @@
 'use strict';
 var express = require('express');
+var co = require('collections-online');
 
 // This allows loading of environment variables from a .env file
 require('dotenv').config({silent: true});
@@ -10,4 +11,4 @@ var config = require('./config');
 var app = express();
 
 // Asking collections online to set-up itself
-var co = require('collections-online')(app, config);
+co.initialize(app, config);
