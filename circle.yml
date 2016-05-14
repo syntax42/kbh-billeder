@@ -21,6 +21,13 @@ dependencies:
     - $GCLOUD config set compute/zone $GCLOUD_COMPUTE_ZONE
     # Get the credentials for the cluster
     - $GCLOUD container clusters get-credentials $GCLOUD_CLUSTER
+  override:
+    - echo "Build scripts should be run here ..."
+  post:
+    # Build the docker image using the current directory as context
+    - docker build -t us.gcr.io/${GCLOUD_PROJECT}/kbh-billeder:$CIRCLE_SHA1 .
+    # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
+    - docker tag eu.gcr.io/${GCLOUD_PROJECT}/kbh-billeder:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/kbh-billeder:latest
 deployment:
   staging:
     branch: master
