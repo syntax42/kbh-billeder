@@ -61,3 +61,4 @@ Then, in this repository run
 ```
 npm link collections-online
 ```
+
