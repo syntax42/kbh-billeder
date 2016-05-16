@@ -16,7 +16,10 @@ module.exports = {
   ip:   process.env.IP || '0.0.0.0',
   port: process.env.PORT || 9000,
   // A list of directories to look for static files and /views
-  appPaths: path.join(__dirname, '..', '..', 'app'),
+  appPaths: [
+    path.join(__dirname, '..', '..', 'generated'),
+    path.join(__dirname, '..', '..', 'app')
+  ],
   // Elasticsearch
   esHost: process.env.ES_HOST || 'localhost:9200',
   esAssetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
