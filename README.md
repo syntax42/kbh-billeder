@@ -21,6 +21,32 @@ In this repository run
 npm install
 ```
 
+### Fetch the relevant bower components
+First install bower globally
+
+```
+npm install -g bower
+```
+
+Install bower components
+
+```
+cd node_modules/collections-online/ && bower install
+```
+
+### Run gulp to build CSS from SCSS and other generated statics
+First install gulp globally
+
+```
+npm install -g gulp
+```
+
+Then run gulp
+
+```
+gulp
+```
+
 ### Install Elasticsearch 2.3 or greater
 
 Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html, executing
