@@ -14,6 +14,13 @@ http://github.com/collections-online/collections-online
 git clone https://github.com/CopenhagenCityArchives/kbh-billeder.git
 ```
 
+### Install node modules
+In this repository run
+
+```
+npm install
+```
+
 ### Install Elasticsearch 2.3 or greater
 
 Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html, executing
@@ -49,16 +56,21 @@ sudo /etc/init.d/elasticsearch start
 
 ### Set up symbolic linking between this and a Collections Online module
 
-After cloning the Collections Online repository to your local environment
-navigate to the git repository and prepare the module for linking by running
+After cloning the [Collections Online](https://github.com/collections-online/collections-online) repository to your local environment
+navigate to the git repository and install the node modules
+
+```
+npm install
+```
+
+When done, prepare the module for linking by running
 
 ```
 npm link
 ```
 
-Then, in this repository run
+Then, in the kbh-billeder repository run
 
 ```
 npm link collections-online
 ```
-
