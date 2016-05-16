@@ -9,7 +9,6 @@ spec:
   template:
     metadata:
       labels:
-        component: elasticsearch
         component: frontend
     spec:
       containers:
@@ -25,7 +24,7 @@ spec:
         - name: NODE_ENV
           value: "production"
         - name: ES_HOST
-          value: "127.0.0.1:9200"
+          value: "localhost:9200"
       - name: es
         securityContext:
           capabilities:
@@ -47,6 +46,8 @@ spec:
           value: "true"
         - name: HTTP_ENABLE
           value: "true"
+        - name: NETWORK_HOST
+          value: "_local_,_site_"
         ports:
         - containerPort: 9200
           name: http
