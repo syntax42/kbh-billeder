@@ -15,4 +15,4 @@ Creating the cluster on the Google Cloud requires the following components:
 
 ## Updating the deployment
 
-Make changes to the deployment/deployment.yaml or another .yaml file in the directory and use `kubectl update -f deployment/deployment.yaml` to push the update to the Google cloud infrastructure.
+Make changes to the deployment/deployment.yaml or another .yaml file in the directory and use `kubectl replace -f deployment/deployment.yaml` to push the update to the Google cloud infrastructure.
