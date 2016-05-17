@@ -15,6 +15,7 @@ git clone https://github.com/CopenhagenCityArchives/kbh-billeder.git
 ```
 
 ### Install node modules
+
 In this repository run
 
 ```
@@ -22,6 +23,7 @@ npm install
 ```
 
 ### Fetch the relevant bower components
+
 First install bower globally
 
 ```
@@ -35,6 +37,7 @@ cd node_modules/collections-online/ && bower install
 ```
 
 ### Run gulp to build CSS from SCSS and other generated statics
+
 First install gulp globally
 
 ```
@@ -51,10 +54,20 @@ gulp
 
 Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html, executing
 
+##### Linux
+
 ```
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 sudo apt-get update && sudo apt-get install elasticsearch
+```
+
+##### Mac
+
+Install using [homebrew](http://brew.sh)
+
+```
+brew install elasticsearch
 ```
 
 ### Run the indexing routines in all-mode
@@ -74,8 +87,18 @@ npm start
 
 ### Start elasticsearch as a service
 
+##### Linux
+
 ```
 sudo /etc/init.d/elasticsearch start
+```
+
+##### Mac
+
+Where 2.3.2 is your version number
+
+```
+/usr/local/Cellar/elasticsearch/2.3.2/bin/elasticsearch
 ```
 
 ### Create a .env file with environment variables
