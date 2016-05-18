@@ -55,6 +55,7 @@ module.exports = {
   sortOptions: require('../sort-options.json'),
   assetFields: require('../asset-fields.json'),
   assetLayout: require('../asset-layout.json'),
+  assetTransformations: require('../asset-transformations.js'),
   licenseMapping: require('../license-mapping.json'),
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
