@@ -4,58 +4,16 @@
     "notSelectedLabel": "Alle samlinger",
     "type": "catalog",
     "options": {
-      "AS": {
-        "label": "Antiksamlingen",
+      "stadsarkviet": {
+        "label": "Stadsarkivet",
         "method": {
-          "query": {"match": {"catalog": "AS"}}
+          "query": {"match": {"catalog": "stadsarkivet"}}
         }
       },
-      "BA": {
-        "label": "Bevaringsafdelingen",
+      "kbh-museum": {
+        "label": "Københavns Museum",
         "method": {
-          "query": {"match": {"catalog": "BA"}}
-        }
-      },
-      "DMR": {
-        "label": "Danmarks Middelalder og Renæssance",
-        "method": {
-          "query": {"match": {"catalog": "DMR"}}
-        }
-      },
-      "DNT": {
-        "label": "Danmarks Nyere Tid",
-        "method": {
-          "query": {"match": {"catalog": "DNT"}}
-        }
-      },
-      "DO": {
-        "label": "Danmarks Oldtid",
-        "method": {
-          "query": {"match": {"catalog": "DO"}}
-        }
-      },
-      "KMM": {
-        "label": "Den Kgl. Mønt- og Medaljesamling",
-        "method": {
-          "query": {"match": {"catalog": "KMM"}}
-        }
-      },
-      "ES": {
-        "label": "Etnografisk Samling",
-        "method": {
-          "query": {"match": {"catalog": "ES"}}
-        }
-      },
-      "FHM": {
-        "label": "Frihedsmuseet",
-        "method": {
-          "query": {"match": {"catalog": "FHM"}}
-        }
-      },
-      "FLM": {
-        "label": "Frilandsmuseet",
-        "method": {
-          "query": {"match": {"catalog": "FLM"}}
+          "query": {"match": {"catalog": "kbh-museum"}}
         }
       }
     }
@@ -75,8 +33,7 @@
         "label": "Har placering",
         "method": {
           "or": [
-            {"exists": {"field": "google_maps_coordinates"}},
-            {"exists": {"field": "google_maps_coordinates_crowd"}}
+            {"exists": {"field": "google_maps_coordinates"}}
           ]
         }
       },
@@ -84,39 +41,8 @@
         "label": "Mangler placering",
         "method": {
           "and": [
-            {"missing": {"field": "google_maps_coordinates"}},
-            {"missing": {"field": "google_maps_coordinates_crowd"}}
+            {"missing": {"field": "google_maps_coordinates"}}
           ]
-        }
-      }
-    }
-  },
-  "media": {
-    "label": "Medietype",
-    "notSelectedLabel": "Alle medietyper",
-    "options": {
-      "picture": {
-        "label": "Billede",
-        "method": {
-          "query": {"match": {"file_format": "image"}}
-        }
-      },
-      "video": {
-        "label": "Film",
-        "method": {
-          "query": {"match": {"file_format": "video"}}
-        }
-      },
-      "sound": {
-        "label": "Lyd",
-        "method": {
-          "query": {"match": {"file_format": "mp3"}}
-        }
-      },
-      "rotationPicture": {
-        "label": "Rotationsbillede",
-        "method": {
-          "query": {"match": {"categories.name": "Rotationsbilleder"}}
         }
       }
     }

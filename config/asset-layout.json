@@ -4,16 +4,40 @@
       "title": "Sted",
       "rows": [
         {
-          "title": "Adresse",
-          "template": "= address || street"
+          "title": "Gadenavn/bydel",
+          "template": "= street_and_district"
+        }, {
+          "title": "Gadenavn",
+          "template": "= street_name"
+        }, {
+          "title": "Husnr.",
+          "template": "= street_number"
+        }, {
+          "title": "Etage mm",
+          "template": "= floor"
+        }, {
+          "title": "Postnummer",
+          "template": "= zipcode"
         }, {
           "title": "By",
           "template": "= city"
         }, {
-          "title": "Topnr",
-          "template": "= topno"
+          "title": "Bydel",
+          "template": "= district"
         }, {
-          "title": "Koordinater",
+          "title": "Sted",
+          "template": "= place"
+        }, {
+          "title": "Land",
+          "template": "= country"
+        }, {
+          "title": "Matrikel nr.",
+          "template": "= cadastral"
+        }, {
+          "title": "Lokalitetsnote",
+          "template": "= locationnote"
+        }, {
+          "title": "Google Maps koordinater",
           "type": "map-coordinates",
           "fields": {
             "latitude": "latitude",
@@ -25,19 +49,24 @@
       "title": "Tid",
       "rows": [
         {
-          "title": "Optagelsestid",
-          "type": "date-interval",
-          "fields": {
-            "from": "acceptance_time_from",
-            "to": "acceptance_time_to"
-          }
-        }, {
           "title": "Fremstillingstid",
           "type": "date-interval",
           "fields": {
             "from": "creation_time_from",
             "to": "creation_time_to"
           }
+        }, {
+          "title": "Fremstillingstidspunkt",
+          "template": "= creation_time"
+        }, {
+          "title": "Fremstillingsperiode fra",
+          "template": "= creation_time_from"
+        }, {
+          "title": "Fremstillingsperiode til",
+          "template": "= creation_time_to"
+        }, {
+          "title": "Tidsangivelses anslået",
+          "template": "= bool(creation_time_estimated)"
         }, {
           "title": "Tidsnote",
           "template": "= timenote"
@@ -47,53 +76,120 @@
       "title": "Yderligere oplysninger",
       "rows": [
         {
-          "title": "Samling",
-          "template": "!= catalogLinked(catalogs, catalog)"
+          "title": "Sekundær beskrivelse",
+          "template": "= secondary_description"
+        },
+        {
+          "title": "Beskrivelsesnote",
+          "template": "= description_note"
+        },
+        {
+          "title": "Originalmateriale",
+          "template": "= original_material"
+        },
+        {
+          "title": "Fotograf/skaber af mediet",
+          "template": "= creator"
+        },
+        {
+          "title": "Ophavsret",
+          "template": "= copyright"
         },
         {
           "title": "Licens",
           "template": "!= licenseLinked(license)"
-        }, {
-          "title": "Fotograf/skaber",
-          "template": "= creator"
-        }, {
-          "title": "Kilde",
-          "template": "= copyright"
-        }, {
-          "title": "Arkivalie nr",
+        },
+        {
+          "title": "Samlingens navn",
+          "template": "!= catalogLinked(catalogs, catalog)"
+        },
+        {
+          "title": "Arkivreference",
           "template": "= archiveno"
-        }, {
-          "title": "Negativ nr",
-          "template": "= negative_number"
-        }, {
-          "title": "Genstands nr",
-          "template": "= object_number"
-        }, {
-          "title": "Inventar nr",
-          "template": "= inventory_number"
-        }, {
-          "title": "Arkivnavn",
-          "template": "= archivename ? archivename.displaystring : ''"
+        },
+        {
+          "title": "Link til registratur",
+          "template": "= registrar_link"
+        },
+        {
+          "title": "Målestoksforhold",
+          "template": "= scale"
+        },
+        {
+          "title": "Målestok",
+          "template": "= scale_measure"
+        },
+        {
+          "title": "ID",
+          "template": "= id"
+        },
+        {
+          "title": "Katalog",
+          "template": "= catalog_name"
+        },
+        {
+          "title": "Tegnings nr.",
+          "template": "= architect_drawing_no"
+        },
+        {
+          "title": "Stadsarkitekt nr.",
+          "template": "= city_architect_no"
+        },
+        {
+          "title": "Udførelse",
+          "template": "= implementation"
+        },
+        {
+          "title": "Farve",
+          "template": "= bool(color)"
+        },
+        {
+          "title": "Sort/hvid",
+          "template": "= bool(black_and_white)"
+        },
+        {
+          "title": "Stadsarkitekt",
+          "template": "= city_architect"
+        },
+        {
+          "title": "Sagsarkitekt",
+          "template": "= project_architect"
+        },
+        {
+          "title": "Øvrige arkitekter",
+          "template": "= other_architects"
+        },
+        {
+          "title": "Art",
+          "template": "= kind"
+        },
+        {
+          "title": "Opført fra",
+          "template": "= constructed_from"
+        },
+        {
+          "title": "Opført til",
+          "template": "= constructed_to"
         }
       ]
     }, {
       "title": "Tekniske oplysninger",
       "rows": [
         {
-          "title": "Fil-ID",
-          "template": "= id"
+          "title": "Filstørrels",
+          "template": "= file_size"
         }, {
           "title": "Filstørrelse (mb)",
           "template": "= filesizeMB(file_size)"
+        }, {
+          "title": "Opløsning (DPI)",
+          "template": "= decimals(dpi, 0)"
         }, {
           "title": "Størrelse (pixel)",
           "template": "!= decimals(width_px, 0) + ' &times; ' + decimals(height_px, 0)"
         }, {
           "title": "Størrelse (cm)",
           "template": "!= decimals(width_cm, 1) + ' &times; ' + decimals(height_cm, 1)"
-        }, {
-          "title": "Opløsning (DPI)",
-          "template": "= decimals(dpi, 0)"
         }
       ]
     }
