@@ -7,9 +7,9 @@ https://github.com/kubernetes/kubernetes/tree/release-1.2/examples/elasticsearch
 
 Creating the cluster on the Google Cloud requires the following components:
 
-- An elasticsearch [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/es-svc.yaml`
+- A persistent disk for the elasticsearch index, running `gcloud compute disks create --size=10GB --zone=europe-west1-b es-disk`
 
-- A frontend [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/frontend-svc.yaml`
+- A [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/service.yaml`
 
 - A [deployment](http://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment) of the frontend and elasticsearch containers , running `kubectl create -f deployment/deployment.yaml`
 

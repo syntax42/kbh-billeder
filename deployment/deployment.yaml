@@ -57,7 +57,9 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /data
-          name: storage
+          name: es-storage
       volumes:
-      - name: storage
-        emptyDir: {}
+      - name: es-storage
+        gcePersistentDisk:
+          pdName: es-disk
+          fsType: ext4
