@@ -23,7 +23,7 @@ dependencies:
     - $GCLOUD container clusters get-credentials $GCLOUD_CLUSTER
     # Write specific environment variables to an .env file
     - |
-      cat << EOF > .testenv
+      cat << EOF > .env
       CIP_USERNAME="${CIP_USERNAME}"
       CIP_PASSWORD="${CIP_PASSWORD}"
       EOF
