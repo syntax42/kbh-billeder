@@ -3,6 +3,10 @@
     "cumulusKey": "{c02adb31-5c2c-4014-b86a-a53cf83f7e6c}",
     "short": "id"
   }, {
+    "cumulusKey": "{af4b2e06-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "modification_time",
+    "type": "date"
+  }, {
     "cumulusKey": "{cd411053-f1e8-47ec-86f2-6d12a832b875}",
     "short": "file_id"
   }, {
