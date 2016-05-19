@@ -57,7 +57,7 @@
           }
         }, {
           "title": "Fremstillingstidspunkt",
-          "template": "= creation_time"
+          "template": "= creation_time ? creation_time.displaystring : ''"
         }, {
           "title": "Fremstillingsperiode fra",
           "template": "= creation_time_from"
@@ -85,7 +85,7 @@
         },
         {
           "title": "Originalmateriale",
-          "template": "= original_material"
+          "template": "= original_material ? original_material.displaystring : ''"
         },
         {
           "title": "Fotograf/skaber af mediet",
@@ -109,7 +109,7 @@
         },
         {
           "title": "Link til registratur",
-          "template": "= registrar_link"
+          "template": "!= link(registrar_link)"
         },
         {
           "title": "Målestoksforhold",
@@ -174,11 +174,7 @@
       ]
     }, {
       "title": "Tekniske oplysninger",
-      "rows": [
-        {
-          "title": "Filstørrels",
-          "template": "= file_size"
-        }, {
+      "rows": [{
           "title": "Filstørrelse (mb)",
           "template": "= filesizeMB(file_size)"
         }, {
