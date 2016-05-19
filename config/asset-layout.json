@@ -109,7 +109,7 @@
         },
         {
           "title": "Link til registratur",
-          "template": "!= link(registrar_link)"
+          "template": "!= registrar_link && link(registrar_link)"
         },
         {
           "title": "Målestoksforhold",
