@@ -8,7 +8,7 @@ require('dotenv').config({silent: true});
 var state = {};
 var config = require('./config');
 co.indexing(state, config).then(function() {
-  console.log('Good bye!');
+  console.log('\nAll done - good bye!');
   process.exit(0);
 }, function(err) {
   console.error('An error occured!');
