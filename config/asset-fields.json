@@ -178,10 +178,10 @@
     "cumulusKey": "{c02adb32-5c2c-4014-b86a-a53cf83f7e6c}",
     "short": "catalog_name"
   }, {
-    "cumulusKey": "related_master_assets",
-    "short": "{af4b2e72-5f6a-11d2-8f20-0000c0e166dc}"
+    "cumulusKey": "{af4b2e72-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "related_master_assets"
   }, {
-    "cumulusKey": "related_sub_assets",
-    "short": "{af4b2e71-5f6a-11d2-8f20-0000c0e166dc}"
+    "cumulusKey": "{af4b2e71-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "related_sub_assets"
   }
 ]
