@@ -6,7 +6,7 @@ module.exports = [
   '../transformations/date-intervals',
   '../transformations/categories-and-suggest',
   '../transformations/relations',
-  '../transformations/dimensions-in-cm',
+  '../transformations/dimensions',
   '../transformations/is-searchable',
   '../transformations/latitude-longitude',
   '../transformations/split-tags',

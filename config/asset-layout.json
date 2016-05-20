@@ -179,7 +179,7 @@
           "template": "= filesizeMB(file_size)"
         }, {
           "title": "Opløsning (DPI)",
-          "template": "= decimals(dpi, 0)"
+          "template": "= decimals(resolution_dpi, 0)"
         }, {
           "title": "Størrelse (pixel)",
           "template": "!= decimals(width_px, 0) + ' &times; ' + decimals(height_px, 0)"

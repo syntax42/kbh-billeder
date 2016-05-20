@@ -17,7 +17,7 @@
     "short": "file_format"
   }, {
     "cumulusKey": "{af4b2e0f-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "dpi"
+    "short": "resolution_dpi"
   }, {
     "cumulusKey": "{71a28baa-7b7f-409a-ac96-32062acca93e}",
     "short": "architect_drawing_no"
@@ -95,10 +95,10 @@
     "short": "creation_time_estimated"
   }, {
     "cumulusKey": "{af4b2e12-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "height_px"
+    "short": "height_in"
   }, {
     "cumulusKey": "{af4b2e11-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "width_px"
+    "short": "width_in"
   }, {
     "cumulusKey": "{f7bb28d1-0ef1-46b5-90c8-202f90800eff}",
     "short": "google_maps_coordinates"
