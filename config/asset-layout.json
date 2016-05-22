@@ -59,12 +59,6 @@
           "title": "Fremstillingstidspunkt",
           "template": "= creation_time ? creation_time.displaystring : ''"
         }, {
-          "title": "Fremstillingsperiode fra",
-          "template": "= creation_time_from"
-        }, {
-          "title": "Fremstillingsperiode til",
-          "template": "= creation_time_to"
-        }, {
           "title": "Tidsangivelses anslået",
           "template": "= bool(creation_time_estimated)"
         }, {
