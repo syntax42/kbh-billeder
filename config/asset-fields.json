@@ -87,7 +87,6 @@
     "type": "date"
   }, {
     "cumulusKey": "{eaf2f030-2bfb-4d75-98ab-fb9bd33affcc}",
-    "short": "production_date_to",
     "short": "creation_time_to",
     "type": "date"
   }, {
