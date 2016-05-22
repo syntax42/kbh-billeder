@@ -3,10 +3,6 @@
     "cumulusKey": "{c02adb31-5c2c-4014-b86a-a53cf83f7e6c}",
     "short": "id"
   }, {
-    "cumulusKey": "{af4b2e06-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "modification_time",
-    "type": "date"
-  }, {
     "cumulusKey": "{cd411053-f1e8-47ec-86f2-6d12a832b875}",
     "short": "file_id"
   }, {
@@ -171,9 +167,6 @@
     "cumulusKey": "{2792772e-bd1b-4855-a2d2-1a17032a28d2}",
     "short": "scale_measure"
   }, {
-    "cumulusKey": "{c65d4fb9-53a2-47ed-bb9a-c7fdeceb8618}",
-    "short": "collection_name"
-  }, {
     "cumulusKey": "{c02adb32-5c2c-4014-b86a-a53cf83f7e6c}",
     "short": "catalog_name"
   }, {
@@ -182,5 +175,21 @@
   }, {
     "cumulusKey": "{af4b2e71-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "related_sub_assets"
+  }, {
+    "cumulusKey": "{af4b2e05-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "asset_creation_date",
+    "type": "date"
+  }, {
+    "cumulusKey": "{af4b2e06-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "modification_time",
+    "type": "date"
+  }, {
+    "cumulusKey": "{af4b2e01-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "item_creation_date",
+    "type": "date"
+  }, {
+    "cumulusKey": "{af4b2e02-5f6a-11d2-8f20-0000c0e166dc}",
+    "short": "item_modification_date",
+    "type": "date"
   }
 ]
