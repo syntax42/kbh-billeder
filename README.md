@@ -70,6 +70,16 @@ Install using [homebrew](http://brew.sh)
 brew install elasticsearch
 ```
 
+### Install MongoDB 2.4 or greater
+
+##### Linux
+
+##### Mac
+
+Install using [homebrew](http://brew.sh)
+
+brew install mongodb
+
 ### Run the indexing routines in all-mode
 
 ```
