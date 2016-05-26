@@ -35,6 +35,7 @@ keystone.set('routes', require('./routes'));
 
 keystone.set('nav', {
 	users: 'users',
+	pages: 'pages',
 });
 
 keystone.mount('/content', app, function() {
