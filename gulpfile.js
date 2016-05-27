@@ -11,7 +11,7 @@ var config = require('./config')
 // Get the gulp content from the main
 // ------------------------------------------
 
-require('./node_modules/collections-online/build/gulp')(gulp, config)
+require('collections-online/build/gulp')(gulp, config)
 
 // ------------------------------------------
 // Combining tasks
