@@ -26,6 +26,8 @@ dependencies:
       cat << EOF > .env
       CIP_USERNAME="${CIP_USERNAME}"
       CIP_PASSWORD="${CIP_PASSWORD}"
+      KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
+      KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
       EOF
     # Build the docker image using the current directory as context
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
