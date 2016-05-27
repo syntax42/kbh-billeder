@@ -10,7 +10,7 @@ if (!process.env.NODE_ENV) {
 console.log('Loading ' + process.env.NODE_ENV + ' configuration');
 module.exports = require('./config/env/' + process.env.NODE_ENV);
 
-console.log('Loading Keystone configuration');
+// Loading Keystone configuration
 module.exports.keystone = {
   options: {
     'name': 'KBH Billeder',
