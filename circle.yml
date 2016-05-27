@@ -8,6 +8,8 @@ machine:
     GCLOUD: sudo /opt/google-cloud-sdk/bin/gcloud
   services:
     - docker
+  node:
+    version: 6.1.0
 dependencies:
   override:
     # Upgrading the gcloud command and installing kubectl
@@ -29,9 +31,8 @@ dependencies:
       KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
       KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
       EOF
-    - export NODE_ENV=development
-    - npm install --no-spin
-    - node_modules/.bin/gulp
+    - npm install --no-spin --dev
+    - NODE_ENV=production; node_modules/.bin/gulp
     # Build the docker image using the current directory as context
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
