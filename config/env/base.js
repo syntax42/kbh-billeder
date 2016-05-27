@@ -12,15 +12,17 @@ tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm,'\n').split('\
 
 var cipCatalogs = require('../cip-catalogs.json');
 var generatedDir = path.join(__dirname, '..', '..', 'generated');
+var appDir = path.join(__dirname, '..', '..', 'app');
 
 module.exports = {
   //root: rootPath,
   ip:   process.env.IP || '0.0.0.0',
   port: process.env.PORT || 9000,
+  appDir: appDir,
   // A list of directories to look for static files and /views
   appPaths: [
     generatedDir,
-    path.join(__dirname, '..', '..', 'app')
+    appDir
   ],
   // Elasticsearch
   esHost: process.env.ES_HOST || 'localhost:9200',
