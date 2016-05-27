@@ -1,7 +1,6 @@
 module.exports = [
   '../transformations/field-names',
   '../transformations/empty-title',
-  '../transformations/modification-time',
   '../transformations/dates',
   '../transformations/date-intervals',
   '../transformations/categories-and-suggest',
