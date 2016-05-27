@@ -83,7 +83,7 @@ brew install mongodb
 ### Run the indexing routines in all-mode
 
 ```
-npm run-script index all
+npm run index all
 ```
 
 
