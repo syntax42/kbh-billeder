@@ -12,30 +12,13 @@ var config = require('./config');
 var app = express();
 
 // Set up Keystone
-keystone.init({
-  'name': 'KBH-billeder',
-  'brand': 'KBH-billeder',
-
-  'sass': 'generated',
-  'static': 'generated',
-  'views': 'app/views',
-  'view engine': 'jade',
-  'auto update': true,
-  'mongo': 'mongodb://localhost/kbh-billeder',
-  'session': true,
-  'auth': true,
-  'user model': 'User',
-  'cookie secret': '&#34;fF-ELbvoJ|P6:$&lt;;3c-Cen8OJJy[W1&amp;i@O.M)-%&lt;&gt;QTiTvC93&lt;n;R@!vD@A    6N=7',
-});
+keystone.init(config.keystone.options);
 
 keystone.import('./models');
 
 keystone.set('routes', require('./routes'));
 
-keystone.set('nav', {
-	users: 'users',
-	pages: 'pages',
-});
+keystone.set('nav', config.keystone.nav);
 
 keystone.initDatabase();
 keystone.initExpressSession();
