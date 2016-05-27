@@ -1,6 +1,7 @@
 // ------------------------------------------
 // Require - sorted alphabetically after npm name
 // ------------------------------------------
+require('dotenv').config({silent: true});
 
 var gulp = require('gulp')
 var sequence = require('run-sequence')
@@ -18,8 +19,9 @@ require('./node_modules/collections-online/build/gulp')(gulp, config)
 
 gulp.task('build', function (callback) {
   // put stuff in arrays that you'd want to run in parallel
-  sequence('clean', ['css', 'js'],
-    callback)
+  sequence(['clean', 'bower'],
+           ['css', 'js', 'svg'],
+           callback)
 })
 
 // ------------------------------------------
@@ -27,10 +29,3 @@ gulp.task('build', function (callback) {
 // ------------------------------------------
 
 gulp.task('default', ['build'], function () {})
-gulp.task('test', function (callback) {
-  sequence('bower', ['css', 'js'], callback)
-})
-
-gulp.task('svg-test', function (callback) {
-  sequence('svg', callback)
-})
