@@ -14,13 +14,12 @@ var svgstore = require('gulp-svgstore')
 var uglify = require('gulp-uglify')
 var gutil = require('gulp-util')
 var sequence = require('run-sequence')
-var requireDir = require('require-dir')
 
 // ------------------------------------------
 // Get the gulp content from the main
 // ------------------------------------------
 
-requireDir('./node_modules/collections-online/lib/build-system/');
+require('./node_modules/collections-online/build/gulp')(gulp)
 
 // ------------------------------------------
 // Combining tasks
