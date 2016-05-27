@@ -11,6 +11,7 @@ var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH);
 tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm,'\n').split('\n');
 
 var cipCatalogs = require('../cip-catalogs.json');
+var generatedDir = path.join(__dirname, '..', '..', 'generated');
 
 module.exports = {
   //root: rootPath,
@@ -18,7 +19,7 @@ module.exports = {
   port: process.env.PORT || 9000,
   // A list of directories to look for static files and /views
   appPaths: [
-    path.join(__dirname, '..', '..', 'generated'),
+    generatedDir,
     path.join(__dirname, '..', '..', 'app')
   ],
   // Elasticsearch
@@ -45,6 +46,12 @@ module.exports = {
       catalogAliases: _.invert(cipCatalogs)
     }
   },
+  features: {
+    geotagging: false,
+    rotationalImages: false,
+    crowdtagging: false
+  },
+  generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
   // googleMapsAPIKey: '',
   googleAPIKey: process.env.GOOGLE_API_KEY,
