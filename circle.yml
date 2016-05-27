@@ -30,7 +30,7 @@ dependencies:
       KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
       EOF
     - export NODE_ENV=development
-    - npm install
+    - npm install --no-spin
     - node_modules/.bin/gulp
     # Build the docker image using the current directory as context
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
