@@ -4,7 +4,24 @@ append header
   +meta()
 
 block content
-  .container-fluid.let-it-grow
+  .let-it-grow
+    .jumbo 
+      .container-fluid
+        - var path = (req.path).split('/')
+        - var searchMethod = (isSearching ? 'modify-query' : '')
+        form.search-box(method='get', action='/', data-method=searchMethod)
+          .input-group
+            input.form-control.input-search(
+              type='text',
+              id='search-input',
+              placeholder='Søg på samlinger.natmus.dk',
+              name='q',
+              autocomplete="off",
+              value=req.query.q || '')
+            .input-group-btn
+              button.btn-search.btn
+                span.sr-only Søg
+                +icon('search')
     .frontpage
       each catalog in catalogs
         if catalog

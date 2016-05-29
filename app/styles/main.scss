@@ -1,5 +1,4 @@
 @import '../../node_modules/collections-online/app/styles/variables';
-
 @import 'variables';
 
 @import '../../node_modules/collections-online/app/styles/functions-shadows';
@@ -25,7 +24,10 @@
 @import '../../node_modules/collections-online/app/styles/typography';
 @import '../../node_modules/collections-online/app/styles/main';
 
+@import 'header';
 @import 'footer';
+@import 'asset';
+@import 'input-search';
 
 .license-img {
   max-height: 40px;

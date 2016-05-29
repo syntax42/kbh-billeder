@@ -1,0 +1,29 @@
+@import 'variables';
+
+.topbar {
+  background-color: $brand-primary;
+}
+
+.topbar-items__link {
+  color: $white;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    color: $white;
+    text-decoration: none;
+  }
+
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
+
+.topbar-items {
+  height: 40px;
+}
+
+.jumbo {
+  background-color: $gray-dark;
+  height: 500px;
+  max-height: 60vh;
+}
