@@ -22,20 +22,6 @@ In this repository run
 npm install
 ```
 
-### Fetch the relevant bower components
-
-First install bower globally
-
-```
-npm install -g bower
-```
-
-Install bower components
-
-```
-cd node_modules/collections-online/ && bower install
-```
-
 ### Run gulp to build CSS from SCSS and other generated statics
 
 First install gulp globally
@@ -115,8 +101,9 @@ Where 2.3.2 is your version number
 
 ### Set up symbolic linking between this and a Collections Online module
 
-After cloning the [Collections Online](https://github.com/collections-online/collections-online) repository to your local environment
-navigate to the git repository and install the node modules
+After cloning the [Collections Online](https://github.com/collections-online/collections-online)
+repository to your local environment navigate to the git repository and install
+the node modules
 
 ```
 npm install
