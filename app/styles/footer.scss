@@ -1,0 +1,7 @@
+.footer__element {
+  display: block;
+
+  &:not(:last-child)::after {
+    display: none;
+  }
+}
