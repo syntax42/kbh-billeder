@@ -1,7 +1,33 @@
+footer {
+  padding: 2rem 0;
+}
+
 .footer__element {
   display: block;
 
   &:not(:last-child)::after {
     display: none;
+  }
+}
+
+.footer__logo {
+  fill: $white;
+  position: absolute;
+  right: 0;
+  top: -.2rem;
+
+  svg {
+    max-height: 8rem;
+    max-width: 8rem;
+  }
+}
+
+.footer__header {
+  margin: 0;
+}
+
+@media (max-width: $small-size) {
+  .footer__menu {
+    padding-bottom: 2rem;
   }
 }
