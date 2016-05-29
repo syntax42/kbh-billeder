@@ -21,6 +21,7 @@ gulp.task('build', function (callback) {
   // put stuff in arrays that you'd want to run in parallel
   sequence(['clean', 'bower'],
            ['css', 'js', 'svg'],
+           ['watch'],
            callback)
 })
 
