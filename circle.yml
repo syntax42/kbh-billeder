@@ -31,8 +31,10 @@ dependencies:
       KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
       KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
       EOF
-    - NODE_ENV=development; npm install --no-spin
-    - NODE_ENV=production; node_modules/.bin/gulp
+    # Install node modules
+    - npm install --no-spin
+    # Running gulp, installing bower components and building css and js
+    - node_modules/.bin/gulp
     # Build the docker image using the current directory as context
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
