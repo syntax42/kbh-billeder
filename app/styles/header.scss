@@ -26,4 +26,15 @@
   background-color: $gray-dark;
   height: 500px;
   max-height: 60vh;
+  position: relative;
+}
+
+.jumbo__search {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1l1-1v1H0z" fill="%23fff"/></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100px;
 }
