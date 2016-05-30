@@ -6,7 +6,8 @@ append header
 block content
   .let-it-grow
     .jumbo
-      img(src="https://unsplash.it/3100/2000").jumbo__image
+      .jumbo__image
+        img(src="https://unsplash.it/3100/2000")
       .container-fluid.jumbo__flex
         .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
       .jumbo__search
@@ -26,8 +27,39 @@ block content
                 button.btn-search.btn
                   span.sr-only Søg
                   +icon('search')
-    .frontpage
-    
+    .container-fluid
+      .row.fp-featured
+        .col-xs-12.col-sm-6
+          h2 Here goes the title
+          p Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat, suscipit ma nizzle, vel, phat. Bizzle eget tortor. Sed eros. Doggy izzle dolor rizzle away tempus tempor. Tellivizzle doggy nibh et turpizzle. Crazy in tortor. Pellentesque you son of a bizzle rhoncus nisi. In hizzle habitasse platea daahng dawg. Shizzlin dizzle dapibizzle. We gonna chung tellus urna, pretizzle check it out, mattizzle izzle, eleifend vitae, nunc. Da bomb suscipizzle. Integizzle gizzle fo shizzle crazy things.
+        .col-xs-12.col-sm-6
+          .row 
+            .col-xs-6
+              a.fp-thumb(href="#")
+                img(src="https://unsplash.it/600/600").fp-thumb__image
+                .fp-thumb__overlay
+                  h3.fp-thumb__title Østerbro
+                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
+            .col-xs-6
+              a.fp-thumb(href="#")
+                img(src="https://unsplash.it/600/600").fp-thumb__image
+                .fp-thumb__overlay
+                  h3.fp-thumb__title Østerbro
+                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
+            .col-xs-6
+              a.fp-thumb(href="#")
+                img(src="https://unsplash.it/600/600").fp-thumb__image
+                .fp-thumb__overlay
+                  h3.fp-thumb__title Østerbro
+                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
+            .col-xs-6
+              a.fp-thumb(href="#")
+                img(src="https://unsplash.it/600/600").fp-thumb__image
+                .fp-thumb__overlay
+                  h3.fp-thumb__title Østerbro
+                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
+  
+  
   include includes/footer
 
 append javascript
