@@ -20,6 +20,10 @@ $logo-height: 4rem;
 
   svg {
     height: $logo-height;
+    width: 16rem;
+    margin: 0 1rem;
+    max-width: calc(50% - 2rem);
+    fill-rule: evenodd;
   }
 }
 
