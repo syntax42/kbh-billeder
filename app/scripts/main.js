@@ -11,16 +11,13 @@ function checkDateInput() {
 }
 
 function fbshareCurrentPage() {
-  window.open('https://www.facebook.com/sharer/sharer.php?u='
-    + escape(window.location.href)
-  );
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + escape(window.location
+    .href));
   return false;
 }
 
 function twittershareCurrentPage() {
-  window.open('https://twitter.com/intent/tweet?url='
-    + escape(window.location.href)
-  );
+  window.open('https://twitter.com/intent/tweet?url=' + escape(window.location.href));
   return false;
 }
 
@@ -127,4 +124,8 @@ $(function() {
       'pattern': '{{99}}/{{99}}/{{9999}}'
     });
   }
+
+  $('.image-wrap').on('dragstart contextmenu', function(e) {
+    e.preventDefault();
+  });
 });
