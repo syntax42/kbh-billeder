@@ -15,7 +15,7 @@ block content
               input.form-control.input-search(
                 type='text',
                 id='search-input',
-                placeholder='Søg på samlinger.natmus.dk',
+                placeholder='Søg på kbhbilleder',
                 name='q',
                 autocomplete="off",
                 value=req.query.q || '')
@@ -24,12 +24,7 @@ block content
                   span.sr-only Søg
                   +icon('search')
     .frontpage
-      each catalog in catalogs
-        if catalog
-          .frontpage__catalog
-            a(href="/#{catalog.alias}")
-              .thumb(style="background-image: url('#{catalog.sources.thumbnail}')")
-              h2= catalog.name
+    
   include includes/footer
 
 append javascript

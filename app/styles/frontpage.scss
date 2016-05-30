@@ -1,0 +1,71 @@
+.jumbo {
+  background-color: $gray-dark;
+  height: 500px;
+  max-height: 60vh;
+  position: relative;
+}
+
+.jumbo__search {
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1l1-1v1H0z" fill="%23fff"/></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+  bottom: 0;
+  height: 8rem;
+  padding-top: 4rem;
+  position: absolute;
+  width: 100%;
+
+  .input-search::-webkit-input-placeholder {
+    color: rgba($text-color, .8);
+  }
+  .input-search::-moz-placeholder {
+    color: rgba($text-color, .8);
+  }
+  .input-search::-ms-input-placeholder {
+    color: rgba($text-color, .8);
+  }
+
+
+  .search-box {
+    float: right;
+    margin: 0;
+
+    .btn {
+      height: auto;
+    }
+
+    .input-group {
+      max-width: 60%;
+      width: 30rem;
+    }
+
+    .input-group::after {
+      background-color: $text-color;
+    }
+  }
+
+  .input-search {
+    color: inherit;
+    font-size: 1.6rem;
+    height: 3rem;
+  }
+
+  .btn-search svg {
+    fill: $text-color;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  @media (max-width: $small-size) {
+    .input-search {
+      font-size: 1rem;
+      height: 1.6rem;
+    }
+
+    .btn-search svg {
+      fill: $text-color;
+      height: 1.4rem;
+      width: 1.4rem;
+    }
+  }
+}
