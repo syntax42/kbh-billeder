@@ -18,3 +18,27 @@
     }
   }
 }
+
+.image-wrap {
+  position: relative;
+}
+
+.license {
+  background-color: rgba($black, .5);
+  bottom: 0;
+  padding: 1rem;
+  position: absolute;
+  right: 0;
+  line-height: 0;
+
+  svg {
+    fill: $white;
+    fill-rule: evenodd;
+    max-height: 4rem;
+    width: 15rem;
+  }
+}
+
+.kbh-asset-image {
+  width: 100%;
+}

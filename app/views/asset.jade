@@ -32,6 +32,7 @@ block content
           data-heading=metadata.heading,
           data-full-address=fullAddress)
     - var city = metadata.city;
+    - var institution = metadata.catalog;
     - var description = metadata.description;
     - var file_format = metadata.file_format;
     - var license = metadata.license && helpers.licenseTag(metadata.license.id);
@@ -41,11 +42,15 @@ block content
     .asset-top
       .container-fluid
         .row
-          .col-xs-12.small-bleed.img-col
-            img(src=sources.thumbnail, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").asset-image
-          .col-md-6.map-wrap
-            if showGeotagging
-              include includes/geotagging.jade
+          .col-xs-12.col-md-7.small-bleed
+            .image-wrap
+              img(src=sources.thumbnail, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").kbh-asset-image
+              .license
+                if(institution === 'stadsarkivet')
+                  +icon('kbh-stads')
+                else if (institution === 'kbh-museum')
+                  +icon('kbh-mus')
+
       .container-fluid
         .row.asset-info
           .col-sm-8
