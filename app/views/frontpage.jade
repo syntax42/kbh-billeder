@@ -8,25 +8,30 @@ block content
     .jumbo
       .jumbo__image
         img(src="https://unsplash.it/3100/2000")
+      .container-fluid.jumbo__logos
+        +icon('kbh-mus')
+        +icon('kbh-stads')
       .container-fluid.jumbo__flex
         .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
       .jumbo__search
         .container-fluid
-          - var path = (req.path).split('/')
-          - var searchMethod = (isSearching ? 'modify-query' : '')
-          form.search-box(method='get', action='/', data-method=searchMethod)
-            .input-group
-              input.form-control.input-search(
-                type='text',
-                id='search-input',
-                placeholder='Søg på kbhbilleder',
-                name='q',
-                autocomplete="off",
-                value=req.query.q || '')
-              .input-group-btn
-                button.btn-search.btn
-                  span.sr-only Søg
-                  +icon('search')
+          .row
+            .col-xs-12.col-sm-6.col-sm-offset-6
+              - var path = (req.path).split('/')
+              - var searchMethod = (isSearching ? 'modify-query' : '')
+              form.search-box(method='get', action='/', data-method=searchMethod)
+                .input-group
+                  input.form-control.input-search(
+                    type='text',
+                    id='search-input',
+                    placeholder='Søg på kbhbilleder',
+                    name='q',
+                    autocomplete="off",
+                    value=req.query.q || '')
+                  .input-group-btn
+                    button.btn-search.btn
+                      span.sr-only Søg
+                      +icon('search')
     .container-fluid
       .row.fp-featured
         .col-xs-12.col-sm-6

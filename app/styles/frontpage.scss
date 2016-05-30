@@ -8,10 +8,25 @@
   overflow: hidden;
 }
 
+$logo-height: 4rem;
+
+.jumbo__logos {
+  text-align: center;
+  padding-top: 1rem;
+  fill: white;
+  height: $logo-height;
+  position: relative;
+  z-index: 10;
+
+  svg {
+    height: $logo-height;
+  }
+}
+
 .jumbo__flex {
   align-items: center;
   display: flex;
-  height: 100%;
+  height: calc(100% - #{$logo-height});
 }
 
 .jumbo__teaser {
@@ -76,6 +91,7 @@
     .input-group {
       max-width: 60%;
       width: 30rem;
+      background-color: rgba(0,0,0,0);
     }
 
     .input-group::after {

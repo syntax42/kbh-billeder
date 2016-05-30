@@ -8,7 +8,8 @@
   color: $white;
   text-decoration: none;
 
-  &:hover, &:focus {
+  &:focus,
+  &:hover {
     color: $white;
     text-decoration: none;
   }
@@ -20,4 +21,12 @@
 
 .topbar-items {
   height: 40px;
+}
+
+.search-box {
+  .input-group {
+    &::after {
+      background-color: rgba($white, .0);
+    }
+  }
 }
