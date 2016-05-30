@@ -2,7 +2,33 @@
   background-color: $gray-dark;
   height: 500px;
   max-height: 60vh;
+  overflow: hidden;
   position: relative;
+  background-color: $black;
+  overflow: hidden;
+}
+
+.jumbo__flex {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
+.jumbo__teaser {
+  color: $white;
+  position: relative;
+  z-index: 10;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.jumbo__image {
+  left: 0;
+  opacity: .5;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
 }
 
 .jumbo__search {
@@ -18,13 +44,14 @@
   .input-search::-webkit-input-placeholder {
     color: rgba($text-color, .8);
   }
+
   .input-search::-moz-placeholder {
     color: rgba($text-color, .8);
   }
+
   .input-search::-ms-input-placeholder {
     color: rgba($text-color, .8);
   }
-
 
   .search-box {
     float: right;
@@ -55,7 +82,6 @@
     height: 2rem;
     width: 2rem;
   }
-
   @media (max-width: $small-size) {
     .input-search {
       font-size: 1rem;
