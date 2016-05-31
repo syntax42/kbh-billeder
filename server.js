@@ -13,18 +13,14 @@ var app = express();
 
 // Set up Keystone
 keystone.init(config.keystone.options);
-
 keystone.import('./models');
-
-keystone.set('routes', require('./routes'));
-
+keystone.set('routes', require('./routes')(app));
 keystone.set('nav', config.keystone.nav);
 
 keystone.initDatabase();
 keystone.initExpressSession();
 
 app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
-app.use(express.static('generated'));
 
 app.use(keystone.get('session options').cookieParser);
 app.use(keystone.expressSession);
@@ -33,11 +29,7 @@ app.use(require('connect-flash')());
 
 app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-//keystone.mount('/content', app, function() {
-//});
-
-keystone.openDatabaseConnection(function () {
+keystone.openDatabaseConnection(() => {
   // Asking collections online to set-up itself
   co.initialize(app, config);
 });
-

@@ -33,6 +33,7 @@ dependencies:
       CIP_PASSWORD="${CIP_PASSWORD}"
       KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
       KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
+      COOKIE_SECRET="${COOKIE_SECRET}"
       EOF
     # Install node modules
     - npm install --no-spin
