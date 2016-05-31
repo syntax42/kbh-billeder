@@ -15,9 +15,6 @@ module.exports.keystone = {
   options: {
     'name': 'KBH Billeder',
     'brand': 'KBH Billeder',
-    'static': 'generated',
-    'views': 'app/views',
-    'view engine': 'jade',
     'auto update': true,
     'mongo': process.env.MONGO_CONNECTION || 'mongodb://localhost/kbh-billeder',
     'session': 'mongo',
