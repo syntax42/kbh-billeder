@@ -68,7 +68,7 @@ $logo-height: 4rem;
   background-size: contain;
   bottom: 0;
   height: 8rem;
-  padding-top: 4rem;
+  padding-top: 5rem;
   position: absolute;
   width: 100%;
 
@@ -87,15 +87,16 @@ $logo-height: 4rem;
   .search-box {
     float: right;
     margin: 0;
+    width: 100%;
 
     .btn {
       height: auto;
     }
 
     .input-group {
-      max-width: 60%;
-      width: 30rem;
-      background-color: rgba(0,0,0,0);
+      background-color: $white;
+      max-width: none;
+      width: 100%;
     }
 
     .input-group::after {
