@@ -32,15 +32,15 @@ block content
   - if (metadata.width_px > 768) { zoom = true };
 
   article.asset(itemscope,
-          itemtype='http://schema.org/CreativeWork',
-          data-catalog=catalog.alias,
-          data-id=metadata.id,
-          data-title=title,
-          data-latitude=metadata.latitude,
-          data-longitude=metadata.longitude,
-          data-heading=metadata.heading,
-          data-license-id=metadata.license ? metadata.license.id : '',
-          data-full-address=fullAddress)
+      itemtype='http://schema.org/CreativeWork',
+      data-catalog=catalog.alias,
+      data-id=metadata.id,
+      data-title=title,
+      data-latitude=metadata.latitude,
+      data-longitude=metadata.longitude,
+      data-heading=metadata.heading,
+      data-license-id=metadata.license ? metadata.license.id : '',
+      data-full-address=fullAddress)
     .asset-top
       .container-fluid
         .row
