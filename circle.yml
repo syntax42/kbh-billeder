@@ -11,6 +11,9 @@ machine:
   node:
     version: 6.1.0
 dependencies:
+  pre:
+    # Remove the collections-online module from the cache, to always fetch it.
+    - rm -rf node_modules/collections-online
   override:
     # Upgrading the gcloud command and installing kubectl
     - $GCLOUD --quiet components update
