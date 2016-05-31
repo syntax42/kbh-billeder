@@ -125,7 +125,8 @@ $(function() {
     });
   }
 
-  $('.image-wrap').on('dragstart contextmenu', function(e) {
+  $('.asset[data-license-id=7] .image-wrap')
+  .on('dragstart contextmenu', function(e) {
     e.preventDefault();
   });
 });

@@ -30,6 +30,7 @@ block content
           data-latitude=metadata.latitude,
           data-longitude=metadata.longitude,
           data-heading=metadata.heading,
+          data-license-id=metadata.license ? metadata.license.id : '',
           data-full-address=fullAddress)
     - var city = metadata.city;
     - var institution = metadata.catalog;
@@ -45,11 +46,13 @@ block content
           .col-xs-12.col-sm-7.small-bleed
             .image-wrap
               img(src=sources.thumbnail, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").kbh-asset-image
-              .license
-                if(institution === 'stadsarkivet')
-                  +icon('kbh-stads')
-                else if (institution === 'kbh-museum')
-                  +icon('kbh-mus')
+              // If license is "All Rights Reserved"
+              if metadata.license.id === 7
+                .license
+                  if(institution === 'stadsarkivet')
+                    +icon('kbh-stads')
+                  else if (institution === 'kbh-museum')
+                    +icon('kbh-mus')
 
       .container-fluid
         .row.asset-info
