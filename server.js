@@ -10,6 +10,7 @@ var config = require('./config');
 
 // Creating an express app
 var app = express();
+co.config(config);
 
 // Set up Keystone
 keystone.init(config.keystone.options);
@@ -31,5 +32,5 @@ app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
 keystone.openDatabaseConnection(() => {
   // Asking collections online to set-up itself
-  co.initialize(app, config);
+  co.initialize(app);
 });
