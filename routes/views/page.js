@@ -1,10 +1,7 @@
 var keystone = require('keystone');
 
-exports = module.exports = function (req, res) {
-
-	var view = new keystone.View(req, res);
+exports = module.exports = function (req, res, next) {
 	var locals = res.locals;
-
 	// locals.section is used to set the currently selected
 	// item in the header navigation.
 	locals.section = 'page' // fix me
@@ -15,23 +12,27 @@ exports = module.exports = function (req, res) {
 	locals.data = {
 		page: []
 	};
-  locals.req = req;
+	locals.req = req;
 
-	// Load the current page
-	view.on('init', (next) => {
-
-		var q = keystone.list('Page').model.findOne({
-			slug: locals.filters.slug,
-		});
-
-		q.exec(function (err, result) {
-			locals.data.page = result;
-			next(err);
-		});
-
+	var q = keystone.list('Page').model.findOne({
+		slug: locals.filters.slug,
 	});
 
-	// Render the view
-	//view.render('page');
-  view.render('page');
+	q.exec(function (err, result) {
+		if(result && !err) {
+			locals.data.page = result;
+			// Create a view and render
+			var view = new keystone.View(req, res);
+			// Render the view
+		  view.render('page');
+		} else if(err) {
+			err.status = 500;
+			next(err);
+		} else {
+			//var err = new Error("No page with this slug was found");
+			//err.status = 404;
+			//next(err);
+			next();
+		}
+	});
 };
