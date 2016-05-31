@@ -23,7 +23,7 @@ module.exports.keystone = {
     'session': 'mongo',
     'auth': true,
     'user model': 'User',
-    'cookie secret': 'r49utut94ghqnrnfi3ut3dewri34r43rwf;qf43ff4f4fl[gl]eg][4u902u3204u2dwdzfef',
+    'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
   },
   nav: {
     users: 'users',
