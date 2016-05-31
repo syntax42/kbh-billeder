@@ -13,11 +13,8 @@ var app = express();
 
 // Set up Keystone
 keystone.init(config.keystone.options);
-
 keystone.import('./models');
-
-keystone.set('routes', require('./routes'));
-
+keystone.set('routes', require('./routes')(app));
 keystone.set('nav', config.keystone.nav);
 
 keystone.initDatabase();
@@ -33,11 +30,12 @@ app.use(require('connect-flash')());
 
 app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-//keystone.mount('/content', app, function() {
-//});
+// Fixme: jade options aren't initialised from config.js
+app.set('views', 'app/views');
+app.set('view engine', 'jade');
 
-keystone.openDatabaseConnection(function () {
-  // Asking collections online to set-up itself
-  co.initialize(app, config);
-});
+keystone.openDatabaseConnection(() => {
+    // Asking collections online to set-up itself
+    co.initialize(app, config);
+	});
 

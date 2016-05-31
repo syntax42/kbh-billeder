@@ -1,0 +1,12 @@
+extends index
+
+block content
+  .let-it-grow
+    .container-fluid
+      if !data.page
+        h2 Page not found.
+      else
+        h1= data.page.title
+        p!= data.page.content
+
+  include includes/footer

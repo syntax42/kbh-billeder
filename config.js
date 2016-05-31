@@ -15,7 +15,6 @@ module.exports.keystone = {
   options: {
     'name': 'KBH Billeder',
     'brand': 'KBH Billeder',
-    'sass': 'generated',
     'static': 'generated',
     'views': 'app/views',
     'view engine': 'jade',
