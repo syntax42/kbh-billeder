@@ -22,6 +22,14 @@ function twittershareCurrentPage() {
   return false;
 }
 
+function pinterestshareCurrentPage() {
+  var url = escape(window.location.href);
+  var title = $('.asset').data('title');
+  title += ' kbhbilleder.dk'
+  window.open('https://pinterest.com/pin/create/button/?url=' + url + '&media=' + url + '/thumbnail&description=' + title);
+  return false;
+}
+
 $(function() {
   var Snackbar = window.Snackbar;
   Snackbar.init();

@@ -22,24 +22,25 @@ block content
     - fullAddress.push(city)
   - fullAddress = fullAddress.join(', ')
 
+  - var city = metadata.city;
+  - var institution = metadata.catalog;
+  - var description = metadata.description;
+  - var file_format = metadata.file_format;
+  - var license = metadata.license && helpers.licenseTag(metadata.license.id);
+  - var title = metadata.short_title;
+  - var zipcode = metadata.zipcode;
+  - if (metadata.width_px > 768) { zoom = true };
 
   article.asset(itemscope,
           itemtype='http://schema.org/CreativeWork',
           data-catalog=catalog.alias,
           data-id=metadata.id,
+          data-title=title,
           data-latitude=metadata.latitude,
           data-longitude=metadata.longitude,
           data-heading=metadata.heading,
           data-license-id=metadata.license ? metadata.license.id : '',
           data-full-address=fullAddress)
-    - var city = metadata.city;
-    - var institution = metadata.catalog;
-    - var description = metadata.description;
-    - var file_format = metadata.file_format;
-    - var license = metadata.license && helpers.licenseTag(metadata.license.id);
-    - var title = metadata.short_title;
-    - var zipcode = metadata.zipcode;
-    - if (metadata.width_px > 768) { zoom = true };
     .asset-top
       .container-fluid
         .row
@@ -77,7 +78,8 @@ block content
               +icon('facebook')
             a(href="javascript:twittershareCurrentPage()", target="_blank", alt="Del på Twitter")
               +icon('twitter')
-
+            a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
+              +icon('pinterest')
 
     .asset-middle
       .container-fluid
