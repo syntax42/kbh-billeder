@@ -1,6 +1,6 @@
 {
-  "sections": [
-    {
+  "sections": {
+    "place": {
       "title": "Sted",
       "rows": [
         {
@@ -45,7 +45,8 @@
           }
         }
       ]
-    }, {
+    },
+    "time": {
       "title": "Tid",
       "rows": [
         {
@@ -66,7 +67,8 @@
           "template": "= timenote"
         }
       ]
-    }, {
+    },
+    "additional-information": {
       "title": "Yderligere oplysninger",
       "rows": [
         {
@@ -166,7 +168,8 @@
           "template": "= constructed_to"
         }
       ]
-    }, {
+    },
+    "technical-information": {
       "title": "Tekniske oplysninger",
       "rows": [{
           "title": "Filstørrelse (mb)",
@@ -183,5 +186,5 @@
         }
       ]
     }
-  ]
+  }
 }
