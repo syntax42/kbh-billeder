@@ -6,10 +6,10 @@
   overflow: hidden;
   position: relative;
 }
-
 $logo-height: 4rem;
 
-.jumbo__logos, .jumbo__flex {
+.jumbo__flex,
+.jumbo__logos {
   position: relative;
   z-index: 10;
 }
@@ -123,8 +123,30 @@ $logo-height: 4rem;
   padding: 5rem 0;
 
   @media (min-width: $small-size) {
-    display: flex;
     align-items: center;
+    display: flex;
+
+    .text-col-left {
+      padding-right: 3rem;
+    }
+  }
+
+  &__title {
+    font-family: $font-family-thin;
+    font-size: 3rem;
+    margin-left: -.05em;
+
+    @media (min-width: $small-size) {
+      font-size: 4.2rem;
+    }
+  }
+
+  &__text {
+    font-size: 1.2rem;
+
+    @media (min-width: $small-size) {
+      font-size: 1.55rem;
+    }
   }
 }
 
@@ -150,7 +172,11 @@ $logo-height: 4rem;
 
 .fp-thumb__overlay {
   background-color: rgba($white, .75);
+  // Safari bug fix
   bottom: -1px;
+  max-height: 100%;
+  max-height: calc(100% + 1px);
+  overflow: hidden;
   padding: 0 15px;
   position: absolute;
   width: 100%;
