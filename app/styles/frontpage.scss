@@ -149,11 +149,11 @@ $logo-height: 4rem;
 }
 
 .fp-thumb__overlay {
+  background-color: rgba($white, .75);
+  bottom: -1px;
   padding: 0 15px;
   position: absolute;
-  bottom: -1px;
   width: 100%;
-  background-color: rgba($white, .5);
 }
 
 .fp-thumb__title {

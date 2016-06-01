@@ -29,6 +29,7 @@ block content
   - var license = metadata.license && helpers.licenseTag(metadata.license.id);
   - var title = metadata.short_title;
   - var zipcode = metadata.zipcode;
+
   - if (metadata.width_px > 768) { zoom = true };
 
   article.asset(itemscope,
@@ -114,10 +115,20 @@ block content
   .overlay__container(data-content="asset-download")
     .overlay__content
       if (downloadable)
+        - var downloadSlug = metadata.id + '/download/';
         h2 Download
-        if(player === 'image-single')
-          a.btn.btn-primary(href='#{sources.thumbnail}', target='_blank')
-            | Download billede
+        a.btn.btn-primary(href='#{downloadSlug}lille')
+          | Lille (#{sources.imageSet.download800.size} jpg)
+        a.btn.btn-primary(href='#{downloadSlug}mellem')
+          | Mellem (#{sources.imageSet.download1200.size} jpg)
+        a.btn.btn-primary(href='#{downloadSlug}stor')
+          | Stor (#{sources.imageSet.download2000.size} jpg)
+        a.btn.btn-primary(href='#{downloadSlug}originalJPEG')
+          | Original (#{metadata.width_px} x #{metadata.height_px} jpg)
+        if(file_format === 'TIFF Image')
+          a.btn.btn-primary(href='#{downloadSlug}original')
+            | Original (#{metadata.width_px} x #{metadata.height_px} tiff)
+
         if (license)
           a(href=license.url, rel='license', target='_blank')
             img(src=license.img, alt=license.short).license-img
