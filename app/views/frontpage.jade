@@ -10,29 +10,39 @@ block content
       .container-fluid.jumbo__logos
         +icon('kbh-mus')
         +icon('kbh-stads')
-      .container-fluid.jumbo__flex
-        .row 
-          .col-xs-12.col-md-6
-            .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
+        svg.jumbo__svg-filter
+          defs
+            filter#dropshadow
+              fegaussianblur(in='SourceAlpha', stddeviation='4')
+              fecomponenttransfer
+                fefunca(type='linear', slope='0.15')
+              femerge
+                femergenode
+                femergenode(in='SourceGraphic')
+      .jumbo__flex
+        .container-fluid
+          .row 
+            .col-xs-12.col-sm-6
+              .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
       .jumbo__search
         .container-fluid
-          .row
-            .col-xs-6.col-xs-offset-6.col-sm-5.col-sm-offset-7.col-md-4.col-md-offset-8
-              - var path = (req.path).split('/')
-              - var searchMethod = (isSearching ? 'modify-query' : '')
-              form.search-box(method='get', action='/', data-method=searchMethod)
-                .input-group
-                  input.form-control.input-search(
-                    type='text',
-                    id='search-input',
-                    placeholder='Søg på kbhbilleder',
-                    name='q',
-                    autocomplete="off",
-                    value=req.query.q || '')
-                  .input-group-btn
-                    button.btn-search.btn
-                      span.sr-only Søg
-                      +icon('search')
+          - var path = (req.path).split('/')
+          - var searchMethod = (isSearching ? 'modify-query' : '')
+          form.search-box(method='get', action='/', data-method=searchMethod)
+            .input-group
+              input.form-control.input-search(
+                type='text',
+                id='search-input',
+                placeholder='Søg på kbhbilleder',
+                name='q',
+                autocomplete="off",
+                onfocus="this.placeholder = ''",
+                onblur="this.placeholder = 'Søg på kbhbilleder'"
+                value=req.query.q || '')
+              .input-group-btn
+                button.btn-search.btn
+                  span.sr-only Søg
+                  +icon('search')
     .container-fluid
       .row.fp-featured
         .col-xs-12.col-sm-6.text-col-left

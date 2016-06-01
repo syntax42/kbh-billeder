@@ -46,3 +46,8 @@ html {
 .license-img {
   max-height: 40px;
 }
+
+.dropdown__selected, .dropdown__option--active, dt, label, .btn, th {
+  font-family: $font-family-medium;
+  font-weight: inherit;
+}

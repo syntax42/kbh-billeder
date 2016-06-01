@@ -1,11 +1,23 @@
 .jumbo {
   background-color: $black;
   height: 50rem;
-  max-height: 60vh;
+  max-height: 40vh;
   min-height: 25rem;
-  overflow: hidden;
   position: relative;
+
+  @media (min-width: $small-size) {
+    max-height: 50vh;
+  }
+
+  @media (min-width: $medium-size) {
+    max-height: 55vh;
+  }
+
+  @media (min-width: $large-size) {
+    max-height: 60vh;
+  }
 }
+
 $logo-height: 4rem;
 
 .jumbo__flex,
@@ -24,15 +36,26 @@ $logo-height: 4rem;
     margin: 0 1rem;
     max-width: calc(50% - 2rem);
     fill-rule: evenodd;
+    filter: url(#dropshadow);
+  }
+
+  .jumbo__svg-filter {
+    width: 0;
+    height: 0;
   }
 }
 
 .jumbo__flex {
   align-items: center;
   display: flex;
-  height: calc(80% - #{$logo-height});
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 
-  .row {
+  .container-fluid {
+    max-width: $large-size;
     width: 100%;
   }
 }
@@ -41,8 +64,9 @@ $logo-height: 4rem;
   color: $white;
   font-size: 2.2rem;
   line-height: 1.2;
+  text-shadow: 0 0 1px rgba($black, .6), 0 0 4px rgba($black, .2);
 
-  @media (min-width: $small-size) {
+  @media (min-width: $medium-size) {
     font-size: 3rem;
   }
 }
@@ -53,23 +77,60 @@ $logo-height: 4rem;
   background-size: cover;
   height: 100%;
   left: 0;
-  opacity: .5;
+  opacity: .50;
   position: absolute;
   top: 0;
   width: 100%;
 }
 
 .jumbo__search {
+  align-items: center;
   background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1l1-1v1H0z" fill="%23fff"/></svg>');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   bottom: 0;
+  display: flex;
   height: 8rem;
-  height: calc(4rem + 5vw);
-  padding-top: 2rem;
-  padding-top: calc(1.2rem + 3vw);
+  height: calc(2rem + 10vw);
+  max-height: 14rem;
   position: absolute;
   width: 100%;
+
+  .container-fluid {
+    max-width: $large-size;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .search-box {
+    margin-top: 5rem;
+    max-width: 60%;
+    width: 18rem;
+    flex-grow: 0;
+
+    .btn {
+      height: auto;
+    }
+
+    .input-group {
+      background-color: $white;
+      max-width: none;
+      width: 100%;
+    }
+
+    .input-group::after {
+      background-color: $brand-primary;
+      height: 2px;
+    }
+  }
+
+  .input-search {
+    color: inherit;
+    font-size: 1.6rem;
+    height: 3rem;
+    padding-bottom: .3rem;
+  }
 
   .input-search::-webkit-input-placeholder {
     color: rgba($text-color, .8);
@@ -83,57 +144,27 @@ $logo-height: 4rem;
     color: rgba($text-color, .8);
   }
 
-  .search-box {
-    float: right;
-    margin: 0;
-    width: 100%;
-
-    @media (max-width: $small-size) {
-      margin-top: 1rem;
-    }
-
-    .btn {
-      height: auto;
-    }
-
-    .input-group {
-      background-color: $white;
-      max-width: none;
-      width: 100%;
-    }
-
-    .input-group::after {
-      background-color: $text-color;
-    }
-  }
-
-  .input-search {
-    color: inherit;
-    font-size: 1.6rem;
-    height: 3rem;
-  }
-
   .btn-search svg {
-    fill: $text-color;
+    fill: $brand-primary;
     height: 2rem;
+    margin-bottom: .2rem;
     width: 2rem;
   }
-  @media (max-width: $small-size) {
+  @media (max-width: $medium-size) {
     .input-search {
-      font-size: 1rem;
-      height: 1.6rem;
+      font-size: 1.2rem;
+      height: 2rem;
     }
 
     .btn-search svg {
-      fill: $text-color;
-      height: 1.4rem;
-      width: 1.4rem;
+      height: 1.6rem;
+      width: 1.6rem;
     }
   }
 }
 
 .fp-featured {
-  padding: 5rem 0;
+  padding: 3rem 0;
 
   @media (min-width: $small-size) {
     align-items: center;
@@ -147,9 +178,9 @@ $logo-height: 4rem;
   &__title {
     font-family: $font-family-thin;
     font-size: 3rem;
-    margin-left: -.05em;
+    margin-left: -.04em;
 
-    @media (min-width: $small-size) {
+    @media (min-width: $medium-size) {
       font-size: 4.2rem;
     }
   }
@@ -157,7 +188,7 @@ $logo-height: 4rem;
   &__text {
     font-size: 1.2rem;
 
-    @media (min-width: $small-size) {
+    @media (min-width: $medium-size) {
       font-size: 1.55rem;
     }
   }
@@ -206,4 +237,5 @@ $logo-height: 4rem;
   display: none;
   font-size: 1.1rem;
   line-height: 1.2;
+  margin-top: -.4rem;
 }
