@@ -24,7 +24,11 @@
 }
 
 .search-box {
+  margin: 0;
+
   .input-group {
+    max-width: 12rem;
+
     &::after {
       background-color: rgba($white, .0);
     }
