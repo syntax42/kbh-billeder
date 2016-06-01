@@ -63,6 +63,7 @@ $logo-height: 4rem;
 .jumbo__teaser {
   color: $white;
   font-size: 2.2rem;
+  letter-spacing: -.01em;
   line-height: 1.2;
   text-shadow: 0 0 1px rgba($black, .6), 0 0 4px rgba($black, .2);
 
@@ -178,6 +179,7 @@ $logo-height: 4rem;
   &__title {
     font-family: $font-family-thin;
     font-size: 3rem;
+    letter-spacing: -.02em;
     margin-left: -.04em;
 
     @media (min-width: $medium-size) {
