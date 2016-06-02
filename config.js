@@ -28,5 +28,6 @@ module.exports.keystone = {
   nav: {
     users: 'users',
     pages: 'pages',
+    'menus': ['menus', 'menu-items']
   }
 }

@@ -8,7 +8,7 @@
  * modules in your project's /lib directory.
  */
 var _ = require('underscore');
-
+var KeystoneMenus = require('keystone-menus');
 
 /**
 	Initialises the standard view locals
@@ -18,10 +18,19 @@ var _ = require('underscore');
 	or replace it with your own templates / logic.
 */
 exports.initLocals = function (req, res, next) {
-	res.locals.navLinks = [
-		{ label: 'Home', key: 'home', href: '/' },
-	];
-	res.locals.user = req.user;
+	var locals = res.locals;
+
+	var builder = KeystoneMenus.builder();
+	builder.build('headerMenu')
+		.then(function(menu){
+			locals.headerMenu = menu.render(req.path, {'class': 'nav-menu'}, {}, {});
+		});
+
+	builder.build('footerMenu')
+		.then(function(menu){
+			locals.footerMenu = menu.render(req.path, {'class': 'footer-menu'}, {}, {});
+		});
+
 	next();
 };
 

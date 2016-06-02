@@ -12,9 +12,6 @@ exports = module.exports = function (req, res) {
 	locals.filters = {
 		slug: req.params.slug,
 	};
-	locals.data = {
-		page: []
-	};
   locals.req = req;
 
 	// Load the current page
@@ -25,13 +22,12 @@ exports = module.exports = function (req, res) {
 		});
 
 		q.exec(function (err, result) {
-			locals.data.page = result;
+			locals.page = result;
 			next(err);
 		});
 
 	});
 
 	// Render the view
-	//view.render('page');
   view.render('page');
 };

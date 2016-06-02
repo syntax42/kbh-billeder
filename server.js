@@ -1,6 +1,7 @@
 'use strict';
 var express = require('express');
 var keystone = require('keystone');
+var keystoneMenus = require('keystone-menus');
 var co = require('collections-online');
 
 // This allows loading of environment variables from a .env file
@@ -14,11 +15,11 @@ var app = express();
 // Set up Keystone
 keystone.init(config.keystone.options);
 keystone.import('./models');
+keystoneMenus.import(keystone);
 keystone.set('routes', require('./routes')(app));
 keystone.set('nav', config.keystone.nav);
 
-keystone.initDatabase();
-keystone.initExpressSession();
+keystone.initExpressApp(app);
 
 app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
 app.use(express.static('generated'));
