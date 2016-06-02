@@ -101,7 +101,7 @@ $logo-height: 4rem;
   @media (min-resolution: 1.5dppx), (-webkit-min-device-pixel-ratio: 1.5), (-moz-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
     bottom: -.5px;
   }
-  
+
   .container-fluid {
     max-width: $large-size;
     width: 100%;
@@ -156,6 +156,7 @@ $logo-height: 4rem;
     margin-bottom: .2rem;
     width: 2rem;
   }
+
   @media (max-width: $medium-size) {
     .input-search {
       font-size: 1.2rem;
@@ -167,82 +168,4 @@ $logo-height: 4rem;
       width: 1.6rem;
     }
   }
-}
-
-.fp-featured {
-  padding: 3rem 0;
-
-  @media (min-width: $small-size) {
-    align-items: center;
-    display: flex;
-
-    .text-col-left {
-      padding-right: 3rem;
-    }
-  }
-
-  &__title {
-    font-family: $font-family-thin;
-    font-size: 3rem;
-    letter-spacing: -.02em;
-    margin-left: -.04em;
-
-    @media (min-width: $medium-size) {
-      font-size: 4.2rem;
-    }
-  }
-
-  &__text {
-    font-size: 1.2rem;
-
-    @media (min-width: $medium-size) {
-      font-size: 1.55rem;
-    }
-  }
-}
-
-.fp-thumb {
-  position: relative;
-  margin: 1rem 0;
-  display: block;
-  color: inherit;
-
-  &:focus,
-  &:hover {
-    color: inherit;
-
-    .fp-thumb__text {
-      display: block;
-    }
-  }
-}
-
-.fp-thumb__image {
-  max-width: 100%;
-}
-
-.fp-thumb__overlay {
-  background-color: rgba($white, .75);
-  // Safari bug fix
-  bottom: -1px;
-  max-height: 100%;
-  max-height: calc(100% + 1px);
-  overflow: hidden;
-  padding: 0 15px;
-  position: absolute;
-  width: 100%;
-}
-
-.fp-thumb__title {
-  font-family: $font-family-medium;
-  font-size: 1.2rem;
-  line-height: 1.2;
-  margin-top: 1rem;
-}
-
-.fp-thumb__text {
-  display: none;
-  font-size: 1.1rem;
-  line-height: 1.2;
-  margin-top: -.4rem;
 }

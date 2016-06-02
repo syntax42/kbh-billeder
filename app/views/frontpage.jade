@@ -45,19 +45,21 @@ block content
                   +icon('search')
       
     .container-fluid
-      each gallery in galleries
-        .row.fp-featured
-          .col-xs-12.col-sm-6.text-col-left
-            h2.fp-featured__title= gallery.title
-            p.fp-featured__text= gallery.description
+      each gallery, i in galleries
+        .row.gallery(class="gallery--#{i % 2 == 0 ? 'even' : 'odd'}")
+          .col-xs-12.col-sm-5
+            h2.gallery__title= gallery.title
+            p.gallery__text= gallery.description
+          .col-sm-1
           .col-xs-12.col-sm-6
-            each item in gallery.items
-              .col-xs-6
-                a.fp-thumb.no-touch-hover(href=item.link)
-                  img(src=item.image).fp-thumb__image
-                  .fp-thumb__overlay
-                    h3.fp-thumb__title= item.title
-                    p.fp-thumb__text= item.description
+            .row
+              each item in gallery.items
+                .col-xs-6
+                  a.gallery-thumb.no-touch-hover(href=item.link)
+                    img(src=item.image).gallery-thumb__image
+                    .gallery-thumb__overlay
+                      h3.gallery-thumb__title= item.title
+                      p.gallery-thumb__text= item.description
   include includes/footer
 
 append javascript
