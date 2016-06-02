@@ -22,6 +22,7 @@ var keystone = require('keystone');
 var middleware = require('./middleware');
 var importRoutes = keystone.importer(__dirname);
 
+var frontpage = require('./frontpage');
 var images = require('./images');
 
 // Common Middleware
@@ -37,6 +38,8 @@ var routes = {
 
 // Setup Route Bindings
 exports = module.exports = function (app) {
+	// Frontpage override
+  app.route('/').get(frontpage);
 	// Views
 	app.get('/:slug', routes.views.page);
 	// Custom implementation of image downloading.
