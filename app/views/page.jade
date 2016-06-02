@@ -1,12 +1,14 @@
 extends index
 
 block content
-  .let-it-grow
+  .let-it-grow.page-wrap
     .container-fluid
-      if !data.page
-        h2 Page not found.
-      else
-        h1= data.page.title
-        p!= data.page.content
+      .row
+        .col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+          if !data.page || data.page.state === 'draft'
+            h1 Siden eksisterer ikke
+          else
+            h1= data.page.title
+            p!= data.page.content
 
   include includes/footer
