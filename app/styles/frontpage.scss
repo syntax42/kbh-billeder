@@ -89,6 +89,7 @@ $logo-height: 4rem;
   background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1l1-1v1H0z" fill="%23fff"/></svg>');
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  // Fix background peeping trough
   bottom: 0;
   display: flex;
   height: 8rem;
@@ -97,6 +98,10 @@ $logo-height: 4rem;
   position: absolute;
   width: 100%;
 
+  @media (min-resolution: 1.5dppx), (-webkit-min-device-pixel-ratio: 1.5), (-moz-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    bottom: -.5px;
+  }
+  
   .container-fluid {
     max-width: $large-size;
     width: 100%;
