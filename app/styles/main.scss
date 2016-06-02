@@ -45,6 +45,10 @@ html {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
+b, optgroup, strong {
+  font-family: $font-family-medium;
+  font-weight: $headings-font-weight;
+}
 .license-img {
   max-height: 40px;
 }
