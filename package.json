@@ -20,6 +20,7 @@
   "homepage": "https://github.com/CopenhagenCityArchives/kbh-billeder#readme",
   "dependencies": {
     "collections-online": "git+https://github.com/collections-online/collections-online.git",
+    "csurf": "^1.9.0",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "keystone": "https://github.com/keystonejs/keystone.git#32d3a13",

@@ -1,6 +1,7 @@
 'use strict';
 var express = require('express');
 var keystone = require('keystone');
+var csrf = require('csurf');
 var keystoneMenus = require('keystone-menus');
 var co = require('collections-online');
 
@@ -20,6 +21,13 @@ keystoneMenus.import(keystone);
 
 keystone.initExpressApp(app);
 co.initialize(app);
+
+// Keystone form validation
+keystone.pre('routes', csrf());
+keystone.pre('routes', function(req, res, next) {
+  res.locals.csrftoken = req.csrfToken();
+  return next();
+});
 
 keystone.set('routes', require('./routes')(app));
 co.registerRoutes(app);
