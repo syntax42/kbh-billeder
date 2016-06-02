@@ -15,10 +15,8 @@ footer
     .row
       .col-xs-12.col-sm-7.col-lg-8.footer__menu
         h2.footer__header Genveje
-        a.footer__element(href="#") Om os
-        a.footer__element(href="#") Rettigheder og brug
-        a.footer__element(href="#") Kontakt
-        a.footer__element(href="#") Hvad er kbhbilleder?
+        each item in menus.footer
+          a.footer__element(href=item.url)= item.title
         
       .col-xs-12.col-sm-5.col-lg-4
         .footer__element Historie & Kunst

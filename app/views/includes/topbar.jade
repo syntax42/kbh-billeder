@@ -6,11 +6,8 @@ header.topbar
           span.sr-only Menu
           +icon('menu')
         span.hidden-sm.hidden-xs
-          a(href="/").topbar-items__link KBH Billeder
-          a(href="#").topbar-items__link Avanceret søgning
-          a(href="#").topbar-items__link Hjælp
-          a(href="#").topbar-items__link Om KBH Billeder
-          a(href="#").topbar-items__link Kontakt
+          each item in menus.main
+            a(href=item.url).topbar-items__link= item.title
         - var path = (req.path).split('/')
         - var searchMethod = (isSearching ? 'modify-query' : '')
         if !frontpage
