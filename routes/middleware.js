@@ -21,15 +21,19 @@ exports.initLocals = function (req, res, next) {
 	var locals = res.locals;
 
 	var builder = KeystoneMenus.builder();
-	builder.build('headerMenu')
-		.then(function(menu){
-			locals.headerMenu = menu.render(req.path, {'class': 'nav-menu'}, {}, {});
-		});
 
-	builder.build('footerMenu')
-		.then(function(menu){
-			locals.footerMenu = menu.render(req.path, {'class': 'footer-menu'}, {}, {});
-		});
+	function initMenu(name) {
+		builder.build(name).then(function(menu) {
+			if(menu.menu) {
+				locals[name] = menu.render(req.path, {}, {}, {});
+			} else {
+				locals[name] = '';
+			}
+		}).then(null, next);
+	}
+
+	initMenu('headerMenu');
+	initMenu('footerMenu');
 
 	next();
 };
@@ -53,4 +57,3 @@ exports.requireUser = function (req, res, next) {
 		next();
 	}
 };
-
