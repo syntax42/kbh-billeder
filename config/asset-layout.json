@@ -2,6 +2,7 @@
   "sections": {
     "place": {
       "title": "Sted",
+      "emptyMessage": "Der er ingen stedsoplysninger tilknyttet",
       "rows": [
         {
           "title": "Gadenavn/bydel",
@@ -48,6 +49,7 @@
     },
     "time": {
       "title": "Tid",
+      "emptyMessage": "Der er ingen tidsoplysninger tilknyttet",
       "rows": [
         {
           "title": "Fremstillingstid",
@@ -70,6 +72,7 @@
     },
     "additional-information": {
       "title": "Yderligere oplysninger",
+      "emptyMessage": "Der er ingen yderligere oplysninger tilknyttet",
       "rows": [
         {
           "title": "Sekundær beskrivelse",
@@ -171,6 +174,7 @@
     },
     "technical-information": {
       "title": "Tekniske oplysninger",
+      "emptyMessage": "Der er ingen tekniske oplysninger tilknyttet",
       "rows": [{
           "title": "Filstørrelse (mb)",
           "template": "= filesizeMB(file_size)"
