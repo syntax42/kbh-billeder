@@ -11,6 +11,7 @@ var config = require('./config');
 
 // Creating an express app
 var app = express();
+co.config(config);
 
 // Set up Keystone
 keystone.init(config.keystone.options);
@@ -22,7 +23,6 @@ keystone.set('nav', config.keystone.nav);
 keystone.initExpressApp(app);
 
 app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
-app.use(express.static('generated'));
 
 app.use(keystone.get('session options').cookieParser);
 app.use(keystone.expressSession);
@@ -31,12 +31,7 @@ app.use(require('connect-flash')());
 
 app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-// Fixme: jade options aren't initialised from config.js
-app.set('views', 'app/views');
-app.set('view engine', 'jade');
-
 keystone.openDatabaseConnection(() => {
-    // Asking collections online to set-up itself
-    co.initialize(app, config);
-	});
-
+  // Asking collections online to set-up itself
+  co.initialize(app);
+});

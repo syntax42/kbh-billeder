@@ -2,6 +2,7 @@
 
 .topbar {
   background-color: $brand-primary;
+  font-family: $font-family-medium;
 }
 
 .topbar-items__link {
@@ -24,7 +25,11 @@
 }
 
 .search-box {
+  margin: 0;
+
   .input-group {
+    max-width: 14rem;
+
     &::after {
       background-color: rgba($white, .0);
     }

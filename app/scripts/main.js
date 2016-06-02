@@ -17,7 +17,16 @@ function fbshareCurrentPage() {
 }
 
 function twittershareCurrentPage() {
-  window.open('https://twitter.com/intent/tweet?url=' + escape(window.location.href));
+  var twitterAccount = $('meta[name="twitter:site"]').attr('content');
+  window.open('https://twitter.com/intent/tweet?url=' + escape(window.location.href) + '&via=' + twitterAccount);
+  return false;
+}
+
+function pinterestshareCurrentPage() {
+  var url = escape(window.location.href);
+  var title = $('.asset').data('title');
+  title += ' kbhbilleder.dk'
+  window.open('https://pinterest.com/pin/create/button/?url=' + url + '&media=' + url + '/thumbnail&description=' + title);
   return false;
 }
 

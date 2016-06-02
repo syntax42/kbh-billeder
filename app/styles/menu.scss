@@ -1,0 +1,22 @@
+.categories-menu-open {
+  .dropdown-menu-right {
+    left: 0;
+    right: auto;
+    transition: left $anim-entrance $anim-duration;
+  }
+}
+
+.dropdown-menu-right {
+  left: -$menu-width;
+  right: auto;
+  transition: left $anim-exit $anim-duration;
+  width: $menu-width;
+
+  a {
+    width: 100%;
+  }
+}
+
+.hamburger {
+  padding: 0;
+}

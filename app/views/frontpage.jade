@@ -7,62 +7,73 @@ block content
   .let-it-grow
     .jumbo
       .jumbo__image
-        img(src="https://unsplash.it/3100/2000")
       .container-fluid.jumbo__logos
         +icon('kbh-mus')
         +icon('kbh-stads')
-      .container-fluid.jumbo__flex
-        .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
+        svg.jumbo__svg-filter
+          defs
+            filter#dropshadow
+              fegaussianblur(in='SourceAlpha', stddeviation='4')
+              fecomponenttransfer
+                fefunca(type='linear', slope='0.15')
+              femerge
+                femergenode
+                femergenode(in='SourceGraphic')
+      .jumbo__flex
+        .container-fluid
+          .row 
+            .col-xs-12.col-sm-6
+              .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
       .jumbo__search
         .container-fluid
-          .row
-            .col-xs-12.col-sm-6.col-sm-offset-6
-              - var path = (req.path).split('/')
-              - var searchMethod = (isSearching ? 'modify-query' : '')
-              form.search-box(method='get', action='/', data-method=searchMethod)
-                .input-group
-                  input.form-control.input-search(
-                    type='text',
-                    id='search-input',
-                    placeholder='Søg på kbhbilleder',
-                    name='q',
-                    autocomplete="off",
-                    value=req.query.q || '')
-                  .input-group-btn
-                    button.btn-search.btn
-                      span.sr-only Søg
-                      +icon('search')
+          - var path = (req.path).split('/')
+          - var searchMethod = (isSearching ? 'modify-query' : '')
+          form.search-box(method='get', action='/', data-method=searchMethod)
+            .input-group
+              input.form-control.input-search(
+                type='text',
+                id='search-input',
+                placeholder='Søg på kbhbilleder',
+                name='q',
+                autocomplete="off",
+                onfocus="this.placeholder = ''",
+                onblur="this.placeholder = 'Søg på kbhbilleder'"
+                value=req.query.q || '')
+              .input-group-btn
+                button.btn-search.btn
+                  span.sr-only Søg
+                  +icon('search')
     .container-fluid
       .row.fp-featured
-        .col-xs-12.col-sm-6
-          h2 Lille Peter
-          p Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat, suscipit ma nizzle, vel, phat. Bizzle eget tortor. Sed eros. Doggy izzle dolor rizzle away tempus tempor. Tellivizzle doggy nibh et turpizzle. Crazy in tortor. Pellentesque you son of a bizzle rhoncus nisi. In hizzle habitasse platea daahng dawg. Shizzlin dizzle dapibizzle. We gonna chung tellus urna, pretizzle check it out, mattizzle izzle, eleifend vitae, nunc. Da bomb suscipizzle. Integizzle gizzle fo shizzle crazy things.
+        .col-xs-12.col-sm-6.text-col-left
+          h2.fp-featured__title Kort og tegninger
+          p.fp-featured__text Samlingen består af håndtegnede og trykte kort over København og omegn samt bygningstegninger og andre tegninger. Der er fx tegninger fra skoler, hospitaler, gadeanlæg og sporvejsdrift. Der er i alt omkring 250.000 kort og tegninger, og de dækker perioden 1167-2005.
         .col-xs-12.col-sm-6
           .row 
             .col-xs-6
-              a.fp-thumb(href="#")
+              a.fp-thumb.no-touch-hover(href="#")
                 img(src="https://unsplash.it/600/600").fp-thumb__image
                 .fp-thumb__overlay
                   h3.fp-thumb__title Østerbro
                   p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
             .col-xs-6
-              a.fp-thumb(href="#")
+              a.fp-thumb.no-touch-hover(href="#")
                 img(src="https://unsplash.it/600/600").fp-thumb__image
                 .fp-thumb__overlay
                   h3.fp-thumb__title Østerbro
                   p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
             .col-xs-6
-              a.fp-thumb(href="#")
+              a.fp-thumb.no-touch-hover(href="#")
                 img(src="https://unsplash.it/600/600").fp-thumb__image
                 .fp-thumb__overlay
                   h3.fp-thumb__title Østerbro
                   p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
             .col-xs-6
-              a.fp-thumb(href="#")
+              a.fp-thumb.no-touch-hover(href="#")
                 img(src="https://unsplash.it/600/600").fp-thumb__image
                 .fp-thumb__overlay
                   h3.fp-thumb__title Østerbro
-                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
+                  p.fp-thumb__text Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat. Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat. Tellivizzle ipsizzle owned rizzle amet, consectetuer adipiscing elizzle. Nullam fo velizzle, i'm in the shizzle volutpat.
   
   include includes/footer
 
