@@ -10,7 +10,7 @@ var GalleryItem = new keystone.List('Gallery item', {
 GalleryItem.add({
     title: { type: String, required: true },
     description: { type: Types.Textarea },
-    image: { type: Types.Url },
+    image: { type: Types.CloudinaryImage, autoCleanup : true },
     link: { type: Types.Url }
 });
 

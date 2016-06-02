@@ -77,5 +77,6 @@ module.exports = {
   facebookAppId: {
     'stadsarkivet': 159598384220080,
     'kbh-museum': 116055131754566
-  }
+  },
+  cloudinaryUrl: process.env.CLOUDINARY_URL || false
 };

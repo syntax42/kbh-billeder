@@ -15,6 +15,18 @@ co.config(config);
 
 // Set up Keystone
 keystone.init(config.keystone.options);
+
+if(config.cloudinaryUrl) {
+  // Set up cloudinary
+  keystone.set('cloudinary config', config.cloudinaryUrl);
+  // Prefix all built-in tags with 'keystone_'
+  keystone.set('cloudinary prefix', 'keystone');
+  // Prefix each image public_id with [{prefix}]/{list.path}/{field.path}/
+  keystone.set('cloudinary folders', true);
+  // Force cloudinary to serve images over https
+  keystone.set('cloudinary secure', true);
+}
+
 keystone.import('./models');
 
 keystone.initExpressApp(app);

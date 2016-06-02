@@ -56,7 +56,8 @@ block content
               each item in gallery.items
                 .col-xs-6
                   a.gallery-thumb.no-touch-hover(href=item.link)
-                    img(src=item.image).gallery-thumb__image
+                    - var itemImageUrl = item._.image.scale(300,300,{});
+                    img(src=itemImageUrl).gallery-thumb__image
                     .gallery-thumb__overlay
                       h3.gallery-thumb__title= item.title
                       p.gallery-thumb__text= item.description
