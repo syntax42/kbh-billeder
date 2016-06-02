@@ -52,17 +52,17 @@
       "emptyMessage": "Der er ingen tidsoplysninger tilknyttet",
       "rows": [
         {
-          "title": "Fremstillingstid",
+          "title": "Fremstillet",
           "type": "date-interval",
           "fields": {
             "from": "creation_time_from",
             "to": "creation_time_to"
           }
         }, {
-          "title": "Fremstillingstidspunkt",
+          "title": "Fremstillet",
           "template": "= creation_time ? creation_time.displaystring : ''"
         }, {
-          "title": "Tidsangivelses anslået",
+          "title": "Anslået tid",
           "template": "= bool(creation_time_estimated)"
         }, {
           "title": "Tidsnote",
@@ -75,10 +75,6 @@
       "emptyMessage": "Der er ingen yderligere oplysninger tilknyttet",
       "rows": [
         {
-          "title": "Sekundær beskrivelse",
-          "template": "= secondary_description"
-        },
-        {
           "title": "Beskrivelsesnote",
           "template": "= description_note"
         },
@@ -87,7 +83,7 @@
           "template": "= original_material ? original_material.displaystring : ''"
         },
         {
-          "title": "Fotograf/skaber af mediet",
+          "title": "Fotograf/skaber",
           "template": "= creator"
         },
         {

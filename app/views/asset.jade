@@ -25,12 +25,24 @@ block content
   - var city = metadata.city;
   - var institution = metadata.catalog;
   - var description = metadata.description;
+  - var secondary_description = metadata.secondary_description;
   - var file_format = metadata.file_format;
   - var license = metadata.license && helpers.licenseTag(metadata.license.id);
   - var title = metadata.short_title;
   - var zipcode = metadata.zipcode;
-
-  - if (metadata.width_px > 768) { zoom = true };
+  - var downloadSlug = metadata.id + '/download/';
+  
+  //- check image sizes available
+  - var bigImage = "";
+  - var smallImage = "";
+  - var mediumImage = ""; 
+  - var largeImage = ""; 
+  - if (metadata.width_px > 800) { bigImage = "lille", smallImage = downloadSlug + bigImage };
+  - if (metadata.width_px > 1200) { bigImage = "mellem", mediumImage = downloadSlug + bigImage };
+  - if (metadata.width_px > 2000) { bigImage = "stor", largeImage = downloadSlug + bigImage };
+  //- enable zoom if medium size image exist
+  - if (mediumImage) { zoom = true };
+  - bigImage = downloadSlug + bigImage;
 
   article.asset(itemscope,
       itemtype='http://schema.org/CreativeWork',
@@ -45,21 +57,21 @@ block content
     .asset-top
       .container-fluid
         .row
-          .col-xs-12.col-sm-7
+          .col-xs-12.col-sm-7.img-col
             .image-wrap
-              img(src=sources.thumbnail, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").kbh-asset-image
-              // If license is "All Rights Reserved"
-              if metadata.license.id === 7
+              if downloadable
+                img(src=sources.thumbnail, data-src=bigImage, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").kbh-asset-image
+              else
+                img(src=sources.thumbnail, alt=title).kbh-asset-image
                 .license
                   if(institution === 'stadsarkivet')
                     +icon('kbh-stads')
                   else if (institution === 'kbh-museum')
                     +icon('kbh-mus')
             .social
-              if(player === 'image-single' || player === 'image-single-animated')
-                if (zoom)
-                  a(data-action="asset-image-size-toggle")
-                    +icon('zoom-in')
+              if zoom
+                a(data-action="asset-image-size-toggle", class="#{downloadable===true ? '' : 'dimmed'}").hidden-xs
+                  +icon('zoom-in')
               a(data-action="asset-download-show", class="#{downloadable===true ? '' : 'dimmed'}")
                 +icon('download')
               a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
@@ -71,12 +83,11 @@ block content
           .col-sm-5.asset-info
             if(title)
               h1= title
-              if(description)
-                p.sr-only Beskrivelse
-                p.lead= description
-            else if(description)
+            if(description)
               p.sr-only Beskrivelse
-              h1= description
+              p.lead= description
+            if(secondary_description)
+              p= secondary_description
             .metadata
               != assetSection('time', metadata)
               != assetSection('place', metadata)
@@ -109,16 +120,15 @@ block content
   .overlay__container(data-content="asset-download")
     .overlay__content
       if (downloadable)
-        - var downloadSlug = metadata.id + '/download/';
         h2 Download
-        if(metadata.width_px > 800)
-          a.btn.btn-primary(href='#{downloadSlug}lille')
+        if(smallImage)
+          a.btn.btn-primary(href='#{smallImage}')
             | Lille (#{sources.imageSet.download800.size} jpg)
-        if(metadata.width_px > 1200)
-          a.btn.btn-primary(href='#{downloadSlug}mellem')
+        if(mediumImage)
+          a.btn.btn-primary(href='#{mediumImage}')
             | Mellem (#{sources.imageSet.download1200.size} jpg)
-        if(metadata.width_px > 2000)
-          a.btn.btn-primary(href='#{downloadSlug}stor')
+        if(largeImage)
+          a.btn.btn-primary(href='#{largeImage}')
             | Stor (#{sources.imageSet.download2000.size} jpg)
         a.btn.btn-primary(href='#{downloadSlug}originalJPEG')
           | Original (#{metadata.width_px} x #{metadata.height_px} jpg)
@@ -135,13 +145,10 @@ block content
         h2 Vi beklager
         p Billedet er ophavsretligt beskyttet og kan derfor ikke downloades uden forudgående aftale med fotografen.
 
-
-  .facebook-group
-    h2 Tusind tak for din hjælp!
-    p Hvis du synes det er spændende at bidrage til Nationalmuseets samlinger, så følg med i facebookgruppen&nbsp;
-      a(href="https://www.facebook.com/groups/1002729026439527/") Crowdsourcing af Nationalmuseets Samlinger.
-    br
-    p Dette er første og sidste gang vi forstyrrer dig. Skjul denne besked ved at&nbsp;
-      a(href="").ok trykke her.
+  if (!downloadable)
+    .overlay__container.no-zoom-message
+      .overlay__content
+        h2 Vi beklager
+        p Billedet er ophavsretligt beskyttet og vi må derfor ikke vise det i højere opløsning.
 
   include includes/footer
