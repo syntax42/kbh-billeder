@@ -8,7 +8,9 @@ module.exports = function(req, res, next) {
     console.log('req.originalUrl =', req.originalUrl);
     return search.result(req, res, next);
   } else {
-    keystone.list('Gallery').model.find().populate('items')
+    keystone.list('Gallery').model.find()
+    .populate('items')
+    .sort('order')
     .exec(function(err, galleries) {
       if(!err) {
         res.locals.galleries = galleries;
