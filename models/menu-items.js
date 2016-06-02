@@ -16,5 +16,13 @@ MenuItem.add({
     link: { type: Types.Url }
 });
 
+MenuItem.schema.methods.getUrl = function() {
+  if(this.page) {
+    return '/' + this.page.slug;
+  } else if(this.link) {
+    return this.link;
+  }
+}
+
 MenuItem.defaultColumns = 'title, placement, order|20%'
 MenuItem.register();

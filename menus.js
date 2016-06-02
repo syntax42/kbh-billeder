@@ -4,17 +4,15 @@ var keystone = require('keystone');
 const MENUS = ['main', 'footer'];
 
 module.exports = function(app) {
+  var MenuItem = keystone.list('Menu item');
+
   var menuItems = {};
   Q.all(MENUS.map((menu) => {
-  	return keystone.list('Menu item').model.find({
+  	return MenuItem.model.find({
   		placement: menu
   	}).populate('page').exec(function(err, items) {
       menuItems[menu] = items.map((item) => {
-        if(item.page) {
-          item.url = '/' + item.page.slug;
-        } else if(item.link) {
-          item.url = item.link;
-        }
+        item.url = item.getUrl();
         return item;
       });
     });
