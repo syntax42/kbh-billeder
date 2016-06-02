@@ -2,9 +2,9 @@
 $black: #000;
 $white: #fff;
 $gray-darker: $black; //lighten(#000, 13.5%) !default; // #222
-$gray-dark: #333; //lighten(#000, 20%) !default;   // #333
+$gray-dark: #333; //lighten(#000, 20%) !default; // #333
 $gray: #555; //lighten(#000, 33.5%) !default; // #555
-$gray-light: #999; //lighten(#000, 60%) !default;   // #999
+$gray-light: #999; //lighten(#000, 60%) !default; // #999
 $gray-lighter: hsl(345, 3%, 88%); //lighten(#000, 93.5%) !default; // #eee
 $brand-primary: #e6225a; // #971623; //#428bca !default;
 $menu-shadow: rgba(0, 0, 0, .5);
@@ -48,7 +48,7 @@ $anim-default: $anim-duration ease;
 // Menu
 $menu-width: 280px;
 $menu-width-small: 440px;
-$topbar-height: 60px;
+$topbar-height: 40px;
 
 // Breakpoints
 $extra-small-size: 480px;
@@ -73,6 +73,12 @@ $snackbar-zindex: 1000;
 $icon-size: 24px;
 
 // Asset
+$asset-top-bg: $white;
+$asset-top-color: $text-color;
+$asset-middle-bg: $white;
+$asset-bottom-bg: $gray-lighter;
+$asset-heading-font: $font-family-medium;
+
 $asset--icon-shadow-color: #fff;
 $asset-subject-headline-height: 3rem;
 $asset-max-height: calc(100vh - #{$topbar-height}*2);
