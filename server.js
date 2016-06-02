@@ -12,14 +12,19 @@ var config = require('./config');
 // Creating an express app
 var app = express();
 co.config(config);
+
 // Set up Keystone
 keystone.init(config.keystone.options);
 keystone.import('./models');
 keystoneMenus.import(keystone);
-keystone.set('routes', require('./routes')(app));
-keystone.set('nav', config.keystone.nav);
 
 keystone.initExpressApp(app);
+co.initialize(app);
+
+keystone.set('routes', require('./routes')(app));
+co.registerRoutes(app);
+
+keystone.set('nav', config.keystone.nav);
 
 app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
 
@@ -32,4 +37,4 @@ app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
 keystone.openDatabaseConnection();
 
-co.initialize(app);
+co.registerErrors(app);
