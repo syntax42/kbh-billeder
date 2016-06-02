@@ -2,7 +2,6 @@
 var express = require('express');
 var keystone = require('keystone');
 var csrf = require('csurf');
-var keystoneMenus = require('keystone-menus');
 var co = require('collections-online');
 
 // This allows loading of environment variables from a .env file
@@ -17,7 +16,6 @@ co.config(config);
 // Set up Keystone
 keystone.init(config.keystone.options);
 keystone.import('./models');
-keystoneMenus.import(keystone);
 
 keystone.initExpressApp(app);
 co.initialize(app);
@@ -43,6 +41,8 @@ app.use(require('connect-flash')());
 
 app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-keystone.openDatabaseConnection();
+keystone.openDatabaseConnection(function() {
+  require('./menus')(app);
+});
 
 co.registerErrors(app);
