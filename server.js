@@ -30,4 +30,6 @@ app.use(require('connect-flash')());
 
 app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
+keystone.openDatabaseConnection();
+
 co.initialize(app);
