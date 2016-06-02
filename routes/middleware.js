@@ -34,6 +34,14 @@ exports.initLocals = function (req, res, next) {
 	next();
 };
 
+exports.error404 = function(req, res, next) {
+	next();
+}
+
+exports.error500 = function(err, req, res, next) {
+	next(err);
+}
+
 /**
 	Prevents people from accessing protected pages when they're not signed in
  */

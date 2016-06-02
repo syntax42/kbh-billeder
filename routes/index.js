@@ -26,6 +26,9 @@ var images = require('./images');
 
 // Common Middleware
 keystone.pre('routes', middleware.initLocals);
+// Override error handlers
+keystone.set('404', middleware.error404);
+keystone.set('500', middleware.error500);
 
 // Import Route Controllers
 var routes = {
