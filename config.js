@@ -9,6 +9,7 @@ if (!process.env.NODE_ENV) {
 
 console.log('Loading ' + process.env.NODE_ENV + ' configuration');
 module.exports = require('./config/env/' + process.env.NODE_ENV);
+var config = module.exports;
 
 // Loading Keystone configuration
 module.exports.keystone = {
@@ -21,6 +22,7 @@ module.exports.keystone = {
     'auth': true,
     'user model': 'User',
     'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
+    'wysiwyg cloudinary images': config.cloudinaryUrl ? true : false
   },
   nav: {
     users: 'users',
