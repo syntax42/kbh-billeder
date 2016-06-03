@@ -2,7 +2,7 @@
   padding-bottom: 2rem;
 
   @media (min-width: $small-size) {
-    padding-top: $topbar-height;
+    padding-top: $topbar-height * 3 / 2;
 
     .asset-info {
       padding-top: 0;
@@ -74,7 +74,7 @@
 
 .metadata {
   table {
-    margin-top: .3rem;
+    margin-top: .5rem;
     width: 100%;
   }
 
