@@ -58,9 +58,9 @@ block content
           .col-xs-12.col-sm-7.img-col
             .image-wrap
               if downloadable
-                img(src=sources.thumbnail, data-src=bigImage, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").asset-image--lazy.kbh-asset-image
+                img(src=sources.thumbnail, data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
               else
-                img(src=sources.thumbnail, alt=title).kbh-asset-image
+                img(src=sources.thumbnail, alt=title).asset-image--zoomable.kbh-asset-image
                 .license
                   if(institution === 'stadsarkivet')
                     +icon('kbh-stads')
