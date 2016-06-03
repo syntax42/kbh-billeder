@@ -1,4 +1,4 @@
-.video-wrap {
+.film {
   display: block;
   height: 0;
   margin: .5rem 0 1rem;
@@ -8,4 +8,13 @@
     height: 100%;
     width: 100%;
   }
+}
+
+.billede {
+  max-width: 100%;
+}
+
+.fuld-bredde {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
 }
