@@ -1,8 +1,16 @@
-.film {
+.film,
+.billede {
   display: block;
-  height: 0;
   margin: .5rem 0 1rem;
+}
+
+.film {
+  height: 0;
   padding-bottom: 56.25%;
+
+  &.fuld-bredde {
+    padding-bottom: 56.25vw;
+  }
 
   iframe {
     height: 100%;
@@ -12,6 +20,10 @@
 
 .billede {
   max-width: 100%;
+
+  &.fuld-bredde {
+    max-width: 100vw;
+  }
 }
 
 .fuld-bredde {
