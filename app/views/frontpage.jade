@@ -44,7 +44,7 @@ block content
                   span.sr-only Søg
                   +icon('search')
       
-    .container-fluid
+    .container-fluid.frontpage-galleries
       each gallery, i in galleries
         .row.gallery(class="gallery--#{i % 2 == 0 ? 'even' : 'odd'}")
           .col-xs-12.col-sm-5
