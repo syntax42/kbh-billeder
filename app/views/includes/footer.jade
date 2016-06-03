@@ -15,8 +15,9 @@ footer
     .row
       .col-xs-12.col-sm-7.col-lg-8.footer__menu
         h2.footer__header Genveje
-        each item in menus.footer
-          a.footer__element(href=item.url)= item.title
+        if menus && menus.footer
+          each item in menus.footer
+            a.footer__element(href=item.url)= item.title
         
       .col-xs-12.col-sm-5.col-lg-4
         .footer__element Historie & Kunst

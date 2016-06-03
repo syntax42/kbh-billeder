@@ -1,3 +1,4 @@
-each item in menus.main
-  li 
-    a(href=item.url).topbar-items__link= item.title
+if menus && menus.main
+  each item in menus.main
+    li 
+      a(href=item.url).topbar-items__link= item.title

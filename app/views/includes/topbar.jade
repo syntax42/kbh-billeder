@@ -6,8 +6,9 @@ header.topbar
           span.sr-only Menu
           +icon('menu')
         span.hidden-sm.hidden-xs
-          each item in menus.main
-            a(href=item.url).topbar-items__link= item.title
+          if menus && menus.main
+            each item in menus.main
+              a(href=item.url).topbar-items__link= item.title
         - var path = (req.path).split('/')
         - var searchMethod = (isSearching ? 'modify-query' : '')
         if !frontpage
