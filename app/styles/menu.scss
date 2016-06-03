@@ -15,6 +15,11 @@
   a {
     width: 100%;
   }
+
+  @media (min-width: $small-size) {
+    left: -$menu-width-small;
+    width: $menu-width-small;
+  }
 }
 
 .hamburger {

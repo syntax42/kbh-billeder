@@ -3,8 +3,8 @@ header.topbar
     nav
       .topbar-items
         #heading-categories-menu.hamburger.hidden-lg.hidden-md
-          span.sr-only Menu
           +icon('menu')
+          .topbar-items__link Menu
         span.hidden-sm.hidden-xs
           if menus && menus.main
             each item in menus.main
