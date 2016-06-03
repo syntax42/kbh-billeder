@@ -22,7 +22,8 @@ module.exports.keystone = {
     'auth': true,
     'user model': 'User',
     'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
-    'wysiwyg cloudinary images': config.cloudinaryUrl ? true : false
+    'wysiwyg cloudinary images': config.cloudinaryUrl ? true : false,
+    'wysiwyg importcss': '/styles/keystone-tiny-mce.css'
   },
   nav: {
     users: 'users',
