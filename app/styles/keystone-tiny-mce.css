@@ -13,8 +13,3 @@
 .billede {
   max-width: 100%;
 }
-
-.fuld-bredde {
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
-}
