@@ -24,16 +24,17 @@ gulp.task('build', function (callback) {
            callback)
 })
 
-gulp.task('dev', function (callback) {
-  // put stuff in arrays that you'd want to run in parallel
-  sequence(['clean', 'bower'],
-           ['css', 'js', 'svg'],
-           ['watch'],
-           callback)
-})
-
 // ------------------------------------------
 // Default task
 // ------------------------------------------
 
-gulp.task('default', ['build'], function () {})
+gulp.task('default', function (callback) {
+  if (process.env.NODE_ENV === 'development') {
+    sequence(['build'],
+             ['watch'],
+             callback)
+  } else {
+    sequence(['build'],
+             callback)
+  }
+})
