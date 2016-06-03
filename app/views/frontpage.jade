@@ -23,7 +23,7 @@ block content
         .container-fluid
           .row 
             .col-xs-12.col-sm-6
-              .jumbo__teaser Udforsk #{totalAssets} billeder fra KBH billeders samling
+              .jumbo__teaser Udforsk #{totalAssets} billeder fra Københavns Museums og Stadsarkivets samling
       .jumbo__search
         .container-fluid
           - var path = (req.path).split('/')
@@ -44,7 +44,7 @@ block content
                   span.sr-only Søg
                   +icon('search')
       
-    .container-fluid
+    .container-fluid.frontpage-galleries
       each gallery, i in galleries
         .row.gallery(class="gallery--#{i % 2 == 0 ? 'even' : 'odd'}")
           .col-xs-12.col-sm-5

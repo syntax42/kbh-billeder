@@ -86,11 +86,11 @@ $logo-height: 4rem;
 
 .jumbo__search {
   align-items: center;
-  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1l1-1v1H0z" fill="%23fff"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 19l1-19v20H0z" fill="%23fff"/></svg>');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   // Fix background peeping trough
-  bottom: 0;
+  bottom: -1px;
   display: flex;
   height: 8rem;
   height: calc(2rem + 10vw);
@@ -98,22 +98,18 @@ $logo-height: 4rem;
   position: absolute;
   width: 100%;
 
-  @media (min-resolution: 1.5dppx), (-webkit-min-device-pixel-ratio: 1.5), (-moz-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
-    bottom: -.5px;
-  }
-
   .container-fluid {
-    max-width: $large-size;
-    width: 100%;
     display: flex;
     justify-content: flex-end;
+    max-width: $large-size;
+    width: 100%;
   }
 
   .search-box {
+    flex-grow: 0;
     margin-top: 5rem;
     max-width: 60%;
     width: 18rem;
-    flex-grow: 0;
 
     .btn {
       height: auto;
@@ -168,4 +164,8 @@ $logo-height: 4rem;
       width: 1.6rem;
     }
   }
+}
+
+.frontpage-galleries {
+  padding-bottom: 2rem;
 }

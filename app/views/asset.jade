@@ -40,8 +40,6 @@ block content
   - if (metadata.width_px > 800) { bigImage = "lille", smallImage = downloadSlug + bigImage };
   - if (metadata.width_px > 1200) { bigImage = "mellem", mediumImage = downloadSlug + bigImage };
   - if (metadata.width_px > 2000) { bigImage = "stor", largeImage = downloadSlug + bigImage };
-  //- enable zoom if medium size image exist
-  - if (mediumImage) { zoom = true };
   - bigImage = downloadSlug + bigImage;
 
   article.asset(itemscope,
@@ -60,18 +58,17 @@ block content
           .col-xs-12.col-sm-7.img-col
             .image-wrap
               if downloadable
-                img(src=sources.thumbnail, data-src=bigImage, alt=title, class="#{zoom===true ? 'asset-image--zoomable' : ''}").kbh-asset-image
+                img(src=sources.thumbnail, data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
               else
-                img(src=sources.thumbnail, alt=title).kbh-asset-image
+                img(src=sources.thumbnail, alt=title).asset-image--zoomable.kbh-asset-image
                 .license
                   if(institution === 'stadsarkivet')
                     +icon('kbh-stads')
                   else if (institution === 'kbh-museum')
                     +icon('kbh-mus')
             .social
-              if zoom
-                a(data-action="asset-image-size-toggle", class="#{downloadable===true ? '' : 'dimmed'}").hidden-xs
-                  +icon('zoom-in')
+              a(data-action="asset-image-size-toggle").hidden-xs
+                +icon('zoom-in')
               a(data-action="asset-download-show", class="#{downloadable===true ? '' : 'dimmed'}")
                 +icon('download')
               a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
@@ -144,11 +141,5 @@ block content
       else
         h2 Vi beklager
         p Billedet er ophavsretligt beskyttet og kan derfor ikke downloades uden forudgående aftale med fotografen.
-
-  if (!downloadable)
-    .overlay__container.no-zoom-message
-      .overlay__content
-        h2 Vi beklager
-        p Billedet er ophavsretligt beskyttet og vi må derfor ikke vise det i højere opløsning.
 
   include includes/footer

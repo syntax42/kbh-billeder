@@ -33,27 +33,36 @@
 @import 'page';
 @import 'gallery';
 @import 'asset';
+@import 'video';
 @import 'input-search';
-
+@import 'typo';
 
 html {
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.25), only screen and ( min-device-pixel-ratio: 1.25), only screen and ( min-resolution: 200dpi), only screen and ( min-resolution: 1.25dppx) {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-b, optgroup, strong {
+b,
+optgroup,
+strong {
   font-family: $font-family-medium;
   font-weight: $headings-font-weight;
 }
+
 .license-img {
   max-height: 40px;
 }
 
-.dropdown__selected, .dropdown__option--active, dt, label, .btn, th {
+.btn,
+.dropdown__option--active,
+.dropdown__selected,
+dt,
+label,
+th {
   font-family: $font-family-medium;
   font-weight: inherit;
 }

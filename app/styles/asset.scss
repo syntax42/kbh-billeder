@@ -3,10 +3,14 @@
 
   @media (min-width: $small-size) {
     padding-top: $topbar-height;
+  }
 
-    .asset-info {
-      padding-top: 0;
-    }
+  @media (min-width: $medium-size) {
+    padding-top: $topbar-height * 3 / 2;
+  }
+
+  .asset-info {
+    padding-top: $topbar-height / 4;
   }
 }
 
@@ -74,7 +78,7 @@
 
 .metadata {
   table {
-    margin-top: .3rem;
+    margin-top: .5rem;
     width: 100%;
   }
 

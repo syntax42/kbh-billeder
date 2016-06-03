@@ -1,0 +1,11 @@
+.video-wrap {
+  display: block;
+  height: 0;
+  margin: .5rem 0 1rem;
+  padding-bottom: 56.25%;
+
+  iframe {
+    height: 100%;
+    width: 100%;
+  }
+}

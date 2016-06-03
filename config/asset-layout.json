@@ -96,7 +96,7 @@
         },
         {
           "title": "Samlingens navn",
-          "template": "!= catalogLinked(catalogs, catalog)"
+          "template": "= archivename"
         },
         {
           "title": "Arkivreference",
@@ -115,12 +115,8 @@
           "template": "= scale_measure"
         },
         {
-          "title": "ID",
-          "template": "= id"
-        },
-        {
-          "title": "Katalog",
-          "template": "= catalog_name"
+          "title": "Institution",
+          "template": "!= catalogLinked(catalogs, catalog)"
         },
         {
           "title": "Tegnings nr.",
@@ -171,16 +167,24 @@
     "technical-information": {
       "title": "Tekniske oplysninger",
       "emptyMessage": "Der er ingen tekniske oplysninger tilknyttet",
-      "rows": [{
+      "rows": [
+        {
+          "title": "ID",
+          "template": "= id"
+        },
+        {
           "title": "Filstørrelse (mb)",
           "template": "= filesizeMB(file_size)"
-        }, {
+        },
+        {
           "title": "Opløsning (DPI)",
           "template": "= decimals(resolution_dpi, 0)"
-        }, {
+        },
+        {
           "title": "Størrelse (pixel)",
           "template": "!= decimals(width_px, 0) + ' &times; ' + decimals(height_px, 0)"
-        }, {
+        },
+        {
           "title": "Størrelse (cm)",
           "template": "!= decimals(width_cm, 1) + ' &times; ' + decimals(height_cm, 1)"
         }
