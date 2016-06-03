@@ -38,6 +38,8 @@ dependencies:
       EOF
     # Install node modules
     - npm install --no-spin
+    # Switching to production environment
+    - export NODE_ENV=production
     # Running gulp, installing bower components and building css and js
     - node_modules/.bin/gulp
     # Build the docker image using the current directory as context
