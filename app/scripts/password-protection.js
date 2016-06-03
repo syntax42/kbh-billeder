@@ -1,13 +1,22 @@
 var REDIRECTION_URL = 'http://www.kbharkiv.dk/';
 var LOCALSTORAGE_FIELD = 'password';
 
+function isValidPassword() {
+  return localStorage.getItem(LOCALSTORAGE_FIELD) === 'edagleda';
+}
+
 if (typeof(Storage) !== 'undefined') {
   var msg = ['Sitet er desværre ikke lanceret endnu - for at kunne se det skal',
              'du kende et kodeord'];
 
-  while(localStorage.getItem(LOCALSTORAGE_FIELD) !== 'edagleda') {
+  if(!isValidPassword()) {
     var password = prompt(msg.join(' '));
-    localStorage.setItem(LOCALSTORAGE_FIELD, password.split('').reverse().join(''));
+    if (password) {
+      localStorage.setItem(LOCALSTORAGE_FIELD, password.split('').reverse().join(''));
+    }
+    if(!isValidPassword()) {
+      location.href="http://www.kbharkiv.dk/";
+    }
   }
 } else {
   var msg = ['Sitet er desværre ikke lanceret endnu - for at kunne se det skal',
