@@ -7,4 +7,5 @@ module.exports = _.merge(base, {
   env: 'production',
   siteTitle: 'KBH Billeder',
   esAssetsIndex: 'kbh-billeder-assets',
+  googleAnalyticsPropertyID: 'UA-78446616-1'
 });
