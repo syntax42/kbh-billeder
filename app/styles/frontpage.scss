@@ -26,32 +26,32 @@ $logo-height: 4rem;
 }
 
 .jumbo__logos {
-  fill: white;
+  display: flex;
+  justify-content: center;
   padding-top: 1rem;
-  text-align: center;
 
   svg {
-    height: $logo-height;
-    width: 16rem;
-    margin: 0 1rem;
-    max-width: calc(50% - 2rem);
+    fill: $white;
     fill-rule: evenodd;
-    filter: url(#dropshadow);
+    filter: url('#dropshadow');
+    height: $logo-height;
+    margin: 0 15px;
+    width: 16rem;
   }
+}
 
-  .jumbo__svg-filter {
-    width: 0;
-    height: 0;
-  }
+.jumbo__svg-filter {
+  height: 0;
+  width: 0;
 }
 
 .jumbo__flex {
   align-items: center;
   display: flex;
   height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
 
   .container-fluid {

@@ -1,6 +1,7 @@
+@import 'fontface';
+
 @import '../../node_modules/collections-online/app/styles/variables';
 @import './variables';
-
 
 @import '../../node_modules/collections-online/app/styles/functions-shadows';
 @import '../../node_modules/collections-online/bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
@@ -25,7 +26,6 @@
 @import '../../node_modules/collections-online/app/styles/typography';
 @import '../../node_modules/collections-online/app/styles/main';
 
-
 @import 'header';
 @import 'menu';
 @import 'footer';
@@ -35,7 +35,7 @@
 @import 'asset';
 @import 'media';
 @import 'input-search';
-@import 'typo';
+@import 'typography';
 
 html {
   -moz-osx-font-smoothing: grayscale;
@@ -46,23 +46,6 @@ html {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-b,
-optgroup,
-strong {
-  font-family: $font-family-medium;
-  font-weight: $headings-font-weight;
-}
-
 .license-img {
   max-height: 40px;
-}
-
-.btn,
-.dropdown__option--active,
-.dropdown__selected,
-dt,
-label,
-th {
-  font-family: $font-family-medium;
-  font-weight: inherit;
 }

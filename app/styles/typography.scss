@@ -28,3 +28,20 @@ pre {
     font-size: 1.62rem;
   }
 }
+
+b,
+optgroup,
+strong {
+  font-family: $font-family-medium;
+  font-weight: $headings-font-weight;
+}
+
+.btn,
+.dropdown__option--active,
+.dropdown__selected,
+dt,
+label,
+th {
+  font-family: $font-family-medium;
+  font-weight: inherit;
+}
