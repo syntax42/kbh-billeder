@@ -31,7 +31,8 @@ pre {
 
 b,
 optgroup,
-strong {
+strong,
+.h4 {
   font-family: $font-family-medium;
   font-weight: $headings-font-weight;
 }
