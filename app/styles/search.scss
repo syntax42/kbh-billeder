@@ -1,0 +1,17 @@
+.square-container {
+  height: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 100%;
+  width: 100%;
+
+  img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  // Object fit polyfil
+  img {
+    font-family: 'object-fit: cover;'
+  }
+}

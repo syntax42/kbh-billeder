@@ -1,0 +1,14 @@
+mixin searchResultAssetSquare(asset)
+  .box
+    a(href='#{asset.link}')
+      if asset.type == 'video'
+        .video-thumbnail
+          .icon
+      else
+        .image
+          .overlay.square-container
+            img(src='#{asset.thumbnailURL}').rotation.object-fit
+            if asset.type == 'image-rotation'
+              +icon('rotation')
+      h2.h4 #{asset.title}
+      p.description #{asset.description}
