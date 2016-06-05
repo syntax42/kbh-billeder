@@ -1,0 +1,41 @@
+include mixins-custom
+
+extends index
+
+append header
+  +searchMeta(result, catalog, breadcrumbs)
+    
+block content
+
+  include includes/search-filter
+
+  .let-it-grow
+    section.container-fluid
+      
+      include includes/search-header
+      
+      .search-results.row(id="masonry-container")
+        each asset in result.hits
+          +searchResultAssetSquare(asset)
+
+  .clearfix
+  
+  #page-nav
+    a(href='#{infinitepath}')
+
+  if(result.totalCountRaw > 10)
+    button.btn.btn-primary.btn-lg.load-more(data-action="load-more")
+      +loader('Vis flere...')
+      
+  a#toTop
+    +icon('scrolltotop')
+
+  include includes/footer
+
+append javascript
+  script.
+    $(function() {
+      $('#toTop').scrollToTop(400);
+      // To ensure no boxes are hidden if the was some load error
+      $('.loaded-more').removeClass('loaded-more');
+    });

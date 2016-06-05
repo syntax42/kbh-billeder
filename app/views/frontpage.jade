@@ -7,18 +7,9 @@ block content
   .let-it-grow
     .jumbo
       .jumbo__image
-      .container-fluid.jumbo__logos
+      .jumbo__logos
         +icon('kbh-mus')
         +icon('kbh-stads')
-        svg.jumbo__svg-filter
-          defs
-            filter#dropshadow
-              fegaussianblur(in='SourceAlpha', stddeviation='4')
-              fecomponenttransfer
-                fefunca(type='linear', slope='0.15')
-              femerge
-                femergenode
-                femergenode(in='SourceGraphic')
       .jumbo__flex
         .container-fluid
           .row 
@@ -63,6 +54,7 @@ block content
                       h3.gallery-thumb__title= item.title
                       p.gallery-thumb__text= item.description
   include includes/footer
+  include includes/svg-filter
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'

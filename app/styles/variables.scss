@@ -21,14 +21,10 @@ $link-color: $brand-primary;
 $link-hover-color: lighten($link-color, 10%);
 
 // Typography
-// font-family: 'FF Unit OT Thin'
-// font-family: 'FF Unit OT Light'
-// font-family: 'FF Unit OT Medium'
-
-$font-family-sans-serif: 'FF Unit OT Light', sans-serif;
-$font-family-thin: 'FF Unit OT Thin', sans-serif;
-$font-family-light: 'FF Unit OT Light', sans-serif;
-$font-family-medium: 'FF Unit OT Medium', sans-serif;
+$font-family-sans-serif: 'FFUnitWebLight', sans-serif;
+$font-family-thin: 'FFUnitWebThin', sans-serif;
+$font-family-light: 'FFUnitWebLight', sans-serif;
+$font-family-medium: 'FFUnitWebMedium', sans-serif;
 $font-size-base: 14px;
 $line-height-base: 1.6;
 $headings-font-weight: normal;

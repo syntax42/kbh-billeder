@@ -1,0 +1,9 @@
+svg.jumbo__svg-filter
+  defs
+    filter#dropshadow
+      fegaussianblur(in='SourceAlpha', stddeviation='4')
+      fecomponenttransfer
+        fefunca(type='linear', slope='0.15')
+      femerge
+        femergenode
+        femergenode(in='SourceGraphic')

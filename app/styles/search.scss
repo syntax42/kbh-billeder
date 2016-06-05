@@ -1,0 +1,38 @@
+.image {
+  line-height: 0;
+}
+
+.square-container {
+  height: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 100%;
+  position: relative;
+  width: 100%;
+
+  img {
+    height: 100%;
+    left: 0;
+    margin: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  // Object fit polyfil
+  img {
+    font-family: 'object-fit: cover;'
+  }
+}
+
+.box .h4 {
+  font-size: 120%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: normal;
+}
+
+.box__meta {
+  height: 2.7rem;
+}
