@@ -10,5 +10,6 @@ mixin searchResultAssetSquare(asset)
             img(src='#{asset.thumbnailURL}').rotation.object-fit
             if asset.type == 'image-rotation'
               +icon('rotation')
-      h2.h4 #{asset.title}
-      p.description #{asset.description}
+      .box__meta
+        h2.h4 #{asset.title}
+        p.description #{asset.description}
