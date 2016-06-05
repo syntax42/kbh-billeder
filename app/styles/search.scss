@@ -15,3 +15,10 @@
     font-family: 'object-fit: cover;'
   }
 }
+
+.box .h4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: normal;
+}
