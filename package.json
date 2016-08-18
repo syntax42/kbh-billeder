@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "index": "node indexing.js",
+    "gulp": "gulp",
     "test": "echo \"Error: no test specified - but lets succeed\" && exit 0"
   },
   "repository": {
