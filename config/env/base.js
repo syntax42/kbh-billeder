@@ -46,7 +46,8 @@ module.exports = {
           layoutAlias: "stadsarkivet"
       },
       catalogAliases: _.invert(cipCatalogs)
-    }
+    },
+    sessionRenewalRate: 60*60*1000 // Onces every hour
   },
   features: {
     geotagging: false,
