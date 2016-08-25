@@ -7,7 +7,7 @@
     "start": "node server.js",
     "index": "node indexing.js",
     "gulp": "gulp",
-    "postinstall": "gulp build",
+    "prepublish": "gulp build",
     "test": "echo \"Error: no test specified - but lets succeed\" && exit 0"
   },
   "repository": {
