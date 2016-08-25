@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    stage: beta
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: eu.gcr.io/kbh-billeder/frontend:latest
+        imagePullPolicy: Always
+        resources: {}
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: ES_HOST
+          value: "elasticsearch:9200"
+        - name: MONGO_CONNECTION
+          value: "mongodb://mongo:27017/kbh-billeder"

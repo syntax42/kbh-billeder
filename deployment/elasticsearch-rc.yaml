@@ -1,7 +1,7 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: ReplicationController
 metadata:
-  name: kbh-billeder
+  name: elasticsearch
   labels:
     stage: beta
 spec:
@@ -9,25 +9,10 @@ spec:
   template:
     metadata:
       labels:
-        component: frontend
+        component: elasticsearch
     spec:
       containers:
-      - name: frontend
-        image: eu.gcr.io/kbh-billeder/frontend:latest
-        imagePullPolicy: Always
-        resources: {}
-        ports:
-        - containerPort: 9000
-          name: http
-          protocol: TCP
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: ES_HOST
-          value: "localhost:9200"
-        - name: MONGODB_HOST
-          value: "localhost:27017"
-      - name: es
+      - name: elasticsearch
         securityContext:
           capabilities:
             add:
@@ -60,21 +45,8 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: es-storage
-      - name: mongo
-        image: mongo
-        ports:
-        - containerPort: 27017
-          name: http
-          protocol: TCP
-        volumeMounts:
-          - name: mongo-storage
-            mountPath: /data/db
       volumes:
       - name: es-storage
         gcePersistentDisk:
           pdName: es-disk
-          fsType: ext4
-      - name: mongo-storage
-        gcePersistentDisk:
-          pdName: mongo-disk
           fsType: ext4
