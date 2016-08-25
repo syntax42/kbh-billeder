@@ -26,8 +26,6 @@ dependencies:
     - $GCLOUD config set compute/zone $GCLOUD_COMPUTE_ZONE
     # Get the credentials for the cluster
     - $GCLOUD container clusters get-credentials $GCLOUD_CLUSTER
-    # Install node modules
-    - npm install --no-spin
     # Write specific environment variables to an .env file
     - |
       cat << EOF > .env
@@ -39,8 +37,6 @@ dependencies:
       COOKIE_SECRET="${COOKIE_SECRET}"
       CLOUDINARY_URL="${CLOUDINARY_URL}"
       EOF
-    # Running gulp, installing bower components and building css and js
-    - node_modules/.bin/gulp
     # Build the docker image using the current directory as context
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
