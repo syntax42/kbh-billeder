@@ -5,15 +5,13 @@ machine:
     GCLOUD_PROJECT: kbh-billeder
     GCLOUD_CLUSTER: kbh-billeder-staging-cluster
     GCLOUD_COMPUTE_ZONE: europe-west1-b
+    GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-service-key.json
     GCLOUD: sudo /opt/google-cloud-sdk/bin/gcloud
   services:
     - docker
   node:
     version: 6.1.0
 dependencies:
-  pre:
-    # Remove the collections-online module from the cache, to always fetch it.
-    - rm -rf node_modules/collections-online
   override:
     # Upgrading the gcloud command and installing kubectl
     - $GCLOUD --quiet components update
