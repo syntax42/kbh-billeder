@@ -7,12 +7,28 @@ https://github.com/kubernetes/kubernetes/tree/release-1.2/examples/elasticsearch
 
 Creating the cluster on the Google Cloud requires the following components:
 
+## elasticsearch
+
 - A persistent disk for the elasticsearch index, running `gcloud compute disks create --size=10GB --zone=europe-west1-b es-disk`
 
-- A [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/service.yaml`
+- A [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/#what-is-a-replication-controller) of the elasticsearch container , running `kubectl create -f deployment/elasticsearch-rc.yaml`
 
-- A [deployment](http://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment) of the frontend and elasticsearch containers , running `kubectl create -f deployment/deployment.yaml`
+- A [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/elasticsearch-service.yaml`
+
+## Mongo DB
+
+- A persistent disk for the elasticsearch index, running `gcloud compute disks create --size=10GB --zone=europe-west1-b mongo-disk`
+
+- A [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/#what-is-a-replication-controller) of the mongo container , running `kubectl create -f deployment/mongo-rc.yaml`
+
+- A [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/mongo-service.yaml`
+
+## Frontend
+
+- A [deployment](http://kubernetes.io/docs/user-guide/deployments/#what-is-a-deployment) of the frontend , running `kubectl create -f deployment/frontend-deployment.yaml`
+
+- A LoadBalancer [service](http://kubernetes.io/docs/user-guide/services/), running `kubectl create -f deployment/frontend-service.yaml`
 
 ## Updating the deployment
 
-Make changes to the deployment/deployment.yaml or another .yaml file in the directory and use `kubectl replace -f deployment/deployment.yaml` to push the update to the Google cloud infrastructure.
+Make changes to the deployment/deployment.yaml or another .yaml file in the directory and use `kubectl replace -f deployment/frontend-deployment.yaml` to push the update to the Google cloud infrastructure.
