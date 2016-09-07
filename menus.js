@@ -10,7 +10,10 @@ function reload() {
     Q.all(MENUS.map((menu) => {
     	return MenuItem.model.find({
     		placement: menu
-    	}).populate('page').exec(function(err, items) {
+    	})
+      .populate('page')
+      .sort('order')
+      .exec(function(err, items) {
         menuItems[menu] = items.map((item) => {
           item.url = item.getUrl();
           return item;
