@@ -73,12 +73,12 @@ runs a bower install as well.
 npm install
 ```
 
-### Start elasticsearch as a service
+### Start elasticsearch
 
 You might consider connecting directly to the production elasticsearch server
 instead. See how in another section below.
 
-##### Linux
+##### Linux (as a service)
 
 ```
 sudo /etc/init.d/elasticsearch start
@@ -86,10 +86,8 @@ sudo /etc/init.d/elasticsearch start
 
 ##### Mac
 
-Where 2.3.2 is your version number
-
 ```
-/usr/local/Cellar/elasticsearch/2.3.2/bin/elasticsearch
+elasticsearch
 ```
 
 ### Create a .env file with environment variables
