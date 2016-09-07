@@ -6,39 +6,17 @@ the Canto Cumulus webservice, Canto Integration Platform.
 The shared core of this project is found at
 http://github.com/collections-online/collections-online
 
-## Setting up a production environment
+---
 
-### Clone the repository
+## Deploying the app
 
-```
-git clone https://github.com/CopenhagenCityArchives/kbh-billeder.git
-```
+See [deployment/README.md](deployment/README.md)
 
-### Install node modules
-
-In this repository run
-
-```
-npm install
-```
-
-### Run gulp to build CSS from SCSS and other generated statics
-
-First install gulp globally
-
-```
-npm install -g gulp
-```
-
-Then run gulp
-
-```
-gulp
-```
+## Get dependencies up and running
 
 ### Install Elasticsearch 2.3 or greater
 
-Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html, executing
+Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html
 
 ##### Linux
 
@@ -60,28 +38,45 @@ brew install elasticsearch
 
 ##### Linux
 
+Follow the guide on https://docs.mongodb.com/manual/administration/install-on-linux/
+
 ##### Mac
 
 Install using [homebrew](http://brew.sh)
 
+```
 brew install mongodb
-
-### Run the indexing routines in all-mode
-
-```
-npm run index all
 ```
 
+### Install NVM for managing the node versions
 
-### Start the app
-
-```
-npm start
-```
+Follow the guide on https://github.com/creationix/nvm
 
 ## Setting up the development environment
 
+Clone the module from GitHub
+
+```
+git@github.com:collections-online/collections-online.git
+```
+
+Make sure you use the correct version of node.
+
+```
+nvm use
+```
+
+Install the node module and it's dependencies. This runs a gulp build too, which
+runs a bower install as well.
+
+```
+npm install
+```
+
 ### Start elasticsearch as a service
+
+You might consider connecting directly to the production elasticsearch server
+instead. See how in another section below.
 
 ##### Linux
 
@@ -99,17 +94,38 @@ Where 2.3.2 is your version number
 
 ### Create a .env file with environment variables
 
-### Set up symbolic linking between this and a Collections Online module
+    CIP_USERNAME="..."
+    CIP_PASSWORD="..."
+    ES_HOST="http://localhost:9200/"
+    CLOUDINARY_URL=cloudinary://..:..@kbh-billeder
+
+
+### Run the indexing routines in all-mode
+
+```
+npm run index all
+```
+
+### Start the app
+
+```
+npm start
+```
+
+### Start a gulp watch to recompile static assets when they change
+
+```
+npm run gulp watch
+```
+
+### Set up symbolic linking between this module and the Collections Online module
+
+When developing both on this module and collections online at the same time it
+might help you to link the two moduls, so you don't have to push/pull constantly.
 
 After cloning the [Collections Online](https://github.com/collections-online/collections-online)
-repository to your local environment navigate to the git repository and install
-the node modules
-
-```
-npm install
-```
-
-When done, prepare the module for linking by running
+repository to your local environment navigate to the git repository and prepare
+the module for linking (this installs collections onlines dependencies).
 
 ```
 npm link
@@ -119,4 +135,33 @@ Then, in the kbh-billeder repository run
 
 ```
 npm link collections-online
+```
+
+## Connecting to elasticsearch (when deployed)
+
+Install the kubectl commandline tool
+
+```
+gcloud components install kubectl
+```
+
+Get the kubenetes credentials for the cluster
+
+```
+gcloud container clusters get-credentials kbh-billeder-staging-cluster
+```
+
+To connect to the production elasticsearch server, use kubectl to create a
+port forwarding. After which the production elasticsearch server will be
+available on http://localhost:9201/
+
+```
+kubectl port-forward elasticsearch-ad1w8 9201:9200
+```
+
+Node the elasticsearch pod might have changed name - get the name of the pods
+using
+
+```
+kubectl get pods
 ```
