@@ -163,3 +163,19 @@ using
 ```
 kubectl get pods
 ```
+
+## Subsequent runs
+
+Open 3 terminal windows in the project folder and run
+
+```
+kubectl port-forward elasticsearch-ad1w8 9201:9200
+```
+
+```
+npm run gulp watch
+```
+
+```
+npm start
+```
