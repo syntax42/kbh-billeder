@@ -1,0 +1,13 @@
+.btn-close {
+  padding-right: $spacer-lg;
+  position: relative;
+  padding-right: $spacer-xs;
+}
+
+.btn-default {
+  background-color: $gray-dark;
+
+  &:hover, &:focus {
+    background-color: $gray;
+  }
+}
