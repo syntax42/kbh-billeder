@@ -33,8 +33,8 @@ keystone.initExpressApp(app);
 co.initialize(app);
 
 // Keystone form validation
-keystone.pre('routes', csrf());
-keystone.pre('routes', function(req, res, next) {
+app.use('/keystone', csrf());
+app.use('/keystone', function(req, res, next) {
   res.locals.csrftoken = req.csrfToken();
   return next();
 });
