@@ -52,7 +52,8 @@ module.exports = {
   features: {
     geotagging: false,
     rotationalImages: false,
-    crowdtagging: false
+    crowdtagging: false,
+    clientSideSearchResultRendering: true
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
@@ -60,7 +61,6 @@ module.exports = {
   googleAPIKey: process.env.GOOGLE_API_KEY,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
   categoryBlacklist: require('../category-blacklist.js'),
-  enableGeotagging: false,
   filterOptions: require('../filter-options.json'),
   sortOptions: require('../sort-options.json'),
   assetFields: require('../asset-fields.json'),
