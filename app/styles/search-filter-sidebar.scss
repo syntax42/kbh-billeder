@@ -1,5 +1,8 @@
 .search-filter-sidebar {
   margin: $spacer-md 0;
+  position: -webkit-sticky;
+  position: sticky;
+  top: $spacer-md;
 
   &__heading {
     background-color: $gray-light;

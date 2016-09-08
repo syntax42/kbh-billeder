@@ -79,13 +79,10 @@
 .metadata {
   table {
     margin-top: .5rem;
-    width: 100%;
   }
 
-  td,
-  th {
-    // Override bootstrap col 15 px padding
-    padding: 0;
+  th, td {
+    vertical-align: top;
   }
 
   // ensure som padding on mobile

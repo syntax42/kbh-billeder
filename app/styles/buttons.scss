@@ -5,9 +5,25 @@
 }
 
 .btn-default {
-  background-color: $gray-dark;
+  background-color: $gray;
 
-  &:hover, &:focus {
-    background-color: $gray;
+  &:hover, &:focus, &:active {
+    color: white;
+    background-color: lighten($gray, 10%);
+  }
+}
+
+.btn:not(.btn-search) {
+  @include shadow(1);
+
+  @media (pointer:fine) {
+    transition: $anim-default;
+
+    &:hover,
+    &:focus {
+      @include shadow(2);
+      z-index: 1;
+      transform: translateY(-1px);
+    }
   }
 }
