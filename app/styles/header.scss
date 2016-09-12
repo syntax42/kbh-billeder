@@ -3,6 +3,7 @@
 .topbar {
   background-color: $brand-primary;
   font-family: $font-family-medium;
+  @include shadow(3);
 }
 
 .topbar-items__link {
