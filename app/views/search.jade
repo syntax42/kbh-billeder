@@ -1,6 +1,8 @@
-include mixins-custom
-
 extends index
+include mixins/meta-search
+include mixins/icon
+include mixins/loader
+include mixins/search-result-asset
 
 append header
   +searchMeta(result, catalog, breadcrumbs)
@@ -19,7 +21,7 @@ block content
         .col-md-9.col-sm-8.col-xs-12
           .search-results.row(id="masonry-container")
             each asset in result.hits
-              +searchResultAssetSquare(asset)
+              +searchResultAsset(asset)
 
   .clearfix
   
