@@ -25,12 +25,17 @@
   }
 }
 
-.box .h4 {
-  font-size: 120%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: normal;
+.box {
+  .h4 {
+    font-size: 120%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: normal;
+  }
+  .description {
+    height: 1.6rem;
+  }
 }
 
 .box__meta {
