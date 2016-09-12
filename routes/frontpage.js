@@ -5,8 +5,7 @@ var search = require('collections-online/lib/controllers/search');
 
 module.exports = function(req, res, next) {
   if ('q' in req.query) {
-    console.log('req.originalUrl =', req.originalUrl);
-    return search.result(req, res, next);
+    next();
   } else {
     keystone.list('Gallery').model.find()
     .populate('items')
