@@ -117,13 +117,15 @@
     "short": "archivename"
   }, {
     "cumulusKey": "{6fb1f61b-14a3-4851-bba0-cf7e71ef59cb}",
-    "short": "short_title"
+    "short": "short_title",
+    "includeRaw": true
   }, {
     "cumulusKey": "{7c387978-2121-4230-b1c2-16cf3bb316a8}",
     "short": "street_and_district"
   }, {
     "cumulusKey": "{a9231747-8609-4cae-a790-efaf33f2cf3d}",
-    "short": "street_name"
+    "short": "street_name",
+    "includeRaw": true
   }, {
     "cumulusKey": "{f856c054-7031-4d7b-849d-06185c0c44cd}",
     "short": "street_number"
@@ -138,7 +140,8 @@
     "short": "city"
   }, {
     "cumulusKey": "{2e62286b-52eb-4693-a830-d095d42fbae7}",
-    "short": "district"
+    "short": "district",
+    "includeRaw": true
   }, {
     "cumulusKey": "{38f9d1d8-8961-49e7-a90f-9f35c7ab3945}",
     "short": "neighborhood"
