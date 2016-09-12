@@ -6,6 +6,9 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'development',
   siteTitle: 'KBH Billeder (dev)',
-  esAssetsIndex: process.env.ES_ASSETS_INDEX || 'kbh-billeder-assets',
+  es: {
+    assetsIndex: process.env.ES_ASSETS_INDEX || 'kbh-billeder-assets',
+    log: 'trace'
+  },
   googleAnalyticsPropertyID: false,
 });

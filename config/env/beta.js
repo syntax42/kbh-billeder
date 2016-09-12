@@ -6,5 +6,7 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'beta',
   siteTitle: 'KBH Billeder (beta)',
-  esAssetsIndex: 'kbh-billeder-assets-beta',
+  es: {
+    assetsIndex: 'kbh-billeder-assets-beta',
+  }
 });

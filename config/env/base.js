@@ -25,8 +25,11 @@ module.exports = {
     appDir
   ],
   // Elasticsearch
-  esHost: process.env.ES_HOST || 'localhost:9200',
-  esAssetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
+  es: {
+    host: process.env.ES_HOST || 'localhost:9200',
+    assetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
+    log: 'error'
+  },
   // CIP
   cip: {
     baseURL: 'http://www.neaonline.dk/CIP',
@@ -53,7 +56,8 @@ module.exports = {
     geotagging: false,
     rotationalImages: false,
     crowdtagging: false,
-    clientSideSearchResultRendering: true
+    clientSideSearchResultRendering: true,
+    filterSidebar: true
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
