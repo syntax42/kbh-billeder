@@ -50,7 +50,7 @@ module.exports = {
       },
       catalogAliases: _.invert(cipCatalogs)
     },
-    sessionRenewalRate: 30*60*1000 // Onces every 30 minutes
+    sessionRenewalRate: 30*60*1000 // Once every 30 minutes
   },
   features: {
     geotagging: false,
