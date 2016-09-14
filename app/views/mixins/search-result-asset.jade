@@ -1,7 +1,9 @@
 include icon
 
 mixin searchResultAsset(asset)
-  .box.col-xs-6.col-md-4
+  - var sidebar = config.features.filterSidebar
+  - var boxCol = sidebar ? 'col-xs-6 col-md-4' : ' col-xs-6 col-md-4 col-lg-3'
+  .box(class=boxCol)
     a(href='#{asset.link}')
       if asset.type == 'video'
         .video-thumbnail
