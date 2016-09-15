@@ -43,7 +43,7 @@ block content
   - if (metadata.width_px > 2000) { bigImage = "stor", largeImage = downloadSlug + bigImage };
   - bigImage = downloadSlug + bigImage;
 
-  article.asset(itemscope,
+  article.asset.let-it-grow(itemscope,
       itemtype='http://schema.org/CreativeWork',
       data-catalog=catalog.alias,
       data-id=metadata.id,
