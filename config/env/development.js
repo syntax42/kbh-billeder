@@ -8,7 +8,7 @@ module.exports = _.merge(base, {
   siteTitle: 'KBH Billeder (dev)',
   es: {
     assetsIndex: process.env.ES_ASSETS_INDEX || 'kbh-billeder-assets',
-    log: 'trace'
+    log: 'error' //use 'trace' for verbose mode
   },
   googleAnalyticsPropertyID: false,
 });
