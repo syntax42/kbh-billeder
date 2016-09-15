@@ -4,7 +4,6 @@
 
 .square-container {
   height: 0;
-  margin-bottom: 1rem;
   padding-bottom: 100%;
   position: relative;
   width: 100%;
@@ -32,6 +31,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: normal;
+    padding-top: $spacer-md;
   }
   .description {
     height: 1.6rem;
