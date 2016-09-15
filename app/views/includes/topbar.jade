@@ -13,6 +13,10 @@ header.topbar
               a(href=item.url).topbar-items__link= item.title
         - var path = (req.path).split('/')
         - var searchMethod = (isSearching ? 'modify-query' : '')
+        - if(config.features.clientSideSearchResultRendering) {
+        -   // Turning off the search related behaviour defined in main.js
+        -   searchMethod = false;
+        - }
         if !frontpage
           form.search-box(method='get', action='/', data-method=searchMethod)
             .input-group
