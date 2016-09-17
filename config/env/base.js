@@ -71,6 +71,7 @@ module.exports = {
   assetLayout: require('../asset-layout.json'),
   assetTransformations: require('../asset-transformations.js'),
   licenseMapping: require('../license-mapping.json'),
+  searchPath: 'søg',
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
   appName: 'KBH Billeder',
