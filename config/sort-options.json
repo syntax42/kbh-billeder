@@ -24,14 +24,6 @@
       "modification_time.timestamp": "asc"
     }
   },
-  "acceptance|desc": {
-    "label": "Optaget: Nyeste",
-    "method": {"acceptance_timestamp": "desc"}
-  },
-  "acceptance|asc": {
-    "label": "Optaget: Ældste",
-    "method": {"acceptance_timestamp": "asc"}
-  },
   "creation|desc": {
     "label": "Fremstillet: Nyeste",
     "method": {"creation_timestamp": "desc"}
