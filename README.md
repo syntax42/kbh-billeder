@@ -73,6 +73,20 @@ runs a bower install as well.
 npm install
 ```
 
+### Install Cairo (needed for the npm canvas pkg used for watermarking)
+
+Instructions on: https://www.npmjs.com/package/canvas
+
+For mac you might need to brew install cairo separately (check with `brew ls`) and this might also help you https://github.com/Automattic/node-canvas/issues/649#issuecomment-149039524
+```
+xcode-select --install
+brew install pkgconfig
+brew install pixman
+brew install libjpeg
+brew install giflib
+brew install cairo
+```
+
 ### Start elasticsearch
 
 You might consider connecting directly to the production elasticsearch server
