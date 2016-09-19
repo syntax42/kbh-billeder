@@ -16,6 +16,7 @@ const WATERMARK_SCALE = 0.33; // 20% of the width of the thumbnail
 var watermarkPath = path.normalize(config.appDir + '/images/watermarks');
 const WATERMARK_BUFFERS = {
   'kbh-museum': fs.readFileSync(watermarkPath + '/kbh-museum.png'),
+  'stadsarkivet': fs.readFileSync(watermarkPath + '/stadsarkivet.png'),
 }
 
 exports.download = function(req, res, next) {
