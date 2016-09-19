@@ -5,9 +5,6 @@
       "emptyMessage": "Der er ingen stedsoplysninger tilknyttet",
       "rows": [
         {
-          "title": "Gadenavn/bydel",
-          "template": "= printVocabularyValues(street_and_district)"
-        }, {
           "title": "Gadenavn",
           "template": "= street_name"
         }, {
