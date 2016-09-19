@@ -12,6 +12,12 @@ const Transform = require('stream').Transform;
 const POSSIBLE_SIZES = ['lille', 'mellem', 'stor', 'originalJPEG', 'original'];
 const WATERMARK_SCALE = 0.33; // 20% of the width of the thumbnail
 
+// Resolving the watermark path relative to the app dir's images dir
+var watermarkPath = path.normalize(config.appDir + '/images/watermarks');
+const WATERMARK_BUFFERS = {
+  'kbh-museum': fs.readFileSync(watermarkPath + '/kbh-museum.png'),
+}
+
 exports.download = function(req, res, next) {
   var catalog = req.params.catalog;
   var id = req.params.id;
@@ -60,11 +66,8 @@ function middleCenterPosition(img, watermarkImg) {
 
 const watermarkPositionFunction = middleCenterPosition;
 
-function watermarkTransformation(watermarkPath) {
-  // Resolving the watermark path relative to the app dir's images dir
-  watermarkPath = path.normalize(config.appDir + '/images' + watermarkPath);
+function watermarkTransformation(watermarkBuffer) {
   var imageData = [];
-
   return new Transform({
     transform(chunk, encoding, callback) {
       imageData.push(chunk);
@@ -77,31 +80,25 @@ function watermarkTransformation(watermarkPath) {
       var canvas = new Canvas(img.width, img.height)
       var ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, img.width, img.height);
-      var pngStream = canvas.pngStream();
 
-      // Read the watermark file
-      // TODO: Consider doing this file-load only once, when the app starts
-      fs.readFile(watermarkPath, (err, watermarkData) => {
-        if (err) throw err;
-        var watermarkImg = new Image;
-        watermarkImg.src = watermarkData;
-        var position = watermarkPositionFunction(img, watermarkImg);
+      var watermarkImg = new Image;
+      watermarkImg.src = watermarkBuffer;
+      var position = watermarkPositionFunction(img, watermarkImg);
 
-        // Draw the watermark in the
-        ctx.drawImage(watermarkImg,
-                      position.left,
-                      position.top,
-                      position.width,
-                      position.height);
+      // Draw the watermark in the
+      ctx.drawImage(watermarkImg,
+                    position.left,
+                    position.top,
+                    position.width,
+                    position.height);
 
-        // Size of the jpeg stream is just ~ 15% of the raw PNG buffer
-        canvas.jpegStream()
-        .on('data', (chuck) => {
-          this.push(chuck);
-        })
-        .on('end', () => {
-          callback();
-        });
+      // Size of the jpeg stream is just ~ 15% of the raw PNG buffer
+      canvas.jpegStream()
+      .on('data', (chuck) => {
+        this.push(chuck);
+      })
+      .on('end', () => {
+        callback();
       });
     }
   });
@@ -128,8 +125,8 @@ exports.socialThumbnail = function(req, res, next) {
     var url = config.cip.baseURL + '/preview/thumbnail/' + catalogAlias + '/' + id;
     var proxyRequest = images.proxy(url, next);
 
-    if(applyWatermark) {
-      var transformation = watermarkTransformation(watermarkPaths[catalogAlias]);
+    if(applyWatermark && catalogAlias in WATERMARK_BUFFERS) {
+      var transformation = watermarkTransformation(WATERMARK_BUFFERS[catalogAlias]);
       proxyRequest = proxyRequest.pipe(transformation);
     }
 
