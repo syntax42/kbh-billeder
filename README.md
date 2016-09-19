@@ -77,7 +77,7 @@ npm install
 
 Instructions on: https://www.npmjs.com/package/canvas
 
-For mac you might need to brew install cairo separately (check with `brew ls`) and this might also help you https://github.com/Automattic/node-canvas/issues/649#issuecomment-149039524
+For mac you might need to install manually:
 ```
 xcode-select --install
 brew install pkgconfig
