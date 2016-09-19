@@ -18,6 +18,7 @@ module.exports = {
   //root: rootPath,
   ip:   process.env.IP || '0.0.0.0',
   port: process.env.PORT || 9000,
+  allowRobots: true,
   appDir: appDir,
   // A list of directories to look for static files and /views
   appPaths: [

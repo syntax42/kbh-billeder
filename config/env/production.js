@@ -6,6 +6,7 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'production',
   siteTitle: 'KBH Billeder',
+  allowRobots: true,
   es: {
     assetsIndex: 'kbh-billeder-assets'
   },
