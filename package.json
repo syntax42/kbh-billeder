@@ -2,7 +2,7 @@
   "name": "kbh-billeder",
   "version": "0.1.0",
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "index": "node indexing.js",
