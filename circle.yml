@@ -33,27 +33,27 @@ dependencies:
       COOKIE_SECRET="${COOKIE_SECRET}"
       CLOUDINARY_URL="${CLOUDINARY_URL}"
       EOF
-    # Build the docker image using the current directory as context
-    - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
-    # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
-    - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
-    # Optionally install a specific version the collections online
-    # for the 2x mv of node_modules see https://github.com/npm/npm/issues/9863
+    # Either build a production ready container and tag it as latest or build
+    # a container with a specific version of collections online
     - |
-      if [ -n "$collections_online_sha1" ]; then
-        CO=git+https://github.com/collections-online/collections-online.git#$collections_online_sha1
-        echo "Installing the specific CO version using $CO"
-        sudo docker run --cidfile /tmp/co-testable.cid eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm install $CO --no-color --no-spin --unsafe-perm
+      if [ -z "$collections_online_sha1" ]; then
+        # Build the docker image using the current directory as context
+        sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
+        # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
+        sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
+      else
+        sudo docker build \
+          -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 \
+          --build-arg collections_online_sha1=$collections_online_sha1
+          .
       fi
 test:
   override:
     - |
-      if [ -n "$collections_online_sha1" ]; then
-        echo "Testing the Collections Online specific version"
-        CID=$(cat /tmp/co-testable.cid)
-        sudo docker run $CID npm test
-      else
+      if [ -z "$collections_online_sha1" ]; then
         sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm test
+      else
+        sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 npm test
       fi
 deployment:
   staging:
