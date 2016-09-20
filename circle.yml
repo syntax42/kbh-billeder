@@ -39,7 +39,7 @@ dependencies:
     - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
     # Optionally install a specific version the collections online
     - |
-      if [ -z "$collections_online_sha1" ]; then
+      if [ ! -z "$collections_online_sha1" ]; then
         CO=git://github.com/collections-online/collections-online.git#$collections_online_sha1
         echo "Installing the specific CO version using $CO"
         sudo docker run --cidfile /tmp/docker_test.cid eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm install $CO
@@ -49,7 +49,7 @@ dependencies:
 test:
   override:
     - |
-      if [ -z "$collections_online_sha1" ]; then
+      if [ ! -z "$collections_online_sha1" ]; then
         echo "Testing the Collections Online specific version"
         sudo docker run collections-online-testable npm test
       else
@@ -60,7 +60,7 @@ deployment:
     branch: master
     commands:
       - |
-        if [ -z "$collections_online_sha1" ]; then
+        if [ ! -z "$collections_online_sha1" ]; then
           echo "Skipping deployment - it was build with a specifc collections online version"
         else
           . ./deployment/staging.sh
