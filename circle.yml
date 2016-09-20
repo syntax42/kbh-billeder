@@ -38,20 +38,20 @@ dependencies:
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
     # Optionally install a specific version the collections online
+    # for the 2x mv of node_modules see https://github.com/npm/npm/issues/9863
     - |
       if [ -n "$collections_online_sha1" ]; then
-        CO=git://github.com/collections-online/collections-online.git#$collections_online_sha1
+        CO=git+https://github.com/collections-online/collections-online.git#$collections_online_sha1
         echo "Installing the specific CO version using $CO"
-        sudo docker run --cidfile /tmp/docker_test.cid eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm install $CO
-        CID=$(cat /tmp/docker_test.cid)
-        sudo docker commit $CID collections-online-testable
+        sudo docker run --cidfile /tmp/co-testable.cid eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm install $CO --no-color --no-spin --unsafe-perm
       fi
 test:
   override:
     - |
       if [ -n "$collections_online_sha1" ]; then
         echo "Testing the Collections Online specific version"
-        sudo docker run collections-online-testable npm test
+        CID=$(cat /tmp/co-testable.cid)
+        sudo docker run $CID npm test
       else
         sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm test
       fi
