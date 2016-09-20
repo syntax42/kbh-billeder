@@ -44,7 +44,7 @@ dependencies:
       else
         sudo docker build \
           -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 \
-          --build-arg collections_online_sha1=$collections_online_sha1
+          --build-arg collections_online_sha1=$collections_online_sha1 \
           .
       fi
 test:
