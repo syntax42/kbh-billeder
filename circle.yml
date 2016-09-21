@@ -7,6 +7,11 @@ machine:
     GCLOUD_COMPUTE_ZONE: europe-west1-b
     GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-service-key.json
     GCLOUD: sudo /opt/google-cloud-sdk/bin/gcloud
+  # Using docker 1.10, to enable the --build-arg
+  # See https://discuss.circleci.com/t/docker-1-10-0-is-available-beta/2100/49
+  # and https://docs.docker.com/engine/reference/commandline/build/
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
     - docker
 dependencies:
@@ -43,8 +48,8 @@ dependencies:
         sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
       else
         sudo docker build \
-          -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 \
           --build-arg collections_online_sha1=$collections_online_sha1 \
+          -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 \
           .
       fi
 test:
