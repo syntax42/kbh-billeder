@@ -11,6 +11,7 @@ const Transform = require('stream').Transform;
 
 const POSSIBLE_SIZES = ['lille', 'mellem', 'stor', 'originalJPEG', 'original'];
 const WATERMARK_SCALE = 0.33; // 20% of the width of the thumbnail
+const THUMBNAIL_SIZE = 600;
 
 // Resolving the watermark path relative to the app dir's images dir
 var watermarkPath = path.normalize(config.appDir + '/images/watermarks');
@@ -67,7 +68,7 @@ function middleCenterPosition(img, watermarkImg) {
 
 const watermarkPositionFunction = middleCenterPosition;
 
-function watermarkTransformation(watermarkBuffer) {
+function watermarkTransformation(watermarkBuffer, maxSize) {
   var imageData = [];
   return new Transform({
     transform(chunk, encoding, callback) {
@@ -78,13 +79,19 @@ function watermarkTransformation(watermarkBuffer) {
       img = new Image;
       img.src = Buffer.concat(imageData);
 
-      var canvas = new Canvas(img.width, img.height)
+      var ratio = img.width / img.height;
+      var newSize = {
+        width: ratio >= 1 ? maxSize : maxSize * ratio,
+        height: ratio < 1 ? maxSize : maxSize / ratio,
+      };
+
+      var canvas = new Canvas(newSize.width, newSize.height)
       var ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0, newSize.width, newSize.height);
 
       var watermarkImg = new Image;
       watermarkImg.src = watermarkBuffer;
-      var position = watermarkPositionFunction(img, watermarkImg);
+      var position = watermarkPositionFunction(newSize, watermarkImg);
 
       // Draw the watermark in the
       ctx.drawImage(watermarkImg,
@@ -122,12 +129,12 @@ exports.socialThumbnail = function(req, res, next) {
     id: esId
   })
   .then(function(metadata) {
-    var applyWatermark = !metadata.license || metadata.license.id !== 8;
+    var applyWatermark = !metadata.license || (metadata.license.id !== 8);
     var url = config.cip.baseURL + '/preview/thumbnail/' + catalogAlias + '/' + id;
     var proxyRequest = images.proxy(url, next);
 
     if(applyWatermark && catalogAlias in WATERMARK_BUFFERS) {
-      var transformation = watermarkTransformation(WATERMARK_BUFFERS[catalogAlias]);
+      var transformation = watermarkTransformation(WATERMARK_BUFFERS[catalogAlias], THUMBNAIL_SIZE);
       proxyRequest = proxyRequest.pipe(transformation);
     }
 
