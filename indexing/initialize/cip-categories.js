@@ -1,6 +1,6 @@
 'use strict';
 
-var cipCategories = require('collections-online/lib/cip-categories.js');
+var cipCategories = require('../../cip-categories.js');
 
 /**
  * This initializes the CIP categories.

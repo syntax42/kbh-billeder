@@ -1,6 +1,6 @@
 'use strict';
 
-var assetMapping = require('collections-online/lib/asset-mapping.js');
+var assetMapping = require('../../asset-mapping.js');
 
 module.exports = function(state, metadata) {
   var transformedMetadata = assetMapping.transform(metadata);

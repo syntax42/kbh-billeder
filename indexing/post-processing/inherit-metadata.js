@@ -7,7 +7,7 @@
  */
 
 var Q = require('q');
-var assetMapping = require('collections-online/lib/asset-mapping.js');
+var assetMapping = require('../../asset-mapping.js');
 var es = require('collections-online/lib/services/elasticsearch');
 
 // Given a sub asset's and a master asset's metadata:
