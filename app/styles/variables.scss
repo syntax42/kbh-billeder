@@ -1,73 +1,24 @@
 // Colors
 $black: #000;
 $white: #fff;
-$gray-darker: $black; //lighten(#000, 13.5%) !default; // #222
-$gray-dark: #404040; //lighten(#000, 20%) !default; // #333
-$gray: #555; //lighten(#000, 33.5%) !default; // #555
-$gray-light: #e0e0e0; //lighten(#000, 60%) !default; // #999
-$gray-lighter: #f0f0f0; //lighten(#000, 93.5%) !default; // #eee
-$brand-primary: #e6225a; // #971623; //#428bca !default;
-$menu-shadow: rgba(0, 0, 0, .5);
-$menu-no-shadow: rgba(0, 0, 0, 0);
-$menu-highlight: rgba(255, 255, 255, .1);
-$dropdown-bg: $white;
-$dropdown-bg-hover: rgba($gray-lighter, .5);
-$dropdown-padding: .5em;
-
-// Scaffolding
-$body-bg: $white;
-$text-color: $gray-dark;
-$link-color: $brand-primary;
-$link-hover-color: lighten($link-color, 10%);
-
+$gray-darker: $black;
+$gray-dark: #404040;
+$gray: #555;
+$gray-light: #e0e0e0;
+$gray-lighter: #f0f0f0;
+$brand-primary: #e6225a;
+$text-color: $gray-dark !default;
 // Typography
 $font-family-sans-serif: 'FFUnitWebLight', sans-serif;
 $font-family-thin: 'FFUnitWebThin', sans-serif;
 $font-family-light: 'FFUnitWebLight', sans-serif;
 $font-family-medium: 'FFUnitWebMedium', sans-serif;
-$font-size-base: 14px;
-$line-height-base: 1.6;
 $headings-font-weight: normal;
-$border-radius-base: 0;
-$border-radius-large: 0;
-$border-radius-small: 0;
 $input-border-focus: $brand-primary;
-
-// Animation
-$anim-duration: 300ms;
-$anim-duration-long: 400ms;
-$anim-duration-fast: 150ms;
-$anim-entrance: ease-out;
-$anim-exit: ease-in;
-$anim-default: $anim-duration ease;
-
 // Menu
 $menu-width: 200px;
 $menu-width-small: 280px;
 $topbar-height: 40px;
-
-// Breakpoints
-$extra-small-size: 480px;
-$extra-small-size-min: $extra-small-size + 1px;
-$small-size: 768px;
-$medium-size: 992px;
-$large-size: 1070px;
-
-// item
-$button-bg: $gray-light;
-$snackbar-bg: $gray-dark;
-$snackbar-front: $white;
-
-// Footer
-$footer-background-color: $topbar-color;
-$footer-text-color: $white;
-
-//z-indexes
-$snackbar-zindex: 1000;
-
-// SVG
-$icon-size: 24px;
-
 // Asset
 $asset-top-bg: $white;
 $asset-top-color: $text-color;
@@ -76,7 +27,5 @@ $asset-bottom-bg: $gray-light;
 $asset-heading-font: $font-family-medium;
 $asset-full-width-on-big-image: false;
 
-$asset--icon-shadow-color: #fff;
-$asset-subject-headline-height: 3rem;
-$asset-max-height: calc(100vh - #{$topbar-height}*2);
-$asset-height-small: calc(80vh - #{$topbar-height}*2);
+// Loading variables again at the bottom allows default
+@import '../../node_modules/collections-online/app/styles/variables';
