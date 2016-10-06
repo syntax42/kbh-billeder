@@ -30,31 +30,33 @@ if(config.cloudinaryUrl) {
 keystone.import('./models');
 
 keystone.initExpressApp(app);
-co.initialize(app);
+co.initialize(app, [
+  require('collections-online-cumulus')
+]).then(() => {
+  // Keystone form validation
+  app.use('/keystone', csrf());
+  app.use('/keystone', function(req, res, next) {
+    res.locals.csrftoken = req.csrfToken();
+    return next();
+  });
 
-// Keystone form validation
-app.use('/keystone', csrf());
-app.use('/keystone', function(req, res, next) {
-  res.locals.csrftoken = req.csrfToken();
-  return next();
-});
+  keystone.set('routes', require('./routes')(app));
+  co.registerRoutes(app);
 
-keystone.set('routes', require('./routes')(app));
-co.registerRoutes(app);
+  keystone.set('nav', config.keystone.nav);
 
-keystone.set('nav', config.keystone.nav);
+  app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
 
-app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
+  app.use(keystone.get('session options').cookieParser);
+  app.use(keystone.expressSession);
+  app.use(keystone.session.persist);
+  app.use(require('connect-flash')());
 
-app.use(keystone.get('session options').cookieParser);
-app.use(keystone.expressSession);
-app.use(keystone.session.persist);
-app.use(require('connect-flash')());
+  app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
+  keystone.openDatabaseConnection(function() {
+    require('./menus')(app);
+  });
 
-keystone.openDatabaseConnection(function() {
-  require('./menus')(app);
-});
-
-co.registerErrors(app);
+  co.registerErrors(app);
+}, console.error);
