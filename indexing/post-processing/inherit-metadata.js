@@ -9,6 +9,7 @@
 var Q = require('q');
 var assetMapping = require('../../asset-mapping.js');
 var es = require('collections-online/lib/services/elasticsearch');
+var config = require('collections-online/lib/config');
 
 // Given a sub asset's and a master asset's metadata:
 // - Extend the metadata of an asset from it's master asset.
@@ -103,6 +104,11 @@ module.exports = function(state) {
 
   var activity = 'Post-processing to inherit metadata from master assets';
   console.log('\n=== ' + activity + ' ===');
+
+  if(config.cip.indexing.inheritMetadata === false) {
+    console.log('Skipping this, because inheritMetadataFromMaster is false');
+    return state;
+  }
 
   var assetIdQueue = state.queries.reduce(function(result, query) {
     return result.concat(query.indexedAssetIds);
