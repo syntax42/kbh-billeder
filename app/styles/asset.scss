@@ -88,6 +88,7 @@
   // ensure som padding on mobile
   th {
     padding-right: 1rem;
+    white-space: nowrap;
 
     @media (min-width: $small-size) {
       padding-left: 0;

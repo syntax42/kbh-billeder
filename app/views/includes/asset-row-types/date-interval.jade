@@ -1,0 +1,8 @@
+include ../../mixins/date-format
+
+tr
+  th #{row.title}:
+  td
+    - var fromDate = metadata[row.fields.from];
+    - var toDate = metadata[row.fields.to];
+    +formatDate(fromDate, toDate)
