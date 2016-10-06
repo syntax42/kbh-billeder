@@ -41,6 +41,7 @@ module.exports = {
     indexing: {
       additionalFields: null, // Place additional fields to be indexed here ..
       restriction: null, // '{some-guid} is 3'
+      inheritMetadata: false
     },
     catalogs: cipCatalogs,
     client: {
