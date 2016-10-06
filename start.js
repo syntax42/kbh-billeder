@@ -8,8 +8,13 @@ try {
 
 module.exports.registerPlugins = () => {
   plugins.register('indexing-engine', require('./indexing/run'));
-  plugins.register('image-controller', require('./image-controller'));
+  plugins.register('image-controller', require('./controllers/image'));
   plugins.register('geo-tagging-saver', null);
+};
+
+module.exports.registerRoutes = (app) => {
+  var indexController = require('./controllers/index');
+  app.post('/index/asset', indexController.asset);
 };
 
 // Initialize the cip client and make sure a valid session exists
