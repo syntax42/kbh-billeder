@@ -2,7 +2,7 @@
 
 var querystring = require('querystring');
 var config = require('collections-online/lib/config');
-var proxy = require('./proxy');
+var proxy = require('../proxy');
 
 exports.proxy = proxy;
 
