@@ -9,7 +9,8 @@ const PREFIXED_NUMBERS_LETTERS_AND_DOTS = /^[\dA-Z\.]+ (- )?/;
 const PREFIXED_SPECIAL_CASE_ONE = /^\w+\d\w\s-\s/;
 
 module.exports = function(state, metadata) {
-  var tagsPerCategory = metadata.categories.map(function(category) {
+  var categories = metadata.categories || [];
+  var tagsPerCategory = categories.map(function(category) {
     var catalogsCategoryTree = state.categories[metadata.catalog];
     var path = catalogsCategoryTree.getPath(category.id) || [];
     return path.map(function(categoryOnPath) {
