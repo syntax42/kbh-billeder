@@ -63,10 +63,10 @@ block content
               else
                 img(src=sources.thumbnail, alt=title).asset-image--zoomable.kbh-asset-image
                 .license
-                  if(institution === 'stadsarkivet')
-                    +icon('kbh-stads')
+                  if(institution === 'kbh-arkiv')
+                    +icon('kbh-arkiv')
                   else if (institution === 'kbh-museum')
-                    +icon('kbh-mus')
+                    +icon('kbh-museum')
             .social
               a(data-action="asset-image-size-toggle").hidden-xs
                 +icon('zoom-in')

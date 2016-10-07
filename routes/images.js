@@ -17,7 +17,7 @@ const THUMBNAIL_SIZE = 600;
 var watermarkPath = path.normalize(config.appDir + '/images/watermarks');
 const WATERMARK_BUFFERS = {
   'kbh-museum': fs.readFileSync(watermarkPath + '/kbh-museum.png'),
-  'stadsarkivet': fs.readFileSync(watermarkPath + '/stadsarkivet.png'),
+  'kbh-arkiv': fs.readFileSync(watermarkPath + '/kbh-arkiv.png'),
 }
 
 exports.download = function(req, res, next) {
@@ -110,11 +110,6 @@ function watermarkTransformation(watermarkBuffer, maxSize) {
       });
     }
   });
-}
-
-const watermarkPaths = {
-  'kbh-museum': '/watermarks/kbh-museum.png',
-  'stadsarkivet': '/icons/kbh-stads.svg'
 }
 
 exports.socialThumbnail = function(req, res, next) {

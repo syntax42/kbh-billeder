@@ -4,10 +4,10 @@
     "notSelectedLabel": "Alle samlinger",
     "type": "catalog",
     "options": {
-      "stadsarkivet": {
+      "kbh-arkiv": {
         "label": "Stadsarkivet",
         "method": {
-          "query": {"match": {"catalog": "stadsarkivet"}}
+          "query": {"match": {"catalog": "kbh-arkiv"}}
         }
       },
       "kbh-museum": {

@@ -48,7 +48,7 @@ module.exports = {
       endpoint: 'http://www.neaonline.dk/CIP/',
       constants: {
           catchAllAlias: "alle",
-          layoutAlias: "stadsarkivet"
+          layoutAlias: "kbh-arkiv"
       },
       catalogAliases: _.invert(cipCatalogs)
     },
@@ -77,12 +77,12 @@ module.exports = {
   themeColor: '#262626',
   appName: 'KBH Billeder',
   twitterAccount: {
-    'stadsarkivet': 'kbharkiv',
+    'kbh-arkiv': 'kbharkiv',
     'kbh-museum': 'kbenhavnsmuseum'
   },
    // Found using https://developers.facebook.com/tools/explorer
   facebookAppId: {
-    'stadsarkivet': 159598384220080,
+    'kbh-arkiv': 159598384220080,
     'kbh-museum': 116055131754566
   },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false
