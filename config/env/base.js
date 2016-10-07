@@ -41,14 +41,15 @@ module.exports = {
     indexing: {
       additionalFields: null, // Place additional fields to be indexed here ..
       restriction: null, // '{some-guid} is 3'
-      inheritMetadata: false
+      inheritMetadata: false,
+      transformationsModule: path.join(__dirname, '..', '..', 'indexing', 'transformations')
     },
     catalogs: cipCatalogs,
     client: {
       endpoint: 'http://www.neaonline.dk/CIP/',
       constants: {
           catchAllAlias: "alle",
-          layoutAlias: "kbh-arkiv"
+          layoutAlias: "stadsarkivet"
       },
       catalogAliases: _.invert(cipCatalogs)
     },
