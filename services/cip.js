@@ -5,7 +5,6 @@ var Q = require('q');
 // Used to parse a UTF16-LE to UTF16-BE string.
 var Iconv  = require('iconv').Iconv;
 var config = require('collections-online/lib/config');
-
 var cipClient = new cip.CIPClient(config.cip.client);
 var originalRequest = cipClient.request.bind(cipClient);
 

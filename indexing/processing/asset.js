@@ -15,25 +15,6 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
   this.innerError = innerError;
 }
 
-// This list of transformations are a list of functions that takes two
-// arguments (cip_client, metadata) and returns a mutated metadata, which
-// is passed on to the next function in the list.
-var METADATA_TRANSFORMATIONS = [
-  require('../transformations/field-names'),
-  require('../transformations/empty-title'),
-  require('../transformations/dates'),
-  require('../transformations/date-intervals'),
-  require('../transformations/categories-and-suggest'),
-  require('../transformations/relations'),
-  require('../transformations/dimensions'),
-  require('../transformations/is-searchable'),
-  require('../transformations/latitude-longitude'),
-  require('../transformations/split-tags'),
-  require('../transformations/category-tags'),
-  require('../transformations/vision-tags'),
-  require('../transformations/tag-hierarchy')
-];
-
 function transformMetadata(state, metadata, transformations) {
   return transformations.reduce(function(metadata, transformation) {
     return Q.when(metadata).then(function(metadata) {
@@ -52,12 +33,10 @@ function processAsset(state, metadata, transformations) {
   //console.log('Processing an asset.');
   // Use all transformations by default.
   if (typeof(transformations) === 'undefined') {
-    if (config.assetTransformations) {
-      transformations = config.assetTransformations.map(function(path){
-        return require(path);
-      });
+    if (config.cip.indexing.transformationsModule) {
+      transformations = require(config.cip.indexing.transformationsModule);
     } else {
-      transformations = METADATA_TRANSFORMATIONS;
+      transformations = require('../transformations');
     }
   }
   // Perform additional transformations and index the result.
@@ -81,4 +60,3 @@ function processAsset(state, metadata, transformations) {
 }
 
 module.exports = processAsset;
-module.exports.METADATA_TRANSFORMATIONS = METADATA_TRANSFORMATIONS;
