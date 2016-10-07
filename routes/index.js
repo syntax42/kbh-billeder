@@ -47,5 +47,7 @@ exports = module.exports = function (app) {
 	app.get('/:catalog/:id(\\d+)/download/:size/:filename', images.download);
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
 	// app.get('/protected', middleware.requireUser, routes.views.protected);
-	app.get('/:catalog/:id(\\d+)/social-thumbnail', images.socialThumbnail);
+	app.get('/:catalog/:id(\\d+)/thumbnail', images.thumbnail);
+	app.get('/:catalog/:id(\\d+)/thumbnail/:size(\\d+)', images.thumbnail);
+	app.get('/:catalog/:id(\\d+)/thumbnail/:size(\\d+)/:position([a-z\\-]+)', images.thumbnail);
 };

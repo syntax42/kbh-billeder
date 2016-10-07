@@ -8,7 +8,7 @@ mixin assetMeta(item, sources)
   if item.description
     - description = item.description
   if sources.thumbnail
-    - image = '/' + item.catalog + '/' + item.id + '/social-thumbnail'
+    - image = '/' + item.catalog + '/' + item.id + '/thumbnail/800'
 
   - twitterAccount = helpers.getTwitterAccount(item)
   - facebookAppId = helpers.getFacebookAppId(item)

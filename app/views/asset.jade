@@ -61,14 +61,14 @@ block content
           .col-xs-12.col-sm-7.img-col
             .image-wrap
               if downloadable
-                img(src=sources.thumbnail, data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
+                img(src=sources.thumbnail+'/1000', data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
               else
-                img(src=sources.thumbnail, alt=title).asset-image--zoomable.kbh-asset-image
-                .watermark
-                  if(institution === 'kbh-arkiv')
-                    +icon('kbh-arkiv')
-                  else if (institution === 'kbh-museum')
-                    +icon('kbh-museum')
+                img(src=sources.thumbnail+'/1000/bottom-right', alt=title).asset-image--zoomable.kbh-asset-image
+                //- .watermark
+                //-  if(institution === 'kbh-arkiv')
+                //-    +icon('kbh-arkiv')
+                //-  else if (institution === 'kbh-museum')
+                //-    +icon('kbh-museum')
             .social
               a(data-action="asset-image-size-toggle").hidden-xs
                 +icon('zoom-in')
