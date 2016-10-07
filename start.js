@@ -3,6 +3,7 @@ try {
   plugins = require('collections-online/plugins');
 } catch(err) {
   console.error('This module is ment to be run as a plugin for collections online');
+  console.error(err);
   process.exit(1);
 }
 
