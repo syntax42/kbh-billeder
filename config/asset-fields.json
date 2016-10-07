@@ -51,7 +51,8 @@
     "short": "black_and_white"
   }, {
     "cumulusKey": "{f5d1dcd8-c553-4346-8d4d-672c85bb59be}",
-    "short": "license"
+    "short": "license",
+    "type": "enum"
   }, {
     "cumulusKey": "{af4b2e2c-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "copyright"
@@ -66,7 +67,8 @@
     "short": "description_note"
   }, {
     "cumulusKey": "{8eff09f3-68ed-4796-8ce4-1e5bd25f58c1}",
-    "short": "original_material"
+    "short": "original_material",
+    "type": "enum"
   }, {
     "cumulusKey": "{af4b2e0c-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "categories"
@@ -156,7 +158,8 @@
     "short": "cadastral"
   }, {
     "cumulusKey": "{8270771e-bb36-41fc-858d-98541e1a7e6a}",
-    "short": "zoom_level"
+    "short": "zoom_level",
+    "type": "enum"
   }, {
     "cumulusKey": "{e9ae9aeb-4dce-4c1f-ae4f-b60ff7abae59}",
     "short": "short_radius"
