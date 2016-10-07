@@ -32,16 +32,18 @@ block content
   - var title = metadata.short_title;
   - var zipcode = metadata.zipcode;
   - var downloadSlug = metadata.id + '/download/';
-  
+
   //- check image sizes available
   - var bigImage = "";
   - var smallImage = "";
-  - var mediumImage = ""; 
-  - var largeImage = ""; 
+  - var mediumImage = "";
+  - var largeImage = "";
   - if (metadata.width_px > 800) { bigImage = "lille", smallImage = downloadSlug + bigImage };
   - if (metadata.width_px > 1200) { bigImage = "mellem", mediumImage = downloadSlug + bigImage };
   - if (metadata.width_px > 2000) { bigImage = "stor", largeImage = downloadSlug + bigImage };
   - bigImage = downloadSlug + bigImage;
+  - var fullWidth = Math.round(metadata.width_px);
+  - var fullHeight = Math.round(metadata.height_px);
 
   article.asset.let-it-grow(itemscope,
       itemtype='http://schema.org/CreativeWork',
@@ -62,7 +64,7 @@ block content
                 img(src=sources.thumbnail, data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
               else
                 img(src=sources.thumbnail, alt=title).asset-image--zoomable.kbh-asset-image
-                .license
+                .watermark
                   if(institution === 'kbh-arkiv')
                     +icon('kbh-arkiv')
                   else if (institution === 'kbh-museum')
@@ -101,7 +103,7 @@ block content
     if relatedAssets && relatedAssets.length > 0
       .asset-bottom
         .container-fluid
-          .row      
+          .row
             .col-xs-12
               h2 Relaterede billeder
               .related-assets
@@ -129,10 +131,10 @@ block content
           a.btn.btn-primary(href='#{largeImage}')
             | Stor (#{sources.imageSet.download2000.size} jpg)
         a.btn.btn-primary(href='#{downloadSlug}originalJPEG')
-          | Original (#{metadata.width_px} x #{metadata.height_px} jpg)
+          | Original (#{fullWidth} x #{fullHeight} jpg)
         if(file_format === 'TIFF Image')
           a.btn.btn-primary(href='#{downloadSlug}original')
-            | Original (#{metadata.width_px} x #{metadata.height_px} tiff)
+            | Original (#{fullWidth} x #{fullHeight} tiff)
 
         if (license)
           a(href=license.url, rel='license', target='_blank')
