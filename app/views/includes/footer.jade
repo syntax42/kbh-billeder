@@ -6,11 +6,16 @@ footer
           each item in menus.footer
             a.footer__element(href=item.url)= item.title
 
-      .col-xs-12.col-sm-5.col-lg-4
-        .footer__element Historie & Kunst
-        .footer__element KØBENHAVNS KOMMUNE
-        .footer__element Kultur- og Fritidsforvaltningen
-        .footer__element Vesterbrogade 59
-        .footer__element 1620 København V
+      .col-xs-12.col-sm-5.col-lg-4.footer__flex
+        .footer__address
+          | Historie &amp; Kunst
+          br
+          | KØBENHAVNS KOMMUNE
+          br
+          | Kultur- og Fritidsforvaltningen
+          br
+          | Vesterbrogade 59
+          br
+          | 1620 København V
         .footer__logo
           +icon('logo')
