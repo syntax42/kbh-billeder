@@ -1,17 +1,16 @@
 .page-wrap {
-  font-size: 110%;
   padding: 3rem 0 5rem;
 
   @media (min-width: $small-size) {
-    font-size: 130%;
+    font-size: 1.1rem;
   }
 
   @media (min-width: $medium-size) {
-    font-size: 140%;
+    font-size: 1.2rem;
   }
 
   @media (min-width: $large-size) {
-    font-size: 150%;
+    font-size: 1.4rem;
   }
 
   h1,
