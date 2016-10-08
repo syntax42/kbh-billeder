@@ -28,7 +28,7 @@ if(config.cloudinaryUrl) {
 }
 
 // Richer wysiwyg
-keystone.set('wysiwyg additional buttons', 'styleselect, blockquote');
+// keystone.set('wysiwyg additional buttons', 'styleselect, blockquote');
 
 keystone.import('./models');
 
