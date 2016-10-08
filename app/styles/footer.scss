@@ -19,15 +19,18 @@ footer {
   }
 
   &__logo {
-    margin-bottom: -1rem;
+    line-height: 1;
 
+    // 6162 8862  ,695328368
+    $iconHeight: 8rem;
+    $iconHeightResponsive: 25vw;
+    $iconRatio: .695;
     svg {
       fill: $white;
-      height: 9rem;
-      width: 9rem;
-      max-width: 20vw;
-      max-height: 20vw;
-      line-height: 0;
+      height: $iconHeight;
+      max-height: $iconHeightResponsive;
+      max-width: $iconHeightResponsive * $iconRatio;
+      width: $iconHeight * $iconRatio;
     }
   }
 
