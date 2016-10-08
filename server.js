@@ -25,9 +25,10 @@ if(config.cloudinaryUrl) {
   keystone.set('cloudinary folders', true);
   // Force cloudinary to serve images over https
   keystone.set('cloudinary secure', true);
-  // Richer wysiwyg
-  keystone.set('wysiwyg additional buttons', 'styleselect, blockquote');
 }
+
+// Richer wysiwyg
+keystone.set('wysiwyg additional buttons', 'styleselect, blockquote');
 
 keystone.import('./models');
 
