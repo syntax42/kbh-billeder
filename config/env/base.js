@@ -56,6 +56,8 @@ module.exports = {
     sessionRenewalRate: 30*60*1000 // Once every 30 minutes
   },
   features: {
+    cookieConsent: true,
+    cookieName: 'kbh-billeder-ok-cookie',
     geotagging: false,
     rotationalImages: false,
     crowdtagging: false,
