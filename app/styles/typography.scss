@@ -1,16 +1,16 @@
 h1 {
-  font-size: 2rem;
+  font-size: 2em;
   line-height: 1.25;
 }
 
 .lead,
 h2 {
-  font-size: 1.42rem;
+  font-size: 1.42em;
   margin-bottom: .3rem;
 }
 
 pre {
-  font-size: .8rem;
+  font-size: .8em;
 }
 
 @media (min-width: $medium-size) {
@@ -19,13 +19,13 @@ pre {
   }
 
   h1 {
-    font-size: 2.62rem;
+    font-size: 2.62em;
     margin-left: -1px;
   }
 
   .lead,
   h2 {
-    font-size: 1.62rem;
+    font-size: 1.62em;
   }
 }
 
