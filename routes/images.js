@@ -12,6 +12,16 @@ const Transform = require('stream').Transform;
 const POSSIBLE_SIZES = ['lille', 'mellem', 'stor', 'originalJPEG', 'original'];
 const WATERMARK_SCALE = 0.33; // 20% of the width of the thumbnail
 const THUMBNAIL_SIZE = 350;
+// Looping through the licenses to find the on
+const LICENSE_IDS_NEEDING_WATERMARK = config.licenseMapping
+.map((license, licenseId) => {
+  return {
+    id: licenseId,
+    watermark: license.watermark
+  };
+})
+.filter(license => license.watermark)
+.map(license => license.id);
 
 // Resolving the watermark path relative to the app dir's images dir
 var watermarkPath = path.normalize(config.appDir + '/images/watermarks');
@@ -150,8 +160,10 @@ exports.thumbnail = function(req, res, next) {
     var url = config.cip.baseURL + '/preview/thumbnail/' + catalogAlias + '/' + id;
     var proxyRequest = images.proxy(url, next);
 
-    var applyWatermark = (!metadata.license || metadata.license.id !== 8) &&
-                         size > THUMBNAIL_SIZE;
+    // Apply the watermark if the config's licenseMapping states it
+    var applyWatermark = !metadata.license || LICENSE_IDS_NEEDING_WATERMARK.indexOf(metadata.license.id) > -1;
+    // We should only apply the watermark when the size is large
+    applyWatermark = applyWatermark && size > THUMBNAIL_SIZE;
     var watermark = null;
     var positionFunction = null;
     if (applyWatermark && catalogAlias in WATERMARK_BUFFERS) {
