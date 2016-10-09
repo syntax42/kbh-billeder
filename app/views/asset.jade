@@ -1,5 +1,6 @@
 extends index
 include mixins/meta-asset
+include mixins/display-license
 
 append header
   +assetMeta(metadata, sources)
@@ -9,7 +10,6 @@ append javascript
     script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsAPIKey + "&callback=initMap&libraries=geometry,places")
 
 block content
-
   - var address = metadata.address || metadata.street;
   - var zipcode = metadata.zipcode;
   - var city = metadata.city;
@@ -28,7 +28,6 @@ block content
   - var description = metadata.description;
   - var secondary_description = metadata.secondary_description;
   - var file_format = metadata.file_format;
-  - var license = metadata.license && helpers.licenseTag(metadata.license.id);
   - var title = metadata.short_title;
   - var zipcode = metadata.zipcode;
   - var downloadSlug = metadata.id + '/download/';
@@ -135,12 +134,7 @@ block content
         if(file_format === 'TIFF Image')
           a.btn.btn-primary(href='#{downloadSlug}original')
             | Original (#{fullWidth} x #{fullHeight} tiff)
-
-        if (license)
-          a(href=license.url, rel='license', target='_blank')
-            img(src=license.img, alt=license.short).license-img
-        else
-          p No known rights
+        +displayLicense(metadata.license)
       else
         h2 Vi beklager
         p Billedet er beskyttet af ophavsret og kan derfor ikke downloades.
