@@ -7,6 +7,7 @@ module.exports = _.merge(base, {
   env: 'production',
   siteTitle: 'KBH Billeder',
   allowRobots: true,
+  host: 'kbhbilleder.dk',
   es: {
     assetsIndex: 'kbh-billeder-assets'
   },
