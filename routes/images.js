@@ -30,6 +30,8 @@ const WATERMARK_BUFFERS = {
   'kbh-arkiv': fs.readFileSync(watermarkPath + '/kbh-arkiv.png'),
 }
 
+const contentDispositionRegexp = /.*\.([^.]+)$/i;
+
 exports.download = function(req, res, next) {
   var catalog = req.params.catalog;
   var id = req.params.id;
@@ -45,7 +47,26 @@ exports.download = function(req, res, next) {
                     ' given: "' + size + '"');
   }
 
-  images.proxy(url, next).pipe(res);
+  var proxyRequest = images.proxy(url, next);
+
+  res._writeHead = res.writeHead;
+  res.writeHead = function(statusCode, reasonPhrase, headers) {
+    // Reading the file extension from the response from CIP
+    var responseHeaders = proxyRequest.response.headers;
+    var contentDispositionHeader = responseHeaders['content-disposition'] || '';
+    var extension = contentDispositionHeader.match(contentDispositionRegexp);
+    if(extension) {
+      extension = '.' + extension[1];
+    } else {
+      extension = '.jpg'; // Default extension, when the CIP is not responsing
+    }
+    // Generating a new filename
+    var filename = catalog + '-' + id + extension;
+    res.header('content-disposition', 'attachment; filename=' + filename);
+    res._writeHead(statusCode, reasonPhrase, headers);
+  };
+
+  proxyRequest.pipe(res);
 }
 
 function bottomRightPosition(img, watermarkImg) {
