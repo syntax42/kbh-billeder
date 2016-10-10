@@ -50,6 +50,21 @@ module.exports = function(state) {
           }
         };
       });
+      // Enumurations should not have their displaystring tokenized
+      config.assetFields.filter((field) => {
+        return field.type === 'enum';
+      }).forEach((field) => {
+        var fieldName = field.short;
+        fields[fieldName] = {
+          type: 'object',
+          properties: {
+            displaystring: {
+              'type': 'string',
+              'index': 'not_analyzed'
+            }
+          }
+        };
+      });
       // Create the actual index
       return es.indices.create({
         index: state.index,
