@@ -48,10 +48,27 @@ function deleteAsset(req, assetId) {
 exports.asset = function(req, res, next) {
   var id = req.body.id || '';
   var action = req.body.action || null;
+  var collection = req.body.collection || null;
   var catalogs = req.app.get('catalogs');
   var categories = req.app.get('categories');
 
   console.log('Index asset called with body =', req.body);
+
+  // If the catalog alias does is not sat in the ID
+  if(id.indexOf('/') === -1) {
+    // No slash in the id - the catalog should be read from .collection
+    var catalogAlias = catalogs.reduce(function(result, catalog) {
+      if(catalog.name === collection) {
+        return catalog.alias;
+      } else {
+        return result;
+      }
+    }, null);
+    // If the catalog alias was found, let's prepend it to the id
+    if(catalogAlias) {
+      id = catalogAlias + '/' + id;
+    }
+  }
 
   function success() {
     res.json({
