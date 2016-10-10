@@ -19,6 +19,10 @@ module.exports = function(state) {
     var deletedAssetIds;
     if (state.mode === 'all' || state.mode === 'catalog') {
       deletedAssetIds = state.queries.reduce(function(deletedAssetIds, query) {
+        console.log('- Indexed',
+                    query.indexedAssetIds.length,
+                    'assets from',
+                    query.catalogAlias);
         return deletedAssetIds.then(function(deletedAssetIds) {
           if (query.offset > 0) {
             console.log('Skipping a query that had a non-zero offset.');
@@ -30,7 +34,7 @@ module.exports = function(state) {
               'bool': {
                 'must': {
                   'match': {
-                    'catalog': query.catalogAlias
+                    'catalog.raw': query.catalogAlias
                   }
                 },
                 'must_not': {
