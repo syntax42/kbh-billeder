@@ -47,20 +47,16 @@
     "time": {
       "title": "Tid",
       "emptyMessage": "Der er ingen tidsoplysninger tilknyttet",
-      "rows": [
-        {
+      "rows": [ {
           "title": "Fremstillet",
+          "template": "= (creation_time_estimated ? 'ca. ' : '') + (creation_time ? formatDate(creation_time) : '')"
+        }, {
+          "title": "Periode",
           "type": "date-interval",
           "fields": {
             "from": "creation_time_from",
             "to": "creation_time_to"
           }
-        }, {
-          "title": "Fremstillet",
-          "template": "= creation_time ? creation_time.displaystring : ''"
-        }, {
-          "title": "Anslået tid",
-          "template": "= bool(creation_time_estimated)"
         }, {
           "title": "Tidsnote",
           "template": "= timenote"
