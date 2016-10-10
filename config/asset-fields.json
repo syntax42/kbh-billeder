@@ -177,6 +177,9 @@
     "short": "catalog_name",
     "includeRaw": true
   }, {
+    "short": "catalog",
+    "includeRaw": true
+  }, {
     "cumulusKey": "{af4b2e72-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "related_master_assets"
   }, {
