@@ -1,5 +1,5 @@
 footer {
-  padding: 2rem 0;
+  padding: 2.2rem 0 2rem;
   font-size: 100%;
 }
 
@@ -20,9 +20,10 @@ footer {
 
   &__logo {
     line-height: 1;
+    margin-top: -.4rem;
 
     // 6162 8862  ,695328368
-    $iconHeight: 8rem;
+    $iconHeight: 8.4rem;
     $iconHeightResponsive: 25vw;
     $iconRatio: .695;
     svg {
