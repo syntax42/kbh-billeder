@@ -1,7 +1,7 @@
 $logo-height: 4rem;
 
 .jumbo {
-  background-color: $black;
+  background-color: $gray-darker;
   height: 50rem;
   max-height: 40vh;
   min-height: 25rem;
@@ -72,7 +72,7 @@ $logo-height: 4rem;
     background-size: cover;
     height: 100%;
     left: 0;
-    opacity: .3;
+    opacity: .2;
     position: absolute;
     top: 0;
     width: 100%;
@@ -128,15 +128,7 @@ $logo-height: 4rem;
       padding-bottom: .3rem;
     }
 
-    .input-search::-webkit-input-placeholder {
-      color: rgba($text-color, .8);
-    }
-
-    .input-search::-moz-placeholder {
-      color: rgba($text-color, .8);
-    }
-
-    .input-search::-ms-input-placeholder {
+    .input-search::placeholder {
       color: rgba($text-color, .8);
     }
 

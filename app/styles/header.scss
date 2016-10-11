@@ -13,13 +13,18 @@
   &__search {
     margin: 0;
     flex-grow: 1;
+  }
 
-    .input-group {
-      max-width: 14rem;
+  .input-search::placeholder {
+    font-family: $font-family-sans-serif;
+    color: $white;
+  }
 
-      &::after {
-        display: none; // collections online overwrite
-      }
+  .input-group {
+    max-width: 14rem;
+
+    &::after {
+      display: none; // collections online overwrite
     }
   }
 }

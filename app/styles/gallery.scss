@@ -56,7 +56,7 @@
   }
 
   &__overlay {
-    background-color: rgba($text-color, .75);
+    background-color: rgba($gray-darker, .8);
     bottom: -1px; // Safari bug fix
     color: $white;
     max-height: 100%;

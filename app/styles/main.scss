@@ -1,33 +1,8 @@
 @import 'fontface';
-
 @import 'variables';
 
-@import '../../node_modules/collections-online/app/styles/functions-shadows';
-
 @import 'bootstrap';
-
-@import '../../node_modules/collections-online/app/styles/asset';
-@import '../../node_modules/collections-online/app/styles/button';
-@import '../../node_modules/collections-online/app/styles/cookie-consent';
-@import '../../node_modules/collections-online/app/styles/dropdown';
-@import '../../node_modules/collections-online/app/styles/facebook-group';
-@import '../../node_modules/collections-online/app/styles/footer';
-@import '../../node_modules/collections-online/app/styles/frontpage';
-@import '../../node_modules/collections-online/app/styles/input';
-@import '../../node_modules/collections-online/app/styles/loading';
-@import '../../node_modules/collections-online/app/styles/menu';
-@import '../../node_modules/collections-online/app/styles/overlay';
-@import '../../node_modules/collections-online/app/styles/search-filter-sidebar';
-@import '../../node_modules/collections-online/app/styles/search-results';
-@import '../../node_modules/collections-online/app/styles/snackbar';
-@import '../../node_modules/collections-online/app/styles/tab-focus';
-@import '../../node_modules/collections-online/app/styles/tags';
-@import '../../node_modules/collections-online/app/styles/thumbnails';
-@import '../../node_modules/collections-online/app/styles/to-top';
-@import '../../node_modules/collections-online/app/styles/topbar';
-@import '../../node_modules/collections-online/app/styles/translate';
-@import '../../node_modules/collections-online/app/styles/typography';
-@import '../../node_modules/collections-online/app/styles/main';
+@import 'collections-online';
 
 @import 'header';
 @import 'menu';
@@ -39,15 +14,5 @@
 @import 'gallery';
 @import 'asset';
 @import 'media';
-@import 'input-search';
 @import 'search';
 @import 'typography';
-
-html {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.25), only screen and ( min-device-pixel-ratio: 1.25), only screen and ( min-resolution: 200dpi), only screen and ( min-resolution: 1.25dppx) {
-  -webkit-font-smoothing: subpixel-antialiased;
-}
