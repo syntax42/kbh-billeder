@@ -1,20 +1,19 @@
 .jumbo {
   background-color: $jumbo-bg;
-  height: 50rem;
-  max-height: 40vh;
-  min-height: 25rem;
+  height: 45vh;
+  min-height: 30rem;
   position: relative;
 
-  @media (min-width: $small-size) {
-    max-height: 50vh;
+  @media (min-width: $small-size) and (orientation: landscape) {
+    height: 55vh;
   }
 
-  @media (min-width: $medium-size) {
-    max-height: 55vh;
+  @media (min-width: $medium-size) and (orientation: landscape) {
+    height: 60vh;
   }
 
-  @media (min-width: $large-size) {
-    max-height: 60vh;
+  @media (min-width: $large-size) and (orientation: landscape) {
+    height: 65vh;
   }
 
   &__flex,
@@ -62,6 +61,10 @@
       0 0 4px rgba($jumbo-text-shadow, .2);
 
     @media (min-width: $medium-size) {
+      font-size: 2.6rem;
+    }
+
+    @media (min-width: $large-size) {
       font-size: 3rem;
     }
   }
@@ -101,7 +104,7 @@
 
     .search-box {
       flex-grow: 0;
-      margin-top: 5rem;
+      margin: 5rem 0 0;
       max-width: 60%;
       width: 18rem;
 
@@ -115,10 +118,10 @@
         width: 100%;
 
         &::after {
-        background-color: $brand-primary;
-        height: 2px;
+          background-color: $brand-primary;
+          height: 2px;
+        }
       }
-    }
     }
 
     .input-search {
@@ -130,8 +133,8 @@
 
       &::placeholder {
         font-family: $font-family-sans-serif;
-      color: rgba($text-color, .8);
-    }
+        color: rgba($text-color, .8);
+      }
     }
 
     .btn-search svg {

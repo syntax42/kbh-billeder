@@ -9,6 +9,11 @@ html {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
+::selection {
+  color: $white;
+  background: $brand-primary;
+}
+
 h1 {
   font-size: 2em;
   line-height: 1.25;
@@ -25,7 +30,7 @@ pre {
 }
 
 @media (min-width: $medium-size) {
-  body {
+  html, body {
     font-size: 15px;
   }
 

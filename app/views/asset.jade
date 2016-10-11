@@ -102,18 +102,16 @@ block content
     if relatedAssets && relatedAssets.length > 0
       .asset-bottom
         .container-fluid
-          .row
-            .col-xs-12
-              h2 Relaterede billeder
-              .related-assets
-                .related-assets__next-arrow
-                  +icon('chevron-right')
-                .related-assets__prev-arrow
-                  +icon('chevron-right')
-                .slider
-                  each asset in relatedAssets
-                    a(href=asset.href)
-                      img(data-lazy="#{asset.src}")
+          h2 Relaterede billeder
+          .related-assets
+            .related-assets__next-arrow
+              +icon('chevron-right')
+            .related-assets__prev-arrow
+              +icon('chevron-right')
+            .slider
+              each asset in relatedAssets
+                a(href=asset.href)
+                  img(data-lazy="#{asset.src}")
 
 
   .overlay__container(data-content="asset-download")

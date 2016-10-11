@@ -15,21 +15,27 @@
   }
 
   &__title {
-    font-family: $font-family-medium;
+    // font-family: $font-family-medium;
     font-size: 2rem;
     letter-spacing: -.02em;
     margin-left: -.04em;
 
-    @media (min-width: $small-size) {
+    @media (min-width: $medium-size) {
+      font-size: 2.6rem;
+    }
+
+    @media (min-width: $large-size) {
       font-size: 3rem;
     }
   }
 
   &__text {
     font-size: 1.2rem;
+    line-height: 1.5;
 
     @media (min-width: $medium-size) {
-      font-size: 1.55rem;
+      font-size: 1.43rem;
+      line-height: 1.4;
       letter-spacing: -.01em;
     }
   }
@@ -69,14 +75,13 @@
 
   &__title {
     font-family: $font-family-medium;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.2;
     margin-top: 1rem;
   }
 
   &__text {
     display: none;
-    font-size: 1.1rem;
     line-height: 1.2;
     margin-top: -.4rem;
   }

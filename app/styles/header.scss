@@ -1,8 +1,9 @@
 .topbar {
+  -webkit-font-smoothing: subpixel-antialiased;
   background-color: $brand-primary;
   font-family: $font-family-medium;
   letter-spacing: 0.02em;
-  -webkit-font-smoothing: subpixel-antialiased;
+  line-height: 1;
 
   &__menu {
     flex-grow: 3;
