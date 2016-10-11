@@ -17,17 +17,16 @@ header.topbar
         -   // Turning off the search related behaviour defined in main.js
         -   searchMethod = false;
         - }
-        if !frontpage
-          form.search-box(method='get', action='/', data-method=searchMethod)
-            .input-group
-              input.form-control.input-search(
-                type='text',
-                id='search-input',
-                placeholder='Søg på kbh-billeder.dk',
-                name='q',
-                autocomplete="off",
-                value=req.query.q || '')
-              .input-group-btn
-                button.btn-search.btn
-                  span.sr-only Søg
-                  +icon('search')
+        form.search-box(method='get', action='/', data-method=searchMethod)
+          .input-group
+            input.form-control.input-search(
+              type='text',
+              id='search-input',
+              placeholder='Søg på kbh-billeder.dk',
+              name='q',
+              autocomplete="off",
+              value=req.query.q || '')
+            .input-group-btn
+              button.btn-search.btn
+                span.sr-only Søg
+                +icon('search')
