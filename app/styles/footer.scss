@@ -37,6 +37,7 @@ footer {
 
   &__menu {
     font-family: $font-family-medium;
+
     @media (max-width: $small-size) {
       padding-bottom: 2rem;
     }
