@@ -1,9 +1,8 @@
-footer {
+.footer {
   padding: 2.2rem 0 2rem;
   font-size: 100%;
-}
+  -webkit-font-smoothing: subpixel-antialiased;
 
-.footer {
   &__element {
     display: block;
 

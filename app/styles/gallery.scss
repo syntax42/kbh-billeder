@@ -16,10 +16,13 @@
 
   &__title {
     font-family: $font-family-medium;
-    font-size: 3rem;
+    font-size: 2rem;
     letter-spacing: -.02em;
     margin-left: -.04em;
 
+    @media (min-width: $small-size) {
+      font-size: 3rem;
+    }
   }
 
   &__text {
@@ -33,10 +36,11 @@
 }
 
 .gallery-thumb {
-  position: relative;
-  margin: 1rem 0;
-  display: block;
   color: inherit;
+  display: block;
+  margin: 1rem 0;
+  overflow: hidden; // Needed because of the safari bug fix on overlay
+  position: relative;
 
   &:focus,
   &:hover {
@@ -52,11 +56,10 @@
   }
 
   &__overlay {
-    background-color: rgba($white, .75);
-    // Safari bug fix
-    bottom: -1px;
+    background-color: rgba($text-color, .75);
+    bottom: -1px; // Safari bug fix
+    color: $white;
     max-height: 100%;
-    max-height: calc(100% + 1px);
     overflow: hidden;
     padding: 0 15px;
     position: absolute;

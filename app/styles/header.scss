@@ -3,6 +3,25 @@
 .topbar {
   background-color: $brand-primary;
   font-family: $font-family-medium;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: subpixel-antialiased;
+
+  &__menu {
+    flex-grow: 3;
+  }
+
+  &__search {
+    margin: 0;
+    flex-grow: 1;
+
+    .input-group {
+      max-width: 14rem;
+
+      &::after {
+        background-color: rgba($white, .0);
+      }
+    }
+  }
 }
 
 .topbar-items {
@@ -20,22 +39,6 @@
 
     &:not(:last-child) {
       margin-right: 1rem;
-    }
-  }
-}
-
-.search-box {
-  margin: 0;
-
-  &::placeholder {
-    font-family: $font-family-sans-serif;
-  }
-
-  .input-group {
-    max-width: 14rem;
-
-    &::after {
-      background-color: rgba($white, .0);
     }
   }
 }
