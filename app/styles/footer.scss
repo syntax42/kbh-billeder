@@ -3,12 +3,8 @@
   font-size: 100%;
   -webkit-font-smoothing: subpixel-antialiased;
 
-  &__element {
-    display: block;
-
-    &:not(:last-child)::after {
-      display: none;
-    }
+  &__element:not(:last-child)::after {
+    display: none; // override collections online default
   }
 
   &__flex {
