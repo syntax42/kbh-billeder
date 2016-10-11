@@ -18,7 +18,7 @@
       max-width: 14rem;
 
       &::after {
-        background-color: rgba($white, .0);
+        display: none; // collections online overwrite
       }
     }
   }

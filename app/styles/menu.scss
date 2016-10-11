@@ -1,3 +1,9 @@
+.categories-menu {
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-family: $font-family-medium;
+  letter-spacing: .04em;
+}
+
 .categories-menu-open {
   .dropdown-menu-right {
     left: 0;
