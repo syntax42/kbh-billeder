@@ -1,9 +1,9 @@
 .gallery {
-  padding: 3rem 0;
 
   @media (min-width: $small-size) {
     align-items: center;
     display: flex;
+    padding: 1rem 0;
 
     &--odd {
       flex-direction: row-reverse;
@@ -12,6 +12,10 @@
     .text-col-left {
       padding-right: 3rem;
     }
+  }
+
+  @media (min-width: $medium-size) {
+    padding: 2rem 0;
   }
 
   &__title {
