@@ -60,8 +60,13 @@ exports.download = function(req, res, next) {
     } else {
       extension = '.jpg'; // Default extension, when the CIP is not responsing
     }
-    // Generating a new filename
-    var filename = catalog + '-' + id + extension;
+    if(size) {
+      // Remove JPEG from e.g. kbh-museum-26893-originalJPEG.jpg
+      size = size.replace('JPEG', '');
+      size = '-' + size;
+    }
+    // Generating a new filename adding size if it exists
+    var filename = catalog + '-' + id + size + extension;
     res.header('content-disposition', 'attachment; filename=' + filename);
     res._writeHead(statusCode, reasonPhrase, headers);
   };
