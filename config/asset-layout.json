@@ -139,14 +139,13 @@
         {
           "title": "Art",
           "template": "= kind"
-        },
-        {
-          "title": "Opført fra",
-          "template": "= constructed_from"
-        },
-        {
-          "title": "Opført til",
-          "template": "= constructed_to"
+        }, {
+          "title": "Opført",
+          "type": "date-interval",
+          "fields": {
+            "from": "constructed_from",
+            "to": "constructed_to"
+          }
         }
       ]
     },
