@@ -3,7 +3,9 @@
 @import 'variables';
 
 @import '../../node_modules/collections-online/app/styles/functions-shadows';
-@import '../../node_modules/collections-online/bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
+
+@import 'bootstrap';
+
 @import '../../node_modules/collections-online/app/styles/asset';
 @import '../../node_modules/collections-online/app/styles/button';
 @import '../../node_modules/collections-online/app/styles/cookie-consent';
