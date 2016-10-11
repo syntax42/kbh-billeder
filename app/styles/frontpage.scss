@@ -1,7 +1,5 @@
-$logo-height: 4rem;
-
 .jumbo {
-  background-color: $gray-darker;
+  background-color: $jumbo-bg;
   height: 50rem;
   max-height: 40vh;
   min-height: 25rem;
@@ -49,7 +47,7 @@ $logo-height: 4rem;
       fill-rule: evenodd;
       height: $logo-height;
       margin: 0 15px;
-      width: 16rem;
+      width: $logo-height * 4;
     }
   }
 
@@ -59,7 +57,9 @@ $logo-height: 4rem;
     font-size: 2.2rem;
     letter-spacing: -.01em;
     line-height: 1.2;
-    text-shadow: 0 0 1px rgba($black, .6), 0 0 4px rgba($black, .2);
+    text-shadow:
+      0 0 1px rgba($jumbo-text-shadow, .6),
+      0 0 4px rgba($jumbo-text-shadow, .2);
 
     @media (min-width: $medium-size) {
       font-size: 3rem;
@@ -113,23 +113,25 @@ $logo-height: 4rem;
         background-color: $white;
         max-width: none;
         width: 100%;
-      }
 
-      .input-group::after {
+        &::after {
         background-color: $brand-primary;
         height: 2px;
       }
     }
+    }
 
     .input-search {
       color: inherit;
+      font-family: $font-family-medium;
       font-size: 1.6rem;
       height: 3rem;
       padding-bottom: .3rem;
-    }
 
-    .input-search::placeholder {
+      &::placeholder {
+        font-family: $font-family-sans-serif;
       color: rgba($text-color, .8);
+    }
     }
 
     .btn-search svg {

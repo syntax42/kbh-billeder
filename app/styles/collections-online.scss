@@ -1,6 +1,9 @@
+// Variables are already loaded within the kbh billeder variables file
+
 @import '../../node_modules/collections-online/app/styles/functions-shadows';
 
 @import '../../node_modules/collections-online/app/styles/asset';
+@import '../../node_modules/collections-online/app/styles/asset-related';
 @import '../../node_modules/collections-online/app/styles/frontpage';
 
 @import '../../node_modules/collections-online/app/styles/topbar';
@@ -16,6 +19,7 @@
 @import '../../node_modules/collections-online/app/styles/loading';
 @import '../../node_modules/collections-online/app/styles/menu';
 @import '../../node_modules/collections-online/app/styles/overlay';
+@import '../../node_modules/collections-online/app/styles/slick';
 @import '../../node_modules/collections-online/app/styles/tab-focus';
 @import '../../node_modules/collections-online/app/styles/to-top';
 @import '../../node_modules/collections-online/app/styles/translate';

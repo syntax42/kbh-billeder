@@ -6,7 +6,7 @@ $gray-dark: #404040;
 $gray: #555;
 $gray-light: #e0e0e0;
 $gray-lighter: #f0f0f0;
-$brand-primary: #e6225a;
+$brand-primary: hsl(338, 80%, 50%);
 $text-color: $gray-dark !default;
 
 // Typography
@@ -29,6 +29,15 @@ $asset-middle-bg: $gray-lighter;
 $asset-bottom-bg: $gray-light;
 $asset-heading-font: $font-family-medium;
 $asset-full-width-on-big-image: false;
+
+// Jumbo (frontpage)
+$logo-height: 4rem;
+$jumbo-bg: $gray-darker;
+$jumbo-text-shadow: $gray-darker;
+// Andreas suggestion
+// $logo-height: 3rem;
+// $jumbo-bg: hsl(350, 100%, 25%);
+// $jumbo-text-shadow: hsl(346, 100%, 15%);
 
 // Loading variables again at the bottom allows default
 @import '../../node_modules/collections-online/app/styles/variables';
