@@ -22,9 +22,11 @@ header.topbar
             input.form-control.input-search(
               type='text',
               id='search-input',
-              placeholder='Søg på kbh-billeder.dk',
+              placeholder='Søg på kbhbilleder',
               name='q',
               autocomplete="off",
+              onfocus="this.placeholder = ''",
+              onblur="this.placeholder = 'Søg på kbhbilleder'",
               value=req.query.q || '')
             .input-group-btn
               button.btn-search.btn
