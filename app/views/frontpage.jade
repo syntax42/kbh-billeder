@@ -47,7 +47,7 @@ block content
           .col-xs-12.col-sm-6
             .row
               each item, index in gallery.items
-                - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center'});
+                - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center', quality: 60});
                 - var indexClass = 'gallery-thumb-' + index
                 .col-xs-6
                   a.gallery-thumb.no-touch-hover(href=item.link, class=indexClass)
