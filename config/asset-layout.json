@@ -34,13 +34,6 @@
         }, {
           "title": "Lokalitetsnote",
           "template": "= locationnote"
-        }, {
-          "title": "Google Maps koordinater",
-          "type": "map-coordinates",
-          "fields": {
-            "latitude": "latitude",
-            "longitude": "longitude"
-          }
         }
       ]
     },
