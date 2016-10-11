@@ -9,11 +9,11 @@ block content
     .jumbo
       .jumbo__image
       .jumbo__logos
-        +icon('kbh-mus')
-        +icon('kbh-stads')
+        +icon('kbh-museum')
+        +icon('kbh-arkiv')
       .jumbo__flex
         .container-fluid
-          .row 
+          .row
             .col-xs-12.col-sm-6
               .jumbo__teaser
                 include includes/tagline
@@ -36,7 +36,7 @@ block content
                 button.btn-search.btn
                   span.sr-only Søg
                   +icon('search')
-      
+
     .container-fluid.frontpage-galleries
       each gallery, i in galleries
         .row.gallery(class="gallery--#{i % 2 == 0 ? 'even' : 'odd'}")
@@ -55,7 +55,6 @@ block content
                       h3.gallery-thumb__title= item.title
                       p.gallery-thumb__text= item.description
   include includes/footer
-  include includes/svg-filter
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
