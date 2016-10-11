@@ -7,7 +7,7 @@ header.topbar
         #heading-categories-menu.hamburger.hidden-lg.hidden-md
           +icon('menu')
           .topbar-items__link Menu
-        span.hidden-sm.hidden-xs
+        span.hidden-sm.hidden-xs.topbar__menu
           if menus && menus.main
             each item in menus.main
               a(href=item.url).topbar-items__link= item.title
@@ -17,7 +17,10 @@ header.topbar
         -   // Turning off the search related behaviour defined in main.js
         -   searchMethod = false;
         - }
-        form.search-box(method='get', action='/', data-method=searchMethod)
+        form.search-box.topbar__search(
+            method='get',
+            action='/',
+            data-method=searchMethod)
           .input-group
             input.form-control.input-search(
               type='text',
