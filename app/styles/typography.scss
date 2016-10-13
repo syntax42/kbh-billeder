@@ -29,6 +29,10 @@ pre {
   font-size: .8em;
 }
 
+p {
+  margin-bottom: 1rem;
+}
+
 @media (min-width: $medium-size) {
   html, body {
     font-size: 15px;
