@@ -165,6 +165,15 @@ Get the kubenetes credentials for the cluster
 gcloud container clusters get-credentials kbh-billeder-staging-cluster
 ```
 
+Get the name of the pods using (note that this might change if server is e.g.
+reset).
+
+```
+kubectl get pods
+```
+
+Note the name of the elasticsearch pod (in this case vem8u).
+
 To connect to the production elasticsearch server, use kubectl to create a
 port forwarding. After which the production elasticsearch server will be
 available on http://localhost:9201/
@@ -173,12 +182,7 @@ available on http://localhost:9201/
 kubectl port-forward elasticsearch-vem8u 9201:9200
 ```
 
-Node the elasticsearch pod might have changed name - get the name of the pods
-using
 
-```
-kubectl get pods
-```
 
 ## Subsequent runs
 
