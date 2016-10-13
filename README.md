@@ -170,7 +170,7 @@ port forwarding. After which the production elasticsearch server will be
 available on http://localhost:9201/
 
 ```
-kubectl port-forward elasticsearch-ad1w8 9201:9200
+kubectl port-forward elasticsearch-vem8u 9201:9200
 ```
 
 Node the elasticsearch pod might have changed name - get the name of the pods
@@ -185,7 +185,7 @@ kubectl get pods
 Open 3 terminal windows in the project folder and run
 
 ```
-kubectl port-forward elasticsearch-ad1w8 9201:9200
+kubectl port-forward elasticsearch-vem8u 9201:9200
 ```
 ```
 npm run gulp
