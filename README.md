@@ -183,7 +183,6 @@ kubectl port-forward elasticsearch-vem8u 9201:9200
 ```
 
 
-
 ## Subsequent runs
 
 Open 3 terminal windows in the project folder and run
@@ -197,4 +196,3 @@ npm run gulp
 ```
 npm start
 ```
- 

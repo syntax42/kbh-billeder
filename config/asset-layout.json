@@ -140,7 +140,7 @@
           "title": "Art",
           "template": "= kind"
         }, {
-          "title": "Opført",
+          "title": "Bygning opført",
           "type": "date-interval",
           "fields": {
             "from": "constructed_from",
