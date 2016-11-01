@@ -30,6 +30,8 @@ const WATERMARK_BUFFERS = {
   'kbh-arkiv': fs.readFileSync(watermarkPath + '/kbh-arkiv.png'),
 }
 
+var FALLBACK_PATH = path.normalize(config.appDir + '/images/fallback.png');
+
 const contentDispositionRegexp = /.*\.([^.]+)$/i;
 
 exports.download = function(req, res, next) {
@@ -165,6 +167,10 @@ function watermarkTransformation(watermarkBuffer, maxSize, positionFunction) {
   });
 }
 
+function getErrorPlaceholderStream() {
+  return fs.createReadStream(FALLBACK_PATH);
+}
+
 exports.thumbnail = function(req, res, next) {
   // Let's find out what the license on the asset is
   var catalogAlias = req.params.catalog;
@@ -197,8 +203,14 @@ exports.thumbnail = function(req, res, next) {
       positionFunction = POSITION_FUNCTIONS[position];
     }
     var transformation = watermarkTransformation(watermark, size, positionFunction);
-    proxyRequest = proxyRequest.pipe(transformation);
 
-    return proxyRequest.pipe(res);
+    proxyRequest
+    .on('response', function(response) {
+      if(response.statusCode === 200) {
+        proxyRequest.pipe(transformation).pipe(res);
+      } else {
+        getErrorPlaceholderStream().pipe(res);
+      }
+    })
   }, next);
 };
