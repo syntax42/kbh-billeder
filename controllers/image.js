@@ -12,10 +12,12 @@ exports.proxy = proxy;
  * size is a parameter that
  * next is a callback method for potential errors
  */
-exports.proxyDownload = (id, params) => {
+exports.proxyDownload = (id, size) => {
   var url = '/asset/download/' + id;
-  if (params.options) {
-    url += '?options=' + params.options;
+  if (typeof(size) === 'string') {
+    url += '?options=' + size;
+  } else if (typeof(size) === 'number') {
+    url += '?size=' + size;
   }
   return proxy(url);
 };
