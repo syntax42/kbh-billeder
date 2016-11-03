@@ -62,4 +62,4 @@ co.initialize(app, [
   });
 
   co.registerErrors(app);
-}, console.error);
+}).then(null, console.error);
