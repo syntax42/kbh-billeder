@@ -63,7 +63,8 @@ module.exports = {
     rotationalImages: false,
     crowdtagging: false,
     clientSideSearchResultRendering: true,
-    filterSidebar: true
+    filterSidebar: true,
+    watermarks: true
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
@@ -79,6 +80,7 @@ module.exports = {
   searchPath: 'søg',
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
+  thumbnailSizes: ['lille', 'mellem', 'stor', 'originalJPEG', 'original'],
   types: ['asset'],
   typeRouters: {
     'asset': 'collections-online/lib/routers/asset'
@@ -86,6 +88,10 @@ module.exports = {
   twitterAccount: {
     'kbh-arkiv': 'kbharkiv',
     'kbh-museum': 'kbenhavnsmuseum'
+  },
+  watermarks: {
+    'kbh-museum': path.join(appDir, 'images', 'watermarks', 'kbh-museum.png'),
+    'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png')
   },
    // Found using https://developers.facebook.com/tools/explorer
   facebookAppId: {
