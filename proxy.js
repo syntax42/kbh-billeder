@@ -1,5 +1,5 @@
-var config = require('collections-online/lib/config');
 
+var config = require('collections-online/lib/config');
 var cip = require('./services/cip');
 var Agent = require('agentkeepalive');
 var request = require('request').defaults({
@@ -8,7 +8,9 @@ var request = require('request').defaults({
   })
 });
 
-function proxy(url, next) {
+function proxy(url) {
+  // Prefix the baseURL
+  url = config.cip.baseURL + url;
   // Add any available jsessionid, just before any querystring.
   if(url.indexOf('jsessionid') < 0 && cip.jsessionid) {
     let jsessionidString = ';jsessionid=' + cip.jsessionid;
@@ -26,9 +28,6 @@ function proxy(url, next) {
 
   return request
     .get(url)
-    .on('error', function(err) {
-      next(err);
-    })
     .on('response', function(response){
       response.headers['Cache-Control'] = 'max-age=2592000';
     });
