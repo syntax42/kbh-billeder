@@ -23,7 +23,6 @@ var middleware = require('./middleware');
 var importRoutes = keystone.importer(__dirname);
 
 var frontpage = require('./frontpage');
-var images = require('./images');
 
 // Common Middleware
 keystone.pre('routes', middleware.initLocals);
@@ -42,12 +41,4 @@ exports = module.exports = function (app) {
   app.route('/').get(frontpage);
 	// Views
 	app.get('/:slug', routes.views.page);
-	// Custom implementation of image downloading.
-	app.get('/:catalog/:id(\\d+)/download/:size', images.download);
-	app.get('/:catalog/:id(\\d+)/download/:size/:filename', images.download);
-	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
-	// app.get('/protected', middleware.requireUser, routes.views.protected);
-	app.get('/:catalog/:id(\\d+)/thumbnail', images.thumbnail);
-	app.get('/:catalog/:id(\\d+)/thumbnail/:size(\\d+)', images.thumbnail);
-	app.get('/:catalog/:id(\\d+)/thumbnail/:size(\\d+)/:position([a-z\\-]+)', images.thumbnail);
 };

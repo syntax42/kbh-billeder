@@ -20,6 +20,7 @@ module.exports = {
   port: process.env.PORT || 9000,
   allowRobots: true,
   appDir: appDir,
+  appName: 'KBH Billeder',
   // A list of directories to look for static files and /views
   appPaths: [
     generatedDir,
@@ -78,7 +79,10 @@ module.exports = {
   searchPath: 'søg',
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
-  appName: 'KBH Billeder',
+  types: ['asset'],
+  typeRouters: {
+    'asset': 'collections-online/lib/routers/asset'
+  },
   twitterAccount: {
     'kbh-arkiv': 'kbharkiv',
     'kbh-museum': 'kbenhavnsmuseum'
