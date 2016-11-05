@@ -75,15 +75,15 @@ module.exports = {
   filterOptions: require('../filter-options.json'),
   sortOptions: require('../sort-options.json'),
   assetFields: require('../asset-fields.json'),
-  assetLayout: require('../asset-layout.json'),
   licenseMapping: require('../license-mapping.json'),
   searchPath: 'søg',
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
   thumbnailSizes: ['lille', 'mellem', 'stor', 'originalJPEG', 'original'],
-  types: ['asset'],
-  typeRouters: {
-    'asset': 'collections-online/lib/routers/asset'
+  types: {
+    asset: {
+      layout: require('../layouts/asset.json')
+    }
   },
   twitterAccount: {
     'kbh-arkiv': 'kbharkiv',
