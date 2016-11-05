@@ -118,11 +118,11 @@
         },
         {
           "title": "Farve",
-          "template": "= bool(color)"
+          "template": "= color ? 'Ja' : 'Nej'"
         },
         {
           "title": "Sort/hvid",
-          "template": "= bool(black_and_white)"
+          "template": "= black_and_white ? 'Ja' : 'Nej'"
         },
         {
           "title": "Stadsarkitekt",
