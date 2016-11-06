@@ -82,7 +82,8 @@ module.exports = {
   thumbnailSizes: ['lille', 'mellem', 'stor', 'originalJPEG', 'original'],
   types: {
     asset: {
-      layout: require('../layouts/asset.json')
+      layout: require('../layouts/asset.json'),
+      index: 'kbh-billeder-assets'
     }
   },
   twitterAccount: {
