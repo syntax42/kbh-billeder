@@ -82,8 +82,10 @@
     text-align: left;
   }
 
-  th, td {
+  th,
+  td {
     vertical-align: top;
+    word-wrap: break-word;
   }
 
   // ensure som padding on mobile
