@@ -1,15 +1,16 @@
 .btn-close {
-  padding-right: $spacer-lg;
-  position: relative;
   padding-right: $spacer-xs;
+  position: relative;
 }
 
 .btn-default {
   background-color: $gray;
 
-  &:hover, &:focus, &:active {
-    color: white;
+  &:hover,
+  &:focus,
+  &:active {
     background-color: lighten($gray, 10%);
+    color: $white;
   }
 }
 
@@ -22,8 +23,8 @@
     &:hover,
     &:focus {
       @include shadow(2);
-      z-index: 1;
       transform: translateY(-1px);
+      z-index: 1;
     }
   }
 }
