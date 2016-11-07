@@ -13,14 +13,9 @@ header.topbar
               a(href=item.url).topbar-items__link= item.title
         - var path = (req.path).split('/')
         - var searchMethod = (isSearching ? 'modify-query' : '')
-        - if(config.features.clientSideSearchResultRendering) {
-        -   // Turning off the search related behaviour defined in main.js
-        -   searchMethod = false;
-        - }
         form.search-box.topbar__search(
             method='get',
-            action='/',
-            data-method=searchMethod)
+            action='/')
           .input-group
             input.form-control.input-search(
               type='text',
