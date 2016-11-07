@@ -1,0 +1,43 @@
+{
+  "district": {
+    "type": "term",
+    "field": "district.raw",
+    "singular": "bydel",
+    "plural": "bydele"
+  },
+  "street_name": {
+    "type": "term",
+    "field": "street_name.raw",
+    "size": 20,
+    "singular": "gadenavn",
+    "plural": "gadenavne"
+  },
+  "creation": {
+    "type": "date-range",
+    "field": "creation_time.timestamp",
+    "singular": "periode",
+    "plural": "perioder"
+  },
+  "original_material": {
+    "type": "term",
+    "field": "original_material.displaystring",
+    "singular": "originalmateriale",
+    "plural": "originalmaterialer"
+  },
+  "license": {
+    "type": "term",
+    "field": "license.displaystring",
+    "singular": "licens",
+    "plural": "licenser"
+  },
+  "institution": {
+    "type": "term",
+    "field": "catalog_name.raw",
+    "singular": "institution",
+    "plural": "institutioner"
+  },
+  "q": {
+    "type": "querystring",
+    "skipSplit": true
+  }
+}
