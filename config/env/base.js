@@ -15,24 +15,15 @@ var generatedDir = path.join(__dirname, '..', '..', 'generated');
 var appDir = path.join(__dirname, '..', '..', 'app');
 
 module.exports = {
-  //root: rootPath,
-  ip:   process.env.IP || '0.0.0.0',
-  port: process.env.PORT || 9000,
   allowRobots: true,
   appDir: appDir,
   appName: 'KBH Billeder',
-  // A list of directories to look for static files and /views
   appPaths: [
     generatedDir,
     appDir
   ],
-  // Elasticsearch
-  es: {
-    host: process.env.ES_HOST || 'localhost:9200',
-    assetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
-    log: 'error'
-  },
-  // CIP
+  assetFields: require('../asset-fields.json'),
+  categoryBlacklist: require('../category-blacklist.js'),
   cip: {
     baseURL: 'http://www.neaonline.dk/CIP',
     username: process.env.CIP_USERNAME,
@@ -56,27 +47,43 @@ module.exports = {
     },
     sessionRenewalRate: 30*60*1000 // Once every 30 minutes
   },
+  cloudinaryUrl: process.env.CLOUDINARY_URL || false,
+  es: {
+    host: process.env.ES_HOST || 'localhost:9200',
+    assetsIndex: process.env.ES_ASSETS_INDEX || 'assets',
+    log: 'error'
+  },
+  facebookAppId: {
+    // Found using https://developers.facebook.com/tools/explorer
+    'kbh-arkiv': 159598384220080,
+    'kbh-museum': 116055131754566
+  },
   features: {
     cookieConsent: true,
     cookieName: 'kbh-billeder-ok-cookie',
     geotagging: false,
     rotationalImages: false,
     crowdtagging: false,
-    clientSideSearchResultRendering: true,
     filterSidebar: true,
     watermarks: true
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
-  // googleMapsAPIKey: '',
   googleAPIKey: process.env.GOOGLE_API_KEY,
-  projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
-  categoryBlacklist: require('../category-blacklist.js'),
-  filterOptions: require('../filter-options.json'),
-  sortOptions: require('../sort-options.json'),
-  assetFields: require('../asset-fields.json'),
+  ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
-  searchPath: 'søg',
+  port: process.env.PORT || 9000,
+  projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
+  search: {
+    baseQuery: {
+      match: {
+        'is_searchable': true
+      }
+    },
+    filters: require('../filters.json'),
+    path: 'søg'
+  },
+  sortOptions: require('../sort-options.json'),
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
   thumbnailSizes: ['lille', 'mellem', 'stor', 'originalJPEG', 'original'],
@@ -93,11 +100,5 @@ module.exports = {
   watermarks: {
     'kbh-museum': path.join(appDir, 'images', 'watermarks', 'kbh-museum.png'),
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png')
-  },
-   // Found using https://developers.facebook.com/tools/explorer
-  facebookAppId: {
-    'kbh-arkiv': 159598384220080,
-    'kbh-museum': 116055131754566
-  },
-  cloudinaryUrl: process.env.CLOUDINARY_URL || false
+  }
 };
