@@ -17,7 +17,7 @@ var appDir = path.join(__dirname, '..', '..', 'app');
 module.exports = {
   allowRobots: true,
   appDir: appDir,
-  appName: 'KBH Billeder',
+  appName: 'kbhbilleder.dk',
   appPaths: [
     generatedDir,
     appDir
@@ -72,6 +72,9 @@ module.exports = {
   googleAPIKey: process.env.GOOGLE_API_KEY,
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
+  metatags: {
+    description: 'Udforsk historiske fotografier, kort og tegninger fra Københavns Museum og Københavns Stadsarkivs samlinger.'
+  },
   port: process.env.PORT || 9000,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
   search: {

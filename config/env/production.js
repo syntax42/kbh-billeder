@@ -5,7 +5,7 @@ var base = require('./base');
 
 module.exports = _.merge(base, {
   env: 'production',
-  siteTitle: 'KBH Billeder',
+  appName: 'kbhbilleder.dk',
   allowRobots: true,
   host: 'kbhbilleder.dk',
   es: {
