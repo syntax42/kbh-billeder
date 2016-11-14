@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "cip-js": "git+https://github.com/NationalMuseumofDenmark/cip.js.git#feature/promises"
   },
   "peerDependencies": {
     "collections-online": "^1.0.0"
