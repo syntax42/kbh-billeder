@@ -10,7 +10,7 @@ var es = require('collections-online/lib/services/elasticsearch');
 var config = require('collections-online/lib/config');
 
 module.exports = function(state) {
-  state.index = config.es.assetsIndex;
+  state.index = config.types.asset.index;
   console.log('Initializing the Elastic Search index: ' + state.index);
 
   return es.indices.exists({

@@ -162,7 +162,7 @@ function fetchCategoryCounts(esClient, catalogs) {
     var catalogAlias = catalog.id;
 
     var countPromise = esClient.search({
-      index: config.es.assetsIndex,
+      index: config.types.asset.index,
       body: {
         'size': 0,
         'aggs': {

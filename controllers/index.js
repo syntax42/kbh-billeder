@@ -27,7 +27,7 @@ var helpers = {
 function updateAsset(catalogs, categories, assetId) {
   var state = {
     'es': es,
-    'index': config.es.assetsIndex,
+    'index': config.types.asset.index,
     'catalogs': catalogs,
     'categories': categories,
     'mode': 'single',
@@ -39,7 +39,7 @@ function updateAsset(catalogs, categories, assetId) {
 
 function deleteAsset(req, assetId) {
   return es.delete({
-    index: config.es.assetsIndex,
+    index: config.types.asset.index,
     type: 'asset',
     id: assetId
   });
