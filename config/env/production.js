@@ -8,8 +8,5 @@ module.exports = _.merge(base, {
   appName: 'kbhbilleder.dk',
   allowRobots: true,
   host: 'kbhbilleder.dk',
-  es: {
-    assetsIndex: 'kbh-billeder-assets'
-  },
   googleAnalyticsPropertyID: 'UA-78446616-1'
 });
