@@ -23,6 +23,9 @@ module.exports = {
     appDir
   ],
   assetFields: require('../asset-fields.json'),
+  cache: {
+    ttl: 60 * 5 // 5 minutes
+  },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
     baseURL: 'http://www.neaonline.dk/CIP',
