@@ -4,14 +4,12 @@ var keystone = require('keystone');
 var csrf = require('csurf');
 var co = require('collections-online');
 
-// This allows loading of environment variables from a .env file
-require('dotenv').config({silent: true});
 // Loading the configuration
 var config = require('./config');
+co.config(config);
 
 // Creating an express app
 var app = express();
-co.config(config);
 
 // Set up Keystone
 keystone.init(config.keystone.options);

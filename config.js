@@ -1,6 +1,13 @@
 'use strict';
 
 var _ = require('lodash');
+var path = require('path');
+
+// Allows for environment variables to be set using a .env file
+require('dotenv').config({
+  silent: true,
+  path: path.join(__dirname, '.env')
+});
 
 // If no NODE_ENV was specified, we are in development
 if (!process.env.NODE_ENV) {
@@ -8,11 +15,10 @@ if (!process.env.NODE_ENV) {
 }
 
 console.log('Loading ' + process.env.NODE_ENV + ' configuration');
-module.exports = require('./config/env/' + process.env.NODE_ENV);
-var config = module.exports;
+let config = require('./config/env/' + process.env.NODE_ENV);
 
 // Loading Keystone configuration
-module.exports.keystone = {
+config.keystone = {
   options: {
     'name': 'KBH Billeder',
     'brand': 'KBH Billeder',
@@ -32,3 +38,5 @@ module.exports.keystone = {
     galleries: ['galleries', 'gallery-items']
   }
 }
+
+module.exports = config;
