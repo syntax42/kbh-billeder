@@ -14,9 +14,9 @@
  * }
  */
 
-var runIndexing = require('../indexing/modes/run');
-var es = require('collections-online/lib/services/elasticsearch');
-var config = require('collections-online/lib/config');
+const runIndexing = require('../indexing/modes/run');
+const es = require('collections-online/lib/services/elasticsearch');
+const config = require('collections-online/lib/config');
 
 var helpers = {
   thousandsSeparator: function(number) {
@@ -54,7 +54,7 @@ exports.asset = function(req, res, next) {
 
   console.log('Index asset called with body =', req.body);
 
-  // If the catalog alias does is not sat in the ID
+  // If the catalog alias is not sat in the ID
   if(id.indexOf('/') === -1) {
     // No slash in the id - the catalog should be read from .collection
     var catalogAlias = catalogs.reduce(function(result, catalog) {

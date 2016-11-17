@@ -10,7 +10,8 @@ try {
 module.exports.registerPlugins = () => {
   plugins.register('indexing-engine', require('./indexing/run'));
   plugins.register('image-controller', require('./controllers/image'));
-  plugins.register('geo-tagging-saver', null);
+  plugins.register('geo-tag-controller', require('./controllers/geo-tag'));
+  plugins.register('motif-tag-controller', require('./controllers/motif-tag'));
 };
 
 module.exports.registerRoutes = (app) => {
