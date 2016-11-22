@@ -5,8 +5,11 @@ var base = require('./base');
 
 module.exports = _.merge(base, {
   env: 'production',
-  appName: 'kbhbilleder.dk',
   allowRobots: true,
+  appName: 'kbhbilleder.dk',
+  googleAnalyticsPropertyID: 'UA-78446616-1',
   host: 'kbhbilleder.dk',
-  googleAnalyticsPropertyID: 'UA-78446616-1'
+  ip: null,
+  port: null,
+  socketPath: '/tmp/kbh-billeder.sock'
 });
