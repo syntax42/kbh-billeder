@@ -24,7 +24,7 @@ config.keystone = {
     'brand': 'KBH Billeder',
     'auto update': true,
     'mongo': process.env.MONGO_CONNECTION || 'mongodb://localhost/kbh-billeder',
-    'session': 'mongo',
+    'session store': 'mongo',
     'auth': true,
     'user model': 'User',
     'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
