@@ -67,7 +67,8 @@ module.exports = {
     rotationalImages: false,
     crowdtagging: false,
     filterSidebar: true,
-    watermarks: true
+    watermarks: true,
+    lazyLoadExpandedAssets: false
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
