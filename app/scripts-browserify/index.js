@@ -5,4 +5,5 @@ if(config.features.cookieConsent) {
 if(config.googleAnalyticsPropertyID) {
   require('analytics');
 }
+require('asset');
 require('dropdown');

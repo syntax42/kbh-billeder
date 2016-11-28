@@ -59,8 +59,8 @@ block content
         .row
           .col-xs-12.col-sm-7.img-col
             .image-wrap
-              if downloadable
-                img(src=sources.thumbnail+'/2000', data-src=bigImage, alt=title).asset-image--zoomable.asset-image--lazy.kbh-asset-image
+              if downloadable && config.features.lazyLoadExpandedAssets
+                img(src=sources.thumbnail+'/2000', data-expanded-src=bigImage, alt=title).asset-image--zoomable.kbh-asset-image
               else
                 img(src=sources.thumbnail+'/2000/bottom-right', alt=title).asset-image--zoomable.kbh-asset-image
                 //- .watermark
@@ -68,9 +68,10 @@ block content
                 //-    +icon('kbh-arkiv')
                 //-  else if (institution === 'kbh-museum')
                 //-    +icon('kbh-museum')
-            .social
-              a(data-action="asset-image-size-toggle").hidden-xs
-                +icon('zoom-in')
+            .controls
+              a(data-action="asset-image-size-toggle").hidden-xs.zoom-btn
+                +icon('zoom-in', 'zoom-in')
+                +icon('zoom-out', 'zoom-out')
               a(data-action="asset-download-show", class="#{downloadable===true ? '' : 'dimmed'}")
                 +icon('download')
               a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
