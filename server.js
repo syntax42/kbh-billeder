@@ -31,6 +31,7 @@ keystone.set('wysiwyg additional buttons', 'styleselect, blockquote');
 keystone.import('./models');
 
 keystone.initExpressApp(app);
+
 co.initialize(app, [
   require('collections-online-cumulus')
 ]).then(() => {
@@ -47,12 +48,6 @@ co.initialize(app, [
   keystone.set('nav', config.keystone.nav);
 
   app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
-
-  app.use(keystone.get('session options').cookieParser);
-  app.use(keystone.expressSession);
-  app.use(keystone.session.persist);
-  app.use(require('connect-flash')());
-
   app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
   keystone.openDatabaseConnection(function() {
