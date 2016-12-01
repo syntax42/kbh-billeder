@@ -29,12 +29,7 @@ config.keystone = {
     'user model': 'User',
     'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
     'wysiwyg cloudinary images': config.cloudinaryUrl ? true : false,
-    'wysiwyg importcss': '/styles/keystone-tiny-mce.css',
-    'wysiwyg additional options': {
-      'external_plugins': {
-        'uploadimage': '/keystone/js/lib/tinymce/tinymce.min.js'
-      }
-    },
+    'wysiwyg importcss': '/styles/keystone-tiny-mce.css'
   },
   nav: {
     users: 'users',
