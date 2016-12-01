@@ -15,6 +15,15 @@ spec:
       - name: frontend
         image: eu.gcr.io/kbh-billeder/frontend:latest
         imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+            httpHeaders:
+              - name: Host
+                value: kbhbilleder.dk
         resources: {}
         ports:
         - containerPort: 80
