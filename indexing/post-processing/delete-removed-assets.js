@@ -7,7 +7,7 @@
  */
 
 var Q = require('q');
-var es = require('collections-online/lib/services/elasticsearch');
+var es = require('collections-online/default-plugins/elasticsearch');
 var _ = require('lodash');
 
 module.exports = function(state) {

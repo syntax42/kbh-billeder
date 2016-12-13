@@ -1,7 +1,5 @@
 const config = require('collections-online/lib/config');
 const cip = require('../services/cip');
-const es = require('collections-online/lib/services/elasticsearch');
-const indexAsset = require('../indexing/processing/asset');
 
 const CROWD_TAGS = '{73be3a90-a8ef-4a42-aa8f-d16ca4f55e0a}';
 
@@ -23,6 +21,9 @@ module.exports.save = (metadata) => {
 }
 
 module.exports.updateIndex = (metadata) => {
+  const es = require('collections-online/default-plugins/elasticsearch');
+  // TODO: Consider that elasticsearch might not be the only way to update the
+  // document index.
   var indexingState = {
     es: es,
     index: config.types.asset.index
@@ -32,5 +33,7 @@ module.exports.updateIndex = (metadata) => {
   ];
   // The CIP specific indexing code requires a catalog instead of collection
   metadata.catalog = metadata.collection;
+
+  const indexAsset = require('../indexing/processing/asset');
   return indexAsset(indexingState, metadata, transformations);
 }

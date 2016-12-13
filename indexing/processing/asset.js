@@ -6,7 +6,7 @@
 
 var _ = require('lodash');
 var Q = require('q');
-var es = require('collections-online/lib/services/elasticsearch');
+var es = require('collections-online/default-plugins/elasticsearch');
 var config = require('collections-online/lib/config');
 
 function AssetIndexingError(catalogAlias, assetId, innerError) {

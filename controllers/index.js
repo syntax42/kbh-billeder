@@ -15,7 +15,7 @@
  */
 
 const runIndexing = require('../indexing/modes/run');
-const es = require('collections-online/lib/services/elasticsearch');
+const ds = require('collections-online/lib/services/documents');
 const config = require('collections-online/lib/config');
 
 var helpers = {
@@ -26,7 +26,7 @@ var helpers = {
 
 function updateAsset(catalogs, categories, assetId) {
   var state = {
-    'es': es,
+    'es': ds,
     'index': config.types.asset.index,
     'catalogs': catalogs,
     'categories': categories,
@@ -38,7 +38,7 @@ function updateAsset(catalogs, categories, assetId) {
 }
 
 function deleteAsset(req, assetId) {
-  return es.delete({
+  return ds.delete({
     index: config.types.asset.index,
     type: 'asset',
     id: assetId

@@ -6,15 +6,6 @@
 
 var Q = require('q');
 
-var steps = [
-  require('./initialize/elastic-search-index'),
-  require('./initialize/cip-catalogs'),
-  require('./initialize/cip-categories'),
-  require('./initialize/mode'),
-  require('./modes/run'),
-  require('./post-processing/print-asset-exceptions')
-];
-
 function run(state) {
   // TODO: Consider having a mode and referecen parameter on the run method,
   // for this module to be controlled by other modules.
@@ -22,6 +13,15 @@ function run(state) {
   if (!state) {
     state = {};
   }
+  
+  var steps = [
+    require('./initialize/elastic-search-index'),
+    require('./initialize/cip-catalogs'),
+    require('./initialize/cip-categories'),
+    require('./initialize/mode'),
+    require('./modes/run'),
+    require('./post-processing/print-asset-exceptions')
+  ];
 
   return steps.reduce(Q.when, new Q(state));
 }

@@ -1,9 +1,9 @@
 'use strict';
 
-var cip = require('./services/cip');
-var es = require('collections-online/lib/services/elasticsearch');
-var Q = require('q');
-var config = require('collections-online/lib/config');
+const cip = require('./services/cip');
+const Q = require('q');
+const config = require('collections-online/lib/config');
+const ds = require('collections-online/lib/services/documents');
 
 function Categories(tree) {
   this.getPath = function(x) {
@@ -231,7 +231,7 @@ exports.initialize = (app) => {
       }
     }
     // Fetch the number of assets in the category.
-    return fetchCategoryCounts(es, categories)
+    return fetchCategoryCounts(ds, categories)
     .then(function(categoriesWithCounts) {
       app.set('categories', categoriesWithCounts);
     });

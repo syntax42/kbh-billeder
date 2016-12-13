@@ -1,10 +1,10 @@
 const cip = require('../services/cip');
-const indexAsset = require('../indexing/processing/asset');
 
 var GOOGLE_MAPS_COORDS_CROWD_FIELD = '{81780c19-86be-44e6-9eeb-4e63f16d7215}';
 var HEADING_FIELD = '{ef236a08-62f8-485f-b232-9771792d29ba}';
 
 function updateIndex(req, collection, id, latitude, longitude, heading) {
+  throw new Error('Needs a reimplementation');
   // Get the assets current metadata from elasticsearch.
   return es.get({
     index: config.type.asset.index,
