@@ -8,7 +8,12 @@ try {
 }
 
 module.exports.registerPlugins = () => {
-  plugins.register('indexing-engine', require('./indexing/run'));
+  const config = require('collections-online/lib/config');
+  if(config.es) {
+    plugins.register('indexing-engine', require('./indexing/run'));
+  } else {
+    console.warn('The Cumulus indexing engine is disabled due to configuation');
+  }
   plugins.register('image-controller', require('./controllers/image'));
   plugins.register('geo-tag-controller', require('./controllers/geo-tag'));
   plugins.register('motif-tag-controller', require('./controllers/motif-tag'));
