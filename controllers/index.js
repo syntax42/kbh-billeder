@@ -14,7 +14,6 @@
  * }
  */
 
-const runIndexing = require('../indexing/modes/run');
 const ds = require('collections-online/lib/services/documents');
 const config = require('collections-online/lib/config');
 
@@ -34,7 +33,7 @@ function updateAsset(catalogs, categories, assetId) {
     'reference': assetId
   };
 
-  return runIndexing(state);
+  throw new Error('updateAsset not yet implemented');
 }
 
 function deleteAsset(req, assetId) {

@@ -28,7 +28,9 @@ module.exports.registerRoutes = (app) => {
 module.exports.initialize = (app, config) => {
   var cip = require('./services/cip');
   return cip.initSession().then(() => {
-    return require('./cip-categories').initialize(app)
+    // TODO: Consider creating the structure of categories (used for the menu)
+    // from another API than the CIP
+    // return require('./cip-categories').initialize(app)
   }).then(() => {
     setInterval(() => {
       // Consider calling close session ..
