@@ -1,13 +1,12 @@
 'use strict';
+// Requiring collections-online and loading configuration
+const co = require('collections-online');
+co.config(__dirname);
+// Register collections-online plugins
+require('./plugins').register();
 
-var co = require('collections-online');
-
-// This allows loading of environment variables from a .env file
-require('dotenv').config({silent: true});
 // Loading the configuration
 var state = {};
-var config = require('./config');
-co.config(config);
 
 // This registers the cumulus indexing-engine
 require('collections-online-cumulus').registerPlugins();

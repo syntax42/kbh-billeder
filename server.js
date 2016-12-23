@@ -1,15 +1,13 @@
 'use strict';
-var express = require('express');
-var keystone = require('keystone');
-var csrf = require('csurf');
-var co = require('collections-online');
-
-// Loading the configuration
-var config = require('./config');
-co.config(config);
+// Requiring collections-online and loading configuration
+const co = require('collections-online');
+co.config(__dirname);
+// Register collections-online plugins
+require('./plugins').register();
 
 // Creating an express app
-var app = express();
+const express = require('express');
+const app = express();
 
 // Set up Keystone
 keystone.init(config.keystone.options);
