@@ -1,5 +1,5 @@
 var Q = require('q');
-var keystone = require('keystone');
+var keystone = require('collections-online/plugins/keystone').module;
 
 var Gallery = keystone.list('Gallery');
 var GalleryItem = keystone.list('Gallery item');

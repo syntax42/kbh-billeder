@@ -1,4 +1,4 @@
-var keystone = require('keystone');
+var keystone = require('collections-online/plugins/keystone').module;
 
 var index = require('collections-online/lib/controllers/index');
 var search = require('collections-online/lib/controllers/search');
