@@ -1,5 +1,6 @@
 module.exports = [
   require('collections-online-cumulus/indexing/transformations/field-names'),
+  require('./derive_collection'),
   require('collections-online-cumulus/indexing/transformations/empty-title'),
   require('collections-online-cumulus/indexing/transformations/dates'),
   require('collections-online-cumulus/indexing/transformations/date-intervals'),
