@@ -72,7 +72,7 @@ block content
               a(data-action="asset-image-size-toggle").hidden-xs.zoom-btn
                 +icon('zoom-in', 'zoom-in')
                 +icon('zoom-out', 'zoom-out')
-              a(data-action="asset-download-show", class="#{downloadable===true ? '' : 'dimmed'}")
+              a(data-action="asset-download-show", class=downloadable===true ? '' : 'dimmed')
                 +icon('download')
               a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
                 +icon('facebook')
@@ -112,7 +112,7 @@ block content
             .slider
               each asset in relatedAssets
                 a(href=asset.href)
-                  img(data-lazy="#{asset.src}")
+                  img(data-lazy=asset.src)
 
 
   .overlay__container(data-content="asset-download")
@@ -120,18 +120,18 @@ block content
       if (downloadable)
         h2 Download
         if(smallImage)
-          a.btn.btn-primary(href='#{smallImage}')
+          a.btn.btn-primary(href=smallImage)
             | Lille (#{sources.imageSet.download800.size} jpg)
         if(mediumImage)
-          a.btn.btn-primary(href='#{mediumImage}')
+          a.btn.btn-primary(href=mediumImage)
             | Mellem (#{sources.imageSet.download1200.size} jpg)
         if(largeImage)
-          a.btn.btn-primary(href='#{largeImage}')
+          a.btn.btn-primary(href=largeImage)
             | Stor (#{sources.imageSet.download2000.size} jpg)
-        a.btn.btn-primary(href='#{downloadSlug}originalJPEG')
+        a.btn.btn-primary(href=downloadSlug + 'originalJPEG')
           | Original (#{fullWidth} x #{fullHeight} jpg)
         if(file_format === 'TIFF Image')
-          a.btn.btn-primary(href='#{downloadSlug}original')
+          a.btn.btn-primary(href=downloadSlug + 'original')
             | Original (#{fullWidth} x #{fullHeight} tiff)
         +displayLicense(metadata.license)
       else
