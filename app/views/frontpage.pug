@@ -39,7 +39,7 @@ block content
 
     .container-fluid.frontpage-galleries
       each gallery, i in galleries
-        .row.gallery(class="gallery--#{i % 2 == 0 ? 'even' : 'odd'}")
+        .row.gallery(class="gallery--" + (i % 2 == 0 ? 'even' : 'odd'))
           .col-xs-12.col-sm-5
             h2.gallery__title= gallery.title
             p.gallery__text= gallery.description
@@ -55,7 +55,6 @@ block content
                     .gallery-thumb__overlay
                       h3.gallery-thumb__title= item.title
                       p.gallery-thumb__text= item.description
-  include includes/footer
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
