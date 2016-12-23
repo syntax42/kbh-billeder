@@ -14,7 +14,7 @@ var cipCatalogs = require('../cip-catalogs.json');
 var generatedDir = path.join(__dirname, '..', '..', 'generated');
 var appDir = path.join(__dirname, '..', '..', 'app');
 
-module.exports = {
+let config = {
   allowRobots: true,
   appDir: appDir,
   appName: 'kbhbilleder.dk',
@@ -50,6 +50,27 @@ module.exports = {
     },
     sessionRenewalRate: 30*60*1000 // Once every 30 minutes
   },
+  keystone: {
+    options: {
+      'name': 'KBH Billeder',
+      'brand': 'KBH Billeder',
+      'auto update': true,
+      'updates': path.join(__dirname, '..', '..', 'updates'),
+      'mongo': process.env.MONGO_CONNECTION || 'mongodb://localhost/kbh-billeder',
+      'session store': 'mongo',
+      'auth': true,
+      'user model': 'User',
+      'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
+      'wysiwyg additional buttons': 'styleselect, blockquote',
+      'wysiwyg importcss': '/styles/keystone-tiny-mce.css'
+    },
+    nav: {
+      users: 'users',
+      pages: 'pages',
+      menus: ['menu-items'],
+      galleries: ['galleries', 'gallery-items']
+    }
+  },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
   es: {
     host: process.env.ES_HOST || 'localhost:9200',
@@ -62,13 +83,13 @@ module.exports = {
   },
   features: {
     cookieConsent: true,
-    cookieName: 'kbh-billeder-ok-cookie',
-    geotagging: false,
-    rotationalImages: false,
     crowdtagging: false,
     filterSidebar: true,
-    watermarks: true,
-    lazyLoadExpandedAssets: false
+    geotagging: false,
+    keystone: true,
+    lazyLoadExpandedAssets: false,
+    rotationalImages: false,
+    watermarks: true
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
@@ -108,3 +129,5 @@ module.exports = {
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png')
   }
 };
+
+module.exports = config;
