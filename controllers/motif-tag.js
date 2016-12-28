@@ -21,7 +21,7 @@ module.exports.save = (metadata) => {
 }
 
 module.exports.updateIndex = (metadata) => {
-  const es = require('collections-online/default-plugins/elasticsearch');
+  const es = require('collections-online/lib/services/elasticsearch');
   // TODO: Consider that elasticsearch might not be the only way to update the
   // document index.
   var indexingState = {

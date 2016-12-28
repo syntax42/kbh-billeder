@@ -6,9 +6,9 @@
  * the index.
  */
 
-var Q = require('q');
-var es = require('collections-online/default-plugins/elasticsearch');
-var _ = require('lodash');
+const Q = require('q');
+const es = require('collections-online/lib/services/elasticsearch');
+const _ = require('lodash');
 
 module.exports = function(state) {
   var activity = 'Post-processing to delete removed assets';

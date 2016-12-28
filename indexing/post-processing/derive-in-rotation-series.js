@@ -7,10 +7,10 @@
  * reachable when searching.
  */
 
-var Q = require('q');
-var _ = require('lodash');
-var es = require('collections-online/default-plugins/elasticsearch');
-var config = require('collections-online/lib/config');
+const Q = require('q');
+const _ = require('lodash');
+const es = require('collections-online/lib/services/elasticsearch');
+const config = require('collections-online/lib/config');
 
 // TODO: Consider taking the 'Rotationsbilleder' category name from a
 // configuration file.

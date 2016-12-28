@@ -6,8 +6,8 @@
  * @param {Object} state The state of which we are about to initialize.
  */
 
-var es = require('collections-online/default-plugins/elasticsearch');
-var config = require('collections-online/lib/config');
+const es = require('collections-online/lib/services/elasticsearch');
+const config = require('collections-online/lib/config');
 
 module.exports = function(state) {
   state.index = config.types.asset.index;

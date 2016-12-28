@@ -10,7 +10,10 @@ const config = require('collections-online/lib/config');
 module.exports.registerPlugins = () => {
   const config = require('collections-online/lib/config');
   if(config.es) {
-    plugins.register('indexing-engine', require('./indexing/run'));
+    plugins.register({
+      type: 'indexing-engine',
+      module: require('./indexing/run')
+    });
   } else {
     console.warn('The Cumulus indexing engine is disabled due to configuation');
   }

@@ -4,10 +4,10 @@
  * The processor handling a single asset.
  */
 
-var _ = require('lodash');
-var Q = require('q');
-var es = require('collections-online/default-plugins/elasticsearch');
-var config = require('collections-online/lib/config');
+const _ = require('lodash');
+const Q = require('q');
+const es = require('collections-online/lib/services/elasticsearch');
+const config = require('collections-online/lib/config');
 
 function AssetIndexingError(catalogAlias, assetId, innerError) {
   this.catalogAlias = catalogAlias;
