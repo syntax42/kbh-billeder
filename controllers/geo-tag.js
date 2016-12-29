@@ -17,6 +17,10 @@ module.exports.save = (metadata) => {
     if (response.statusCode !== 200) {
       console.error(response.body);
       throw new Error('Failed to set the field values');
+    } else {
+      console.log('Saved geo-tag on asset: ' +
+                  metadata.collection + '/' + metadata.id);
+      return metadata;
     }
   })
 }
