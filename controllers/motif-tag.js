@@ -13,8 +13,9 @@ function saveToCip(catalog, id, values) {
 }
 
 module.exports.save = (metadata) => {
+  // Save it using the CIP
   var values = {};
-  values[CROWD_TAGS] = metadata.tags_crowd.join(',');
+  values[CROWD_TAGS] = metadata.tags.join(',');
   return saveToCip(metadata.collection, metadata.id, values).then(function() {
     return metadata;
   });
