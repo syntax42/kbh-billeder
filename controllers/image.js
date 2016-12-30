@@ -1,7 +1,10 @@
 'use strict';
 
-var querystring = require('querystring');
-var proxy = require('../proxy');
+const assert = require('assert');
+
+const config = require('collections-online/lib/config');
+const querystring = require('querystring');
+const proxy = require('../proxy');
 
 exports.proxy = proxy;
 
@@ -13,12 +16,14 @@ exports.proxy = proxy;
  * next is a callback method for potential errors
  */
 exports.proxyDownload = (id, size) => {
-  var url = '/asset/download/' + id;
-  if (typeof(size) === 'string') {
-    url += '?options=' + size;
-  } else if (typeof(size) === 'number') {
-    url += '?size=' + size;
+  let url = '/asset/download/' + id;
+  const option = config.downloadOptions[size];
+  assert(option, 'Expected value for "' + size + '" in config.downloadOptions');
+
+  if (option.cumulus) {
+    url += '?options=' + JSON.stringify(option.cumulus);
   }
+
   return proxy(url);
 };
 
