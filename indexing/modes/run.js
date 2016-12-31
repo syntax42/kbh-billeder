@@ -9,9 +9,7 @@ var processQuery = require('../processing/query');
 var config = require('collections-online/lib/config');
 
 const POST_PROCESSING_STEPS = [
-  require('../post-processing/inherit-metadata'),
   require('../post-processing/delete-removed-assets'),
-  require('../post-processing/derive-in-rotation-series'),
   require('../post-processing/clear-index')
 ];
 
