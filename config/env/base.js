@@ -74,6 +74,7 @@ let config = {
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
   downloadOptions: require('../download-options'),
   es: {
+    index: 'kbh-billeder-assets',
     host: process.env.ES_HOST || 'localhost:9200',
     log: 'error'
   },
@@ -104,8 +105,12 @@ let config = {
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
   search: {
     baseQuery: {
-      match: {
-        'is_searchable': true
+      'bool': {
+        'must_not': {
+          'term': {
+            'related.assets.direction': 'parent'
+          }
+        }
       }
     },
     filters: require('../filters.json'),
