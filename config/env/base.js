@@ -17,7 +17,6 @@ var appDir = path.join(__dirname, '..', '..', 'app');
 let config = {
   allowRobots: true,
   appDir: appDir,
-  appName: 'kbhbilleder.dk',
   appPaths: [
     generatedDir,
     appDir
@@ -116,6 +115,8 @@ let config = {
     filters: require('../filters.json'),
     path: 'søg'
   },
+  siteTitle: 'kbhbilleder.dk',
+  siteSubTitle: 'Københavns billedbårne kulturarv',
   sortOptions: require('../sort-options.json'),
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
