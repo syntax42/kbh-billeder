@@ -20,7 +20,9 @@ exports.proxyDownload = (id, size) => {
   const option = config.downloadOptions[size];
   assert(option, 'Expected value for "' + size + '" in config.downloadOptions');
 
-  if (option.cumulus) {
+  if (typeof(option.cumulus) === 'string') {
+    url += '?options=' + option.cumulus;
+  } else if (typeof(option.cumulus) === 'object') {
     url += '?options=' + JSON.stringify(option.cumulus);
   }
 
