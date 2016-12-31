@@ -78,7 +78,7 @@
         },
         {
           "title": "Licens",
-          "template": "!= licenseLinked(license)"
+          "template": "!= license && licenseLinked(license.displaystring)"
         },
         {
           "title": "Samlingens navn",
@@ -102,7 +102,7 @@
         },
         {
           "title": "Institution",
-          "template": "!= catalogLinked(catalogs, catalog)"
+          "template": "!= link(collection, catalog_name)"
         },
         {
           "title": "Tegnings nr.",

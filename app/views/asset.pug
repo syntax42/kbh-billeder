@@ -1,9 +1,12 @@
 extends index
-include mixins/meta-asset
+include mixins/meta
 include mixins/display-license
 
 append header
-  +assetMeta(metadata, sources)
+  - let title = helpers.documentTitle(metadata);
+  - let description = helpers.documentDescription(metadata);
+  - let thumbnailUrl = helpers.getThumbnailURL(metadata);
+  +meta(title, description, thumbnailUrl)
 
 append javascript
   if(showGeotagging)
@@ -23,30 +26,9 @@ block content
     - fullAddress.push(city)
   - fullAddress = fullAddress.join(', ')
 
-  - var city = metadata.city;
-  - var institution = metadata.catalog;
-  - var description = metadata.description;
-  - var secondary_description = metadata.secondary_description;
-  - var file_format = metadata.file_format;
-  - var title = metadata.short_title;
-  - var zipcode = metadata.zipcode;
-  - var downloadSlug = metadata.id + '/download/';
-
-  //- check image sizes available
-  - var bigImage = "";
-  - var smallImage = "";
-  - var mediumImage = "";
-  - var largeImage = "";
-  - if (metadata.width_px > 800) { bigImage = "lille", smallImage = downloadSlug + bigImage };
-  - if (metadata.width_px > 1200) { bigImage = "mellem", mediumImage = downloadSlug + bigImage };
-  - if (metadata.width_px > 2000) { bigImage = "stor", largeImage = downloadSlug + bigImage };
-  - bigImage = downloadSlug + bigImage;
-  - var fullWidth = Math.round(metadata.width_px);
-  - var fullHeight = Math.round(metadata.height_px);
-
   article.asset.let-it-grow(itemscope,
       itemtype='http://schema.org/CreativeWork',
-      data-catalog=catalog.alias,
+      data-collection=metadata.collection,
       data-id=metadata.id,
       data-title=title,
       data-latitude=metadata.latitude,
@@ -58,21 +40,14 @@ block content
       .container-fluid
         .row
           .col-xs-12.col-sm-7.img-col
-            .image-wrap
-              if downloadable && config.features.lazyLoadExpandedAssets
-                img(src=sources.thumbnail+'/2000', data-expanded-src=bigImage, alt=title).asset-image--zoomable.kbh-asset-image
-              else
-                img(src=sources.thumbnail+'/2000/bottom-right', alt=title).asset-image--zoomable.kbh-asset-image
-                //- .watermark
-                //-  if(institution === 'kbh-arkiv')
-                //-    +icon('kbh-arkiv')
-                //-  else if (institution === 'kbh-museum')
-                //-    +icon('kbh-museum')
+            include includes/player
+            - // TODO: Consider using "include includes/asset-controls"
             .controls
+              - const isDownloadable = helpers.isDownloadable(metadata);
               a(data-action="asset-image-size-toggle").hidden-xs.zoom-btn
                 +icon('zoom-in', 'zoom-in')
                 +icon('zoom-out', 'zoom-out')
-              a(data-action="asset-download-show", class=downloadable===true ? '' : 'dimmed')
+              a(data-action="asset-download-show", class= isDownloadable ? '' : 'dimmed')
                 +icon('download')
               a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
                 +icon('facebook')
@@ -81,13 +56,8 @@ block content
               a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
                 +icon('pinterest')
           .col-xs-12.col-sm-5.asset-info
-            if(title)
-              h1= title
-            if(description)
-              p.sr-only Beskrivelse
-              p.lead= description
-            if(secondary_description)
-              p= secondary_description
+            h1= title
+            p.lead= description
             .metadata
               != assetSection('time', metadata)
               != assetSection('place', metadata)
@@ -100,40 +70,9 @@ block content
           .col-sm-5
             != assetSection('technical-information', metadata)
 
-    if relatedAssets && relatedAssets.length > 0
-      .asset-bottom
-        .container-fluid
-          h2 Relaterede billeder
-          .related-assets
-            .related-assets__next-arrow
-              +icon('chevron-right')
-            .related-assets__prev-arrow
-              +icon('chevron-right')
-            .slider
-              each asset in relatedAssets
-                a(href=asset.href)
-                  img(data-lazy=asset.src)
+    .asset-bottom
+      .container-fluid
+        .row
+          include includes/relations
 
-
-  .overlay__container(data-content="asset-download")
-    .overlay__content
-      if (downloadable)
-        h2 Download
-        if(smallImage)
-          a.btn.btn-primary(href=smallImage)
-            | Lille (#{sources.imageSet.download800.size} jpg)
-        if(mediumImage)
-          a.btn.btn-primary(href=mediumImage)
-            | Mellem (#{sources.imageSet.download1200.size} jpg)
-        if(largeImage)
-          a.btn.btn-primary(href=largeImage)
-            | Stor (#{sources.imageSet.download2000.size} jpg)
-        a.btn.btn-primary(href=downloadSlug + 'originalJPEG')
-          | Original (#{fullWidth} x #{fullHeight} jpg)
-        if(file_format === 'TIFF Image')
-          a.btn.btn-primary(href=downloadSlug + 'original')
-            | Original (#{fullWidth} x #{fullHeight} tiff)
-        +displayLicense(metadata.license)
-      else
-        h2 Vi beklager
-        p Billedet er beskyttet af ophavsret og kan derfor ikke downloades.
+    include includes/download-overlay

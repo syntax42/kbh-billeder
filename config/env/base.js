@@ -72,6 +72,7 @@ let config = {
     }
   },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
+  downloadOptions: require('../download-options'),
   es: {
     host: process.env.ES_HOST || 'localhost:9200',
     log: 'error'
@@ -113,11 +114,11 @@ let config = {
   sortOptions: require('../sort-options.json'),
   tagsBlacklist: tagsBlacklist,
   themeColor: '#262626',
-  thumbnailSizes: ['lille', 'mellem', 'stor', 'originalJPEG', 'original'],
+  translations: require('../translations'),
   types: {
     asset: {
       layout: require('../layouts/asset.json'),
-      index: 'kbh-billeder-assets'
+      mapping: require('../mappings/asset.json')
     }
   },
   twitterAccount: {

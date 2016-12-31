@@ -1,0 +1,28 @@
+{
+  "small": {
+    "cumulus": "lille",
+    "filenamePrefix": "-lille",
+    "labelPrefix": "Lille ",
+    "size": 800
+  },
+  "medium": {
+    "cumulus": "mellem",
+    "filenamePrefix": "-mellem",
+    "labelPrefix": "Mellem ",
+    "size": 1200
+  },
+  "large": {
+    "cumulus": "stor",
+    "filenamePrefix": "-stor",
+    "labelPrefix": "Stor ",
+    "size": 2000
+  },
+  "original-jpeg": {
+    "cumulus": "originalJPEG",
+    "labelPrefix": "Original "
+  },
+  "original": {
+    "cumulus": "original",
+    "labelPrefix": "Original "
+  }
+}
