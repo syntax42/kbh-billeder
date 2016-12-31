@@ -1,9 +1,10 @@
-require('search');
-if(config.features.cookieConsent) {
-  require('cookie-consent');
-}
+const config = require('collections-online/shared/config');
+// Always include collections-online's base
+require('base')({
+  helpers: require('../../shared/helpers')
+});
+
+// Project specific
 if(config.googleAnalyticsPropertyID) {
   require('analytics');
 }
-require('asset');
-require('dropdown');
