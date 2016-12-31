@@ -4,10 +4,11 @@
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "index": "node indexing.js",
+    "dev": "NODE_ENV=development nodemon server.js",
     "gulp": "gulp",
+    "index": "node indexing.js",
     "prepublish": "gulp build",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified - but lets succeed\" && exit 0"
   },
   "repository": {
