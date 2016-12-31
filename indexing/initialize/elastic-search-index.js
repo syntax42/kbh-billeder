@@ -10,7 +10,7 @@ const es = require('collections-online/lib/services/elasticsearch');
 const config = require('collections-online/lib/config');
 
 module.exports = function(state) {
-  state.index = config.types.asset.index;
+  state.index = config.es.index;
   console.log('Initializing the Elastic Search index: ' + state.index);
 
   return es.indices.exists({
@@ -20,7 +20,7 @@ module.exports = function(state) {
       console.log('Index was already created');
       return state;
     } else {
-      var fields = {};
+      var fields = config.types.asset.mapping || {};
       // Get all fields that needs a raw value included in the index
       config.assetFields.filter((field) => {
         return field.includeRaw;
