@@ -117,7 +117,7 @@ if(config.downloadOptions) {
 }
 
 helpers.isDownloadable = (metadata) => {
-  return !metadata.license || !metadata.license.id !== 7;
+  return !metadata.license || metadata.license.id !== 7;
 };
 
 helpers.isWatermarkRequired = (metadata) => {
