@@ -17,7 +17,8 @@ COPY . /tmp/
 WORKDIR /tmp/
 # --no-color is needed to prevent strange chars in the CI logs
 # --no-spin is needed to prevent duplicated lines in the CI logs
-RUN npm install --no-color --no-spin
+# --unsafe-perm is needed for the lifecycle scripts to run
+RUN npm install --no-color --no-spin --unsafe-perm
 
 # If a collections online sha1 is given, install this particular version
 # Fix bug https://github.com/npm/npm/issues/9863
