@@ -37,6 +37,7 @@ dependencies:
       KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
       COOKIE_SECRET="${COOKIE_SECRET}"
       CLOUDINARY_URL="${CLOUDINARY_URL}"
+      DISABLE_NOTIFIER="true"
       EOF
     # Either build a production ready container and tag it as latest or build
     # a container with a specific version of collections online
