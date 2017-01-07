@@ -27,31 +27,3 @@
     }
   }
 }
-
-.topbar-items {
-  height: $topbar-height;
-
-  &__link {
-    color: $white;
-    text-decoration: none;
-
-    &:focus,
-    &:hover {
-      color: $white;
-      text-decoration: none;
-    }
-
-    &:not(:last-child) {
-      margin-right: 1rem;
-    }
-  }
-}
-
-.hamburger {
-  display: flex;
-  svg {
-    height: 20px;
-    margin-right: 10px;
-    width: 20px;
-  }
-}
