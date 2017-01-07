@@ -4,7 +4,7 @@
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"npm run gulp watch\" \"npm run start-dev\"",
+    "dev": "concurrently \"npm run gulp\" \"npm run start-dev\" \"kubectl port-forward elasticsearch-jjeyj 9201:9200\"",
     "gulp": "gulp",
     "index": "node indexing.js",
     "prepublish": "gulp build",
