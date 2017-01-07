@@ -1,60 +1,40 @@
-extends index
+extends frontpage
 include mixins/meta
 
 append header
   +meta()
 
-block content
-  .let-it-grow
-    .jumbo
-      .jumbo__image
-      .jumbo__logos
-        +icon('kbh-museum')
-        +icon('kbh-arkiv')
-      .jumbo__flex
-        .container-fluid
-          .row
-            .col-xs-12.col-sm-8.col-md-6
-              .jumbo__teaser
-                include includes/tagline
-      .jumbo__search
-        .container-fluid
-          - var path = (req.path).split('/')
-          - var searchMethod = (isSearching ? 'modify-query' : '')
-          form.search-box(method='get', action='/', data-method=searchMethod)
-            .input-group
-              input.form-control.input-search(
-                type='text',
-                id='search-input',
-                placeholder='Søg på kbhbilleder',
-                name='q',
-                autocomplete="off",
-                onfocus="this.placeholder = ''",
-                onblur="this.placeholder = 'Søg på kbhbilleder'"
-                value=req.query.q || '')
-              .input-group-btn
-                button.btn-search.btn
-                  span.sr-only Søg
-                  +icon('search')
-
-    .container-fluid.frontpage-galleries
-      each gallery, i in galleries
-        .row.gallery(class="gallery--" + (i % 2 == 0 ? 'even' : 'odd'))
-          .col-xs-12.col-sm-5
-            h2.gallery__title= gallery.title
-            p.gallery__text= gallery.description
-          .col-sm-1
-          .col-xs-12.col-sm-6
-            .row
-              each item, index in gallery.items
-                - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center', quality: 60});
-                - var indexClass = 'gallery-thumb-' + index
-                .col-xs-6
-                  a.gallery-thumb.no-touch-hover(href=item.link, class=indexClass)
-                    img(src=itemImageUrl).gallery-thumb__image
-                    .gallery-thumb__overlay
-                      h3.gallery-thumb__title= item.title
-                      p.gallery-thumb__text= item.description
+block content-top
+  .jumbo
+    .jumbo__image
+    .jumbo__logos
+      +icon('kbh-museum')
+      +icon('kbh-arkiv')
+    .jumbo__flex
+      .container-fluid
+        .row
+          .col-xs-12.col-sm-8.col-md-6
+            .jumbo__teaser
+              include includes/tagline
+    .jumbo__search
+      .container-fluid
+        - var path = (req.path).split('/')
+        - var searchMethod = (isSearching ? 'modify-query' : '')
+        form.search-box(method='get', action='/', data-method=searchMethod)
+          .input-group
+            input.form-control.input-search(
+              type='text',
+              id='search-input',
+              placeholder='Søg på kbhbilleder',
+              name='q',
+              autocomplete="off",
+              onfocus="this.placeholder = ''",
+              onblur="this.placeholder = 'Søg på kbhbilleder'"
+              value=req.query.q || '')
+            .input-group-btn
+              button.btn-search.btn
+                span.sr-only Søg
+                +icon('search')
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
