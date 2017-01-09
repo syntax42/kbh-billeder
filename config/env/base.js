@@ -51,8 +51,6 @@ let config = {
   },
   keystone: {
     options: {
-      'name': 'KBH Billeder',
-      'brand': 'KBH Billeder',
       'auto update': true,
       'updates': path.join(__dirname, '..', '..', 'updates'),
       'mongo': process.env.MONGO_CONNECTION || 'mongodb://localhost/kbh-billeder',
@@ -62,12 +60,6 @@ let config = {
       'cookie secret': process.env.COOKIE_SECRET || 'not-a-secret',
       'wysiwyg additional buttons': 'styleselect, blockquote',
       'wysiwyg importcss': '/styles/keystone-tiny-mce.css'
-    },
-    nav: {
-      users: 'users',
-      pages: 'pages',
-      menus: ['menu-items'],
-      galleries: ['galleries', 'gallery-items']
     }
   },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
