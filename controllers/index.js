@@ -29,38 +29,38 @@ var helpers = {
   }
 };
 
-function updateAsset(categories, assetId) {
+function updateAsset(catalogAlias, assetId) {
   var state = {
     'es': ds,
     'index': config.es.index,
-    'categories': categories,
     'mode': 'single',
-    'reference': assetId
+    'reference': catalogAlias + '/' + assetId
   };
   return indexing(state);
 }
 
-function deleteAsset(req, assetId) {
+function deleteAsset(catalogAlias, assetId) {
   return ds.delete({
     index: config.es.index,
     type: 'asset',
-    id: assetId
+    id: catalogAlias + '-' + assetId
   });
 }
 
 exports.asset = function(req, res, next) {
-  var id = req.body.id || '';
-  var action = req.body.action || null;
-  var catalogName = req.body.catalog || null;
-  // These categories are probably no longer needed
-  var categories = req.app.get('categories');
+  const action = req.body.action || null;
+  const catalogName = req.body.catalog || null;
+  let id = req.body.id || '';
+  let catalogAlias = null;
 
   console.log('Index asset called with body =', req.body);
 
   // If the catalog alias is not sat in the ID
-  if(id.indexOf('/') === -1 && catalogName) {
+  if(id.indexOf('-') > -1) {
+    [catalogAlias, id] = id.split('-');
+  } else if(catalogName) {
     // No slash in the id - the catalog should be read from .collection
-    var catalogAlias = Object.keys(config.cip.catalogs)
+    catalogAlias = Object.keys(config.cip.catalogs)
     .reduce(function(result, alias) {
       const candidateCatalogName = config.cip.catalogs[alias];
       console.log('trying', candidateCatalogName);
@@ -70,16 +70,11 @@ exports.asset = function(req, res, next) {
         return result;
       }
     }, null);
-    // If the catalog alias was found, let's prepend it to the id
-    if(catalogAlias) {
-      id = catalogAlias + '/' + id;
-    } else {
-      throw new Error('id didn´t entail catalog and the provided value was: ' +
-                      catalogName);
-    }
   }
 
-  console.log('id', id);
+  if (!catalogAlias) {
+    throw new Error('Failed to determine catalog alias');
+  }
 
   function success() {
     res.json({
@@ -89,11 +84,11 @@ exports.asset = function(req, res, next) {
 
   if (id && action) {
     if (action === 'asset-update') {
-      updateAsset(categories, id).then(success, next);
+      updateAsset(catalogAlias, id).then(success, next);
     } else if (action === 'asset-create') {
-      updateAsset(categories, id).then(success, next);
+      updateAsset(catalogAlias, id).then(success, next);
     } else if (action === 'asset-delete') {
-      deleteAsset(req, id).then(success, next);
+      deleteAsset(catalogAlias, id).then(success, next);
     } else {
       next(new Error('Unexpected action from Cumulus: ' + action));
     }
