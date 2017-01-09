@@ -42,7 +42,7 @@ function usageMessage() {
 }
 
 module.exports = function(state) {
-  console.log('Initializing the indexing mode');
+  console.log('Initializing the indexing ' + state.mode + ' mode');
 
   if (!state.mode) {
     var args = process.argv;
