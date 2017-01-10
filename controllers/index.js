@@ -9,7 +9,7 @@
  * req.body = {
  *   id: 'FHM-25757',
  *   action: 'asset-update',
- *   catalog: 'Frihedsmuseet',
+ *   collection: 'Frihedsmuseet',
  *   apiKey: ''
  * }
  */
@@ -21,7 +21,7 @@ if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
   throw new Error('Need exactly one index for Cumulus triggers to work.');
 }
 
-const indexing = require('../indexing/run');
+const indexing = require('../indexing/modes/run');
 
 var helpers = {
   thousandsSeparator: function(number) {
@@ -49,11 +49,11 @@ function deleteAsset(catalogAlias, assetId) {
 
 exports.asset = function(req, res, next) {
   const action = req.body.action || null;
-  const catalogName = req.body.catalog || null;
+  const catalogName = req.body.collection || null;
   let id = req.body.id || '';
   let catalogAlias = null;
 
-  console.log('Index asset called with body =', req.body);
+  console.log('Index asset called with body: ', JSON.stringify(req.body));
 
   // If the catalog alias is not sat in the ID
   if(id.indexOf('-') > -1) {
@@ -63,7 +63,6 @@ exports.asset = function(req, res, next) {
     catalogAlias = Object.keys(config.cip.catalogs)
     .reduce(function(result, alias) {
       const candidateCatalogName = config.cip.catalogs[alias];
-      console.log('trying', candidateCatalogName);
       if(candidateCatalogName === catalogName) {
         return alias;
       } else {
