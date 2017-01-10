@@ -14,7 +14,7 @@
   }
 }
 
-.btn:not(.btn-search) {
+.btn:not(.search-freetext-form__btn) {
   @include shadow(1);
 
   @media (pointer:fine) {

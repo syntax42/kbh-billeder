@@ -108,57 +108,19 @@
       width: 100%;
     }
 
-    .search-box {
+    .search-freetext-form {
       flex-grow: 0;
       margin: 5rem 0 0;
       max-width: 60%;
       width: 18rem;
 
-      .btn {
-        height: auto;
-      }
-
       .input-group {
-        background-color: $white;
-        max-width: none;
-        width: 100%;
-
-        &::after {
-          background-color: $brand-primary;
-          height: 2px;
-        }
-      }
-    }
-
-    .input-search {
-      color: inherit;
-      font-family: $font-family-medium;
-      font-size: 1.6rem;
-      height: 3rem;
-      padding-bottom: .3rem;
-
-      &::placeholder {
-        font-family: $font-family-sans-serif;
-        color: rgba($text-color, .8);
-      }
-    }
-
-    .btn-search svg {
-      fill: $brand-primary;
-      height: 2rem;
-      margin-bottom: .2rem;
-      width: 2rem;
-    }
-
-    @media (max-width: $medium-size) {
-      .input-search {
-        font-size: 1.2rem;
-        height: 2rem;
+        float: right;
       }
 
-      .btn-search svg {
-        height: 1.6rem;
-        width: 1.6rem;
+      &__input {
+        font-family: $font-family-medium;
+        padding-bottom: .3rem;
       }
     }
   }

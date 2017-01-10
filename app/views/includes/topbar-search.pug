@@ -1,19 +1,4 @@
-- var path = (req.path).split('/')
-- var searchMethod = (isSearching ? 'modify-query' : '')
-form.search-box.topbar__search(
-    method='get',
-    action='/')
-  .input-group
-    input.form-control.input-search(
-      type='text',
-      id='search-input',
-      placeholder='Søg på kbhbilleder',
-      name='q',
-      autocomplete="off",
-      onfocus="this.placeholder = ''",
-      onblur="this.placeholder = 'Søg på kbhbilleder'",
-      value=req.query.q || '')
-    .input-group-btn
-      button.btn-search.btn
-        span.sr-only Søg
-        +icon('search')
+include ../mixins/search-freetext-form
+
+.topbar__search
+  +searchFreetextForm('Søg på kbhbilleder.dk', 'on-brand')
