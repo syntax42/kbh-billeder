@@ -90,7 +90,7 @@ let config = {
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {
-    description: 'Udforsk historiske fotografier, kort og tegninger fra Københavns Museums og Københavns Stadsarkivs samlinger.'
+    description: 'Udforsk historiske fotografier, kort og tegninger fra Københavns Museum og Københavns Stadsarkivs samlinger.'
   },
   port: process.env.PORT || 9000,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
