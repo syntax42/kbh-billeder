@@ -5,7 +5,8 @@ var Agent = require('agentkeepalive');
 var request = require('request').defaults({
   agent: new Agent({
     maxSockets: config.cip.proxyMaxSockets
-  })
+  }),
+  timeout: config.cip.timeout || 55000 // 55 secs
 });
 
 function proxy(url) {
@@ -28,7 +29,7 @@ function proxy(url) {
 
   return request
     .get(url)
-    .on('response', function(response){
+    .on('response', function(response) {
       response.headers['Cache-Control'] = 'max-age=2592000';
     });
 }
