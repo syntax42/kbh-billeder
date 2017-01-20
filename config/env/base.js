@@ -47,8 +47,10 @@ let config = {
       },
       catalogAliases: _.invert(cipCatalogs)
     },
-    sessionRenewalRate: 30*60*1000 // Once every 30 minutes
+    sessionRenewalRate: 30*60*1000, // Once every 30 minutes
+    timeout: 55000
   },
+  imageTimeoutRedirect: '/billedet-kunne-ikke-downloades',
   keystone: {
     options: {
       'auto update': true,
