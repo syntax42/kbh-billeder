@@ -6,7 +6,6 @@ var Q = require('q');
 var Iconv  = require('iconv').Iconv;
 var config = require('collections-online/lib/config');
 var cipClient = new cip.CIPClient(config.cip.client);
-var originalRequest = cipClient.request.bind(cipClient);
 
 cipClient.initSession = function(forceInit) {
   if (!this.isConnected() || forceInit) {
@@ -36,32 +35,6 @@ cipClient.sessionRenew = function() {
   }).then(() => {
     console.log('Renewed the CIP session, id is now', cipClient.jsessionid);
   });
-};
-
-// TODO: Remove this again, as sessions are refreshed automatically now
-cipClient.request = function(operation, namedParameters, data) {
-  var performRequest = () => {
-    // Try to do the operation
-    return originalRequest(operation, namedParameters, data)
-    .then(undefined, (err) => {
-      console.error('Error communicating with CIP (retrying): ' + err.message);
-      // Let's reinitialize the session and try again.
-      return this.initSession(true).then(() => {
-        return originalRequest(operation, namedParameters, data);
-      });
-    });
-  };
-
-  var operationString = typeof(operation) === 'string' ?
-                        operation :
-                        operation.join('/');
-
-  if (!this.isConnected() && operationString !== 'session/open') {
-    // Open a session and then perform the request.
-    return this.initSession().then(performRequest);
-  } else {
-    return performRequest();
-  }
 };
 
 cipClient.getRecentAssets = function(cipClient, catalog, fromDate) {
