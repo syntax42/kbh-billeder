@@ -13,6 +13,7 @@ append javascript
     script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsAPIKey + "&callback=initMap&libraries=geometry,places")
 
 block content
+  - let secondaryDescription = helpers.documentSecondaryDescription(metadata);
   - var address = metadata.address || metadata.street;
   - var zipcode = metadata.zipcode;
   - var city = metadata.city;
@@ -56,8 +57,13 @@ block content
               a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
                 +icon('pinterest')
           .col-xs-12.col-sm-5.asset-info
-            h1= title
-            p.lead= description
+            if(title)
+              h1= title
+            if(description)
+              p.sr-only Beskrivelse
+              p.lead= description
+            if(secondaryDescription)
+              p= secondaryDescription
             .metadata
               != assetSection('time', metadata)
               != assetSection('place', metadata)

@@ -12,6 +12,11 @@ helpers.documentDescription = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(description);
 };
 
+helpers.documentSecondaryDescription = (metadata, fallback) => {
+  let description = metadata.secondary_description || fallback || '';
+  return helpers.capitalizeFirstLetter(description);
+};
+
 helpers.documentLicense = (metadata) => {
   return metadata.license && metadata.license.displaystring;
 };
