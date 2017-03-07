@@ -7,4 +7,8 @@ module.exports = _.merge(base, {
   env: 'beta',
   appName: 'kbhbilleder.dk (beta)',
   allowRobots: false
+  host: 'beta.kbhbilleder.dk',
+  ip: null,
+  port: null,
+  socketPath: '/tmp/kbh-billeder.sock'
 });
