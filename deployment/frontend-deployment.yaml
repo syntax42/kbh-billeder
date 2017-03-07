@@ -1,38 +1,43 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: frontend
-  labels:
-    stage: beta
-spec:
-  replicas: 2
-  template:
+apiVersion: v1
+kind: Template
+objects:
+  - apiVersion: extensions/v1beta1
+    kind: Deployment
     metadata:
-      labels:
-        component: frontend
+      name: frontend
     spec:
-      containers:
-      - name: frontend
-        image: eu.gcr.io/kbh-billeder/frontend:latest
-        imagePullPolicy: Always
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: http
-            scheme: HTTP
-            httpHeaders:
-              - name: Host
-                value: kbhbilleder.dk
-        resources: {}
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: ES_HOST
-          value: "elasticsearch:9200"
-        - name: MONGO_CONNECTION
-          value: "mongodb://mongo:27017/kbh-billeder"
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            component: frontend
+        spec:
+          containers:
+          - name: frontend
+            image: eu.gcr.io/kbh-billeder/frontend:latest
+            imagePullPolicy: Always
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /
+                port: http
+                scheme: HTTP
+                httpHeaders:
+                  - name: Host
+                    value: $(FRONTEND_PUBLIC_HOSTNAME)
+            resources: {}
+            ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+            env:
+            - name: NODE_ENV
+              value: "production"
+            - name: ES_HOST
+              value: "elasticsearch:9200"
+            - name: MONGO_CONNECTION
+              value: "mongodb://mongo:27017/kbh-billeder"
+parameters:
+  - name: FRONTEND_PUBLIC_HOSTNAME
+    description: The public hostname of the frontend
+    required: true
