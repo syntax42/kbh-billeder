@@ -49,9 +49,9 @@ dependencies:
     # based on the CIRCLE_BRANCH
     - |
       if [ "$CIRCLE_BRANCH" = "master" ] then
-        echo 'NODE_ENV="beta"' >> .env
+        echo 'NODE_ENV="beta"' >> .env;
       elif [ "$CIRCLE_BRANCH" = "production" ] then
-        echo 'NODE_ENV="beta"' >> .env
+        echo 'NODE_ENV="beta"' >> .env;
       else
         echo "Unexpected branch, cannot determine NODE_ENV" && exit 1
       fi
