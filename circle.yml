@@ -48,12 +48,14 @@ dependencies:
     # Append either NODE_ENV="production" or NODE_ENV="beta" to .env
     # based on the CIRCLE_BRANCH
     - |
-      if [ "$CIRCLE_BRANCH" = "master" ] then
-        echo 'NODE_ENV="beta"' >> .env;
-      elif [ "$CIRCLE_BRANCH" = "production" ] then
-        echo 'NODE_ENV="beta"' >> .env;
+      if [ "$CIRCLE_BRANCH" = "master" ]
+      then
+        echo 'NODE_ENV="beta"' >> .env
+      elif [ "$CIRCLE_BRANCH" = "production" ]
+      then
+        echo 'NODE_ENV="beta"' >> .env
       else
-        echo "Unexpected branch, cannot determine NODE_ENV" && exit 1
+        echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
       fi
     # Either build a production ready container and tag it as latest or build
     # a container with a specific version of collections online
