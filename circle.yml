@@ -51,7 +51,7 @@ dependencies:
       if [ "$CIRCLE_BRANCH" = "master" ]; then
         echo 'NODE_ENV="beta"' >> .env
       elif [ "$CIRCLE_BRANCH" = "production" ]; then
-        echo 'NODE_ENV="beta"' >> .env
+        echo 'NODE_ENV="production"' >> .env
       else
         echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
       fi
