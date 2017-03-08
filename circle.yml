@@ -17,7 +17,6 @@ machine:
   # and https://docs.docker.com/engine/reference/commandline/build/
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
-    - wget -qO- https://github.com/InQuicker/ktmpl/releases/download/0.5.0/ktmpl-0.5.0-linux.tar.gz | tar xvz -C ~/bin
   services:
     - docker
 dependencies:
