@@ -6,7 +6,7 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'beta',
   appName: 'kbhbilleder.dk (beta)',
-  allowRobots: false
+  allowRobots: false,
   host: 'beta.kbhbilleder.dk',
   ip: null,
   port: null,
