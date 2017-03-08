@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Template
+objects:
+  - spec:
+      template:
+        spec:
+          containers:
+          - name: frontend
+            image: $(IMAGE_PATH)
+parameters:
+  - name: IMAGE_PATH
+    description: The path of the newly created docker image
+    required: true
+  - name: GCLOUD_PROJECT
+    description: The project name on gcloud
+    required: true

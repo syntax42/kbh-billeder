@@ -27,10 +27,11 @@ dependencies:
     - $GCLOUD config set compute/zone $GCLOUD_COMPUTE_ZONE
     # Get the credentials for the cluster
     - $GCLOUD container clusters get-credentials $GCLOUD_CLUSTER
+    # Change the owner of the kubenetes files to ubuntu
+    - sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
     # Write specific environment variables to an .env file
     - |
       cat << EOF > .env
-      NODE_ENV=production
       CIP_USERNAME="${CIP_USERNAME}"
       CIP_PASSWORD="${CIP_PASSWORD}"
       KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
@@ -39,35 +40,30 @@ dependencies:
       CLOUDINARY_URL="${CLOUDINARY_URL}"
       DISABLE_NOTIFIER="true"
       EOF
+    # Append either NODE_ENV="production" or NODE_ENV="beta" to .env
+    # based on the CIRCLE_BRANCH
+    - |
+      if [ "$CIRCLE_BRANCH" = "master" ] then
+        echo 'NODE_ENV="beta"' >> .env
+      elif [ "$CIRCLE_BRANCH" = "production" ] then
+        echo 'NODE_ENV="beta"' >> .env
+      else
+        echo "Unexpected branch, cannot determine NODE_ENV" && exit 1
+      fi
     # Either build a production ready container and tag it as latest or build
     # a container with a specific version of collections online
-    - |
-      if [ -z "$collections_online_sha1" ]; then
-        # Build the docker image using the current directory as context
-        sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 .
-        # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
-        sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest
-      else
-        sudo docker build \
-          --build-arg collections_online_sha1=$collections_online_sha1 \
-          -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 \
-          .
-      fi
+    - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
+    # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
+    - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-latest
 test:
   override:
-    - |
-      if [ -z "$collections_online_sha1" ]; then
-        sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:latest npm test
-      else
-        sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_SHA1-$collections_online_sha1 npm test
-      fi
+    - sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-latest npm test
 deployment:
   staging:
     branch: master
     commands:
-      - |
-        if [ -n "$collections_online_sha1" ]; then
-          echo "Skipping deployment - it was build with a specifc collections online version"
-        else
-          . ./deployment/staging.sh
-        fi
+      - ./deployment/beta/patch.sh
+  production:
+    branch: production
+    commands:
+      - ./deployment/production/patch.sh
