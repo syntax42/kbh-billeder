@@ -61,6 +61,8 @@ dependencies:
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-latest
+  cache_directories:
+    - /opt/google-cloud-sdk/
 test:
   override:
     - sudo docker run eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-latest npm test
