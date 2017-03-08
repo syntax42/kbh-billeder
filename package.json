@@ -10,7 +10,7 @@
     "prepublish": "gulp build",
     "start-dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified - but lets succeed\" && exit 0"
+    "install-production": "node deployment/package-json-patcher.js && npm install"
   },
   "repository": {
     "type": "git",
