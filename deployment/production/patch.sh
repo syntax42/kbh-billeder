@@ -4,7 +4,7 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-IMAGE_PATH="eu.gcr.io/${GCLOUD_PROJECT}/frontend:${CIRCLE_BRANCH}-latest"
+IMAGE_PATH="eu.gcr.io/${GCLOUD_PROJECT}/frontend:${CIRCLE_BRANCH}-${CIRCLE_SHA1}"
 NAMESPACE="production"
 
 # Push the frontend images to
