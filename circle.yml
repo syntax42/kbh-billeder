@@ -1,5 +1,10 @@
 # This circle.yml is heavily inspired from the guide at
 # https://circleci.com/docs/continuous-deployment-with-google-container-engine/
+general:
+  branches:
+    only: # list of branches to build
+      - master
+      - production
 machine:
   environment:
     GCLOUD_PROJECT: kbh-billeder
