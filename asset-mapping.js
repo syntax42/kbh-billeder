@@ -1,11 +1,15 @@
 'use strict';
 
-// TODO: Move this to the collections-online-cumulus package
+const assert = require('assert');
 
-var fields = require('collections-online/lib/config').assetFields;
+const config = require('collections-online/lib/config');
+
+var fields = config.types && config.types.asset && config.types.asset.fields;
 
 function transform(metadata) {
   var result = {};
+
+  assert.ok(fields, 'Missing config.types.asset.fields');
 
   for (var i = 0; i < fields.length; ++i) {
     if (fields[i].cumulusKey in metadata) {
