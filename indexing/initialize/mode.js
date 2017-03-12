@@ -42,7 +42,6 @@ function usageMessage() {
 }
 
 module.exports = function(state) {
-  console.log('Initializing the indexing ' + state.mode + ' mode');
 
   if (!state.mode) {
     var args = process.argv;
@@ -55,7 +54,8 @@ module.exports = function(state) {
       if (args.length >= 4) {
         state.reference = args[3];
       }
-      // yargs
+
+      // Determine if the vision analysis should run or not
       state.indexVisionTags = false;
       state.indexVisionTagsAPIFilter = null;
       state.indexVisionTagsForce = false;
@@ -88,6 +88,8 @@ module.exports = function(state) {
   if (!state.mode) {
     throw new Error('Unrecognized mode!' + '\n' + usageMessage());
   }
+
+  console.log('Initialized the indexing', state.mode, 'mode');
 
   return state;
 };
