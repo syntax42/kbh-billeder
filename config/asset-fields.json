@@ -201,5 +201,8 @@
     "cumulusKey": "{af4b2e02-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "item_modification_date",
     "type": "date"
+  }, {
+    "cumulusKey": "{ba40fa64-6c9c-412a-99f2-5111bd14b40d}",
+    "short": "tags_vision"
   }
 ]
