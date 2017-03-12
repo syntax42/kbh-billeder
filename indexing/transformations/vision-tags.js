@@ -8,10 +8,13 @@ var helpers = require('collections-online/shared/helpers');
 const TAGS_VISION_FIELD = helpers.getAssetField('tags_vision');
 
 function saveVisionTags(metadata, tags) {
-  if(!TAGS_VISION_FIELD) throw new Error('No vision tag field specified!');
+  if(!TAGS_VISION_FIELD) {
+    throw new Error('No vision tag field specified!');
+  }
   var values = {};
   values[TAGS_VISION_FIELD] = tags.join(',');
-  return cip.setFieldValues(metadata.catalog, metadata.id, 'web', values);
+  const view = config.cip.client.constants.layoutAlias;
+  return cip.setFieldValues(metadata.catalog, metadata.id, view, values);
 }
 
 module.exports = function(state, metadata) {
