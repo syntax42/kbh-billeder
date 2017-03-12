@@ -22,7 +22,7 @@ module.exports = function(state) {
     } else {
       var fields = config.types.asset.mapping || {};
       // Get all fields that needs a raw value included in the index
-      config.assetFields.filter((field) => {
+      config.types.asset.fields.filter((field) => {
         return field.includeRaw;
       }).forEach((field) => {
         var fieldName = field.short;
@@ -39,7 +39,7 @@ module.exports = function(state) {
       });
       // Derive mappings from the asset field types
       // First the fields with date types
-      config.assetFields.filter((field) => {
+      config.types.asset.fields.filter((field) => {
         return field.type === 'date';
       }).forEach((field) => {
         var fieldName = field.short;
@@ -51,7 +51,7 @@ module.exports = function(state) {
         };
       });
       // Enumurations should not have their displaystring tokenized
-      config.assetFields.filter((field) => {
+      config.types.asset.fields.filter((field) => {
         return field.type === 'enum';
       }).forEach((field) => {
         var fieldName = field.short;
