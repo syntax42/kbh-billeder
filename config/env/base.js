@@ -21,7 +21,6 @@ let config = {
     generatedDir,
     appDir
   ],
-  assetFields: require('../asset-fields.json'),
   cache: {
     ttl: 60 * 5 // 5 minutes
   },
@@ -117,6 +116,7 @@ let config = {
   translations: require('../translations'),
   types: {
     asset: {
+      fields: require('../asset-fields.json'),
       layout: require('../layouts/asset.json'),
       mapping: require('../mappings/asset.json')
     }
