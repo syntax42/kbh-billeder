@@ -87,7 +87,6 @@ let config = {
   },
   generatedDir: generatedDir,
   googleAnalyticsPropertyID: null,
-  googleAPIKey: process.env.GOOGLE_API_KEY,
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {
