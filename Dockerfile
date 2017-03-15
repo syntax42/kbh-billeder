@@ -17,7 +17,7 @@ COPY . /tmp/
 WORKDIR /tmp/
 
 # Patch the package.json to install relevant variants of dependencies
-RUN node ./deployment/package-json-patcher.js
+RUN node ./package-json-patcher.js
 
 # --no-color is needed to prevent strange chars in the CI logs
 # --no-spin is needed to prevent duplicated lines in the CI logs

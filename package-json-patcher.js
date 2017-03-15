@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const ORIGINAL_PATH = path.join(__dirname, '..', 'package.json');
+const ORIGINAL_PATH = path.join(__dirname, 'package.json');
 assert.ok(fs.existsSync(ORIGINAL_PATH), 'Missing ' + ORIGINAL_PATH);
 const original = require(ORIGINAL_PATH);
 
@@ -12,7 +12,12 @@ if(!ENV) {
   console.log('Ignoring the', path.basename(__filename), '(no NODE_ENV)');
 } else {
   console.log('Merging in', ENV, 'package.json into the project');
-  const specializedPath = path.join(__dirname, ENV, 'package.json');
+  const specializedPath = path.join(
+    __dirname,
+    'config',
+    'package.json',
+    ENV + '.json'
+  );
   assert.ok(fs.existsSync(specializedPath), 'Missing ' + specializedPath);
 
   const specialized = require(specializedPath);
