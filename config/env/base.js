@@ -26,7 +26,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL: 'http://www.neaonline.dk/CIP',
+    baseURL: 'https://www.neaonline.dk:8443/CIP',
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxyMaxSockets: 10,
@@ -39,12 +39,13 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: 'http://www.neaonline.dk/CIP/',
+      endpoint: 'https://www.neaonline.dk:8443/CIP/',
       constants: {
           catchAllAlias: "alle",
           layoutAlias: "stadsarkivet"
       },
-      catalogAliases: _.invert(cipCatalogs)
+      catalogAliases: _.invert(cipCatalogs),
+      trustSelfSigned: true
     },
     sessionRenewalRate: 30*60*1000, // Once every 30 minutes
     timeout: 55000
@@ -62,6 +63,9 @@ let config = {
       'wysiwyg additional buttons': 'styleselect, blockquote',
       'wysiwyg importcss': '/styles/keystone-tiny-mce.css'
     }
+  },
+  motifTagging: {
+    field: '{ba40fa64-6c9c-412a-99f2-5111bd14b40d}'
   },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
   downloadOptions: require('../download-options'),
