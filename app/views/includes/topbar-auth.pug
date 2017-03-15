@@ -1,0 +1,7 @@
+.topbar__auth.hidden-xs.hidden-sm
+  if user
+    a.topbar__items-link
+      = (user.name.givenName || user.nickname)
+    a(href='/logout').topbar__items-link Log ud
+  else
+    a(data-action='login').topbar__items-link Log ind
