@@ -116,7 +116,7 @@ let config = {
   siteSubTitle: 'Københavns billedbårne kulturarv',
   sortOptions: require('../sort-options.json'),
   tagsBlacklist: tagsBlacklist,
-  themeColor: '#262626',
+  themeColor: '#e61a64',
   translations: require('../translations'),
   types: {
     asset: {
