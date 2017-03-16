@@ -15,7 +15,7 @@ if(!ENV) {
   const specializedPath = path.join(
     __dirname,
     'config',
-    'package.json',
+    'package-jsons',
     ENV + '.json'
   );
   assert.ok(fs.existsSync(specializedPath), 'Missing ' + specializedPath);
