@@ -5,7 +5,7 @@ var base = require('./base');
 
 module.exports = _.merge(base, {
   env: 'development',
-  appName: 'kbhbilleder.dk (dev)',
+  siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
   es: {
     log: 'error' //use 'trace' for verbose mode

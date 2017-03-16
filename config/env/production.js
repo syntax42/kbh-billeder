@@ -6,7 +6,6 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'production',
   allowRobots: true,
-  appName: 'kbhbilleder.dk',
   cip: {
     baseURL: 'https://www.neaonline.dk:8443/CIP',
     client: {
