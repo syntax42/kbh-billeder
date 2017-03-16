@@ -6,6 +6,9 @@ var base = require('./base');
 module.exports = _.merge(base, {
   env: 'production',
   allowRobots: true,
+  auth0: {
+    callbackURL: 'http://kbhbilleder.dk/auth/callback'
+  },
   cip: {
     baseURL: 'https://www.neaonline.dk:8443/CIP',
     client: {
