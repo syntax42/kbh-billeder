@@ -12,7 +12,8 @@ module.exports = _.merge(base, {
   siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
-    sitewidePassword: true
+    sitewidePassword: true,
+    users: true
   },
   host: 'beta.kbhbilleder.dk',
   ip: null,

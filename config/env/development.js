@@ -14,5 +14,8 @@ module.exports = _.merge(base, {
   es: {
     log: 'error' //use 'trace' for verbose mode
   },
+  features: {
+    users: true
+  },
   googleAnalyticsPropertyID: false,
 });

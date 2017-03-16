@@ -90,7 +90,6 @@ let config = {
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
-    users: true,
     watermarks: true
   },
   generatedDir: generatedDir,
