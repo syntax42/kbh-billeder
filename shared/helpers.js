@@ -134,4 +134,10 @@ helpers.isWatermarkRequired = (metadata) => {
   }
 };
 
+helpers.cleanDocumentId = (id) => {
+  // We simply return the id ..
+  console.log('cleanDocumentId called with', id);
+  return id;
+};
+
 module.exports = helpers;
