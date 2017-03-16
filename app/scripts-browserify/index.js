@@ -8,3 +8,7 @@ require('base')({
 if(config.googleAnalyticsPropertyID) {
   require('analytics');
 }
+
+if(config.features.sitewidePassword) {
+  require('./sitewide-password');
+}
