@@ -31,8 +31,6 @@ objects:
               name: http
               protocol: TCP
             env:
-            - name: NODE_ENV
-              value: "production"
             - name: ES_HOST
               value: "elasticsearch:9200"
             - name: MONGO_CONNECTION
