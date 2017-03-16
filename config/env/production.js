@@ -7,7 +7,8 @@ module.exports = _.merge(base, {
   env: 'production',
   allowRobots: true,
   auth0: {
-    callbackURL: 'http://kbhbilleder.dk/auth/callback'
+    callbackURL: 'http://kbhbilleder.dk/auth/callback',
+    clientID: 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP'
   },
   cip: {
     baseURL: 'https://www.neaonline.dk:8443/CIP',

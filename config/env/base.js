@@ -22,8 +22,7 @@ let config = {
     appDir
   ],
   auth0: {
-    domain: 'kbhbilleder.eu.auth0.com',
-    clientID: 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu'
+    domain: 'kbhbilleder.eu.auth0.com'
   },
   cache: {
     ttl: 60 * 5 // 5 minutes
