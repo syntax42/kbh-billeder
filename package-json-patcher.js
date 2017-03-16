@@ -2,6 +2,11 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
+// Loading dotenv - remember to install this before calling the script
+require('dotenv').config({
+  path: path.join(__dirname, '.env')
+});
+
 const ORIGINAL_PATH = path.join(__dirname, 'package.json');
 assert.ok(fs.existsSync(ORIGINAL_PATH), 'Missing ' + ORIGINAL_PATH);
 const original = require(ORIGINAL_PATH);

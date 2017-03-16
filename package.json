@@ -11,7 +11,7 @@
     "prepublish": "gulp build",
     "start-dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js",
-    "install-production": "node deployment/package-json-patcher.js && npm install"
+    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js"
   },
   "repository": {
     "type": "git",
