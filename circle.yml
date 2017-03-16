@@ -55,8 +55,9 @@ dependencies:
       else
         echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
       fi
-    # Either build a production ready container and tag it as latest or build
-    # a container with a specific version of collections online
+    # Base 64 decode the GOOGLE_KEY into a .json file
+    - echo $GOOGLE_KEY | base64 --decode > ./google-key.json
+    # Build a container and tag it as latest
     - sudo docker build -t eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - sudo docker tag eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 eu.gcr.io/${GCLOUD_PROJECT}/frontend:$CIRCLE_BRANCH-latest
