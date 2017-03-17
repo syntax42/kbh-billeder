@@ -4,13 +4,13 @@ objects:
   - apiVersion: batch/v1
     kind: Job
     metadata:
-      name: index-recent
+      name: index
       labels:
         jobgroup: indexing
     spec:
       template:
         metadata:
-          name: index-recent
+          name: index
           labels:
             jobgroup: indexing
         spec:
@@ -18,9 +18,15 @@ objects:
           - name: c
             image: eu.gcr.io/kbh-billeder/frontend:$(BRANCH)-latest
             imagePullPolicy: Always
-            command: ["npm", "run", "index", "recent"]
+            command: ["npm", "run", "index", $(MODE), $(EXTRA)]
           restartPolicy: Never
 parameters:
   - name: BRANCH
     description: The branch from which the image should be derived
     required: true
+  - name: MODE
+    description: The mode in which to run the indexing
+    required: true
+  - name: EXTRA
+    description: The reference or extra runtime arguments
+    required: false

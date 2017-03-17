@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-MODE="recent"
+BRANCH="master"
+NAMESPACE="beta"
 
-source $DIR/index.sh
+source $DIR/../jobs/index.sh
