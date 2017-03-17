@@ -12,7 +12,7 @@ module.exports.save = (metadata) => {
   values[GOOGLE_MAPS_COORDS_CROWD_FIELD] = metadata.coordinates.join(', ');
   values[HEADING_FIELD] = metadata.heading;
 
-  return cip.setFieldValues(metadata.collection, metadata.id, 'web', values)
+  return cip.setFieldValues(metadata.collection, metadata.id, values)
   .then(function(response) {
     if (response.statusCode !== 200) {
       console.error(response.body);

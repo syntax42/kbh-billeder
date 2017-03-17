@@ -1,23 +1,31 @@
+const assert = require('assert');
 const config = require('collections-online/lib/config');
 const cip = require('../services/cip');
 
-const CROWD_TAGS = '{73be3a90-a8ef-4a42-aa8f-d16ca4f55e0a}';
+const CROWD_TAGS = config.motifTagging.field;
+assert.ok(CROWD_TAGS, 'Missing a config.motifTagging.field');
 
-function saveToCip(catalog, id, values) {
-  return cip.setFieldValues(catalog, id, 'web', values)
+module.exports.save = (metadata, tags) => {
+  if(typeof(tags) === 'string') {
+    throw new Error('Saving a single tag is not yet supported');
+  }
+
+  const catalog = metadata.catalog;
+  assert.ok(catalog, 'Missing the catalog');
+  const id = metadata.id;
+  assert.ok(catalog, 'Missing an asset id');
+
+  // Save it using the CIP
+  var values = {};
+  values[CROWD_TAGS] = tags.join(',');
+  // Set the field values via the CIP
+  return cip.setFieldValues(catalog, id, values)
   .then(function(response) {
     if (response.statusCode !== 200) {
       throw new Error('Failed to set the field values');
+    } else {
+      return response;
     }
-  });
-}
-
-module.exports.save = (metadata) => {
-  // Save it using the CIP
-  var values = {};
-  values[CROWD_TAGS] = metadata.tags.join(',');
-  return saveToCip(metadata.collection, metadata.id, values).then(function() {
-    return metadata;
   });
 }
 

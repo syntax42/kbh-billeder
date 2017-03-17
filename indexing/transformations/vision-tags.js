@@ -5,16 +5,10 @@ var config = require('collections-online/lib/config');
 var cip = require('../../services/cip');
 var helpers = require('collections-online/shared/helpers');
 
-const TAGS_VISION_FIELD = helpers.getAssetField('tags_vision');
-
-function saveVisionTags(metadata, tags) {
-  if(!TAGS_VISION_FIELD) {
-    throw new Error('No vision tag field specified!');
-  }
-  var values = {};
-  values[TAGS_VISION_FIELD] = tags.join(',');
-  const view = config.cip.client.constants.layoutAlias;
-  return cip.setFieldValues(metadata.catalog, metadata.id, view, values);
+const plugins = require('collections-online/plugins');
+const motifTagController = plugins.getFirst('motif-tag-controller');
+if (!motifTagController) {
+  throw new Error('Expected at least one image controller!');
 }
 
 module.exports = function(state, metadata) {
@@ -52,19 +46,19 @@ module.exports = function(state, metadata) {
 
         // If no new tags was added, we don't save
         if (diffSize === 0) {
-          console.log('No new tags found');
+          console.log('No new tags found, let´s not save back to the CIP');
           return metadata;
+        } else {
+          console.log('Derived', diffSize, 'tags, using AI');
+          return motifTagController.save(metadata, tagsUnion)
+          .then(function(response) {
+            if (response.statusCode !== 200) {
+              throw new Error('Failed to set the field values');
+            }
+            metadata.tags_vision = tagsUnion;
+            return metadata;
+          });
         }
-
-        console.log('Derived', diffSize, 'new tags, using AI.');
-
-        return saveVisionTags(metadata, tagsUnion).then(function(response) {
-          if (response.statusCode !== 200) {
-            throw new Error('Failed to set the field values');
-          }
-          metadata.tags_vision = tagsUnion;
-          return metadata;
-        });
       });
   }
   return metadata;
