@@ -4,13 +4,13 @@ objects:
   - apiVersion: batch/v1
     kind: Job
     metadata:
-      name: index
+      name: $(NAME)
       labels:
         jobgroup: indexing
     spec:
       template:
         metadata:
-          name: index
+          name: $(NAME)
           labels:
             jobgroup: indexing
         spec:
@@ -18,11 +18,19 @@ objects:
           - name: c
             image: eu.gcr.io/kbh-billeder/frontend:$(BRANCH)-latest
             imagePullPolicy: Always
-            command: ["npm", "run", "index", $(MODE), $(EXTRA)]
+            command: ["npm", "run", "index", "--", $(MODE), $(EXTRA)]
+            env:
+            - name: ES_HOST
+              value: "elasticsearch:9200"
+            - name: MONGO_CONNECTION
+              value: "mongodb://mongo:27017/kbh-billeder"
           restartPolicy: Never
 parameters:
   - name: BRANCH
     description: The branch from which the image should be derived
+    required: true
+  - name: NAME
+    description: The name of the index job
     required: true
   - name: MODE
     description: The mode in which to run the indexing

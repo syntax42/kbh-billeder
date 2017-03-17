@@ -6,4 +6,4 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Generate a job from the template
-ktmpl -p BRANCH $BRANCH -p MODE $MODE -p EXTRA "$EXTRA" $DIR/index.yaml # | kubectl create -n $NAMESPACE -f -
+ktmpl -p BRANCH $BRANCH -p NAME $NAME -p MODE $MODE -p EXTRA "$EXTRA" $DIR/index.yaml | kubectl create -n $NAMESPACE -f -
