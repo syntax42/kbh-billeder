@@ -1,84 +1,42 @@
-extends index
-include mixins/meta
-include mixins/display-license
+extends asset-base
+include mixins/tag
+include mixins/loader
+include mixins/icon
 
-append header
-  - let title = helpers.documentTitle(metadata);
-  - let description = helpers.documentDescription(metadata);
-  - let socialThumbnailUrl = helpers.getSocialThumbnailURL(metadata);
-  +meta(title, description, socialThumbnailUrl)
+block asset-middle
+  .asset-middle
+    .container-fluid
+      .row.metadata
+        .col-sm-7
+          != assetSection('additional-information', metadata)
+        .col-sm-5
+          != assetSection('technical-information', metadata)
+  .asset-middle.let-it-grow
+    .container-fluid
+      .row
+        .col-md-7
+          // Vision tags
+          h2 Emneord fra billedanalyse
+          .tags-container.vision
+            if(!metadata.tags_vision || metadata.tags_vision === 0)
+              .btn.btn-primary.btn-small#vision-btn
+                +loader('Analysér billede')
+            each tag in metadata.tags_vision || []
+              +tag(tag)
+                span.add-tag
+                  +icon('thumbup')
+        .col-md-5
+          // Tags
+          h2 Emneord
+          .tags-container.crowd
+            if(!metadata.tags.crowd || metadata.tags.crowd.length === 0)
+              span.no-tags Der er ikke tilføjet nogle emneord endnu.
 
-append javascript
-  if(showGeotagging)
-    script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsAPIKey + "&callback=initMap&libraries=geometry,places")
-
-block content
-  - let secondaryDescription = helpers.documentSecondaryDescription(metadata);
-  - var address = metadata.address || metadata.street;
-  - var zipcode = metadata.zipcode;
-  - var city = metadata.city;
-  - var fullAddress = [];
-
-  - if(address)
-    - fullAddress.push(address)
-  - if(zipcode)
-    - fullAddress.push(zipcode)
-  - if(city)
-    - fullAddress.push(city)
-  - fullAddress = fullAddress.join(', ')
-
-  article.asset.let-it-grow(itemscope,
-      itemtype='http://schema.org/CreativeWork',
-      data-collection=metadata.collection,
-      data-id=metadata.id,
-      data-title=title,
-      data-latitude=metadata.latitude,
-      data-longitude=metadata.longitude,
-      data-heading=metadata.heading,
-      data-license-id=metadata.license ? metadata.license.id : '',
-      data-full-address=fullAddress)
-    .asset-top
-      .container-fluid
-        .row
-          .col-xs-12.col-sm-7.img-col
-            include includes/player
-            - // TODO: Consider using "include includes/asset-controls"
-            .controls
-              - const isDownloadable = helpers.isDownloadable(metadata);
-              a(data-action="asset-image-size-toggle").hidden-xs.zoom-btn
-                +icon('zoom-in', 'zoom-in')
-                +icon('zoom-out', 'zoom-out')
-              a(data-action="asset-download-show", class= isDownloadable ? '' : 'dimmed')
-                +icon('download')
-              a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
-                +icon('facebook')
-              a(href="javascript:twittershareCurrentPage()", target="_blank", alt="Del på Twitter")
-                +icon('twitter')
-              a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
-                +icon('pinterest')
-          .col-xs-12.col-sm-5.asset-info
-            if(title)
-              h1= title
-            if(description)
-              p.sr-only Beskrivelse
-              p.lead= description
-            if(secondaryDescription)
-              p= secondaryDescription
-            .metadata
-              != assetSection('time', metadata)
-              != assetSection('place', metadata)
-
-    .asset-middle
-      .container-fluid
-        .row.metadata
-          .col-sm-7
-            != assetSection('additional-information', metadata)
-          .col-sm-5
-            != assetSection('technical-information', metadata)
-
-    .asset-bottom
-      .container-fluid
-        .row
-          include includes/relations
-
-    include includes/download-overlay
+            each tag in metadata.tags.crowd || []
+              +tag(tag)
+            .material-input
+              input(type='text', required='')
+              span.bar
+              label Indtast nyt emneord og tryk enter
+            //.btn.btn-primary.btn-small#crowd-btn Tilføj emneord
+            .btn.btn-link.btn-small.hidden#stop-crowd-btn Afslut

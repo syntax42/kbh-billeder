@@ -1,0 +1,73 @@
+extends index
+include mixins/meta
+include mixins/display-license
+
+append header
+  - let title = helpers.documentTitle(metadata);
+  - let description = helpers.documentDescription(metadata);
+  - let socialThumbnailUrl = helpers.getSocialThumbnailURL(metadata);
+  +meta(title, description, socialThumbnailUrl)
+
+append javascript
+  if(showGeotagging)
+    script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsAPIKey + "&callback=initMap&libraries=geometry,places")
+
+block content
+  - let secondaryDescription = helpers.documentSecondaryDescription(metadata);
+  - var address = metadata.address || metadata.street;
+  - var zipcode = metadata.zipcode;
+  - var city = metadata.city;
+  - var fullAddress = [];
+
+  - if(address)
+    - fullAddress.push(address)
+  - if(zipcode)
+    - fullAddress.push(zipcode)
+  - if(city)
+    - fullAddress.push(city)
+  - fullAddress = fullAddress.join(', ')
+
+  article.asset.let-it-grow(itemscope,
+      itemtype='http://schema.org/CreativeWork',
+      data-collection=metadata.collection,
+      data-id=metadata.id,
+      data-title=title,
+      data-latitude=metadata.latitude,
+      data-longitude=metadata.longitude,
+      data-heading=metadata.heading,
+      data-license-id=metadata.license ? metadata.license.id : '',
+      data-full-address=fullAddress)
+    .asset-top
+      .container-fluid
+        .row
+          .col-xs-12.col-sm-7.img-col
+            include includes/player
+            - // TODO: Consider using "include includes/asset-controls"
+            .controls
+              - const isDownloadable = helpers.isDownloadable(metadata);
+              a(data-action="asset-image-size-toggle").hidden-xs.zoom-btn
+                +icon('zoom-in', 'zoom-in')
+                +icon('zoom-out', 'zoom-out')
+              a(data-action="asset-download-show", class= isDownloadable ? '' : 'dimmed')
+                +icon('download')
+              a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
+                +icon('facebook')
+              a(href="javascript:twittershareCurrentPage()", target="_blank", alt="Del på Twitter")
+                +icon('twitter')
+              a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
+                +icon('pinterest')
+          .col-xs-12.col-sm-5.asset-info
+            if(title)
+              h1= title
+            if(description)
+              p.sr-only Beskrivelse
+              p.lead= description
+            if(secondaryDescription)
+              p= secondaryDescription
+            .metadata
+              != assetSection('time', metadata)
+              != assetSection('place', metadata)
+    block asset-middle
+
+
+    include includes/download-overlay
