@@ -56,11 +56,10 @@ module.exports = function(state, metadata) {
         } else {
           console.log('Derived', numberOfNewTags, 'new tags.',
                       'Now the asset has', metadata.tags_vision.length, 'tags');
-          return motifTagController.save(metadata, metadata.tags_vision)
+          return motifTagController.save(metadata, {
+            tags_vision: metadata.tags_vision
+          })
           .then(function(response) {
-            if (response.statusCode !== 200) {
-              throw new Error('Failed to set the field values');
-            }
             return metadata;
           });
         }
