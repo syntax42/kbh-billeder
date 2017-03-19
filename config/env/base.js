@@ -68,7 +68,8 @@ let config = {
     }
   },
   motifTagging: {
-    field: '{ba40fa64-6c9c-412a-99f2-5111bd14b40d}'
+    userField: '{64a1e1e9-47d7-46dd-9805-ca474f03c4b9}',
+    visionField: '{ba40fa64-6c9c-412a-99f2-5111bd14b40d}'
   },
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
   downloadOptions: require('../download-options'),

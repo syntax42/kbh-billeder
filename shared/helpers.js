@@ -162,4 +162,37 @@ helpers.modifySearchQueryBody = (body, parameters) => {
   };
 };
 
+helpers.motifTagging = {
+  getTags: metadata => {
+    return metadata.tags;
+  },
+  getVisionTags: metadata => {
+    return metadata.tags_vision;
+  },
+  addTag: (metadata, tag) => {
+    // Add it to the tags if not already there
+    if(metadata.tags.indexOf(tag) === -1) {
+      metadata.tags.push(tag);
+    }
+    // Remove it from the vision tags if there
+    helpers.motifTagging.removeVisionTag(metadata, tag);
+  },
+  removeTag: (metadata, tag) => {
+    // Is it there?
+    const tagIndex = metadata.tags.indexOf(tag);
+    if(tagIndex > -1) {
+      // Remove it
+      metadata.tags.splice(tagIndex, 1);
+    }
+  },
+  removeVisionTag: (metadata, tag) => {
+    // Is it there?
+    const visionTagIndex = metadata.tags_vision.indexOf(tag);
+    if(visionTagIndex > -1) {
+      // Remove it
+      metadata.tags_vision.splice(visionTagIndex, 1);
+    }
+  }
+};
+
 module.exports = helpers;
