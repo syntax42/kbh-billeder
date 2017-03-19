@@ -4,13 +4,6 @@ include mixins/loader
 include mixins/icon
 
 block asset-middle
-  .asset-middle
-    .container-fluid
-      .row.metadata
-        .col-sm-7
-          != assetSection('additional-information', metadata)
-        .col-sm-5
-          != assetSection('technical-information', metadata)
   .asset-middle.let-it-grow
     .container-fluid
       .row
@@ -44,5 +37,10 @@ block asset-middle
 block asset-bottom
   .asset-bottom
     .container-fluid
+      .row.metadata
+        .col-sm-7
+          != assetSection('additional-information', metadata)
+        .col-sm-5
+          != assetSection('technical-information', metadata)
       .row
         include includes/relations
