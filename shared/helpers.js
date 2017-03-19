@@ -140,4 +140,26 @@ helpers.cleanDocumentId = (id) => {
   return id;
 };
 
+helpers.modifySearchQueryBody = (body, parameters) => {
+  const q = (parameters.filters && parameters.filters.q) || '';
+  // Boost the vision tags negatively
+  // https://www.elastic.co/guide/en/elasticsearch/reference/2.3/query-dsl-boosting-query.html
+  return {
+    'query': {
+      'boosting': {
+        'positive': body.query,
+        'negative': {
+          'query_string': {
+            'default_operator': 'OR',
+            'default_field': 'tags_vision',
+            'query': q
+          }
+        },
+        'negative_boost' : 0.5
+      }
+    },
+    'sort': body['sort']
+  };
+};
+
 module.exports = helpers;
