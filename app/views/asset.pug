@@ -24,37 +24,6 @@ block asset-top
             != assetSection('time', metadata)
             != assetSection('place', metadata)
 
-block asset-middle
-  .asset-middle.let-it-grow
-    .container-fluid
-      .row
-        .col-md-7
-          // Vision tags
-          h2 Emneord fra billedanalyse
-          .tags-container.vision
-            if(!metadata.tags_vision || metadata.tags_vision.length === 0)
-              .btn.btn-primary.btn-small#vision-btn
-                +loader('Analysér billede')
-            each tag in metadata.tags_vision || []
-              +tag(tag)
-                span.add-tag
-                  +icon('thumbup')
-        .col-md-5
-          //- Tags
-            h2 Emneord
-            .tags-container.crowd
-              if(!metadata.tags.crowd || metadata.tags.crowd.length === 0)
-                span.no-tags Der er ikke tilføjet nogle emneord endnu.
-
-              each tag in metadata.tags.crowd || []
-                +tag(tag)
-              .material-input
-                input(type='text', required='')
-                span.bar
-                label Indtast nyt emneord og tryk enter
-              //.btn.btn-primary.btn-small#crowd-btn Tilføj emneord
-              .btn.btn-link.btn-small.hidden#stop-crowd-btn Afslut
-
 block asset-bottom
   .asset-bottom
     .container-fluid
