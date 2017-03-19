@@ -12,9 +12,9 @@ module.exports = _.merge(base, {
   siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
-    crowdtagging: true,
+    motifTagging: true,
     sitewidePassword: true,
-    users: true,
+    users: true
   },
   host: 'beta.kbhbilleder.dk',
   ip: null,
