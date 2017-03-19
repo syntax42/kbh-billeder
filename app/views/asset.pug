@@ -3,6 +3,27 @@ include mixins/tag
 include mixins/loader
 include mixins/icon
 
+block asset-top
+  .asset-top
+    .container-fluid
+      .row
+        .col-xs-12.col-sm-7.img-col
+          include includes/player
+          // TODO: Consider using "include includes/asset-controls"
+          .controls
+            include includes/asset-controls
+        .col-xs-12.col-sm-5.asset-info
+          if(title)
+            h1= title
+          if(description)
+            p.sr-only Beskrivelse
+            p.lead= description
+          if(secondaryDescription)
+            p= secondaryDescription
+          .metadata
+            != assetSection('time', metadata)
+            != assetSection('place', metadata)
+
 block asset-middle
   .asset-middle.let-it-grow
     .container-fluid
