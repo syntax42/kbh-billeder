@@ -15,7 +15,7 @@ module.exports = _.merge(base, {
     log: 'error' //use 'trace' for verbose mode
   },
   features: {
-    crowdtagging: true,
+    motifTagging: true,
     users: true
   },
   googleAnalyticsPropertyID: false,

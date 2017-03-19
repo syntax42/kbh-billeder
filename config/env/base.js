@@ -84,7 +84,7 @@ let config = {
   },
   features: {
     cookieConsent: true,
-    crowdtagging: false,
+    motifTagging: false,
     filterSidebar: true,
     geotagging: false,
     keystone: true,
