@@ -97,14 +97,8 @@
     "cumulusKey": "{af4b2e11-5f6a-11d2-8f20-0000c0e166dc}",
     "short": "width_in"
   }, {
-    "cumulusKey": "{f7bb28d1-0ef1-46b5-90c8-202f90800eff}",
+    "cumulusKey": "{1af283a9-bcc7-44a1-bdd8-b65557017a52}",
     "short": "google_maps_coordinates"
-  }, {
-    "cumulusKey": "{418a4c92-fe63-11d3-9030-0080ad80c556}",
-    "short": "longitude"
-  }, {
-    "cumulusKey": "{418a4c91-fe63-11d3-9030-0080ad80c556}",
-    "short": "latitude"
   }, {
     "cumulusKey": "{38664623-b081-4251-8c1c-383ef57ac54d}",
     "short": "locationnote"
