@@ -8,7 +8,6 @@ module.exports = [
   require('collections-online-cumulus/indexing/transformations/dimensions'),
   require('collections-online-cumulus/indexing/transformations/latitude-longitude'),
   require('collections-online-cumulus/indexing/transformations/split-tags'),
-  require('collections-online-cumulus/indexing/transformations/category-tags'),
   require('collections-online-cumulus/indexing/transformations/vision-tags'),
   require('collections-online-cumulus/indexing/transformations/tag-hierarchy')
 ];
