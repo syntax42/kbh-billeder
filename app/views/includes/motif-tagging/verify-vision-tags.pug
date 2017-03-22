@@ -1,0 +1,9 @@
+h2 2. Passer disse emneord til billedet?
+.motif-tagging__tags
+  each tag in helpers.motifTagging.getVisionTags(metadata) || []
+    .btn-group.btn-group-sm(data-tag=tag)
+      +tag(tag)
+      .motif-tagging__transfer-btn.btn.btn-success(data-action='transfer-motif-tag')
+        +icon('thumbup')
+      .motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag')
+        +icon('cross')

@@ -1,0 +1,18 @@
+include ../mixins/tag
+include ../mixins/icon
+
+include ./motif-tagging/final-tags
+
+if editing
+  .row.motif-tagging__editing-container
+    .col-md-4
+      include ./motif-tagging/add-custom-tag
+    .col-md-6
+      include ./motif-tagging/verify-vision-tags
+    .col-md-2
+      h2 3. Færdig
+      .motif-tagging__editing-tags
+        .motif-tagging__save-btn.btn.btn-default(data-action='save-motif-tags', disabled=saving)
+          | Gem emneord
+        .motif-tagging__cancel-btn.btn.btn-no-shadow.btn-small(data-action='cancel-motif-tags')
+          | Annuller

@@ -1,0 +1,13 @@
+h2 Emneord
+.motif-tagging__final-tags
+  if(!metadata.tags || metadata.tags.length === 0)
+    span.no-tags Der er ikke tilføjet nogle emneord endnu.
+  each tag in helpers.motifTagging.getTags(metadata) || []
+    .btn-group(data-tag=tag)
+      +tag(tag)
+      if editing
+        .motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag')
+          +icon('cross')
+  if !editing
+    .motif-tagging__edit-btn.btn.btn-primary(data-action='edit-motif-tags')
+      | Tilføj
