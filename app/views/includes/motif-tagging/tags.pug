@@ -1,5 +1,7 @@
-h2 Emneord
-.motif-tagging__final-tags
+include ../../mixins/tag
+include ../../mixins/icon
+
+.motif-tagging__tags(data-motif-template='tags')
   each tag in helpers.motifTagging.getTags(metadata) || []
     .btn-group(data-tag=tag)
       +tag(tag)
@@ -10,4 +12,4 @@ h2 Emneord
     .motif-tagging__no-tags Der er ikke tilføjet nogle emneord endnu.
   if !editing
     .motif-tagging__edit-btn.btn.btn-primary(data-action='edit-motif-tags')
-      | Tilføj / fjern
+      | Rediger

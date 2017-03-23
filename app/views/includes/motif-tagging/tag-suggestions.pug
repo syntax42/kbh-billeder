@@ -1,7 +1,9 @@
-h2 2. Passer disse emneord til billedet?
-.motif-tagging__tags
+include ../../mixins/tag
+include ../../mixins/icon
+
+.motif-tagging__tag-suggestions(data-motif-template='tag-suggestions')
   each tag in helpers.motifTagging.getVisionTags(metadata) || []
-    .btn-group.btn-group-sm(data-tag=tag)
+    .btn-group(data-tag=tag)
       +tag(tag)
       .motif-tagging__transfer-btn.btn.btn-success(data-action='transfer-motif-tag')
         +icon('thumbup')
