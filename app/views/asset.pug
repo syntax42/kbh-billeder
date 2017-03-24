@@ -1,10 +1,10 @@
-extends asset-base
+extends document
 include mixins/tag
 include mixins/loader
 include mixins/icon
 
-block asset-top
-  .asset-top
+block document__top
+  .document__top
     .container-fluid
       .row
         .col-xs-12.col-sm-7.img-col
@@ -24,8 +24,8 @@ block asset-top
             != assetSection('time', metadata)
             != assetSection('place', metadata)
 
-block asset-bottom
-  .asset-bottom
+block document__bottom
+  .document__bottom
     .container-fluid
       .row.metadata
         .col-sm-7
