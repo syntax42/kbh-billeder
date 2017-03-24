@@ -36,6 +36,50 @@
     "singular": "institution",
     "plural": "institutioner"
   },
+  "location": {
+    "filters" : {
+      "Har placering": {
+        "bool": {
+          "should": [
+            {"exists": { "field": "location.verified.latitude" }},
+            {"exists": { "field": "location.crowd.latitude" }}
+          ]
+        }
+      },
+      "Mangler placering": {
+        "bool": {
+          "must_not": [
+            {"exists": { "field": "location.verified.latitude" }},
+            {"exists": { "field": "location.crowd.latitude" }}
+          ]
+        }
+      }
+    },
+    "plural": "placeringer",
+    "singular": "placering",
+    "type": "filters"
+  },
+  "tags": {
+    "filters" : {
+      "Har emneord": {
+        "bool": {
+          "should": [
+            {"exists": { "field": "tags" }}
+          ]
+        }
+      },
+      "Mangler emneord": {
+        "bool": {
+          "must_not": [
+            {"exists": { "field": "tags" }}
+          ]
+        }
+      }
+    },
+    "plural": "emneord",
+    "singular": "emneord",
+    "type": "filters"
+  },
   "q": {
     "type": "querystring",
     "skipSplit": true
