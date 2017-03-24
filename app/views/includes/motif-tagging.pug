@@ -12,8 +12,4 @@ include ./motif-tagging/tags
         input(type='text', required)
         span.bar
         label Indtast nyt emneord og tryk enter
-    .motif-tagging__editing-tags
-      .motif-tagging__save-btn.btn.btn-primary(data-action='save-motif-tags', disabled=saving)
-        | Gem dine ændringer
-      .motif-tagging__cancel-btn.btn.btn-no-shadow.btn-small(data-action='cancel-motif-tags')
-        | Annuller
+      include ./motif-tagging/save-buttons
