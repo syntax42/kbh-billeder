@@ -12,7 +12,29 @@ if(config.features.geoTagging) {
 }
 
 module.exports.updateIndex = (metadata) => {
-  throw new Error('Not yet implemented: Implement this in your own plugin');
+  const es = require('collections-online/lib/services/elasticsearch');
+  const index = config.es && config.es.index;
+  assert.ok(index, 'Missing config.es.index');
+
+  return es.getSource({
+    id: metadata.collection + '-' + metadata.id,
+    type: 'asset',
+    index
+  }).then(metadataBefore => {
+    const indexingState = {
+      es,
+      index
+    };
+    const transformations = [
+      require('../indexing/transformations/latitude-longitude')
+    ];
+    const indexAsset = require('../indexing/processing/asset');
+    const metadataAfter = Object.assign({}, metadataBefore, metadata);
+    return indexAsset(indexingState, metadataAfter, transformations)
+    .then(id => {
+      return metadataAfter;
+    });
+  });
 };
 
 module.exports.save = (metadata) => {
