@@ -18,5 +18,5 @@ module.exports = _.merge(base, {
     motifTagging: true,
     users: true
   },
-  googleAnalyticsPropertyID: false,
+  googleAnalyticsPropertyID: false
 });

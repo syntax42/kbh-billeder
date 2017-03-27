@@ -18,7 +18,7 @@ helpers.documentSecondaryDescription = (metadata, fallback) => {
 };
 
 helpers.documentLicense = (metadata) => {
-  return metadata.license && metadata.license.displaystring;
+  return metadata.license && metadata.license.id;
 };
 
 // TODO: Delete this when metadata.catalog has transitioned to .collection

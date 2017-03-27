@@ -49,6 +49,7 @@ motifTagging.save = ({id, collection}, metadata) => {
     userTags: metadata.tags,
     visionTags: metadata.tags_vision
   };
+
   return originalSave.call(motifTagging, updatedMetadata)
   .then(response => {
     return {

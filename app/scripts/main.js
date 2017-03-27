@@ -24,6 +24,7 @@ function twittershareCurrentPage() {
 
 function pinterestshareCurrentPage() {
   var url = escape(window.location.href);
+  // TODO: Get this from the meta-tags instead
   var title = $('.asset').data('title');
   title += ' kbhbilleder.dk'
   window.open('https://pinterest.com/pin/create/button/?url=' + url + '&media=' + url + '/thumbnail&description=' + title);

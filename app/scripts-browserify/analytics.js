@@ -3,6 +3,7 @@ $(function() {
     var href = $(this).attr('href');
     var hrefArray = href.split("/");
     var size = hrefArray[hrefArray.length-1];
+    // TODO: Get the id and catalog from another element
     var id = $('.asset').data('id');
     var catalog = $('.asset').data('catalog');
     var catalogIdSize = catalog + '-' + id + '-' + size;
