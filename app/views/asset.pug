@@ -1,36 +1,20 @@
-extends document
-include mixins/tag
-include mixins/loader
-include mixins/icon
+extends asset
 
-block document__top
-  .document__top
-    .container-fluid
-      .row
-        .col-xs-12.col-sm-7.img-col
-          include includes/player
-          // TODO: Consider using "include includes/asset-controls"
-          .controls
-            include includes/asset-controls
-        .col-xs-12.col-sm-5.asset-info
-          if(title)
-            h1= title
-          if(description)
-            p.sr-only Beskrivelse
-            p.lead= description
-          if(secondaryDescription)
-            p= secondaryDescription
-          .metadata
-            != assetSection('time', metadata)
-            != assetSection('place', metadata)
+block document__top-metadata
+  .document__top-metadata.col-md-5
+    if(title)
+      h1.document__title= title
+    if(description)
+      p.sr-only Beskrivelse
+      p.document__description= description
+    if(secondaryDescription)
+      p= secondaryDescription
+    != assetSection('time', metadata)
+    != assetSection('place', metadata)
 
-block document__bottom
-  .document__bottom
-    .container-fluid
-      .row.metadata
-        .col-sm-7
-          != assetSection('additional-information', metadata)
-        .col-sm-5
-          != assetSection('technical-information', metadata)
-      .row
-        include includes/relations
+block document__bottom-metadata
+  .row
+    .col-sm-7
+      != assetSection('additional-information', metadata)
+    .col-sm-5
+      != assetSection('technical-information', metadata)
