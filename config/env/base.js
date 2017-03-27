@@ -87,14 +87,26 @@ let config = {
     cookieConsent: true,
     motifTagging: false,
     filterSidebar: true,
-    geotagging: false,
+    geoTagging: true,
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true
   },
   generatedDir: generatedDir,
+  geoTagging: {
+    default: {
+      position: {
+        latitude: 55.672064,
+        longitude: 12.553359
+      },
+      zoom: 12
+    },
+    coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
+    headingField: '{c192d56c-04ec-443f-a299-b16bbd879e08}'
+  },
   googleAnalyticsPropertyID: null,
+  googleMapsAPIKey: 'AIzaSyB0sMPv-zV7gciZGIwFVJ3S8ZztA1btqvU',
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {

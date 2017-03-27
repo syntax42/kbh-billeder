@@ -195,4 +195,15 @@ helpers.motifTagging = {
   }
 };
 
+helpers.geoTagging = {
+  getLocation: (metadata) => {
+    return {
+      latitude: metadata.latitude,
+      longitude: metadata.longitude,
+      heading: parseFloat(metadata.heading, 10)
+    }
+  },
+  enabled: () => true
+};
+
 module.exports = helpers;
