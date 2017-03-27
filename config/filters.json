@@ -39,19 +39,11 @@
   "location": {
     "filters" : {
       "Har placering": {
-        "bool": {
-          "should": [
-            {"exists": { "field": "location.verified.latitude" }},
-            {"exists": { "field": "location.crowd.latitude" }}
-          ]
-        }
+        "exists": { "field": "latitude" }
       },
       "Mangler placering": {
         "bool": {
-          "must_not": [
-            {"exists": { "field": "location.verified.latitude" }},
-            {"exists": { "field": "location.crowd.latitude" }}
-          ]
+          "must_not": {"exists": { "field": "latitude" }}
         }
       }
     },
@@ -78,21 +70,6 @@
     },
     "plural": "emneord",
     "singular": "emneord",
-    "type": "filters"
-  },
-  "location": {
-    "filters" : {
-      "Har placering": {
-        "exists": { "field": "latitude" }
-      },
-      "Mangler placering": {
-        "bool": {
-          "must_not": {"exists": { "field": "latitude" }}
-        }
-      }
-    },
-    "plural": "placeringer",
-    "singular": "placering",
     "type": "filters"
   },
   "q": {
