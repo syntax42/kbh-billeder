@@ -2,12 +2,13 @@ const assert = require('assert');
 const config = require('collections-online/lib/config');
 const cip = require('../services/cip');
 
-assert.ok(config.motifTagging, 'Missing a config.motifTagging object');
+const USER_FIELD = config.motifTagging && config.motifTagging.userField;
+const VISION_FIELD = config.motifTagging && config.motifTagging.visionField;
 
-const USER_FIELD = config.motifTagging.userField;
-const VISION_FIELD = config.motifTagging.visionField;
-assert.ok(USER_FIELD, 'Missing a config.motifTagging.userField');
-assert.ok(VISION_FIELD, 'Missing a config.motifTagging.visionField');
+if(config.features.motifTagging) {
+  assert.ok(USER_FIELD, 'Missing a config.motifTagging.userField');
+  assert.ok(VISION_FIELD, 'Missing a config.motifTagging.visionField');
+}
 
 module.exports.save = ({id, collection, userTags, visionTags}) => {
   assert.ok(collection, 'Missing the collection');
