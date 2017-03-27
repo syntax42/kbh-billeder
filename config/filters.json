@@ -80,6 +80,21 @@
     "singular": "emneord",
     "type": "filters"
   },
+  "location": {
+    "filters" : {
+      "Har placering": {
+        "exists": { "field": "latitude" }
+      },
+      "Mangler placering": {
+        "bool": {
+          "must_not": {"exists": { "field": "latitude" }}
+        }
+      }
+    },
+    "plural": "placeringer",
+    "singular": "placering",
+    "type": "filters"
+  },
   "q": {
     "type": "querystring",
     "skipSplit": true
