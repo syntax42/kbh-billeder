@@ -1,7 +1,15 @@
-const cip = require('../services/cip');
+const assert = require('assert');
 
-var GOOGLE_MAPS_COORDS_CROWD_FIELD = '{81780c19-86be-44e6-9eeb-4e63f16d7215}';
-var HEADING_FIELD = '{ef236a08-62f8-485f-b232-9771792d29ba}';
+const cip = require('../services/cip');
+const config = require('collections-online/lib/config');
+
+if(config.features.geoTagging) {
+  assert.ok(config.geoTagging, 'Expected a config.geoTagging');
+  assert.ok(config.geoTagging.coordinatesField,
+            'Expected config.geoTagging.coordinatesField');
+  assert.ok(config.geoTagging.headingField,
+            'Expected config.geoTagging.headingField');
+}
 
 module.exports.updateIndex = (metadata) => {
   throw new Error('Not yet implemented: Implement this in your own plugin');
@@ -9,8 +17,8 @@ module.exports.updateIndex = (metadata) => {
 
 module.exports.save = (metadata) => {
   var values = {};
-  values[GOOGLE_MAPS_COORDS_CROWD_FIELD] = metadata.coordinates.join(', ');
-  values[HEADING_FIELD] = metadata.heading;
+  values[config.geoTagging.coordinatesField] = metadata.coordinates.join(', ');
+  values[config.geoTagging.headingField] = metadata.heading;
 
   return cip.setFieldValues(metadata.collection, metadata.id, values)
   .then(function(response) {
