@@ -1,7 +1,13 @@
+include ../mixins/icon
+
 .topbar__auth.hidden-xs.hidden-sm
-  if user
-    a.topbar__items-link
-      = (user.name.givenName || user.nickname)
-    a(href='/logout').topbar__items-link Log ud
-  else
-    a(data-action='login').topbar__items-link Log ind
+  .dropdown
+    a.dropdown__selected
+      +icon('user-shape')
+    .dropdown__options
+      if user
+        a.dropdown__option
+          = (user.name.givenName || user.nickname)
+        a.dropdown__option(href='/logout') Log ud
+      else
+        a.dropdown__option(data-action='login') Log ind
