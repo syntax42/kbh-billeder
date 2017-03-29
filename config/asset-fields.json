@@ -98,6 +98,9 @@
     "short": "width_in"
   }, {
     "cumulusKey": "{1af283a9-bcc7-44a1-bdd8-b65557017a52}",
+    "short": "google_maps_coordinates_crowd"
+  }, {
+    "cumulusKey": "{f7bb28d1-0ef1-46b5-90c8-202f90800eff}",
     "short": "google_maps_coordinates"
   }, {
     "cumulusKey": "{c192d56c-04ec-443f-a299-b16bbd879e08}",
