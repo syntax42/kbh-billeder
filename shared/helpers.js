@@ -207,7 +207,7 @@ helpers.geoTagging = {
       heading: parseFloat(metadata.heading, 10)
     }
   },
-  enabled: () => true
+  enabled: (metadata) => !metadata.google_maps_coordinates
 };
 
 module.exports = helpers;
