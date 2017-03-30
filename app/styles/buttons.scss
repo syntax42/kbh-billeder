@@ -3,17 +3,6 @@
   position: relative;
 }
 
-.btn-default {
-  background-color: $gray;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: lighten($gray, 10%);
-    color: $white;
-  }
-}
-
 .btn:not(.search-freetext-form__btn, .btn-no-shadow) {
   @include shadow(1);
 }
