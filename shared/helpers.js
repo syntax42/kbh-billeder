@@ -31,8 +31,12 @@ helpers.getDocumentURL = (metadata) => {
   return '/' + path.join('/');
 };
 
-helpers.determinePlayer = (metadata) => {
-  return 'image';
+helpers.determinePlayers = metadata => {
+  return [{
+    type: 'image',
+    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+    title: helpers.documentTitle(metadata)
+  }];
 };
 
 helpers.generateSitemapElements = (metadata) => {
