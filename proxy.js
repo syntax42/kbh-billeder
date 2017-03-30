@@ -20,11 +20,11 @@ var request = require('request').defaults({
   timeout: config.cip.timeout || 55000 // 55 secs
 });
 
-function proxy(url) {
+function proxy(url, includeJSessionId = false) {
   // Prefix the baseURL
   url = config.cip.baseURL + url;
   // Add any available jsessionid, just before any querystring.
-  if(url.indexOf('jsessionid') < 0 && cip.jsessionid) {
+  if(url.indexOf('jsessionid') < 0 && cip.jsessionid && includeJSessionId) {
     let jsessionidString = ';jsessionid=' + cip.jsessionid;
     let queryStringStart = url.indexOf('?');
     if(queryStringStart < 0) {
