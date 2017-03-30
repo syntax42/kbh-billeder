@@ -1,12 +1,15 @@
 extends asset
 
 block document__top-metadata
+  - const documentTitle = helpers.documentTitle(metadata);
+  - const documentDescription = helpers.documentDescription(metadata);
+  - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
   .document__top-metadata.col-md-5
-    if(title)
-      h1.document__title= title
-    if(description)
+    if(documentTitle)
+      h1.document__title= documentTitle
+    if(documentDescription)
       p.sr-only Beskrivelse
-      p.document__description= description
+      p.document__description= documentDescription
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
