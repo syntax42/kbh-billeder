@@ -17,11 +17,11 @@ module.exports.save = ({id, collection, userTags, visionTags}) => {
   // Save it using the CIP
   var values = {};
 
-  if(typeof(userTags) === 'string') {
+  if(Array.isArray(userTags)) {
     values[USER_FIELD] = userTags.join(',');
   }
 
-  if(typeof(visionTags) === 'string') {
+  if(Array.isArray(visionTags)) {
     values[VISION_FIELD] = visionTags.join(',');
   }
 

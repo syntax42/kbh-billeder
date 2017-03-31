@@ -53,12 +53,6 @@ cipClient.setFieldValues = function(catalogAlias, id, values) {
 
   values.id = parseInt(id);
 
-  /*
-  console.log('setFieldValues', operation, {
-    items: [values]
-  });
-  */
-
   return this.request(operation, {}, {
     items: [values]
   });
