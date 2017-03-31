@@ -106,7 +106,7 @@ let config = {
       zoom: 12
     },
     coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
-    headingField: '{c192d56c-04ec-443f-a299-b16bbd879e08}'
+    headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}'
   },
   googleAnalyticsPropertyID: null,
   googleMapsAPIKey: 'AIzaSyB0sMPv-zV7gciZGIwFVJ3S8ZztA1btqvU',
