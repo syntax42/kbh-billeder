@@ -6,6 +6,8 @@ const config = require('collections-online/lib/config');
 const querystring = require('querystring');
 const proxy = require('../proxy');
 
+assert.ok(config.cip, 'Missing config.cip');
+assert.ok(config.cip.proxy, 'Missing config.cip.proxy');
 exports.proxy = proxy;
 
 /**
