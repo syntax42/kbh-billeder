@@ -39,6 +39,10 @@ module.exports.updateIndex = (metadata) => {
 
 module.exports.save = (metadata) => {
   var values = {};
+
+  assert.equal(typeof(metadata.coordinates), 'object', 'Missing coordinates');
+  assert.equal(typeof(metadata.heading), 'number', 'Missing nummeric heading');
+
   values[config.geoTagging.coordinatesField] = metadata.coordinates.join(', ');
   values[config.geoTagging.headingField] = metadata.heading;
 
