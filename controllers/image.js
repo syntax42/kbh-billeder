@@ -8,6 +8,8 @@ const proxy = require('../proxy');
 
 assert.ok(config.cip, 'Missing config.cip');
 assert.ok(config.cip.proxy, 'Missing config.cip.proxy');
+const includeSessionId = config.cip.proxy.includeSessionId ? true : false;
+
 exports.proxy = proxy;
 
 /**
@@ -28,7 +30,7 @@ exports.proxyDownload = (id, size) => {
     url += '?options=' + JSON.stringify(option.cumulus);
   }
 
-  return proxy(url);
+  return proxy(url, includeSessionId);
 };
 
 /**
@@ -38,5 +40,5 @@ exports.proxyDownload = (id, size) => {
  * next is a callback method for potential errors
  */
 exports.proxyThumbnail = (id) => {
-    return proxy('/preview/thumbnail/' + id);
+    return proxy('/preview/thumbnail/' + id, includeSessionId);
 };

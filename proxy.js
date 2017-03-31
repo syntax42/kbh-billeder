@@ -5,16 +5,17 @@ const cip = require('./services/cip');
 assert.ok(config.cip.proxy, 'Missing a config.cip.proxy object');
 assert.ok(config.cip.proxy.maxSockets, 'Missing config.cip.proxy.maxSockets');
 
-var Agent = require('agentkeepalive');
+const Agent = require('agentkeepalive');
+
 let agent;
 // Choose a keep-alive agent based on the beginning of the baseUrl
 if(config.cip.baseURL.indexOf('https://') === 0) {
   agent = new Agent.HttpsAgent({
-    maxSockets: config.cip.proxyMaxSockets
+    maxSockets: config.cip.proxy.maxSockets
   });
 } else {
   agent = new Agent({
-    maxSockets: config.cip.proxyMaxSockets
+    maxSockets: config.cip.proxy.maxSockets
   });
 }
 
