@@ -32,7 +32,10 @@ let config = {
     baseURL: 'https://www.neaonline.dk:8443/CIP',
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
-    proxyMaxSockets: 10,
+    proxy: {
+      includeSessionId: true,
+      maxSockets: 10
+    },
     // rotationCategoryName: 'Rotationsbilleder', // TODO: Disable in indexing.
     indexing: {
       additionalFields: null, // Place additional fields to be indexed here ..
