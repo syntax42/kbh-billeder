@@ -200,14 +200,26 @@ helpers.motifTagging = {
 };
 
 helpers.geoTagging = {
-  getLocation: (metadata) => {
+  getLocation: metadata => {
     return {
       latitude: metadata.latitude,
       longitude: metadata.longitude,
       heading: parseFloat(metadata.heading, 10)
     }
   },
-  enabled: (metadata) => !metadata.google_maps_coordinates
+  getAddress: metadata => {
+    return [
+      metadata.place,
+      metadata.street_name,
+      metadata.street_number,
+      metadata.floor,
+      metadata.district,
+      metadata.zipcode,
+      metadata.city,
+      metadata.country
+    ].filter(s => s).join(', ');
+  },
+  enabled: metadata => !metadata.google_maps_coordinates
 };
 
 module.exports = helpers;
