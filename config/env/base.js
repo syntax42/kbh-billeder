@@ -103,7 +103,7 @@ let config = {
         latitude: 55.672064,
         longitude: 12.553359
       },
-      zoom: 12
+      zoom: 16
     },
     coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
     headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}'
