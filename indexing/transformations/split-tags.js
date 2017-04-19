@@ -8,7 +8,6 @@ const fields = [
 module.exports = function(state, metadata) {
   fields.forEach(field => {
     const value = metadata[field];
-    console.log('value', value);
     if(typeof(value) === 'string' && value !== '') {
       metadata[field] = value.split(',');
     } else {
