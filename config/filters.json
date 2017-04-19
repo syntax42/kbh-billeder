@@ -39,11 +39,19 @@
   "location": {
     "filters" : {
       "Har placering": {
-        "exists": { "field": "latitude" }
+        "bool": {
+          "should": [
+            {"exists": { "field": "google_maps_coordinates" }},
+            {"exists": { "field": "google_maps_coordinates_crowd" }}
+          ]
+        }
       },
       "Mangler placering": {
         "bool": {
-          "must_not": {"exists": { "field": "latitude" }}
+          "must_not": [
+            {"exists": { "field": "google_maps_coordinates" }},
+            {"exists": { "field": "google_maps_coordinates_crowd" }}
+          ]
         }
       }
     },
