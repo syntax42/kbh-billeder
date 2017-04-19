@@ -6,6 +6,7 @@ module.exports = [
   require('collections-online-cumulus/indexing/transformations/categories-and-suggest'),
   require('collections-online-cumulus/indexing/transformations/relations'),
   require('collections-online-cumulus/indexing/transformations/dimensions'),
+  require('collections-online-cumulus/indexing/transformations/geo-code'),
   require('collections-online-cumulus/indexing/transformations/latitude-longitude'),
   require('collections-online-cumulus/indexing/transformations/split-tags'),
   require('collections-online-cumulus/indexing/transformations/vision-tags'),

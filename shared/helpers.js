@@ -208,6 +208,12 @@ helpers.geoTagging = {
     }
   },
   getAddress: metadata => {
+    return helpers.geoTagging.getAddressRaw(metadata).filter(s => s).join(', ');
+  },
+  getAddressForMaps: metadata => {
+    return helpers.geoTagging.getAddressRaw(metadata).filter(s => s).join('+');
+  },
+  getAddressRaw: metadata => {
     return [
       metadata.place,
       metadata.street_name,
@@ -217,7 +223,7 @@ helpers.geoTagging = {
       metadata.zipcode,
       metadata.city,
       metadata.country
-    ].filter(s => s).join(', ');
+    ];
   },
   enabled: metadata => !metadata.google_maps_coordinates
 };
