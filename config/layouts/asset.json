@@ -40,7 +40,8 @@
           "fields": {
             "latitude": "latitude",
             "longitude": "longitude",
-            "heading": "heading"
+            "heading": "heading",
+            "approximate": "location_is_approximate"
           }
         }
       ]

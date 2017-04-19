@@ -17,7 +17,9 @@ module.exports = _.merge(base, {
       trustSelfSigned: true
     }
   },
-  googleAnalyticsPropertyID: 'UA-78446616-1',
+  google: {
+    analyticsPropertyID: 'UA-78446616-1'
+  },
   host: 'kbhbilleder.dk',
   ip: null,
   port: null,

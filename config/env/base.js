@@ -108,8 +108,13 @@ let config = {
     coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
     headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}'
   },
-  googleAnalyticsPropertyID: null,
-  googleMapsAPIKey: 'AIzaSyB0sMPv-zV7gciZGIwFVJ3S8ZztA1btqvU',
+  google: {
+    analyticsPropertyID: null,
+    keys: {
+      restricted: 'AIzaSyB0sMPv-zV7gciZGIwFVJ3S8ZztA1btqvU',
+      unrestricted: process.env.GOOGLE_UNRESTRICTED_KEY
+    }
+  },
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {
