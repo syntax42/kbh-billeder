@@ -100,6 +100,9 @@
     "cumulusKey": "{1af283a9-bcc7-44a1-bdd8-b65557017a52}",
     "short": "google_maps_coordinates_crowd"
   }, {
+    "cumulusKey": "{7a1f29a3-e389-4fef-a092-67de7837a181}",
+    "short": "google_maps_coordinates_approximate"
+  }, {
     "cumulusKey": "{f7bb28d1-0ef1-46b5-90c8-202f90800eff}",
     "short": "google_maps_coordinates"
   }, {
