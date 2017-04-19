@@ -5,9 +5,7 @@ require('base')({
 });
 
 // Project specific
-if(config.googleAnalyticsPropertyID) {
-  require('analytics');
-}
+require('analytics');
 
 if(config.features.sitewidePassword) {
   require('./sitewide-password');
