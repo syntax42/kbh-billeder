@@ -2,10 +2,14 @@
 
 module.exports = function(state, metadata) {
   var coordinates;
+
   if (metadata.google_maps_coordinates) {
     coordinates = metadata.google_maps_coordinates;
   } else if (metadata.google_maps_coordinates_crowd) {
     coordinates = metadata.google_maps_coordinates_crowd;
+  } else if (metadata.google_maps_coordinates_approximate) {
+    coordinates = metadata.google_maps_coordinates_approximate;
+    metadata.location_is_approximate = true
   }
   if (coordinates) {
     coordinates = coordinates.split(',').map(parseFloat);

@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "description": "A module that enables collections-online to index and display assets from the Canto Cumulus™ DAMS",
   "main": "index.js",
-  "scripts": {
-    "start": "node start.js",
-    "index": "node indexing/run.js"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/collections-online/collections-online-cumulus"
