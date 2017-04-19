@@ -112,7 +112,7 @@ let config = {
     analyticsPropertyID: null,
     keys: {
       restricted: 'AIzaSyB0sMPv-zV7gciZGIwFVJ3S8ZztA1btqvU',
-      unrestricted: process.env.GOOGLE_UNRESTRICTED_KEY
+      unrestricted: process.env.GOOGLE_UNRESTRICTED_API_KEY
     }
   },
   ip: process.env.IP || '0.0.0.0',
