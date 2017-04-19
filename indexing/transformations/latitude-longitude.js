@@ -5,11 +5,13 @@ module.exports = function(state, metadata) {
 
   if (metadata.google_maps_coordinates) {
     coordinates = metadata.google_maps_coordinates;
+    metadata.location_is_approximate = false;
   } else if (metadata.google_maps_coordinates_crowd) {
     coordinates = metadata.google_maps_coordinates_crowd;
+    metadata.location_is_approximate = false;
   } else if (metadata.google_maps_coordinates_approximate) {
     coordinates = metadata.google_maps_coordinates_approximate;
-    metadata.location_is_approximate = true
+    metadata.location_is_approximate = true;
   }
   if (coordinates) {
     coordinates = coordinates.split(',').map(parseFloat);
