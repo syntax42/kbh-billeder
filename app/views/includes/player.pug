@@ -1,6 +1,9 @@
-- let players = helpers.determinePlayers(metadata);
-each player in players
-  if(player.type === 'image')
-    include ./players/image
-  else
-    | Couldn't determine player: ${player.type}
+extends player
+
+block document__player
+  - let players = helpers.determinePlayers(metadata);
+  each player in players
+    if(player.type === 'image')
+      include ./players/image
+    else
+      | Couldn't determine player: ${player.type}
