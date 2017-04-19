@@ -41,24 +41,14 @@ motifTagging.typeaheadSuggestions = text => {
   });
 };
 
-const originalSave = motifTagging.save;
-motifTagging.save = ({id, collection}, metadata) => {
-  const updatedMetadata = {
-    id,
-    collection,
-    userTags: metadata.tags,
-    visionTags: metadata.tags_vision
-  };
-
-  return originalSave.call(motifTagging, updatedMetadata)
-  .then(response => {
-    return {
-      id,
-      collection,
-      tags: metadata.tags,
-      tags_vision: metadata.tags_vision
-    };
-  });
+const originalUpdateIndex = motifTagging.updateIndex;
+motifTagging.updateIndex = metadata => {
+  return originalUpdateIndex({
+    collection: metadata.collection,
+    id: metadata.id,
+    tags_vision: metadata.visionTags,
+    tags: metadata.userTags
+  })
 };
 
 module.exports = motifTagging;

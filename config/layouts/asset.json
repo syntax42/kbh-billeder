@@ -38,8 +38,9 @@
           "title": "Koordinater",
           "type": "map-coordinates",
           "fields": {
-            "latitude": ["latitude"],
-            "longitude": ["longitude"]
+            "latitude": "latitude",
+            "longitude": "longitude",
+            "heading": "heading"
           }
         }
       ]
