@@ -22,9 +22,13 @@ const saveApproximateCoordinates = (metadata, coordinates) => {
 };
 
 module.exports = (metadata, context) => {
-  const hasApproximateLocation = !!metadata.google_maps_coordinates_approximate;
+  const enabled = context.geocoding.enabled;
+  const forced = context.geocoding.forced;
 
-  if(API_KEY && metadata.street_name && !hasApproximateLocation) {
+  const hasApproximateLocation = !!metadata.google_maps_coordinates_approximate;
+  const needsGeocoding = !hasApproximateLocation || forced;
+
+  if(enabled && API_KEY && metadata.street_name && needsGeocoding) {
     const address = helpers.geoTagging.getAddress(metadata);
     const query = querystring.stringify({
       address: address,
@@ -63,6 +67,7 @@ module.exports = (metadata, context) => {
       // Save these new approximate coordinates to the CIP.
       const coordinates = metadata.google_maps_coordinates_approximate;
       if(coordinates) {
+        // TODO: Move to ../processing/result.js
         return saveApproximateCoordinates(metadata, coordinates)
         .then(() => {
           return metadata;
@@ -71,10 +76,10 @@ module.exports = (metadata, context) => {
         return metadata;
       }
     });
-  } else if(!API_KEY) {
+  } else if(enabled && !API_KEY) {
     console.log('A Google Maps API key is required to geocode.');
     return metadata;
-  } else if(hasApproximateLocation) {
+  } else if(enabled && hasApproximateLocation) {
     console.log('Skipping geocoding, as the approximate location was sat');
     return metadata;
   } else {
