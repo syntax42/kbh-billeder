@@ -64,7 +64,7 @@ module.exports = (metadata, context) => {
     console.log('A Google Maps API key is required to geocode.');
     return metadata;
   } else if(enabled && hasApproximateLocation) {
-    console.log('Skipping geocoding, as the approximate location was sat');
+    // Skipping geocoding, as the approximate location was sat
     return metadata;
   } else {
     return metadata;
