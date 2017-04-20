@@ -93,7 +93,7 @@ function processResultPage(result, state, pageIndex) {
 function processResultPages(result, state) {
   // Build up a list of parameters for all the pages in the entire result
   const pageIndecies = [];
-  for(let p = 0; p * ASSETS_PER_REQUEST < result.total_rows; p++) {
+  for(let p = context.offset; p * ASSETS_PER_REQUEST < result.total_rows; p++) {
     pageIndecies.push(p);
   }
   // Return a promise of process result pages (evaluated one after another)

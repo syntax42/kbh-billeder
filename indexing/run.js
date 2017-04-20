@@ -7,11 +7,12 @@
 var Q = require('q');
 
 function run(state) {
-  // TODO: Consider having a mode and referecen parameter on the run method,
-  // for this module to be controlled by other modules.
-
   if (!state) {
     state = {};
+  }
+
+  if (!state.context) {
+    state.context = {};
   }
 
   var steps = [

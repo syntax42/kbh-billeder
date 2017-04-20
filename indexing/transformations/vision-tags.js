@@ -35,7 +35,7 @@ module.exports = (metadata, context) => {
     }
 
     // Still here. Let's grab the image directly from Cumulus.
-    let path = 'preview/thumbnail/' + metadata.catalog + '/' + metadata.id;
+    let path = 'preview/thumbnail/' + metadata.collection + '/' + metadata.id;
     let url = cip.generateURL(path);
 
     // Loading here to prevent circular dependency.

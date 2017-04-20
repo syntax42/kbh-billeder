@@ -5,24 +5,25 @@
  * to be processed, based on the querystring which is passed to the search.
  */
 
-var cip = require('../../services/cip');
-var processResult = require('./result');
+const _ = require('lodash');
+const cip = require('../../services/cip');
+const processResult = require('./result');
 
 function processQuery(state, query) {
-  console.log('Processing query “' + query.query + '” in the',
-              query.catalogAlias,
-              'catalog');
-
-  var catalog = {alias: query.catalogAlias};
-
+  console.log('Processing query “' + query.query + '” in', query.catalogAlias);
+  // Initiate the search via the CIP
   return cip.criteriaSearch({
-    catalog: catalog
+    catalog: {
+      alias: query.catalogAlias
+    }
   }, query.query, null).then(result => {
-    result.pageIndex = query.offset || 0;
-    // Hang on to the result.
-    result.catalog = catalog;
+    // Copy the context, to prevent race-conditions across queries
+    const clonedContext = _.cloneDeep(state.context);
+    // Add the catalog as the collection in the context
+    clonedContext.collection = query.catalogAlias;
+    clonedContext.offset = query.offset || 0;
     // Process the next page in the search result.
-    return processResult(state, query, result);
+    return processResult(clonedContext, query, result);
   });
 };
 

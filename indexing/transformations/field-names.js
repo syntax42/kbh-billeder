@@ -2,10 +2,9 @@
 
 var assetMapping = require('../../asset-mapping.js');
 
-module.exports = metadata => {
+module.exports = (metadata, context) => {
   var transformedMetadata = assetMapping.transform(metadata);
-  // The catalog will be removed when formatting.
-  transformedMetadata.catalog = metadata.catalog;
-  transformedMetadata.collection = metadata.catalog;
+  // Add the collection from the context
+  transformedMetadata.collection = context.collection;
   return transformedMetadata;
 };
