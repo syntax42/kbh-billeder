@@ -18,8 +18,6 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
 
 const processAsset = require('./asset');
 
-const ASSETS_PER_REQUEST = 100;
-
 function saveChangesToCIP(catalogAlias, items) {
   const operation = [
     'metadata',
@@ -64,12 +62,11 @@ function getResultPage(result, index, count) {
 function processResultPage(result, context, pageIndex) {
   const collection = context.collection;
 
-  var totalPages = Math.ceil(result.total_rows / ASSETS_PER_REQUEST);
+  var totalPages = Math.ceil(result.total_rows / context.pageSize);
   const progress = '[' + (pageIndex + 1) + '/' + totalPages + ']';
   console.log(progress + ' Queuing page');
 
-  const count = ASSETS_PER_REQUEST;
-  return getResultPage(result, pageIndex * count, count)
+  return getResultPage(result, pageIndex * context.pageSize, context.pageSize)
   .then(assets => {
     console.log(progress + ' Received metadata');
     // Perform a processing of all the assets on the page
@@ -176,7 +173,7 @@ function processResultPage(result, context, pageIndex) {
 function processResultPages(result, context) {
   // Build up a list of parameters for all the pages in the entire result
   const pageIndecies = [];
-  for(let p = context.offset; p * ASSETS_PER_REQUEST < result.total_rows; p++) {
+  for(let p = context.offset; p * context.pageSize < result.total_rows; p++) {
     pageIndecies.push(p);
   }
   // Return a promise of process result pages (evaluated one after another)
