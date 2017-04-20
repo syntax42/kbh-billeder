@@ -17,6 +17,11 @@ module.exports = _.merge(base, {
       trustSelfSigned: true
     }
   },
+  features: {
+    geoTagging: false,
+    motifTagging: false,
+    users: false
+  },
   google: {
     analyticsPropertyID: 'UA-78446616-1'
   },
