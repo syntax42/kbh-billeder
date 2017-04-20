@@ -17,7 +17,14 @@ module.exports = _.merge(base, {
       trustSelfSigned: true
     }
   },
-  googleAnalyticsPropertyID: 'UA-78446616-1',
+  features: {
+    geoTagging: false,
+    motifTagging: false,
+    users: false
+  },
+  google: {
+    analyticsPropertyID: 'UA-78446616-1'
+  },
   host: 'kbhbilleder.dk',
   ip: null,
   port: null,

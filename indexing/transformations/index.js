@@ -3,7 +3,6 @@ module.exports = [
   require('collections-online-cumulus/indexing/transformations/empty-title'),
   require('collections-online-cumulus/indexing/transformations/dates'),
   require('collections-online-cumulus/indexing/transformations/date-intervals'),
-  require('collections-online-cumulus/indexing/transformations/categories-and-suggest'),
   require('collections-online-cumulus/indexing/transformations/relations'),
   require('collections-online-cumulus/indexing/transformations/dimensions'),
   require('collections-online-cumulus/indexing/transformations/geo-code'),
