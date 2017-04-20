@@ -19,7 +19,8 @@ function run(state) {
     require('./initialize/cip-client'),
     require('./initialize/mode'),
     require('./modes/run'),
-    require('./post-processing/print-asset-exceptions')
+    require('./post-processing/print-asset-exceptions'),
+    require('./post-processing/close-cip-session')
   ];
 
   return steps.reduce(Q.when, new Q(state));
