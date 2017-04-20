@@ -31,10 +31,12 @@ var helpers = {
 
 function updateAsset(catalogAlias, assetId) {
   var state = {
-    'es': ds,
-    'index': config.es.index,
-    'mode': 'single',
-    'reference': catalogAlias + '/' + assetId
+    context: {
+      index: config.es.index,
+    },
+    es: ds,
+    mode: 'single',
+    reference: catalogAlias + '/' + assetId
   };
   return indexing(state);
 }
