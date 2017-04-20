@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   var coordinates;
 
   if (metadata.google_maps_coordinates) {

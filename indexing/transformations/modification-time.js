@@ -2,7 +2,7 @@
 
 var DATA_REGEXP = new RegExp('\\d+');
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   var modificationTime = DATA_REGEXP.exec(metadata.modification_time);
   if (modificationTime && modificationTime.length > 0) {
     var timestamp = parseInt(modificationTime[0], 10);

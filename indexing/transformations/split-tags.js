@@ -5,7 +5,7 @@ const fields = [
   'tags_vision'
 ]
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   fields.forEach(field => {
     const value = metadata[field];
     if(typeof(value) === 'string' && value !== '') {

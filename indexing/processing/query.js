@@ -8,7 +8,7 @@
 var cip = require('../../services/cip');
 var processResult = require('./result');
 
-module.exports = function(state, query) {
+function processQuery(state, query) {
   console.log('Processing query “' + query.query + '” in the',
               query.catalogAlias,
               'catalog');
@@ -25,3 +25,5 @@ module.exports = function(state, query) {
     return processResult(state, query, result);
   });
 };
+
+module.exports = processQuery;

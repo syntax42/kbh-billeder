@@ -8,7 +8,7 @@ function relatedFilenameComparison(assetA, assetB) {
   return filenameA.localeCompare(filenameB);
 }
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   metadata.related = {};
   // Transforms the binary representations of each relation.
   const masterAssets = cip.parseBinaryRelations(metadata.related_master_assets);

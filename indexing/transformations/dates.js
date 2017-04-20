@@ -37,7 +37,7 @@ function generateTimestamp(date) {
   return date;
 }
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   // Let's find all dates
   var dateFields = config.types.asset.fields.filter((field) => {
     return field.type === 'date';

@@ -16,9 +16,9 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
 }
 
 function transformMetadata(state, metadata, transformations) {
-      return transformation(state, metadata);
   return transformations.reduce((metadata, transformation) => {
     return Q.when(metadata).then(metadata => {
+      return transformation(metadata, context);
     });
   }, new Q(metadata));
 }

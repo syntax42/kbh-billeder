@@ -2,7 +2,7 @@
 
 var CM_PR_IN = 2.54;
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   metadata.width_cm = metadata.width_in * CM_PR_IN;
   metadata.height_cm = metadata.height_in * CM_PR_IN;
   if (metadata.resolution_dpi) {

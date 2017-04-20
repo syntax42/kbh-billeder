@@ -8,7 +8,7 @@ const FIELD_HIERARCHY = [
   'tags_vision'
 ];
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   // A list of tags already consumed - it should not be possible to consume a
   // tag twice.
   var consumedTags = [];

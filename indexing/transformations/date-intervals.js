@@ -5,7 +5,7 @@ var intervals = {
   'creation_timestamp': ['creation_time_from', 'creation_time_to']
 };
 
-module.exports = function(state, metadata) {
+module.exports = metadata => {
   Object.keys(intervals).forEach((destinationField) => {
     var date = intervals[destinationField].reduce((result, field) => {
       if (!result && metadata[field] && metadata[field].timestamp) {

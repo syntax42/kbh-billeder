@@ -12,7 +12,7 @@ if (!motifTagController) {
   throw new Error('Expected at least one image controller!');
 }
 
-module.exports = (context, metadata) => {
+module.exports = (metadata, context) => {
   // Let's save some cost and bandwidth and not analyze the asset unless
   // explicitly told. As in run only if one of the indexVison args
   // are specified.

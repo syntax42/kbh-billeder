@@ -21,7 +21,7 @@ const saveApproximateCoordinates = (metadata, coordinates) => {
   });
 };
 
-module.exports = (state, metadata) => {
+module.exports = (metadata, context) => {
   const hasApproximateLocation = !!metadata.google_maps_coordinates_approximate;
 
   if(API_KEY && metadata.street_name && !hasApproximateLocation) {
