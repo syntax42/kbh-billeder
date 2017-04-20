@@ -10,11 +10,12 @@ const es = require('collections-online/lib/services/elasticsearch');
 const config = require('collections-online/lib/config');
 
 module.exports = function(state) {
-  state.index = config.es.index;
-  console.log('Initializing the Elastic Search index: ' + state.index);
+  // Save the index in the context
+  state.context.index = config.es.index;
+  console.log('Initializing the Elastic Search index: ' + state.context.index);
 
   return es.indices.exists({
-    index: state.index
+    index: state.context.index
   }).then(function(exists) {
     if (exists) {
       console.log('Index was already created');
@@ -67,7 +68,7 @@ module.exports = function(state) {
       });
       // Create the actual index
       return es.indices.create({
-        index: state.index,
+        index: state.context.index,
         body: {
           'index': {
             'max_result_window': 100000 // So sitemaps can access all assets

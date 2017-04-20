@@ -9,7 +9,7 @@ const es = require('collections-online/lib/services/elasticsearch');
 module.exports = function(state) {
   if (state.mode === 'clear') {
     return es.indices.delete({
-      index: state.index
+      index: state.context.index
     }).then(function() {
       console.log('Index cleared.');
       return state;

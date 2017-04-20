@@ -68,7 +68,7 @@ module.exports = function(state) {
       });
       if (actions.length > 0) {
         return es.bulk({
-          index: state.index,
+          index: state.context.index,
           type: 'asset',
           body: actions
         });
