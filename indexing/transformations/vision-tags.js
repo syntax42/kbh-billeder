@@ -16,10 +16,8 @@ module.exports = (metadata, context) => {
   // Let's save some cost and bandwidth and not analyze the asset unless
   // explicitly told. As in run only if one of the indexVison args
   // are specified.
-  assert.ok(context.vision, 'Expected a vision object on the context');
-
-  const enabled = context.vision.enabled;
-  const forced = context.vision.forced;
+  const enabled = context.vision && context.vision.enabled;
+  const forced = context.vision && context.vision.forced;
 
   if (enabled) {
     // Convert tags to a comma seperated string

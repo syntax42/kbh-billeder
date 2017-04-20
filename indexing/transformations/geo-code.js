@@ -10,8 +10,8 @@ const querystring = require('querystring');
 const GEOCODING_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 
 module.exports = (metadata, context) => {
-  const enabled = context.geocoding.enabled;
-  const forced = context.geocoding.forced;
+  const enabled = context.geocoding && context.geocoding.enabled;
+  const forced = context.geocoding && context.geocoding.forced;
 
   const hasApproximateLocation = !!metadata.google_maps_coordinates_approximate;
   const needsGeocoding = !hasApproximateLocation || forced;
