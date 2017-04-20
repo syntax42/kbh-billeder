@@ -6,6 +6,7 @@ header.topbar(class=frontpage ? 'topbar--frontpage' : '')
       .topbar__items
         include ./topbar-menu
         include ./topbar-search
-        include ./topbar-auth
+        if config.features.users
+          include ./topbar-auth
       if frontpage
         include ./topbar-frontpage
