@@ -1,5 +1,6 @@
 'use strict';
 
+const assert = require('assert');
 const union = require('lodash/union');
 const config = require('collections-online/lib/config');
 const cip = require('../../services/cip');
@@ -11,22 +12,27 @@ if (!motifTagController) {
   throw new Error('Expected at least one image controller!');
 }
 
-module.exports = function(state, metadata) {
+module.exports = (context, metadata) => {
   // Let's save some cost and bandwidth and not analyze the asset unless
   // explicitly told. As in run only if one of the indexVison args
   // are specified.
-  var runForced = state.indexVisionTagsForce;
-  var runDefault = state.indexVisionTags;
+  assert.ok(context.vision, 'Expected a vision object on the context');
 
-  if (runDefault || runForced) {
-    if(metadata.tags_vision && !runForced) {
+  const enabled = context.vision.enabled;
+  const forced = context.vision.forced;
+
+  if (enabled) {
+    // Convert tags to a comma seperated string
+    if (!Array.isArray(metadata.tags_vision)) {
+      metadata.tags_vision = [];
+    }
+
+    if(metadata.tags_vision.length > 0 && !forced) {
       console.log('Asset has vision tags, skipping it');
       return metadata;
-    } else if (metadata.tags_vision) {
+    } else if (metadata.tags_vision.length > 0) {
       console.log('Asset has vision tags, but we´re forced');
     }
-    // increment the counter so we can keep track on when to pause and slow down
-    state.indexVisionTagsPauseCounter++;
 
     // Still here. Let's grab the image directly from Cumulus.
     let path = 'preview/thumbnail/' + metadata.catalog + '/' + metadata.id;
@@ -35,35 +41,32 @@ module.exports = function(state, metadata) {
     // Loading here to prevent circular dependency.
     var motif = require('collections-online/lib/controllers/motif-tagging');
 
-    return motif.fetchSuggestions(url, state.indexVisionTagsAPIFilter)
-      .then(function(tags) {
-        // Convert tags to a comma seperated string
-        if (!Array.isArray(metadata.tags_vision)) {
-          metadata.tags_vision = [];
-        }
-        // Hang on to the tags prior to this run
-        const tagsBefore = metadata.tags_vision;
-        // Override the tags with the new suggestions
-        metadata.tags_vision = union(metadata.tags_vision, tags);
-        // Calculate the numberOfNewTags
-        const numberOfNewTags = metadata.tags_vision.length - tagsBefore.length;
+    return motif.fetchSuggestions(url)
+    .then(tags => {
+      // Hang on to the tags prior to this run
+      const tagsBefore = metadata.tags_vision;
+      // Override the tags with the new suggestions
+      metadata.tags_vision = union(metadata.tags_vision, tags);
+      // Calculate the numberOfNewTags
+      const numberOfNewTags = metadata.tags_vision.length - tagsBefore.length;
 
-        // If no new tags was added, we don't save
-        if (numberOfNewTags === 0) {
-          console.log('No new tags found, let´s not save to the CIP.',
-                      'Now the asset has', metadata.tags_vision.length, 'tags');
+      // If no new tags was added, we don't save
+      if (numberOfNewTags === 0) {
+        console.log('No new tags found, let´s not save to the CIP.',
+                    'Now the asset has', metadata.tags_vision.length, 'tags');
+        return metadata;
+      } else {
+        console.log('Derived', numberOfNewTags, 'new tags.',
+                    'Now the asset has', metadata.tags_vision.length, 'tags');
+        // TODO: Move the saving to ../processing/result.js
+        return motifTagController.save(metadata, {
+          tags_vision: metadata.tags_vision
+        })
+        .then(response => {
           return metadata;
-        } else {
-          console.log('Derived', numberOfNewTags, 'new tags.',
-                      'Now the asset has', metadata.tags_vision.length, 'tags');
-          return motifTagController.save(metadata, {
-            tags_vision: metadata.tags_vision
-          })
-          .then(function(response) {
-            return metadata;
-          });
-        }
-      });
+        });
+      }
+    });
   }
   return metadata;
 };

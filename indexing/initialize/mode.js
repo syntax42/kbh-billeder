@@ -54,40 +54,27 @@ module.exports = function(state) {
       if (args.length >= 4) {
         state.reference = args[3];
       }
-
-      // Determine if the vision analysis should run or not
-      state.indexVisionTags = false;
-      state.indexVisionTagsAPIFilter = null;
-      state.indexVisionTagsForce = false;
-      state.indexVisionTagsPauseCounter = 0;
-      if (argv.vision) {
-        state.indexVisionTags = true;
-      }
-
-      if (argv.visionForce) {
-        state.indexVisionTagsForce = true;
-      }
-
-      if (argv.vision || argv.visionForce) {
-        var visionArg = argv.vision || argv.visionForce;
-        if (typeof visionArg === 'string') {
-          state.indexVisionTagsAPIFilter = {};
-          var visionAPIs = visionArg.split(',');
-          visionAPIs.forEach((tag) => {
-            state.indexVisionTagsAPIFilter[tag] = true;
-          });
-          console.log('Running with the Vision Api Filter',
-                      state.indexVisionTagsAPIFilter);
-        } else {
-          console.log('Running with all Vision Api\'s');
-        }
-      }
     }
   }
 
   if (!state.mode) {
     throw new Error('Unrecognized mode!' + '\n' + usageMessage());
   }
+
+  // Initialize the context passed to asset transformations
+  if(!state.context) {
+    state.context = {};
+  }
+  // Determine the context for vision
+  state.context.vision = {
+    enabled: !!argv.vision || !!argv.visionForce,
+    forced: !!argv.visionForce
+  };
+  // Determine the context for geocoding
+  state.context.geocoding = {
+    enabled: !!argv.geocoding || !!argv.geocodingForce,
+    forced: !!argv.geocodingForce
+  };
 
   console.log('Initialized the indexing', state.mode, 'mode');
 
