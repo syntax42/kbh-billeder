@@ -9,7 +9,7 @@
 const es = require('collections-online/lib/services/elasticsearch');
 const config = require('collections-online/lib/config');
 
-module.exports = function(state) {
+module.exports = state => {
   // Save the index in the context
   state.context.index = config.es.index;
   console.log('Initializing the Elastic Search index: ' + state.context.index);

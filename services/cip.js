@@ -14,7 +14,7 @@ cipClient.initSession = function(forceInit) {
     }
     return this.sessionOpen(config.cip.username, config.cip.password)
     .then(() => {
-      console.log('Opened session with jsessionid =', this.jsessionid);
+      console.log('Opened CIP session', this.jsessionid);
       return this;
     }, (err) => {
       if (!err) {
