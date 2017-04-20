@@ -1,19 +1,22 @@
 'use strict';
 
+const config = require('collections-online/lib/config');
+
 /**
  * Running the indexing procedure in the catalog mode.
  */
 
-module.exports.generateQueries = function(state) {
+module.exports.generateQueries = state => {
   var timeDelta;
   if (state.reference) {
     timeDelta = state.reference;
   } else {
     timeDelta = '10m';
   }
-  return state.catalogs.map(function(catalogAlias) {
+  // Loop over every catalog and produce a query
+  return Object.keys(config.cip.catalogs).map(catalogAlias {
     return {
-      catalogAlias: catalogAlias,
+      catalogAlias,
       query: '"Record Modification Date" >= $now-' + timeDelta
     };
   });

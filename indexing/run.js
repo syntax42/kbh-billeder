@@ -13,11 +13,10 @@ function run(state) {
   if (!state) {
     state = {};
   }
-  
+
   var steps = [
     require('./initialize/elastic-search-index'),
-    require('./initialize/cip-catalogs'),
-    require('./initialize/cip-categories'),
+    require('./initialize/cip-client'),
     require('./initialize/mode'),
     require('./modes/run'),
     require('./post-processing/print-asset-exceptions')
