@@ -13,11 +13,10 @@ const POST_PROCESSING_STEPS = [
   require('../post-processing/clear-index')
 ];
 
-module.exports = function(state) {
-  var mode = require('./' + state.mode);
-
+module.exports = state => {
+  const mode = require('./' + state.mode);
+  // Generate the queries
   state.queries = mode.generateQueries(state);
-
   // Add any indexing restrictions from the configuration.
   state.queries.forEach((q) => {
     if (config.cip.indexing.restriction) {
@@ -26,7 +25,6 @@ module.exports = function(state) {
   });
 
   console.log('\n=== Starting to process ===');
-
   // TODO: Consider if the two new Q(state)s need to be wrapped in promises.
 
   return state.queries.reduce((promise, query) => {

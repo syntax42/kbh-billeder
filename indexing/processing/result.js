@@ -26,7 +26,6 @@ function saveChangesToCIP(catalogAlias, items) {
     'setfieldvalues',
     catalogAlias
   ].join('/');
-  console.log('Saving to the CIP', items);
   // Call the CIP
   return cip.request(operation, {}, {
     items
