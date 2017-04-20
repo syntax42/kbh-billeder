@@ -26,7 +26,7 @@ function getResultPage(state, result, pointer, rowCount) {
     'metadata',
     'getfieldvalues',
     config.cip.client.constants.layoutAlias
-  ], options).then(function(response) {
+  ], options).then((response) => {
     if (!response ||
         !response.body ||
         typeof(response.body.items) === 'undefined') {

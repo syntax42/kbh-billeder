@@ -52,8 +52,8 @@ module.exports = function(state) {
         });
       }, new Q([]));
     } else {
-      deletedAssetIds = state.queries.reduce(function(deletedAssetIds, query) {
-        var assetIds = query.assetIds.map((assetId) => {
+      deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+        var assetIds = query.assetIds.map(assetId => {
           return query.catalogAlias + '-' + assetId;
         });
         var moreDeletedAssetIds = _.difference(assetIds, query.indexedAssetIds);
@@ -61,9 +61,9 @@ module.exports = function(state) {
       }, []);
     }
 
-    return Q.when(deletedAssetIds).then(function(deletedAssetIds) {
+    return Q.when(deletedAssetIds).then(deletedAssetIds => {
       console.log('Deleting', deletedAssetIds.length, 'asset(s)');
-      var actions = deletedAssetIds.map(function(deletedAssetId) {
+      var actions = deletedAssetIds.map(deletedAssetId => {
         return {delete: {_id: deletedAssetId}};
       });
       if (actions.length > 0) {

@@ -17,7 +17,7 @@ module.exports = function(state, query) {
 
   return cip.criteriaSearch({
     catalog: catalog
-  }, query.query, null).then(function(result) {
+  }, query.query, null).then(result => {
     result.pageIndex = query.offset || 0;
     // Hang on to the result.
     result.catalog = catalog;

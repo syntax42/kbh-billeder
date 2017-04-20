@@ -29,13 +29,13 @@ module.exports = function(state) {
 
   // TODO: Consider if the two new Q(state)s need to be wrapped in promises.
 
-  return state.queries.reduce(function(promise, query) {
-    return promise.then(function(state) {
       query.indexedAssetIds = [];
       query.assetExceptions = [];
       return processQuery(state, query);
+  return state.queries.reduce((promise, query) => {
+    return promise.then((state) => {
     });
-  }, new Q(state)).then(function(state) {
+  }, new Q(state)).then((state) => {
     console.log('Finished processing!');
     return POST_PROCESSING_STEPS.reduce(Q.when, new Q(state));
   });
