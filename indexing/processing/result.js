@@ -4,19 +4,21 @@
  * The processor handling an entire result.
  */
 
-var Q = require('q');
-var cip = require('../../services/cip');
-var config = require('collections-online/lib/config');
+const _ = require('lodash');
+const cip = require('../../services/cip');
+const config = require('collections-online/lib/config');
+const es = require('collections-online/lib/services/elasticsearch');
+const Q = require('q');
 
-var processAsset = require('./asset');
+const processAsset = require('./asset');
 
-var ASSETS_PER_REQUEST = 100;
+const ASSETS_PER_REQUEST = 100;
 
-function getResultPage(state, result, pointer, rowCount) {
+function getResultPage(result, index, count) {
   var options = {
     collection: result.collection_id,
-    startindex: pointer,
-    maxreturned: rowCount
+    startindex: index,
+    maxreturned: count
   };
 
   if(config.cip.indexing.additionalFields) {
@@ -33,11 +35,7 @@ function getResultPage(state, result, pointer, rowCount) {
       console.error('Unexpected response:', response);
       throw new Error('The request for field values returned an empty result.');
     } else {
-      var result = [];
-      for (var i = 0; i < response.body.items.length; i++) {
-        result.push(response.body.items[i]);
-      }
-      return result;
+      return response.body.items;
     }
   });
 }
@@ -45,8 +43,8 @@ function getResultPage(state, result, pointer, rowCount) {
 /**
  * Process a specific result page, with assets.
  */
-function processResultPage(state, result, pageIndex) {
-  var catalog = result.catalog;
+function processResultPage(result, state, pageIndex) {
+  const { catalog } = result;
 
   var totalPages = Math.ceil(result.total_rows / ASSETS_PER_REQUEST);
   console.log('Queuing page number',
@@ -57,69 +55,81 @@ function processResultPage(state, result, pageIndex) {
               catalog.alias,
               'catalog');
 
-  return getResultPage(state,
-                       result,
-                       pageIndex * ASSETS_PER_REQUEST,
-                       ASSETS_PER_REQUEST)
-  .then(function(assetsOnPage) {
+  const count = ASSETS_PER_REQUEST;
+  return getResultPage(result, pageIndex * count, count)
+  .then(assets => {
     console.log('Got metadata of page',
                 pageIndex + 1,
                 'from the',
-                result.catalog.alias,
+                catalog.alias,
                 'catalog');
-    var assetPromises = assetsOnPage.map(function(asset) {
+    const assetPromises = assets.map(function(asset) {
       asset.catalog = catalog.alias;
-      var assetPromise = processAsset(state, asset);
-      return assetPromise;
+      // Clone the context for every asset
+      const clonedContext = _.cloneDeep(state.context);
+      // Process each asset
+      return processAsset(asset, clonedContext)
+      .then(function(metadata) { // TODO: Refactor to do this once per result
+        return es.index({
+          index: state.index,
+          type: 'asset',
+          id: metadata.catalog + '-' + metadata.id,
+          body: metadata
+        });
+      })
+      .then(function(resp) {
+        console.log('Successfully indexed ' + resp._id);
+        return resp._id;
+      }, function(err) {
+        const msg = 'An error occured! Asset: ' + asset.catalog + '-' + asset.id;
+        console.error(msg, err.stack || err.message || err);
+        return new AssetIndexingError(metadata.catalog, metadata.id, err);
+      });
     });
     return Q.all(assetPromises);
   });
 }
 
-/**
- * Recursively handle the assets on pages, giving a breath first traversal
- * of the CIP webservice.
- */
-function processNextResultPage(state, result, indexedAssetsIds) {
-  // If the function was called without a value for the indexedAssetIds.
-  if (!indexedAssetsIds) {
-    indexedAssetsIds = [];
+function processResultPages(result, state) {
+  // Build up a list of parameters for all the pages in the entire result
+  const pageIndecies = [];
+  for(let p = 0; p * ASSETS_PER_REQUEST < result.total_rows; p++) {
+    pageIndecies.push(p);
   }
-  var startTime = Date.now();
-
-  // Do we still have pages in the result?
-  if (result.pageIndex * ASSETS_PER_REQUEST < result.total_rows) {
-    return processResultPage(state, result, result.pageIndex)
-    .then(function(newIndexedAssetIds) {
-      // Increment the page index of this catalog
-      result.pageIndex++;
-      // Let's concat the newly index asset ids.
-      indexedAssetsIds = indexedAssetsIds.concat(newIndexedAssetIds);
-      return processNextResultPage(state, result, indexedAssetsIds);
+  // Return a promise of process result pages (evaluated one after another)
+  return pageIndecies.reduce((indexedAssetsIds, pageIndex) => {
+    return Q.when(indexedAssetsIds).then(indexedAssetsIds => {
+      return processResultPage(result, state, pageIndex)
+      .then(newlyIndexedAssetsIds => {
+        return indexedAssetsIds.concat(newlyIndexedAssetsIds);
+      });
     });
-  } else {
-    // No more pages in the result, let's return the final array of indexed
-    // asset ids.
-    return new Q(indexedAssetsIds);
-  }
+  }, []);
 }
 
-module.exports = function(state, query, result) {
+function processResult(state, query, result) {
   console.log('Processing a result of ' + result.total_rows + ' assets');
   // TODO: Support an offset defined by state.catalogPageIndex
   if (!result.pageIndex) {
     result.pageIndex = 0;
   }
-  // Start handling the result's page recursively.
-  return processNextResultPage(state, result)
+  const indexedAssetIds = [];
+  const assetExceptions = [];
+
+  return processResultPages(result, state)
   .then(function(indexedAssetIdsOrErrors) {
     indexedAssetIdsOrErrors.forEach(function(idOrError) {
       if (typeof(idOrError) === 'string') {
-        query.indexedAssetIds.push(idOrError);
+        indexedAssetIds.push(idOrError);
       } else {
-        query.assetExceptions.push(idOrError);
+        assetExceptions.push(idOrError);
       }
     });
-    return state;
+    return {
+      indexedAssetIds,
+      assetExceptions
+    };
   });
-};
+}
+
+module.exports = processResult;

@@ -6,7 +6,6 @@
 
 const _ = require('lodash');
 const Q = require('q');
-const es = require('collections-online/lib/services/elasticsearch');
 const config = require('collections-online/lib/config');
 
 function AssetIndexingError(catalogAlias, assetId, innerError) {
@@ -15,20 +14,20 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
   this.innerError = innerError;
 }
 
-function transformMetadata(state, metadata, transformations) {
+function transformMetadata(metadata, context, transformations) {
   return transformations.reduce((metadata, transformation) => {
     return Q.when(metadata).then(metadata => {
       return transformation(metadata, context);
     });
-  }, new Q(metadata));
+  }, metadata);
 }
 
-function processAsset(state, metadata, transformations) {
-  if (!state) {
-    throw new Error('A state is needed to have initialized clients.');
-  }
+function processAsset(metadata, context, transformations) {
   if (!metadata) {
     throw new Error('Metadata is needed to know what to transform.');
+  }
+  if (!context) {
+    throw new Error('A context is needed.');
   }
   //console.log('Processing an asset.');
   // Use all transformations by default.
@@ -39,24 +38,8 @@ function processAsset(state, metadata, transformations) {
       transformations = require('../transformations');
     }
   }
-  // Perform additional transformations and index the result.
-  return transformMetadata(state, metadata, transformations)
-    .then(function(metadata) {
-      return es.index({
-        index: state.index,
-        type: 'asset',
-        id: metadata.catalog + '-' + metadata.id,
-        body: metadata
-      });
-    })
-    .then(function(resp) {
-      console.log('Successfully indexed ' + resp._id);
-      return resp._id;
-    }, function(err) {
-      console.error('An error occured! Asset: ' + metadata.catalog + '-' +
-                    metadata.id, err.stack || err.message || err);
-      return new AssetIndexingError(metadata.catalog, metadata.id, err);
-    });
+  // Perform transformations.
+  return transformMetadata(metadata, context, transformations);
 }
 
 module.exports = processAsset;

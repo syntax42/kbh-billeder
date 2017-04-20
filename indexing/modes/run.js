@@ -29,11 +29,16 @@ module.exports = function(state) {
 
   // TODO: Consider if the two new Q(state)s need to be wrapped in promises.
 
-      query.indexedAssetIds = [];
-      query.assetExceptions = [];
-      return processQuery(state, query);
   return state.queries.reduce((promise, query) => {
     return promise.then((state) => {
+      // Process the query, hang onto the indexed asset ids and exceptions
+      // and return the state
+      return processQuery(state, query)
+      .then(({ indexedAssetIds, assetExceptions }) => {
+        query.indexedAssetIds = indexedAssetIds;
+        query.assetExceptions = assetExceptions;
+        return state;
+      });
     });
   }, new Q(state)).then((state) => {
     console.log('Finished processing!');
