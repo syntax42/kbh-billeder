@@ -126,8 +126,8 @@ function processResult(state, query, result) {
       }
     });
     return {
-      indexedAssetIds,
-      assetExceptions
+      indexedIds: allIndexedIds,
+      errors: allErrors
     };
   });
 }

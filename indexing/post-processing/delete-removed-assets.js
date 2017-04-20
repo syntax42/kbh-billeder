@@ -18,12 +18,9 @@ module.exports = function(state) {
   if (['all', 'catalog', 'single'].indexOf(state.mode) !== -1) {
     var deletedAssetIds;
     if (state.mode === 'all' || state.mode === 'catalog') {
-      deletedAssetIds = state.queries.reduce(function(deletedAssetIds, query) {
-        console.log('- Indexed',
-                    query.indexedAssetIds.length,
-                    'assets from',
-                    query.catalogAlias);
-        return deletedAssetIds.then(function(deletedAssetIds) {
+      deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+        console.log('Indexed', query.indexedIds.length, 'assets from', query.catalogAlias);
+        return deletedAssetIds.then(deletedAssetIds => {
           if (query.offset > 0) {
             console.log('Skipping a query that had a non-zero offset.');
             return deletedAssetIds;
@@ -39,7 +36,7 @@ module.exports = function(state) {
                 },
                 'must_not': {
                   'ids': {
-                    'values': query.indexedAssetIds
+                    'values': query.indexedIds
                   }
                 }
               }
@@ -56,7 +53,7 @@ module.exports = function(state) {
         var assetIds = query.assetIds.map(assetId => {
           return query.catalogAlias + '-' + assetId;
         });
-        var moreDeletedAssetIds = _.difference(assetIds, query.indexedAssetIds);
+        var moreDeletedAssetIds = _.difference(assetIds, query.indexedIds);
         return _.union(deletedAssetIds, moreDeletedAssetIds);
       }, []);
     }

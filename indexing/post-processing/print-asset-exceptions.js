@@ -8,19 +8,19 @@
 
 function printAssetExceptions(state) {
 
-  var assetExceptions = state.queries.reduce(function(result, query) {
-    return result.concat(query.assetExceptions);
+  var errors = state.queries.reduce((result, query) => {
+    return result.concat(query.errors);
   }, []);
 
-  if (assetExceptions.length > 0) {
+  if (errors.length > 0) {
     var activity = 'Some errors occurred indexing assets';
     console.log('\n=== ' + activity + ' ===');
 
-    assetExceptions.forEach(function(error, errorIndex) {
+    errors.forEach((error, errorIndex) => {
       var message = '--- Exception ';
       message += (errorIndex + 1);
       message += '/';
-      message += assetExceptions.length;
+      message += errors.length;
       message += ' (';
       message += error.catalogAlias;
       message += '-';
