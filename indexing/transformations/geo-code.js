@@ -9,18 +9,6 @@ const querystring = require('querystring');
 
 const GEOCODING_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-const saveApproximateCoordinates = (metadata, coordinates) => {
-  const values = {};
-  values[config.geoTagging.approximateCoordinatesField] = coordinates;
-  return cip.setFieldValues(metadata.collection, metadata.id, values)
-  .then((response) => {
-    if (response.statusCode !== 200) {
-      console.error(response.body);
-      throw new Error('Failed to set the field values');
-    }
-  });
-};
-
 module.exports = (metadata, context) => {
   const enabled = context.geocoding.enabled;
   const forced = context.geocoding.forced;
@@ -67,14 +55,10 @@ module.exports = (metadata, context) => {
       // Save these new approximate coordinates to the CIP.
       const coordinates = metadata.google_maps_coordinates_approximate;
       if(coordinates) {
-        // TODO: Move to ../processing/result.js
-        return saveApproximateCoordinates(metadata, coordinates)
-        .then(() => {
-          return metadata;
-        });
-      } else {
-        return metadata;
+        // Persist the coordinates in Cumulus
+        context.persist('google_maps_coordinates_approximate', coordinates);
       }
+      return metadata;
     });
   } else if(enabled && !API_KEY) {
     console.log('A Google Maps API key is required to geocode.');

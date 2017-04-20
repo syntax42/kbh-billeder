@@ -8,12 +8,6 @@ const _ = require('lodash');
 const Q = require('q');
 const config = require('collections-online/lib/config');
 
-function AssetIndexingError(catalogAlias, assetId, innerError) {
-  this.catalogAlias = catalogAlias;
-  this.assetId = assetId;
-  this.innerError = innerError;
-}
-
 function transformMetadata(metadata, context, transformations) {
   return transformations.reduce((metadata, transformation) => {
     return Q.when(metadata).then(metadata => {
@@ -39,7 +33,13 @@ function processAsset(metadata, context, transformations) {
     }
   }
   // Perform transformations.
-  return transformMetadata(metadata, context, transformations);
+  return transformMetadata(metadata, context, transformations)
+  .then(metadata => {
+    return {
+      metadata,
+      context
+    };
+  });
 }
 
 module.exports = processAsset;
