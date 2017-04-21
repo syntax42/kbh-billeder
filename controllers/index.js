@@ -29,6 +29,24 @@ var helpers = {
   }
 };
 
+function createAsset(catalogAlias, assetId) {
+  var state = {
+    context: {
+      index: config.es.index,
+      geocoding: {
+        enabled: true
+      },
+      vision: {
+        enabled: true
+      }
+    },
+    es: ds,
+    mode: 'single',
+    reference: catalogAlias + '/' + assetId
+  };
+  return indexing(state);
+}
+
 function updateAsset(catalogAlias, assetId) {
   var state = {
     context: {
@@ -89,7 +107,7 @@ exports.asset = function(req, res, next) {
       // Go succeed right away
       success();
     } else if (action === 'asset-create') {
-      updateAsset(catalogAlias, id).then(success, next);
+      createAsset(catalogAlias, id).then(success, next);
     } else if (action === 'asset-delete') {
       deleteAsset(catalogAlias, id).then(success, next);
     } else {
