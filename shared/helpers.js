@@ -204,7 +204,8 @@ helpers.geoTagging = {
     return {
       latitude: metadata.latitude,
       longitude: metadata.longitude,
-      heading: parseFloat(metadata.heading, 10)
+      heading: parseFloat(metadata.heading, 10),
+      isApproximate: metadata.location_is_approximate
     }
   },
   getAddress: metadata => {
