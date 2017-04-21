@@ -30,4 +30,12 @@ const production = _.merge({}, base, {
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
 });
+
+delete production.search.filters.location;
+delete production.search.filters.tags;
+
+const rows = production.types.asset.layout.sections.place.rows;
+const coordinatesIndex = rows.findIndex(r => r.title === 'Koordinater');
+delete rows.splice(coordinatesIndex);
+
 module.exports = production;
