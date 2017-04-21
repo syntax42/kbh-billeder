@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var base = require('./base');
 
-module.exports = _.merge(base, {
+const production = _.merge({}, base, {
   env: 'production',
   allowRobots: true,
   auth0: {
@@ -30,3 +30,4 @@ module.exports = _.merge(base, {
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
 });
+module.exports = production;
