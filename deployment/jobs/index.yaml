@@ -18,7 +18,7 @@ objects:
           - name: c
             image: eu.gcr.io/kbh-billeder/frontend:$(BRANCH)-latest
             imagePullPolicy: Always
-            command: ["npm", "run", "index", "--", $(MODE), $(EXTRA)]
+            command: ["npm", "run", "index", "--", $(MODE), $(EXTRA), $(EXTRA_2)]
             env:
             - name: ES_HOST
               value: "elasticsearch:9200"
@@ -37,4 +37,7 @@ parameters:
     required: true
   - name: EXTRA
     description: The reference or extra runtime arguments
+    required: false
+  - name: EXTRA_2
+    description: Another extra runtime argument
     required: false
