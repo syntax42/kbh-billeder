@@ -113,7 +113,7 @@ function processResultPage(result, context, pageIndex) {
       // Save the changes to the CIP
       const changes = assets.filter(({context}) => {
         // Filter out assets without changes
-        return context && context.changes && Object.keys(context.changes).length > 0;
+        return context.changes && Object.keys(context.changes).length > 0;
       }).map(({metadata, context}) => {
         return Object.assign({
           id: metadata.id
@@ -159,6 +159,7 @@ function processResultPage(result, context, pageIndex) {
           if(item.index.status >= 200 && item.index.status < 300) {
             indexedIds.push(item.index._id);
           } else {
+            // TODO: Consider using the AssetIndexingError instead
             errors.push(new Error('Failed index ' + item.index._id));
           }
         });
