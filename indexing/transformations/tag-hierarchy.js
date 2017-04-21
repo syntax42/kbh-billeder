@@ -10,8 +10,8 @@ const FIELD_HIERARCHY = [
 
 module.exports = metadata => {
   // A list of tags already consumed - it should not be possible to consume a
-  // tag twice.
-  var consumedTags = [];
+  // tag twice. The space clears out empty tags.
+  var consumedTags = [''];
   // Loop through the fields in the hierarchy.
   FIELD_HIERARCHY.forEach(function(field) {
     // Take out any tags that has already been consumed.
