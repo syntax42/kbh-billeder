@@ -76,7 +76,9 @@ module.exports = function(state) {
     forced: !!argv.geocodingForce
   };
   // Set the number of assets per page
-  state.context.pageSize = argv.pageSize || 100;
+  if(argv.pageSize) {
+    state.context.pageSize = argv.pageSize;
+  }
 
   console.log('Initialized the indexing', state.mode, 'mode');
 
