@@ -12,6 +12,7 @@ const beta = _.merge({}, base, {
   siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
+    feedback: true,
     motifTagging: true,
     sitewidePassword: true,
     users: true

@@ -15,6 +15,7 @@ const development = _.merge({}, base, {
     log: 'error' //use 'trace' for verbose mode
   },
   features: {
+    feedback: true,
     motifTagging: true,
     users: true
   }
