@@ -34,5 +34,13 @@ $jumbo-text-shadow: $black;
 // $jumbo-bg: hsl(350, 100%, 25%);
 // $jumbo-text-shadow: hsl(346, 100%, 15%);
 
+$document-section-backgrounds: (
+  1: mix($white, $gray-light, 100%),
+  2: mix($white, $gray-light, 75%),
+  3: mix($white, $gray-light, 50%),
+  4: mix($white, $gray-light, 25%),
+  5: mix($white, $gray-light, 0%)
+) !default;
+
 // Loading variables again at the bottom allows default
 @import '../../node_modules/collections-online/app/styles/variables';
