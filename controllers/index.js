@@ -51,6 +51,9 @@ function updateAsset(catalogAlias, assetId) {
   var state = {
     context: {
       index: config.es.index,
+      geocoding: {
+        enabled: true
+      }
     },
     es: ds,
     mode: 'single',
