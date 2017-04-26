@@ -106,9 +106,7 @@ exports.asset = function(req, res, next) {
 
   if (id && action) {
     if (action === 'asset-update') {
-      updateAsset(catalogAlias, id).then(null, next);
-      // Go succeed right away
-      success();
+      updateAsset(catalogAlias, id).then(success, next);
     } else if (action === 'asset-create') {
       createAsset(catalogAlias, id).then(success, next);
     } else if (action === 'asset-delete') {
