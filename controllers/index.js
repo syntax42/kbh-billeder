@@ -70,7 +70,7 @@ function deleteAsset(catalogAlias, assetId) {
   });
 }
 
-exports.asset = function(req, res, next) {
+module.exports.asset = function(req, res, next) {
   const action = req.body.action || null;
   const catalogName = req.body.collection || null;
   let id = req.body.id || '';
@@ -119,3 +119,7 @@ exports.asset = function(req, res, next) {
     next(new Error('Missing an id or an action, requested: ' + requestBody));
   }
 };
+
+module.exports.createAsset = createAsset;
+module.exports.updateAsset = updateAsset;
+module.exports.deleteAsset = deleteAsset;

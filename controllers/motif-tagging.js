@@ -37,27 +37,10 @@ const motifTagging = {
     });
   },
   updateIndex: metadata => {
-    const es = require('collections-online/lib/services/elasticsearch');
-    const index = config.es && config.es.index;
-    assert.ok(index, 'Missing config.es.index');
-
-    return es.getSource({
-      id: metadata.collection + '-' + metadata.id,
-      type: 'asset',
-      index
-    }).then(metadataBefore => {
-      const indexingState = {
-        es, index
-      };
-      const transformations = [
-        require('../indexing/transformations/tag-hierarchy')
-      ];
-      const indexAsset = require('../indexing/processing/asset');
-      const metadataAfter = Object.assign({}, metadataBefore, metadata);
-      return indexAsset(indexingState, metadataAfter, transformations)
-      .then(id => {
-        return metadataAfter;
-      });
+    const indexController = require('./index');
+    return indexController.updateAsset(metadata.collection, metadata.id)
+    .then(response => {
+      return metadata;
     });
   }
 };
