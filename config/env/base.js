@@ -103,7 +103,8 @@ let config = {
   },
   feedback: {
     maxLength: 600,
-    recipients: process.env.FEEDBACK_RECIPIENTS,
+    recipients: 'contributors@kbhbilleder.dk',
+    fromAddress: 'Feedback@kbhbilleder.dk'
   },
   generatedDir: generatedDir,
   geoTagging: {
