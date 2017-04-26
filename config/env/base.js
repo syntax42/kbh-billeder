@@ -56,6 +56,10 @@ let config = {
     sessionRenewalRate: 30*60*1000, // Once every 30 minutes
     timeout: 55000
   },
+  email: {
+    baseUrl: '@api.mailgun.net/v3/kbhbilleder.dk',
+    mailgunKey: process.env.MAILGUN_API_KEY
+  },
   imageTimeoutRedirect: '/billedet-kunne-ikke-downloades',
   keystone: {
     options: {
@@ -88,6 +92,7 @@ let config = {
   },
   features: {
     cookieConsent: true,
+    feedback: false,
     motifTagging: false,
     filterSidebar: true,
     geoTagging: true,
@@ -95,6 +100,11 @@ let config = {
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true
+  },
+  feedback: {
+    maxLength: 600,
+    recipients: 'contributors@kbhbilleder.dk',
+    fromAddress: 'Feedback@kbhbilleder.dk'
   },
   generatedDir: generatedDir,
   geoTagging: {
