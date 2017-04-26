@@ -15,13 +15,13 @@
   "modification|desc": {
     "label": "Opdateret: Nyeste",
     "method": {
-      "modification_time.timestamp": "desc"
+      "item_modification_date.timestamp": "desc"
     }
   },
   "modification|asc": {
     "label": "Opdateret: Ældste",
     "method": {
-      "modification_time.timestamp": "asc"
+      "item_modification_date.timestamp": "asc"
     }
   },
   "creation|desc": {
