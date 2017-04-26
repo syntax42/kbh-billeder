@@ -1,10 +1,10 @@
 extends asset
 
-block document__top-metadata
+block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
   - const documentDescription = helpers.documentDescription(metadata);
   - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
-  .document__top-metadata.col-xs-12.col-md-5
+  .document__section-1-metadata.col-xs-12.col-md-5
     if(documentTitle)
       h1.document__title= documentTitle
     if(documentDescription)
@@ -15,12 +15,14 @@ block document__top-metadata
     != assetSection('time', metadata)
     != assetSection('place', metadata)
 
-block document__bottom-metadata
-  .row
-    .col-sm-7
-      != assetSection('additional-information', metadata)
-    .col-sm-5
-      != assetSection('technical-information', metadata)
-    if config.features.feedback
-      .col-sm-7
-        include ./includes/feedback
+block document__section-3
+  .document__section-3
+    .container-fluid
+      .row
+        .col-sm-7
+          != assetSection('additional-information', metadata)
+        .col-sm-5
+          != assetSection('technical-information', metadata)
+        if config.features.feedback
+          .col-sm-7
+            include ./includes/feedback
