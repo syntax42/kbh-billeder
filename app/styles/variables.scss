@@ -1,13 +1,14 @@
 // Colors
 $black: #000;
 $white: #fff;
-$gray-darker: #151515;
-$gray-dark: #404040;
-$gray: #555;
+$gray-darker: #404040;
+$gray-dark: #555;
+$gray: #c0c0c0;
 $gray-light: #e0e0e0;
 $gray-lighter: #f0f0f0;
 $brand-primary: hsl(338, 80%, 50%);
-$text-color: $gray-dark !default;
+$text-color: $gray-dark;
+$input-color: $gray-dark;
 
 // Typography
 $font-family-thin: 'FFUnitWebThin', sans-serif;
@@ -35,11 +36,11 @@ $jumbo-text-shadow: $black;
 // $jumbo-text-shadow: hsl(346, 100%, 15%);
 
 $document-section-backgrounds: (
-  1: mix($white, $gray-light, 100%),
-  2: mix($white, $gray-light, 75%),
-  3: mix($white, $gray-light, 50%),
-  4: mix($white, $gray-light, 25%),
-  5: mix($white, $gray-light, 0%)
+  1: mix($white, $gray, 100%),
+  2: mix($white, $gray, 75%),
+  3: mix($white, $gray, 50%),
+  4: mix($white, $gray, 25%),
+  5: mix($white, $gray, 0%)
 ) !default;
 
 // Loading variables again at the bottom allows default
