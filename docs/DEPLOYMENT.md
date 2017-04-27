@@ -1,6 +1,6 @@
 # Deployment
 
-![Deployment Diagram](deployment-diagram.svg)
+![Deployment Diagram](https://raw.githubusercontent.com/CopenhagenCityArchives/kbh-billeder/master/docs/deployment-diagram.svg)
 
 This Collections Online customization is deployed on Google Container Engine,
 which runs [Kubenetes](https://kubernetes.io/). The following description of the
