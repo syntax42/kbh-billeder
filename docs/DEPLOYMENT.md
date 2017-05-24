@@ -54,7 +54,7 @@ Configurations of Kubenetes entities (pods, services, deployments, etc.) is
 accessable in the [deployment](../deployment) directory of the project.
 
 Configurations of the frontend pods is accessable in the
-[deployment](../configurations) directory of the project and the main node.js
+[configurations](../configurations) directory of the project and the main node.js
 process (which instantiates collections-online) is configured from the
 [config](../config) directory.
 
