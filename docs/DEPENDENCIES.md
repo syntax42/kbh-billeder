@@ -13,7 +13,7 @@ To successfully deploy and run collections-online you need:
 A folder to keep your configurations and potential customizations of the
 collections-online templates, scripts and styling.
 
-Read more about [customizations](./CUSTOMIZATIONS.md) and see [natmus-samlinger](https://github.com/NationalMuseumofDenmark/natmus-samlinger) or [kbh-billeder](https://github.com/CopenhagenCityArchives/kbh-billeder) as examples of such customizations.
+Read more about [customizations here](./CUSTOMIZATIONS.md).
 
 ## A digital assets management system (typically the Canto Cumulus DAMS)
 
