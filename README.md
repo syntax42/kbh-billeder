@@ -18,7 +18,16 @@ Licensed under [LGPL v3](https://www.gnu.org/licenses/lgpl.html).
 
 ![Screenshot](misc/screenshot.png)
 
+## Documentation
+
+You'll find documentation, instructions and more [right here](./docs/README.md).
+
 ## How to setup
+
+You should not try to setup the project, directly from this repository.
+Start from the repository of a [customization](./docs/CUSTOMIZATIONS.md), to
+which this repository should be a dependency. If you havn't created a
+customization yet - see the documentation for information on how to set it up.
 
 First ensure that you have a running version of Node.js (and the NPM tool)
 (the current code has been tested on node v.7.2).
@@ -27,9 +36,7 @@ Consider getting [elasticsearch](http://www.elasticsearch.org/) as well.
 If you're on a mac it's easiest to install elasticsearch using homebrew which
 installs to `/usr/local/Cellar/elasticsearch/`.
 
-You should not try to setup the project, directly from this repository.
-Start from the repository of a [customization](./docs/CUSTOMIZATIONS.md), to
-which this repository should be a dependency.
+Then, within your customization, run `npm install`.
 
 ## Changing the layout of an assets landing page
 
