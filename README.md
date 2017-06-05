@@ -16,7 +16,12 @@ The solution is built by [Headnet ApS](http://www.headnet.dk) and
 [Socialsquare ApS](http://socialsquare.dk).
 Licensed under [LGPL v3](https://www.gnu.org/licenses/lgpl.html).
 
-![Screenshot](misc/screenshot.png)
+<img src="./docs/screenshots/frontpage-natmus.png" width="48%">
+<img src="./docs/screenshots/frontpage-kbhbilleder.png" width="48%">
+<img src="./docs/screenshots/search-natmus.png" width="48%">
+<img src="./docs/screenshots/search-kbhbilleder.png" width="48%">
+<img src="./docs/screenshots/document-natmus.png" width="48%">
+<img src="./docs/screenshots/document-kbhbilleder.png" width="48%">
 
 ## Documentation
 
