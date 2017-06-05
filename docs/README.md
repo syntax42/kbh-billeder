@@ -20,6 +20,6 @@ more browsable, accessible and usable to the average visitor.
 The documentation has been partitioned into sections
 
 1. [Dependencies](./DEPENDENCIES.md)
-2. [Customizations](./CUSTOMIZATIONS.md)
+2. [Customizations](./CUSTOMIZATIONS.md) (+ configuration & section layout)
 3. [Plugins](./PLUGINS.md)
 4. [Contributing](./CONTRIBUTING.md)
