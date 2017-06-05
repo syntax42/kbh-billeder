@@ -16,16 +16,18 @@ The solution is built by [Headnet ApS](http://www.headnet.dk) and
 [Socialsquare ApS](http://socialsquare.dk).
 Licensed under [LGPL v3](https://www.gnu.org/licenses/lgpl.html).
 
-<img src="./docs/screenshots/frontpage-natmus.png" width="48%">
-<img src="./docs/screenshots/frontpage-kbhbilleder.png" width="48%">
-<img src="./docs/screenshots/search-natmus.png" width="48%">
-<img src="./docs/screenshots/search-kbhbilleder.png" width="48%">
-<img src="./docs/screenshots/document-natmus.png" width="48%">
-<img src="./docs/screenshots/document-kbhbilleder.png" width="48%">
-
 ## Documentation
 
 You'll find documentation, instructions and more [right here](./docs/README.md).
+
+## What does it look like?
+
+![Screenshot 1](./docs/screenshots/frontpage-natmus.png)
+![Screenshot 2](./docs/screenshots/frontpage-kbhbilleder.png)
+![Screenshot 3](./docs/screenshots/search-natmus.png)
+![Screenshot 4](./docs/screenshots/search-kbhbilleder.png)
+![Screenshot 5](./docs/screenshots/document-natmus.png)
+![Screenshot 6](./docs/screenshots/document-kbhbilleder.png)
 
 ## How to setup
 
