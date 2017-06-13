@@ -14,43 +14,9 @@ http://github.com/collections-online/collections-online
 
 See [deployment/README.md](deployment/README.md)
 
-## Get dependencies up and running
+## Developing the app
 
-### Install Elasticsearch 2.3 or greater
-
-Follow the guide on https://www.elastic.co/guide/en/elasticsearch/reference/2.3/setup-repositories.html
-
-##### Linux
-
-```
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
-sudo apt-get update && sudo apt-get install elasticsearch
-```
-
-##### Mac
-
-Install using [homebrew](http://brew.sh)
-
-```
-brew install elasticsearch
-```
-
-### Install MongoDB 2.4 or greater
-
-##### Linux
-
-Follow the guide on https://docs.mongodb.com/manual/administration/install-on-linux/
-
-##### Mac
-
-Install using [homebrew](http://brew.sh)
-
-```
-brew install mongodb
-```
-
-### Install NVM for managing the node versions
+## Install NVM for managing the node versions
 
 Follow the guide on https://github.com/creationix/nvm
 
@@ -59,7 +25,7 @@ Follow the guide on https://github.com/creationix/nvm
 Clone the module from GitHub
 
 ```
-git@github.com:collections-online/collections-online.git
+git@github.com:CopenhagenCityArchives/kbh-billeder.git
 ```
 
 Make sure you use the correct version of node.
@@ -89,57 +55,76 @@ brew install giflib
 brew install cairo
 ```
 
-### Start elasticsearch
+### Get dependencies up and running
+We're relying on Elasticsearch 2.3 <= 2.4.4 and MongoDB greater than 2.4. You can install them via docker or
+manually but we recommend using docker.
 
-You might consider connecting directly to the production elasticsearch server
-instead. See how in another section below.
+#### With docker
+First step is to [install](https://docs.docker.com/compose/install/) `docker` and `docker-compose`.
 
-##### Linux (as a service)
+Next you should make sure to add your user to the `docker` group so you don't have to run commands as sudo. A guide can be found [here](https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo).
 
-```
-sudo /etc/init.d/elasticsearch start
-```
+Now you can start Elasticsearch and Mongo in their own containers simply by running `docker-compose up`.
 
-##### Mac
-
-```
-elasticsearch
-```
+Now we're almost ready to start the app.
 
 ### Create a .env file with environment variables
 
     CIP_USERNAME="..."
     CIP_PASSWORD="..."
-    ES_HOST="http://localhost:9200/"
     CLOUDINARY_URL=cloudinary://..:..@kbh-billeder
+    GOOGLE_API_KEY="..."
+    GOOGLE_UNRESTRICTED_API_KEY="..."
 
+    AUTH0_DOMAIN="..."
+    AUTH0_CLIENT_ID="..."
+    AUTH0_CLIENT_SECRET="..."
+    AUTH0_CALLBACK_URL="http://.../auth/callback"
+
+    MAILGUN_API_KEY="..."
+
+    # Using docker-compose these are the correct addresses.
+    ES_HOST="http://localhost:9200/"
+    MONGO_CONNECTION=mongodb://localhost:27017/kbh-billeder
+
+
+### Running the app
+
+Now we're ready to start developing!
+
+```
+npm start:dev
+```
+
+This command will start the server, boot up your dependencies, start a gulp watch and restart the server anytime a change happens in any of the project folders.
+
+Note: quitting the process doesn't shut down docker. For that you must run `docker-compose down`.
 
 ### Run the indexing routines in all-mode
+If you're running elasticsearch locally, it will be of course be empty when you first start it. To fill it up with some assets you can run.
+
 
 ```
 npm run index all
 ```
 
-### Start the app
-
-```
-npm start
-```
-
-### Start a gulp watch to recompile static assets when they change
-
-```
-npm run gulp watch
-```
+You can cancel at any time, but it's recommended to run through the whole thing.
 
 ### Set up symbolic linking between this module and the Collections Online module
 
 When developing both on this module and collections online at the same time it
-might help you to link the two moduls, so you don't have to push/pull constantly.
+might help you to link the two modules, so you don't have to push/pull constantly.
 
-After cloning the [Collections Online](https://github.com/collections-online/collections-online)
-repository to your local environment navigate to the git repository and prepare
-the module for linking (this installs collections onlines dependencies).
+We're recommend the following project structure to take advantage of `nodemon`s reloading:
+
+    kbh-billeder-project
+      | kbh-billeder
+      | collections-online
+      | collections-online-cumulus
+
+After cloning the [Collections Online](https://github.com/collections-online/collections-online) and [Collections Online Cumulus](https://github.com/collections-online/collections-online-cumulus)
+repositories to your local environment navigate to the repositories and prepare
+the modules for linking (this installs the module's dependencies as well).
 
 ```
 npm link
@@ -149,6 +134,7 @@ Then, in the kbh-billeder repository run
 
 ```
 npm link collections-online
+npm link collections-online-cumulus
 ```
 
 ## Connecting to elasticsearch (when deployed)
@@ -176,23 +162,14 @@ Note the name of the elasticsearch pod (in this case vem8u).
 
 To connect to the production elasticsearch server, use kubectl to create a
 port forwarding. After which the production elasticsearch server will be
-available on http://localhost:9201/
+available on http://localhost:9200/
 
 ```
-kubectl port-forward elasticsearch-vem8u 9201:9200
+kubectl port-forward elasticsearch-vem8u 9200:9200
 ```
 
-
-## Subsequent runs
-
-Open 3 terminal windows in the project folder and run
+The following npm command takes care of running the app with the production index.
 
 ```
-kubectl port-forward elasticsearch-vem8u 9201:9200
-```
-```
-npm run gulp
-```
-```
-npm start
+npm start:dev:es
 ```

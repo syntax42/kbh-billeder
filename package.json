@@ -4,14 +4,14 @@
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"npm run gulp\" \"npm run start-dev\" \"kubectl port-forward -n beta elasticsearch-l2fwb 9201:9200\"",
-    "dev-local": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start-dev\"",
     "gulp": "gulp",
     "index": "node indexing.js",
+    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js",
     "prepublish": "gulp build",
-    "start-dev": "NODE_ENV=development nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
-    "start": "node server.js",
-    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js"
+    "start:dev:es": "concurrently \"docker-compose up -d mongo\" \"npm run gulp\" \"npm run start:nodemon\" \"kubectl port-forward -n beta elasticsearch-l2fwb 9200:9200\"",
+    "start:dev": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start:nodemon\"",
+    "start:nodemon": "NODE_ENV=development nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
