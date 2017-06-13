@@ -5,11 +5,11 @@
   "main": "server.js",
   "scripts": {
     "dev": "concurrently \"npm run gulp\" \"npm run start-dev\" \"kubectl port-forward -n beta elasticsearch-l2fwb 9201:9200\"",
-    "dev-local": "concurrently \"npm run gulp\" \"npm run start-dev\"",
+    "dev-local": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start-dev\"",
     "gulp": "gulp",
     "index": "node indexing.js",
     "prepublish": "gulp build",
-    "start-dev": "NODE_ENV=development nodemon server.js",
+    "start-dev": "NODE_ENV=development nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
     "start": "node server.js",
     "patch-package-json": "npm install dotenv && node ./package-json-patcher.js"
   },
