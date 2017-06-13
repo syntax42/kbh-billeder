@@ -66,8 +66,6 @@ Next you should make sure to add your user to the `docker` group so you don't ha
 
 Now you can start Elasticsearch and Mongo in their own containers simply by running `docker-compose up`.
 
-Now we're almost ready to start the app.
-
 ### Create a .env file with environment variables
 
     CIP_USERNAME="..."
@@ -98,7 +96,7 @@ npm start:dev
 
 This command will start the server, boot up your dependencies, start a gulp watch and restart the server anytime a change happens in any of the project folders.
 
-Note: quitting the process doesn't shut down docker. For that you must run `docker-compose down`.
+Note: quitting the process doesn't shut down the docker containers. For that you must run `docker-compose down`.
 
 ### Run the indexing routines in all-mode
 If you're running elasticsearch locally, it will be of course be empty when you first start it. To fill it up with some assets you can run.
@@ -110,7 +108,7 @@ npm run index all
 
 You can cancel at any time, but it's recommended to run through the whole thing.
 
-### Set up symbolic linking between this module and the Collections Online module
+### Set up symbolic linking between this module and the other Collections Online modules
 
 When developing both on this module and collections online at the same time it
 might help you to link the two modules, so you don't have to push/pull constantly.
@@ -124,7 +122,7 @@ We're recommend the following project structure to take advantage of `nodemon`s 
 
 After cloning the [Collections Online](https://github.com/collections-online/collections-online) and [Collections Online Cumulus](https://github.com/collections-online/collections-online-cumulus)
 repositories to your local environment navigate to the repositories and prepare
-the modules for linking (this installs the module's dependencies as well).
+the modules for linking by running the following. This installs the module's dependencies as well.
 
 ```
 npm link
