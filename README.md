@@ -120,7 +120,7 @@ We're recommend the following project structure to take advantage of `nodemon`s 
       | collections-online
       | collections-online-cumulus
 
-After cloning the [Collections Online](https://github.com/collections-online/collections-online) and [Collections Online Cumulus](https://github.com/collections-online/collections-online-cumulus)
+After cloning the [Collections Online](https://github.com/CopenhagenCityArchives/collections-online) and [Collections Online Cumulus](https://github.com/collections-online/collections-online-cumulus)
 repositories to your local environment navigate to the repositories and prepare
 the modules for linking by running the following. This installs the module's dependencies as well.
 
@@ -134,6 +134,8 @@ Then, in the kbh-billeder repository run
 npm link collections-online
 npm link collections-online-cumulus
 ```
+
+To simplify this, we could consider using [Lerna](https://github.com/lerna/lerna)
 
 ## Connecting to elasticsearch (when deployed)
 
