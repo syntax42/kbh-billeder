@@ -135,6 +135,12 @@ npm link collections-online
 npm link collections-online-cumulus
 ```
 
+And inside both the `collections-online-cumulus` and `collections-online` folders run
+
+```
+npm link collections-online
+```
+
 To simplify this, we could consider using [Lerna](https://github.com/lerna/lerna)
 
 ## Connecting to elasticsearch (when deployed)
