@@ -14,7 +14,7 @@ module.exports.generateQueries = state => {
     timeDelta = '10m';
   }
   // Loop over every catalog and produce a query
-  return Object.keys(config.cip.catalogs).map(catalogAlias {
+  return Object.keys(config.cip.catalogs).map(catalogAlias => {
     return {
       catalogAlias,
       query: '"Record Modification Date" >= $now-' + timeDelta
