@@ -8,7 +8,7 @@
     "index": "node indexing.js",
     "patch-package-json": "npm install dotenv && node ./package-json-patcher.js",
     "prepublish": "gulp build",
-    "start:dev:es": "concurrently \"docker-compose up -d mongo\" \"npm run gulp\" \"npm run start:nodemon\" \"kubectl port-forward -n beta elasticsearch-l2fwb 9200:9200\"",
+    "start:dev:es": "concurrently \"docker-compose up -d mongo\" \"npm run gulp\" \"npm run start:nodemon\" \"kubectl port-forward -n beta elasticsearch-czmt9 9200:9200\"",
     "start:dev": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start:nodemon\"",
     "start:nodemon": "NODE_ENV=development nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
     "start": "node server.js"
