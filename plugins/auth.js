@@ -24,9 +24,6 @@ module.exports = {
     });
   },
   registerRoutes: app => {
-    app.get('/login', function(req, res) {
-      res.render('login', {env: process.env});
-    });
 
     app.get('/logout', function(req, res) {
       req.logout();
