@@ -33,8 +33,9 @@ module.exports = {
       res.redirect('/');
     });
 
-    app.get('/user', function (req, res) {
-      res.render('user', {user: req.user});
+    // Most user facing routes are danish, so let's keep it that way.
+    app.get('/min-side', function (req, res) {
+      res.render('profile', {user: req.user});
     });
 
     app.get('/auth/callback', passport.authenticate('auth0', {
