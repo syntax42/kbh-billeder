@@ -1,6 +1,9 @@
+'use strict';
+
 const _ = require('lodash');
 
 const motifTagging = require('collections-online-cumulus/controllers/motif-tagging');
+const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 
 motifTagging.typeaheadSuggestions = text => {
   // The document service might be registered after this motif tagging service
@@ -48,7 +51,21 @@ motifTagging.updateIndex = metadata => {
     id: metadata.id,
     tags_vision: metadata.visionTags,
     tags: metadata.userTags
-  })
+  });
+};
+
+// Wrap the call to cumulus to save in a function that will inform the
+// kbh-billeder-stats api after a successful save.
+const originalSave = motifTagging.save;
+motifTagging.save = ({id, collection, userTags, visionTags, userId}) => {
+  return originalSave({
+    collection, id, userTags, visionTags
+  }).then(function() {
+    // Pass the same arguments to our save.
+    kbhStatsApi.saveTags({
+      collection, id, userTags, visionTags, userId
+    });
+  });
 };
 
 module.exports = motifTagging;
