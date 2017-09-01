@@ -12,7 +12,9 @@ assert.ok(fallbackEmailFrom, 'Fallback email from undefined');
 
 // Setup urls for each endpoint.
 const POST_TAGS = baseUrl + '/tags';
+const POST_GEOLOCATIONS = baseUrl + '/geolocations';
 const GET_USERS_POINTS = baseUrl + '/users/points';
+const GET_USERS = baseUrl + '/users';
 
 // The API integration.
 const kbhStatsApi = {
@@ -23,17 +25,52 @@ const kbhStatsApi = {
 
   // Number of tags on assets.
   userStats: function(id) {
-    return {
-      geotags: {
-        numberOfTags: 5,
-        numberOfAssets: 5,
-      },
-      motifTags: {
-        numberOfAssets: 4,
-        numberOfTags: 20,
-      },
-      totalNumberOfAssets: 8,
-    };
+    // Path: /users/{id}
+    return this._doGet(GET_USERS + '/' + id).then(function(body) {
+      const result = JSON.parse(body);
+      // Override the response for now.
+      return {
+        geotags: {
+          numberOfTags: result.geolocations || 0,
+          numberOfAssets: 999,
+        },
+        motifTags: {
+          numberOfAssets: 999,
+          numberOfTags: result.tags || 0,
+        },
+        totalNumberOfAssets: 999,
+      };
+    });
+  },
+
+  // Store a user-submitted geotag.
+  saveGeoTag: function(metadata) {
+    const id = metadata.id;
+    const collection = metadata.collection;
+    const assetId = collection + '-' + id;
+    const userId = metadata.userId;
+    const latitude = metadata.latitude;
+    const longitude = metadata.longitude;
+    const heading = metadata.heading;
+
+    return this._doPost(POST_GEOLOCATIONS, {
+      'user_id': userId,
+      'asset_id': assetId,
+      'geolocation': {
+        'latitude': latitude,
+        'longitude': longitude,
+        'direction': heading
+      }
+    }).then(() => {
+      // Log success.
+      console.log('Reported geotag on asset ' + assetId + ' for user ' + userId);
+      // Successive entries in the promise-chain expects the metadata to passed
+      // along.
+      return metadata;
+    }, () => {
+      // Log error.
+      console.error('Error while reporting geotag on asset ' + assetId + ' for user ' + userId);
+    });
   },
 
   // Store a number of tags for a user on a asset.
@@ -56,7 +93,7 @@ const kbhStatsApi = {
   _doGet: function(path)  {
     return new Promise((resolve, reject) => {
       request.get(path, (error, response, body) => {
-        if (error || response.statusCode !== 200) {
+        if (error || (response.errorCode < 200 || response.errorCode > 299)) {
           const errorString = response.statusCode + ': ' + response.statusMessage;
           console.log('Failed call to API ' + path);
           console.log('Error: ' + errorString);
@@ -70,9 +107,11 @@ const kbhStatsApi = {
   // Perform a POST request, returns a promise.
   _doPost: function(path, object)  {
     return new Promise((resolve, reject) => {
+      console.log("Posting to " + path);
       request.post(path, {form: object}, (error, response, body) => {
-        if (error) {
-          console.log(response);
+        console.log("Request done - erro " + error);
+        console.log(response.statusCode + ': ' + response.statusMessage);
+        if (error || (response.errorCode < 200 || response.errorCode > 299)) {
           const payload = JSON.stringify(object);
           const errorString = response.statusCode + ': ' + response.statusMessage;
 
@@ -91,6 +130,8 @@ const kbhStatsApi = {
           mailgun.sendMessage(fallbackEmailFrom, fallbackEmailTo, 'Failed API Request', mailBody);
           reject(response.statusMessage, body);
         } else {
+          console.log("response");
+          console.log(response);
           resolve(response, body);
         }
       });
