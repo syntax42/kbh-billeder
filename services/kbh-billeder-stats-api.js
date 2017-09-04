@@ -19,8 +19,16 @@ const GET_USERS = baseUrl + '/users';
 // The API integration.
 const kbhStatsApi = {
   // Current score for the user.
-  usersPoints: function() {
+  allUsersPoints: function() {
     return this._doGet(GET_USERS_POINTS);
+  },
+
+  userPoints: function(id) {
+    return this._doGet(`${GET_USERS}/${id}/points`).then(body => {
+      const result = JSON.parse(body);
+
+      return result.points;
+    });
   },
 
   // Number of tags on assets.
@@ -143,8 +151,6 @@ const kbhStatsApi = {
           mailgun.sendMessage(fallbackEmailFrom, fallbackEmailTo, 'Failed API Request', mailBody);
           reject(response.statusMessage, body);
         } else {
-          console.log("response");
-          console.log(response);
           resolve(response, body);
         }
       });
@@ -153,7 +159,7 @@ const kbhStatsApi = {
 };
 
 // Perform an initial request to ensure we have connectivity.
-kbhStatsApi.usersPoints().then(() => {
+kbhStatsApi.allUsersPoints().then(() => {
   console.log('API connectivity OK');
 }, (err) => {
   console.log('Could not connect to the KBH Billeder Stats API error: ' + err);
