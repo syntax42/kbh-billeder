@@ -2,6 +2,8 @@
 
 const config = require('collections-online/shared/config');
 
+const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';
+
 /* global Auth0Lock */
 
 $(function() {
@@ -34,13 +36,13 @@ $(function() {
   }
 
   function restrictActions(actions, lock) {
-    const authenticated = $("meta[name='authenticated']").attr("content");
+    const authenticated = $('meta[name="authenticated"]').attr('content');
 
     const dataActions = actions.map(action => {
       return `[data-action="${action}"]`;
     }).join(', ');
 
-    $(dataActions).on('click', (e) => {
+    $(dataActions).on('click', e => {
       if(authenticated !== 'true') {
         e.stopPropagation();
         lock.show({
@@ -53,4 +55,18 @@ $(function() {
       }
     });
   }
+
+  $(RESET_PASSWORD_SELECTOR).on('click', e => {
+    const url = location.origin + '/reset-password';
+    const element = $(e.target);
+    const email = element.data('email');
+    const connection = element.data('connection');
+
+    $
+    .get(url, {email, connection})
+    .then(response => {
+      alert('You have been sent an email');
+    })
+    .catch(err => alert('error'));
+  });
 });
