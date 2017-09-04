@@ -9,7 +9,6 @@ users.renderProfile = async (req, res) => {
 
   try {
     [points, stats] = [await points, await stats]
-    console.log(points, stats)
   } catch(err) {
     console.log(err)
   }
