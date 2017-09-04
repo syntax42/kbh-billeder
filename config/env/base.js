@@ -61,6 +61,11 @@ let config = {
     mailgunKey: process.env.MAILGUN_API_KEY
   },
   imageTimeoutRedirect: '/billedet-kunne-ikke-downloades',
+  kbhBillederStatsApi: {
+    baseUrl: process.env.KBHSTATSAPI_URL || 'http://kbhbilleder-stats-production.xxfpqizzz3.eu-west-1.elasticbeanstalk.com',
+    fallbackEmailTo: process.env.KBHSTATAPI_FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
+    fallbackEmailFrom: process.env.KBHSTATAPI_FALLBACK_EMAIL_FROM || 'postmaster@kbhbilleder.dk',
+  },
   keystone: {
     options: {
       'auto update': true,
