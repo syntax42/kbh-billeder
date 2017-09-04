@@ -1,7 +1,8 @@
 const passport = require('passport');
-const auth0 = require('../lib/services/auth0');
-const users = auth0.Service;
+const auth0 = require('../../lib/services/auth0');
 const Auth = auth0.Auth;
+const plugins = require('../../plugins');
+const users = plugins.getFirst('users-controller');
 
 module.exports = {
   type: 'authentication',
@@ -32,23 +33,7 @@ module.exports = {
     });
 
     // Most user facing routes are danish, so let's keep it that way.
-    app.get('/min-side', (req, res) => {
-      res.render('profile', {
-        user: req.user,
-        // Placeholder values. Structure subject to change.
-        tags: {
-          geoTags: {
-            numberOfTags: 5,
-            numberOfAssets: 5
-          },
-          motifTags: {
-            numberOfTags: 10,
-            numberOfAssets: 5
-          },
-          totalNumberOfAssets: 8
-        }
-      });
-    });
+    app.get('/min-side', users.renderProfile);
 
     app.get('/reset-password', async (req, res) => {
       const {email, connection} = req.query;
