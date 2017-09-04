@@ -1,7 +1,7 @@
 const passport = require('passport');
-const auth0 = require('../../lib/services/auth0');
+const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
-const plugins = require('../../plugins');
+const plugins = require('../plugins');
 const users = plugins.getFirst('users-controller');
 
 module.exports = {
