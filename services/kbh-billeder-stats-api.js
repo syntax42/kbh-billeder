@@ -24,21 +24,34 @@ const kbhStatsApi = {
   },
 
   // Number of tags on assets.
+  // Expected response structure:
+  // {
+  //   "geolocations": {
+  //     "geolocations": 1,
+  //     "assets": 1
+  //   },
+  //   "tags": {
+  //     "tags": 9,
+  //     "assets": 9
+  //   },
+  //   "totalAssets": 10
+  // }
   userStats: function(id) {
     // Path: /users/{id}
     return this._doGet(GET_USERS + '/' + id).then(function(body) {
       const result = JSON.parse(body);
-      // Override the response for now.
+      // We go a bit defensive and ensure that the entrie structure is always
+      // returned.
       return {
-        geotags: {
-          numberOfTags: result.geolocations || 0,
-          numberOfAssets: 999,
+        geolocations: {
+          geolocations: (result.geolocations && result.geolocations.geolocations) || 0,
+          assets: (result.geolocations && result.geolocations.assets) || 0,
         },
-        motifTags: {
-          numberOfAssets: 999,
-          numberOfTags: result.tags || 0,
+        tags: {
+          tags: (result.tags && result.tags.tags) || 0,
+          assets:  (result.tags && result.tags.assets) || 0,
         },
-        totalNumberOfAssets: 999,
+        totalAssets: result.totalAssets || 0,
       };
     });
   },
