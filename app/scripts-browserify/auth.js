@@ -3,6 +3,8 @@
 const config = require('collections-online/shared/config');
 
 const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';
+const RESET_PASSWORD_SUCCESS_ELEMENT = '<p>Check din mail for videre instruktioner.</p>';
+const RESET_PASSWORD_FAILURE_ELEMENT = '<p>Der skete en fejl, prøv igen senere.</p>';
 
 /* global Auth0Lock */
 
@@ -64,9 +66,7 @@ $(function() {
 
     $
     .get(url, {email, connection})
-    .then(response => {
-      alert('You have been sent an email');
-    })
-    .catch(err => alert('error'));
+    .done(response => element.replaceWith(RESET_PASSWORD_SUCCESS_ELEMENT))
+    .fail(err => element.replaceWith(RESET_PASSWORD_FAILURE_ELEMENT));
   });
 });
