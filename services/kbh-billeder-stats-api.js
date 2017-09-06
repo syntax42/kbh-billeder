@@ -61,6 +61,20 @@ const kbhStatsApi = {
     });
   },
 
+  allUsersPoints: function(timespan = 'all', limit = 10) {
+    return this._doGet(URL_USERS_POINTS, {'timespan': timespan, 'limit': limit}).then((data) => {
+      return _.chain(data).sortBy('points').reverse().value();
+    }, () => {return []});
+  },
+
+  motifTags: function(timespan = 'all') {
+    return this._doGet(URL_TAGS, {'type': 'tag', 'timespan': timespan});
+  },
+
+  geotags: function(timespan = 'all') {
+    return this._doGet(URL_TAGS, {'type': 'geolocation', 'timespan': timespan});
+  },
+
   // Store a user-submitted geotag.
   saveGeoTag: function(metadata) {
     const id = metadata.id;
