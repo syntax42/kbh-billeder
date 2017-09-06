@@ -1,0 +1,33 @@
+if stats
+  block stats
+    if stats.week
+      h3= "Seneste 7 dage"
+      ul
+        if stats.week.geotags
+          li Billeder placeret på kort: #{stats.week.geotags}
+        if stats.week.motiftagged
+          li Billeder med emneord: #{stats.week.motiftagged}
+        if stats.week.motiftags
+          li Antal emneord: #{stats.week.motiftags}
+
+    if stats.total
+      h3= "Total"
+      ul
+        if stats.total.geotags
+          li Billeder placeret på kort: #{stats.total.geotags}
+        if stats.total.motiftagged
+          li Billeder med emneord: #{stats.total.motiftagged}
+        if stats.total.motiftags
+          li Antal emneord: #{stats.total.motiftags}
+
+    if stats.leaders
+      h3= "Top 10 brugere den sidste uge"
+      if stats.leaders.week
+        ol
+          each leader in stats.leaders.week
+            li #{leader.name}: #{leader.points} point
+      h3= "Top 10 brugere total"
+      if stats.leaders.total
+        ol
+          each leader in stats.leaders.total
+            li #{leader.name}: #{leader.points} point
