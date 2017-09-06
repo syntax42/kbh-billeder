@@ -3,30 +3,28 @@ const request = require('request');
 const config = require('collections-online/shared/config');
 const assert = require('assert');
 const mailgun = require('collections-online/lib/services/mailgun');
+const _ = require('lodash');
+const NodeCache = require('node-cache');
 
 // Pull in configuration and verify that all required values are present.
-const {baseUrl, fallbackEmailTo, fallbackEmailFrom} = config.kbhBillederStatsApi;
+const {baseUrl, fallbackEmailTo, fallbackEmailFrom, cacheTTL, cacheTTLCheck} = config.kbhBillederStatsApi;
 assert.ok(baseUrl, 'KBH Billeder stat api url');
 assert.ok(fallbackEmailTo, 'Fallback email to undefined');
 assert.ok(fallbackEmailFrom, 'Fallback email from undefined');
 
+const responsecache = new NodeCache({stdTTL: cacheTTL, checkperiod: cacheTTLCheck});
+
 // Setup urls for each endpoint.
-const POST_TAGS = baseUrl + '/tags';
-const POST_GEOLOCATIONS = baseUrl + '/geolocations';
-const GET_USERS_POINTS = baseUrl + '/users/points';
-const GET_USERS = baseUrl + '/users';
+const URL_TAGS = baseUrl + '/tags';
+const URL_GEOLOCATIONS = baseUrl + '/geolocations';
+const URL_USERS_POINTS = baseUrl + '/users/points';
+const URL_USERS = baseUrl + '/users';
 
 // The API integration.
 const kbhStatsApi = {
   // Current score for the user.
-  allUsersPoints: function() {
-    return this._doGet(GET_USERS_POINTS);
-  },
-
   userPoints: function(id) {
-    return this._doGet(`${GET_USERS}/${id}/points`).then(body => {
-      const result = JSON.parse(body);
-
+    return this._doGet(`${URL_USERS}/${id}/points`).then(result => {
       return result.points;
     });
   },
@@ -46,8 +44,7 @@ const kbhStatsApi = {
   // }
   userStats: function(id) {
     // Path: /users/{id}
-    return this._doGet(GET_USERS + '/' + id).then(function(body) {
-      const result = JSON.parse(body);
+    return this._doGet(URL_USERS + '/' + id).then(function(result) {
       // We go a bit defensive and ensure that the entrie structure is always
       // returned.
       return {
@@ -74,7 +71,7 @@ const kbhStatsApi = {
     const longitude = metadata.longitude;
     const heading = metadata.heading;
 
-    return this._doPost(POST_GEOLOCATIONS, {
+    return this._doPost(URL_GEOLOCATIONS, {
       'user_id': userId,
       'asset_id': assetId,
       'geolocation': {
@@ -97,7 +94,7 @@ const kbhStatsApi = {
   // Store a number of tags for a user on a asset.
   saveTags: function({id, collection, userTags, userId}) {
     const assetId = collection + '-' + id;
-    return this._doPost(POST_TAGS, {
+    return this._doPost(URL_TAGS, {
       'user_id': userId,
       'asset_id': assetId,
       'tags': userTags,
@@ -111,39 +108,55 @@ const kbhStatsApi = {
   },
 
   // Perform a GET request, returns a promise.
-  _doGet: function(path)  {
+  _doGet: function(url, parameters = {})  {
     return new Promise((resolve, reject) => {
-      request.get(path, (error, response, body) => {
-        if (error || (response.errorCode < 200 || response.errorCode > 299)) {
-          const errorString = response.statusCode + ': ' + response.statusMessage;
-          console.log('Failed call to API ' + path);
-          console.log('Error: ' + errorString);
-          reject(response.statusMessage);
-        } else {
-          resolve(body);
-        }
-      });
+      const cacheKey = url + JSON.stringify(parameters);
+      const cachedResponse = responsecache.get(cacheKey);
+      if (cachedResponse !== undefined) {
+        resolve(cachedResponse);
+      } else {
+        const callback = (error, response, body) => {
+          if (error || (response.statusCode < 200 || response.statusCode > 299)) {
+            const errorString = response.statusCode + ': ' + response.statusMessage;
+            console.warn('Failed call to API ' + url);
+            console.warn('Error: ' + errorString);
+            console.warn('Response: ');
+            console.log(response);
+            reject(response.statusMessage);
+          } else {
+            const parsedBody = JSON.parse(body);
+            responsecache.set(cacheKey, parsedBody);
+            resolve(parsedBody);
+          }
+        };
+        request(
+          {
+            'url': url,
+            'qs': parameters,
+          }, callback
+        );
+
+      }
     });
   },
+
   // Perform a POST request, returns a promise.
-  _doPost: function(path, object)  {
+  _doPost: function(url, object)  {
     return new Promise((resolve, reject) => {
-      console.log("Posting to " + path);
-      request.post(path, {form: object}, (error, response, body) => {
-        console.log("Request done - erro " + error);
-        console.log(response.statusCode + ': ' + response.statusMessage);
-        if (error || (response.errorCode < 200 || response.errorCode > 299)) {
+      console.log('Posting to ' + url);
+      request.post(url, {form: object}, (error, response, body) => {
+        if (error || (response.statusCode < 200 || response.statusCode > 299)) {
           const payload = JSON.stringify(object);
           const errorString = response.statusCode + ': ' + response.statusMessage;
 
           // Log the error.
-          console.log('Failed call to API ' + path);
-          console.log('Error: ' + errorString);
-          console.log('Payload: \n' + payload);
+          console.warn('Failed call to API ' + url);
+          console.warn('Error: ' + errorString);
+          console.warn('Payload: \n' + payload);
 
           // Send an error-mail.
           let mailBody = '';
-          mailBody += 'Endpoint: ' + path + '<br>--<br>';
+          mailBody += 'Endpoint: ' + url + '<br>--<br>';
           mailBody += 'Response: ' + errorString + '<br>--<br>';
           mailBody += 'Response body: <br>' + body + '<br>--<br>';
           mailBody += 'Attempted Payload:<br>' + payload + '<br>--<br>';
