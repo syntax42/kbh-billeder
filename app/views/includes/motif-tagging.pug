@@ -3,11 +3,14 @@ h2 Emneord
   include ./motif-tagging/tags
 
 .row.motif-tagging__editing-container
-  .col-md-6
-    h2 Kan nogle af disse emneord bruges?
-    .motif-tagging__tag-suggestions(data-template='tag-suggestions')
-      include ./motif-tagging/tag-suggestions
-  .col-md-4.col-md-offset-1
+  - const tags = helpers.motifTagging.getVisionTags(metadata) || [];
+  if tags && tags.length
+    .col-md-6
+      .motif-tagging__tag-suggestions(data-template='tag-suggestions')
+
+  // Only set the offset class if we have tags (in which case we have a
+  // suggestion element in front of us).
+  div(class={"col-md-4": true, "col-md-offset-1": tags && tags.length })
     h2 Tilføj flere emneord
     div Husk at gemme til sidst.
     .motif-tagging__add-tag
