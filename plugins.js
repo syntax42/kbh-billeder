@@ -54,6 +54,13 @@ exports.getFirst = (type) => {
   throw new Error('No plugins of the desired type (' + type + ')');
 };
 
+exports.getAll = (type) => {
+  if(pluginModulesByType[type] && pluginModulesByType[type].length > 0) {
+    return pluginModulesByType[type];
+  }
+  return [];
+};
+
 exports.initialize = (app, config) => {
   // Initialize every plugin package
   var pluginPromises = registeredPlugins.map((plugin) => {
