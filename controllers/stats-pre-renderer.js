@@ -2,10 +2,10 @@
 const _ = require('lodash');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const auth0 = require('collections-online/lib/services/auth0');
-const Sevice = auth0.Service;
+const Service = auth0.Service;
 const PLACEHOLDER = '{{STAT}}';
 
-const rendere = {
+const renderer = {
   render: async (next, locals, req) => {
     // Get the current content that is about be rendered.
     let pageContent = _.get(locals, 'data.page.content', '');
@@ -26,9 +26,9 @@ const rendere = {
 
     // Prepare a function that maps auth0 user_ids to human-readable names.
     const mapUsers = async (data) => {
-      let management = await Sevice;
+      let management = await Service;
 
-      // We load the users in seperate calls for now, eventually we'll
+      // We load the users in separate calls for now, eventually we'll
       // hopefully figure out how to load them in bulk.
       let loadedUsers = await Promise.all(data.map(async (item) => {
         return await management.getUser({'id': item.user_id});
@@ -125,4 +125,4 @@ const rendere = {
   }
 };
 
-module.exports = rendere;
+module.exports = renderer;
