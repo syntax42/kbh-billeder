@@ -1,4 +1,8 @@
 extends index
+include mixins/meta
+
+append header
+  +meta(data.page.title)
 
 block content
   .let-it-grow.page-wrap
