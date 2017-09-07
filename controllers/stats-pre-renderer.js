@@ -26,13 +26,20 @@ const renderer = {
 
     // Prepare a function that maps auth0 user_ids to human-readable names.
     const mapUsers = async (data) => {
+      // No error-handling here - if it fails we want it to fail hard.
       let management = await Service();
 
       // We load the users in separate calls for now, eventually we'll
       // hopefully figure out how to load them in bulk.
       let loadedUsers = await Promise.all(data.map(async (item) => {
-        return await management.getUser({'id': item.user_id});
-      }));
+        try{
+          return await management.getUser({'id': item.user_id});
+        } catch(err) {
+          console.warn("Unable to look up user with id " + item.user_id);
+          console.warn(err);
+          return {};
+        }
+    }));
 
       // Map the scoreEntries we got from the API to new entries with a name
       // property added.
