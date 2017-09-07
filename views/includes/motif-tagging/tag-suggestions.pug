@@ -1,13 +1,15 @@
 include ../../mixins/tag
 include ../../mixins/icon
+- const tags = helpers.motifTagging.getVisionTags(metadata) || [];
 
-p.motif-tagging__suggestion-explanation Emneordene er skabt med automatisk billedanalyse. Godkend ved at klikke ’thumbs up’ eller slet ved at klikke på krydset.
-each tag in helpers.motifTagging.getVisionTags(metadata) || []
-  .btn-group(data-tag=tag)
-    +tag(tag)
-    .motif-tagging__transfer-btn.btn.btn-success(data-action='transfer-motif-tag')
-      +icon('thumbup')
-    .motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag')
-      +icon('cross')
-else
-  p.motif-tagging__no-tags Der er ingen forslåede emneord til dette billede.
+if tags && tags.length
+  h2 Kan nogle af disse emneord bruges?
+
+  p.motif-tagging__suggestion-explanation Emneordene er skabt med automatisk billedanalyse. Godkend ved at klikke ’thumbs up’ eller slet ved at klikke på krydset.
+  each tag in tags || []
+    .btn-group(data-tag=tag)
+      +tag(tag)
+      .motif-tagging__transfer-btn.btn.btn-success(data-action='transfer-motif-tag')
+        +icon('thumbup')
+      .motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag')
+        +icon('cross')
