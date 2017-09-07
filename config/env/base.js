@@ -65,6 +65,8 @@ let config = {
     baseUrl: process.env.KBHSTATSAPI_URL || 'http://kbhbilleder-stats-production.xxfpqizzz3.eu-west-1.elasticbeanstalk.com',
     fallbackEmailTo: process.env.KBHSTATAPI_FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
     fallbackEmailFrom: process.env.KBHSTATAPI_FALLBACK_EMAIL_FROM || 'postmaster@kbhbilleder.dk',
+    cacheTTL: process.env.KBHSTATAPI_CACHE_TTL || 100,
+    cacheTTLCheck: process.env.KBHSTATAPI_CACHE_TTL_CHECK || 120,
   },
   keystone: {
     options: {
