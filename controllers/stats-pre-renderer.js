@@ -2,7 +2,7 @@
 const _ = require('lodash');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const auth0 = require('collections-online/lib/services/auth0');
-const Service = auth0.Service;
+const Service = auth0.getManagementService;
 const PLACEHOLDER = '{{STAT}}';
 
 const renderer = {
@@ -26,7 +26,7 @@ const renderer = {
 
     // Prepare a function that maps auth0 user_ids to human-readable names.
     const mapUsers = async (data) => {
-      let management = await Service;
+      let management = await Service();
 
       // We load the users in separate calls for now, eventually we'll
       // hopefully figure out how to load them in bulk.
