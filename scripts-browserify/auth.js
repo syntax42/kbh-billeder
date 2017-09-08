@@ -9,12 +9,12 @@ const RESET_PASSWORD_FAILURE_ELEMENT = '<p>Der skete en fejl, prøv igen senere.
 /* global Auth0Lock */
 
 $(function() {
-  restrictActions([
-    'login',
-    'geo-tagging:start',
-    'motif-tagging:start',
-    'feedback:start',
-  ], lock());
+  restrictActions({
+    'login': 'authenticated',
+    'geo-tagging:start': 'verified',
+    'motif-tagging:start': 'verified',
+    'feedback:start': 'verified',
+  }, lock(), verify());
 
   function lock() {
     return new Auth0Lock(config.auth0.clientID, config.auth0.domain, {
@@ -37,15 +37,46 @@ $(function() {
     });
   }
 
-  function restrictActions(actions, lock) {
-    const authenticated = $('meta[name="authenticated"]').attr('content');
+  function verify() {
+    // Define a function that can be used to show and hide the overlay.
+    const overlayHandler = function(show = true) {
+      var OVERLAY_ACTIVE_CLASS = 'overlay__container--active';
+      var OVERLAY_ANIM_IN_CLASS = 'overlay__container--anim-in';
+      var $el = $('[data-content="auth-verification"]');
+      if (show === true) {
+        $el.addClass(OVERLAY_ACTIVE_CLASS);
+        $el.addClass(OVERLAY_ANIM_IN_CLASS);
+      }
+      else if (show === false) {
+        $el.removeClass(OVERLAY_ANIM_IN_CLASS);
+        // Animate the removal.
+        setTimeout(function () {
+          $el.removeClass(OVERLAY_ACTIVE_CLASS);
+        }, 300);
+      }
+    };
 
-    const dataActions = actions.map(action => {
+    // When requested we assume that the handler will be used right away so we
+    // bind the hide-call to the now visible overlay.
+    $('[data-content="auth-verification"]')
+      .on('click', overlayHandler.bind({}, false));
+
+    return overlayHandler;
+  }
+
+  function restrictActions(actions, lock, verify) {
+    const authenticated = $('meta[name="authenticated"]').attr('content');
+    const verified = authenticated ? $('meta[name="verified"]').attr('content') : 'false';
+    const dataActions = Object.keys(actions).map(action => {
       return `[data-action="${action}"]`;
     }).join(', ');
 
     $(dataActions).on('click', e => {
-      if(authenticated !== 'true') {
+      const requirement = actions[e.target.getAttribute('data-action')];
+
+      // If the user is not authenticated, block the use of the action and
+      // display the logon overlay.
+      if (requirement === 'authenticated' && authenticated !== 'true') {
         e.stopPropagation();
         lock.show({
           auth: {
@@ -54,6 +85,12 @@ $(function() {
             }
           }
         });
+      }
+
+      // If the user is not verified, show the verification overlay.
+      if (requirement === 'verified' && verified !== true) {
+        e.stopPropagation();
+        verify();
       }
     });
   }
