@@ -12,6 +12,7 @@ Gallery.add({
     state: { type: Types.Select, options: 'draft, published', default: 'draft' },
     order: { type: Types.Number, format: false },
     items: { type: Types.Relationship, ref: 'Gallery item', many: true },
+    appearance: { type: Types.Select, options: 'grid, carousel', default: 'grid'},
     description: { type: Types.Textarea }
 });
 
