@@ -12,7 +12,7 @@ block content
       h3(data-user-id=user.id)
         = 'Hej ' + user.nickname
       p= 'Email: ' + user.emails[0].value
-      p= `Du har placeret ${stats.geolocations.geolocations} billeder på kort og tilføjet ${stats.tags.tags} emneord på ${stats.totalAssets} billeder.`
+      p= `Du har placeret ${stats.geolocations.geolocations} billeder på kort og tilføjet ${stats.tags.tags} emneord på ${stats.tags.assets} billeder.`
       p= `Du har ${points} point.`
       - if(user.provider === 'auth0')
         a(data-action='reset-password'
