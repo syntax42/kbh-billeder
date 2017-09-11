@@ -21,7 +21,7 @@ module.exports = options => {
   if(config.features.feedback) {
     require('./document/feedback');
   }
-  
+
   require('./document/expandable');
   require('./document/navigator');
   if(config.features.geoTagging || config.features.motifTagging) {
@@ -41,6 +41,7 @@ module.exports = options => {
 
   require('./sidebar-menu');
   require('./dropdown');
+  require('./galleries');
 
   window.helpers = options.helpers;
 };
