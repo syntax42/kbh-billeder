@@ -89,7 +89,7 @@ $(function() {
 
       // If the user is not verified, show the verification overlay.
       if (config.features.requireEmailVerification &&
-        requirement === 'verified' && verified !== true) {
+        requirement === 'verified' && verified !== 'true') {
         e.stopPropagation();
         verify();
       }
