@@ -131,16 +131,32 @@ const kbhStatsApi = {
       } else {
         const callback = (error, response, body) => {
           if (error || (response.statusCode < 200 || response.statusCode > 299)) {
-            const errorString = response.statusCode + ': ' + response.statusMessage;
+            let errorString = 'Failed call to API ';
+            if (error) {
+              errorString += error + ' ';
+            }
+            if (response && response.statusCode) {
+              errorString += response.statusCode + ' ';
+            }
+            if (response && response.statusMessage) {
+              errorString += response.statusMessage;
+            }
             console.warn('Failed call to API ' + url);
             console.warn('Error: ' + errorString);
-            console.warn('Response: ');
-            console.log(response);
-            reject(response.statusMessage);
+            response && console.warn('Response: ');
+            response && console.log(response);
+            reject(errorString);
           } else {
-            const parsedBody = JSON.parse(body);
-            responsecache.set(cacheKey, parsedBody);
-            resolve(parsedBody);
+            try{
+              const parsedBody = JSON.parse(body);
+              responsecache.set(cacheKey, parsedBody);
+              resolve(parsedBody);
+            }
+            catch(err) {
+              console.warn("Unable to parse following response from kbh api: \n" + body);
+              console.log(response);
+              reject(err.message);
+            }
           }
         };
         request(
