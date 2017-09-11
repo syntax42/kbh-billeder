@@ -106,7 +106,9 @@ let config = {
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
-    watermarks: true
+    watermarks: true,
+    // Whether to require users to verify their email before they can contribute.
+    requireEmailVerification: false
   },
   feedback: {
     maxLength: 600,

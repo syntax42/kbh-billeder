@@ -15,7 +15,8 @@ const beta = _.merge({}, base, {
     feedback: true,
     motifTagging: true,
     sitewidePassword: true,
-    users: true
+    users: true,
+    requireEmailVerification: true
   },
   host: 'beta.kbhbilleder.dk',
   ip: null,
