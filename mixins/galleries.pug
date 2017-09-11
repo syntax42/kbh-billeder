@@ -1,0 +1,29 @@
+mixin gridGallery(gallery, i, evenOrOdd)
+  .row.gallery(class="gallery--" + evenOrOdd)
+    .col-xs-12.col-sm-5
+      h2.gallery__title= gallery.title
+      p.gallery__text= gallery.description
+    .col-sm-1
+    .col-xs-12.col-sm-6
+      .row
+        each item, index in gallery.items
+          .col-xs-6
+            +galleryItem(item, index, 'grid')
+                
+mixin carouselGallery(gallery)
+  .row.gallery
+    .col-xs-12
+      h2.gallery__title= gallery.title
+      .gallery--slick
+          each item, index in gallery.items
+              +galleryItem(item, index, 'carousel')
+  
+mixin galleryItem(item, index, type)
+  - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center', quality: 60});
+  - var className = 'gallery-thumb-' + index + ' gallery-thumb-' + type
+    a.gallery-thumb.no-touch-hover(href=item.link, class=className)
+      img(src=itemImageUrl).gallery-thumb__image
+      .gallery-thumb__overlay
+        h3.gallery-thumb__title= item.title
+        p.gallery-thumb__text= item.description
+  
