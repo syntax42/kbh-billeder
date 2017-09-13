@@ -6,7 +6,7 @@ var base = require('./base');
 const beta = _.merge({}, base, {
   allowRobots: false,
   auth0: {
-    callbackURL: 'http://beta.kbhbilleder.dk/auth/callback',
+    callbackURL: 'http://beta.kbhbilleder.reload.dk/auth/callback',
     clientID: 'W6lhfnsLRK3UgBnCAOO3Lmr2lVjd5BDp'
   },
   siteTitle: 'kbhbilleder.dk (beta)',
