@@ -9,6 +9,11 @@ const beta = _.merge({}, base, {
     callbackURL: 'http://beta.kbhbilleder.dk/auth/callback',
     clientID: 'W6lhfnsLRK3UgBnCAOO3Lmr2lVjd5BDp'
   },
+  cip: {
+    client: {
+      logRequests: true
+    }
+  },
   siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
