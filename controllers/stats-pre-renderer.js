@@ -29,17 +29,32 @@ const renderer = {
       // No error-handling here - if it fails we want it to fail hard.
       let management = await Service();
 
-      // We load the users in separate calls for now, eventually we'll
-      // hopefully figure out how to load them in bulk.
-      let loadedUsers = await Promise.all(data.map(async (item) => {
-        try{
-          return await management.getUser({'id': item.user_id});
-        } catch(err) {
-          console.warn("Unable to look up user with id " + item.user_id);
-          console.warn(err);
+      // Produce a list of user_ids on the form <id> OR <id> OR....
+      const ids = _.chain(data).map('user_id').map((id) => {return `"${id.replace('|', '\\|')}"`}).join(' OR ').value();
+      // Complete the query.
+      const query = `user_id: (${ids})`;
+
+      // Do a bulk lookup of the users.
+      let users;
+      try {
+        users = await management.getUsers({q: query});
+      } catch(err) {
+        console.warn(`Unable to do bulk user lookup with query ${query}`);
+        console.warn(err);
+        return {};
+      }
+
+      // Map the kbhapi user-references to loaded auth0 users.
+      let loadedUsers = data.map((item) => {
+        const user = _.find(users, {'user_id' : item.user_id});
+
+        if (!user) {
+          console.warn(`Unable to find user with id ${item.user_id}`);
           return {};
+        } else {
+          return user;
         }
-    }));
+      });
 
       // Map the scoreEntries we got from the API to new entries with a name
       // property added.
@@ -87,6 +102,8 @@ const renderer = {
         await geotagsWeek,
         await motiftagsTotal,
         await geotagsTotal,
+        // We do a double lookup of users, we could improve performance slightly
+        // by looking up the union of the id's first, and then do the mapping.
         await mapUsers(usersWeek),
         await mapUsers(usersTotal)
       ];
