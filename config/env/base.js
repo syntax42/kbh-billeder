@@ -46,6 +46,7 @@ let config = {
     catalogs: cipCatalogs,
     client: {
       endpoint: 'https://www.neaonline.dk:8443/CIP/',
+      logRequests: false,
       constants: {
           catchAllAlias: "alle",
           layoutAlias: "stadsarkivet"
