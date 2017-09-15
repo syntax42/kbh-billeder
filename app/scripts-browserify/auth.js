@@ -76,7 +76,7 @@ $(function() {
 
       // If the user is not authenticated, block the use of the action and
       // display the logon overlay.
-      if (requirement === 'authenticated' && authenticated !== 'true') {
+      if (authenticated !== 'true' && (requirement === 'authenticated' ||  requirement === 'verified')) {
         e.stopPropagation();
         lock.show({
           auth: {
@@ -87,8 +87,10 @@ $(function() {
         });
       }
 
-      // If the user is not verified, show the verification overlay.
+      // If the user is authenticated but not verified, show the verification
+      // overlay if it is required.
       if (config.features.requireEmailVerification &&
+        authenticated === 'true' &&
         requirement === 'verified' && verified !== 'true') {
         e.stopPropagation();
         verify();
