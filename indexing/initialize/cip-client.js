@@ -1,6 +1,7 @@
 'use strict';
 
 const cip = require('../../services/cip');
+const config = require('collections-online/lib/config');
 
 /**
  * This initializes the CIP client.
@@ -8,8 +9,10 @@ const cip = require('../../services/cip');
  * @param {Object} state The state of which we are about to initialize.
  */
 
-module.exports = state => {
-  return cip.initSession().then(() => {
-    return state;
-  });
+module.exports = async (state) => {
+  if(config.cip.client.authMechanism !== 'http-basic') {
+    await cip.initSession();
+  }
+
+  return state;
 };
