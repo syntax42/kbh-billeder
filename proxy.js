@@ -42,11 +42,14 @@ function proxy(url, includeJSessionId = false) {
 
   console.log('CIP proxy is requesting', url);
 
+  const { username, password } = config.cip
+
   return request
     .get({
       url,
       rejectUnauthorized: config.cip.client.trustSelfSigned ? false : true
     })
+    .auth(username, password)
     .on('response', function(response) {
       response.headers['Cache-Control'] = 'max-age=2592000';
     });
