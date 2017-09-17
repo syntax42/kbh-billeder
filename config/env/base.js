@@ -29,7 +29,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL: 'https://www.neaonline.dk:8443/CIP',
+    baseURL: 'https://www.neaonline.dk:8443/CIP-kbh-billeder',
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxy: {
@@ -45,7 +45,10 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: 'https://www.neaonline.dk:8443/CIP/',
+      endpoint: 'https://www.neaonline.dk:8443/CIP-kbh-billeder/',
+      authMechanism: 'http-basic',
+      username: process.env.CIP_USERNAME,
+      password: process.env.CIP_PASSWORD,
       logRequests: false,
       constants: {
           catchAllAlias: "alle",
