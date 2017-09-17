@@ -30,43 +30,46 @@ function saveChangesToCIP(catalogAlias, items) {
   });
 }
 
-function getResultPage(result, index, count) {
-  var options = {
-    collection: result.collection_id,
+async function getResultPage(query, catalog, index, pageSize) {
+  const operation = [
+    'metadata',
+    'search',
+    catalog,
+    config.cip.client.constants.layoutAlias,
+  ]
+
+  const options = {
+    querystring: query,
     startindex: index,
-    maxreturned: count
+    maxreturned: pageSize
   };
 
   if(config.cip.indexing.additionalFields) {
     options.field = config.cip.indexing.additionalFields;
   }
-  return cip.request([
-    'metadata',
-    'getfieldvalues',
-    config.cip.client.constants.layoutAlias
-  ], options).then((response) => {
-    if (!response ||
-        !response.body ||
-        typeof(response.body.items) === 'undefined') {
-      console.error('Unexpected response:', response);
-      throw new Error('The request for field values returned an empty result.');
-    } else {
-      return response.body.items;
-    }
-  });
+
+  const response = await cip.request(operation, options);
+
+  if (!response || !response.body || typeof(response.body.items) === 'undefined') {
+    console.error('Unexpected response:', response);
+    throw new Error('The request for field values returned an empty result.');
+  } else {
+    return response.body.items;
+  }
 }
 
 /**
  * Process a specific result page, with assets.
  */
-function processResultPage(result, context, pageIndex) {
-  const collection = context.collection;
+function processResultPage(totalcount, context, pageIndex) {
+  const { query, collection, pageSize } = context
 
-  var totalPages = Math.ceil(result.total_rows / context.pageSize);
+  const totalPages = Math.ceil(totalcount / pageSize);
   const progress = '[' + (pageIndex + 1) + '/' + totalPages + ']';
   console.log(progress + ' Queuing page');
 
-  return getResultPage(result, pageIndex * context.pageSize, context.pageSize)
+
+  return getResultPage(query, collection, pageIndex * pageSize, pageSize)
   .then(assets => {
     console.log(progress + ' Received metadata');
     // Perform a processing of all the assets on the page
@@ -171,17 +174,17 @@ function processResultPage(result, context, pageIndex) {
   });
 }
 
-function processResultPages(result, context) {
+function processResultPages(totalcount, context) {
   // Build up a list of parameters for all the pages in the entire result
   const pageIndecies = [];
-  for(let p = context.offset; p * context.pageSize < result.total_rows; p++) {
+  for(let p = context.offset; p * context.pageSize < totalcount; p++) {
     pageIndecies.push(p);
   }
   // Return a promise of process result pages (evaluated one after another)
   return pageIndecies.reduce((idsAndErrors, pageIndex) => {
     return Q.when(idsAndErrors)
     .then(({allIndexedIds, allErrors}) => {
-      return processResultPage(result, context, pageIndex)
+      return processResultPage(totalcount, context, pageIndex)
       .then(({indexedIds, errors}) => {
         return {
           allIndexedIds: allIndexedIds.concat(indexedIds),
@@ -201,9 +204,9 @@ function processResultPages(result, context) {
   });
 }
 
-function processResult(context, query, result) {
-  console.log('Processing a result of ' + result.total_rows + ' assets');
-  return processResultPages(result, context);
+function processResult(context, query, totalcount) {
+  console.log('Processing a result of ' + totalcount + ' assets');
+  return processResultPages(totalcount, context);
 }
 
 module.exports = processResult;
