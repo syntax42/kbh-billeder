@@ -24,6 +24,7 @@ const beta = _.merge({}, base, {
     requireEmailVerification: true
   },
   host: 'beta.kbhbilleder.dk',
+  enforceHttps: true,
   ip: null,
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
