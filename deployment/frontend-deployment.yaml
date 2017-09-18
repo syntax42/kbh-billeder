@@ -19,7 +19,7 @@ objects:
             livenessProbe:
               failureThreshold: 3
               httpGet:
-                path: /
+                path: /healtz
                 port: http
                 scheme: HTTP
                 httpHeaders:

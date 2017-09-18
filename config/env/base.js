@@ -17,6 +17,7 @@ var appDir = path.join(__dirname, '..', '..', 'app');
 let config = {
   allowRobots: true,
   appDir: appDir,
+  alivecheckPath: '/healtz',
   appPaths: [
     generatedDir,
     appDir
