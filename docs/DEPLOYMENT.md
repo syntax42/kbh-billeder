@@ -71,3 +71,18 @@ A process which involves:
 2. Building the docker image from the [Dockerfile](../Dockerfile).
 3. Pushing the image to Googles servers and patching the frontend deployment,
    running [deployment/patch-deployment.sh](../deployment/patch-deployment.sh).
+
+
+## How to clear frontend cache
+
+Both frontend-pods have a local nginx-instance that caches thumbnail requests.
+The cache is cleared during redeploy (as it is local to the pod).
+
+Should you need to do an emergency redeploy, it can be done by setting a label
+on the pod
+```
+kubectl patch deployment frontend -n <NAMESPACE> --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/redeploy", "value":"<TIMESTAMP>"}]'
+```
+
+Where ```<TIMESTAMP>``` should be replaced with a unique timestamp, and 
+```<NAMESPACE>``` with "beta" or "production".
