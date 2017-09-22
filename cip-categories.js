@@ -86,46 +86,47 @@ function Categories(tree) {
   this.tree = this.buildTree(tree);
 }
 
-function loadCategories() {
-  // First let's create a single session with the CIP
-  return cip.initSession().then(() => {
-    // Then - let's fetch some categories
-    var catalogPromises = Object.keys(config.cip.catalogs).map((alias) => {
-      return cip.request([
-        'metadata',
-        'getcategories',
-        alias,
-        'categories'
-      ], {
-        levels: 'all'
-      }).then((response) => {
-        var categories = new Categories(response.body);
-        categories.id = alias;
-        return categories;
-      });
-    });
-    console.log('Fetching categories for', catalogPromises.length, 'catalogs.');
+async function loadCategories() {
+  if(config.cip.client.authMechanism !== 'http-basic') {
+    await cip.initSession()
+  }
 
-    return Q.allSettled(catalogPromises).then(function(result) {
-      var finalResult = [];
+  // Then - let's fetch some categories
+  var catalogPromises = Object.keys(config.cip.catalogs).map((alias) => {
+    response = await cip.request([
+      'metadata',
+      'getcategories',
+      alias,
+      'categories'
+    ], {
+      levels: 'all'
+    })
 
-      for (var i = 0; i < result.length; ++i) {
-        if (result[i].state === 'fulfilled') {
-          finalResult.push(result[i].value);
-        } else {
-          console.error('Error fetching categories:', result[i].reason);
-        }
-      }
-      console.log('Got categories for', finalResult.length, 'catalogs.');
-
-      if (catalogPromises.length !== finalResult.length &&
-          config.env !== 'development') {
-        throw new Error('Could not load categories for all the catalogs.');
-      }
-
-      return finalResult;
-    });
+    var categories = new Categories(response.body);
+    categories.id = alias;
+    return categories;
   });
+  console.log('Fetching categories for', catalogPromises.length, 'catalogs.');
+
+  result = await Q.allSettled(catalogPromises)
+
+  var finalResult = [];
+
+  for (var i = 0; i < result.length; ++i) {
+    if (result[i].state === 'fulfilled') {
+      finalResult.push(result[i].value);
+    } else {
+      console.error('Error fetching categories:', result[i].reason);
+    }
+  }
+  console.log('Got categories for', finalResult.length, 'catalogs.');
+
+  if (catalogPromises.length !== finalResult.length &&
+      config.env !== 'development') {
+    throw new Error('Could not load categories for all the catalogs.');
+  }
+
+  return finalResult;
 }
 
 exports.loadCategories = loadCategories;
