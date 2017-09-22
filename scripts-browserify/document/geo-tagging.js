@@ -421,6 +421,12 @@ function addApproximateCircle(map, latLng) {
       if(this.state.saving) {
         return;
       }
+
+      // No marker has been set yet, just ignore the user.
+      if (typeof this.marker.getPosition() == "undefined") {
+        return;
+      }
+
       this.state.saving = true;
       $(SAVE_GEO_TAG_SELECTOR).prop('disabled', true);
       // Set the latitude and longitude, based on the markers current position
