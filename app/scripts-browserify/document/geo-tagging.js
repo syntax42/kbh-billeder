@@ -422,6 +422,7 @@ function addApproximateCircle(map, latLng) {
         return;
       }
       this.state.saving = true;
+      $(SAVE_GEO_TAG_SELECTOR).prop('disabled', true);
       // Set the latitude and longitude, based on the markers current position
       const position = this.marker.getPosition();
       if(position) {
@@ -438,6 +439,7 @@ function addApproximateCircle(map, latLng) {
           window.location.reload();
         }, 'json');
       } else {
+        $(SAVE_GEO_TAG_SELECTOR).prop('disabled', false);
         throw new Error('Expected a valid position for the marker');
       }
     }
