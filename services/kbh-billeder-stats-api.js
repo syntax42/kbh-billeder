@@ -7,7 +7,8 @@ const _ = require('lodash');
 const NodeCache = require('node-cache');
 
 // Pull in configuration and verify that all required values are present.
-const {baseUrl, fallbackEmailTo, fallbackEmailFrom, cacheTTL, cacheTTLCheck} = config.kbhBillederStatsApi;
+const {baseUrl, cacheTTL, cacheTTLCheck} = config.kbhBillederStatsApi;
+const {fallbackEmailTo, fallbackEmailFrom} = config.email;
 assert.ok(baseUrl, 'KBH Billeder stat api url');
 assert.ok(fallbackEmailTo, 'Fallback email to undefined');
 assert.ok(fallbackEmailFrom, 'Fallback email from undefined');
