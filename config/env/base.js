@@ -63,13 +63,14 @@ let config = {
   },
   email: {
     baseUrl: '@api.mailgun.net/v3/kbhbilleder.dk',
-    mailgunKey: process.env.MAILGUN_API_KEY
+    mailgunKey: process.env.MAILGUN_API_KEY,
+    // Email to send errors to.
+    fallbackEmailTo: process.env.FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
+    fallbackEmailFrom: process.env.FALLBACK_EMAIL_FROM || 'postmaster@kbhbilleder.dk'
   },
   imageTimeoutRedirect: '/billedet-kunne-ikke-downloades',
   kbhBillederStatsApi: {
     baseUrl: process.env.KBHSTATSAPI_URL || 'http://kbhbilleder-stats-production.xxfpqizzz3.eu-west-1.elasticbeanstalk.com',
-    fallbackEmailTo: process.env.KBHSTATAPI_FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
-    fallbackEmailFrom: process.env.KBHSTATAPI_FALLBACK_EMAIL_FROM || 'postmaster@kbhbilleder.dk',
     cacheTTL: process.env.KBHSTATAPI_CACHE_TTL || 100,
     cacheTTLCheck: process.env.KBHSTATAPI_CACHE_TTL_CHECK || 120,
   },
