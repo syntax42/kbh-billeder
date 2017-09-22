@@ -48,6 +48,7 @@ function createAsset(catalogAlias, assetId) {
   return indexing(state);
 }
 
+// Re-index an asset by retriving it from Cumulus and updating Elastic Search.
 function updateAsset(catalogAlias, assetId) {
   var state = {
     context: {
@@ -63,7 +64,7 @@ function updateAsset(catalogAlias, assetId) {
   return indexing(state);
 }
 
-// Direct update of ES from one or more providede documents.
+// Update an already indexed asset with partial data providede by the caller.
 function updateAssetsFromData(partials) {
   // Support both a single document and a list.
   if (!Array.isArray(partials)) {
