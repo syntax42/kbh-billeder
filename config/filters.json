@@ -57,7 +57,8 @@
     },
     "plural": "placeringer",
     "singular": "placering",
-    "type": "filters"
+    "type": "filters",
+    "feature": "geoTagging"
   },
   "tags": {
     "filters" : {
@@ -78,7 +79,8 @@
     },
     "plural": "emneord",
     "singular": "emneord",
-    "type": "filters"
+    "type": "filters",
+    "feature": "motifTagging"
   },
   "q": {
     "type": "querystring",
