@@ -23,7 +23,7 @@ const development = _.merge({}, base, {
     feedback: true,
     motifTagging: true,
     users: true,
-    requireEmailVerification: true
+    requireEmailVerification: true,
     feedback: false,
     geoTagging: false,
     motifTagging: false,
