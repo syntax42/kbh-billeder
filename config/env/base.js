@@ -106,7 +106,7 @@ let config = {
   features: {
     cookieConsent: true,
     feedback: false,
-    motifTagging: false,
+    motifTagging: true,
     filterSidebar: true,
     geoTagging: true,
     keystone: true,

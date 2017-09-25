@@ -18,8 +18,10 @@ const production = _.merge({}, base, {
     }
   },
   features: {
+    feedback: false,
     geoTagging: false,
     motifTagging: false,
+    requireEmailVerification: false,
     users: false
   },
   google: {

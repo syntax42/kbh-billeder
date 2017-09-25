@@ -24,6 +24,11 @@ const development = _.merge({}, base, {
     motifTagging: true,
     users: true,
     requireEmailVerification: true
+    feedback: false,
+    geoTagging: false,
+    motifTagging: false,
+    requireEmailVerification: true,
+    users: false
   }
 });
 
