@@ -6,13 +6,26 @@ try {
 }
 
 const config = require('collections-online/lib/config');
+const indexing = require('./indexing/run');
 
 module.exports.registerPlugins = () => {
   const config = require('collections-online/lib/config');
   if(config.es) {
     plugins.register({
       type: 'indexing-engine',
-      module: require('./indexing/run')
+      module: indexing,
+      registerRoutes: app => {
+        app.get('/index/recent', (req, res) => {
+            const state = {
+              mode: 'recent',
+              reference: req.timeframe
+            }
+
+            indexing(state)
+            return res.send('Indexing of recent assets started.')
+          }
+        )
+      }
     });
   } else {
     console.warn('The Cumulus indexing engine is disabled due to configuation');
