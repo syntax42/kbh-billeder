@@ -7,12 +7,12 @@ block document__section-2
         include includes/motif-tagging
 
 block document__section-4
-  .document__section-4
-    .container-fluid
-      if config.features.feedback
-        .row
-          .col-sm-7
-            include includes/feedback
+  if config.features.feedback
+    .document__section-4
+      .container-fluid
+          .row
+            .col-sm-7
+              include includes/feedback
 
 block document__section-5
   if helpers.hasRelations(metadata)
