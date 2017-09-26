@@ -18,7 +18,7 @@ module.exports.registerPlugins = () => {
         app.get('/index/recent', (req, res) => {
             const state = {
               mode: 'recent',
-              reference: req.timeframe
+              reference: req.query.timeframe
             }
 
             indexing(state)
