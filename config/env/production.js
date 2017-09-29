@@ -26,6 +26,7 @@ const production = _.merge({}, base, {
     analyticsPropertyID: 'UA-78446616-1'
   },
   host: 'kbhbilleder.dk',
+  enforceHttps: true,
   ip: null,
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
