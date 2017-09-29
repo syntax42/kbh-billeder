@@ -17,7 +17,6 @@ var appDir = path.join(__dirname, '..', '..', 'app');
 let config = {
   allowRobots: true,
   appDir: appDir,
-  alivecheckPath: '/healthz',
   appPaths: [
     generatedDir,
     appDir
@@ -141,6 +140,10 @@ let config = {
       unrestricted: process.env.GOOGLE_UNRESTRICTED_API_KEY
     }
   },
+  httpWhitelist: [
+    '/healthz',
+    '/index/asset'
+  ],
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {
