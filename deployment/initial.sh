@@ -26,3 +26,10 @@ ktmpl -p MONGO_DISK_NAME $MONGO_DISK_NAME $DIR/mongo-rc.yaml | kubectl create -n
 # Create a service for the frontend(s)
 ktmpl -p FRONTEND_PUBLIC_IP $FRONTEND_PUBLIC_IP $DIR/frontend-service.yaml | kubectl create -n $NAMESPACE -f -
 ktmpl -p BRANCH $BRANCH -p FRONTEND_PUBLIC_HOSTNAME $FRONTEND_PUBLIC_HOSTNAME $DIR/frontend-deployment.yaml | kubectl create -n $NAMESPACE -f -
+
+# Setup frontend ingress
+ktmpl \
+  -p FRONTEND_PUBLIC_IP_NAME $FRONTEND_PUBLIC_IP_NAME \
+  -p FRONTEND_PUBLIC_HOSTNAME $FRONTEND_PUBLIC_HOSTNAME \
+  $DIR/frontend-ingress.yaml \
+  | kubectl apply -n $NAMESPACE -f -
