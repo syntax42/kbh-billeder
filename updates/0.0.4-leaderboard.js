@@ -22,15 +22,17 @@ module.exports = function(done) {
       pages[page.slug] = page;
     });
 
-    var menuItems = [
-      new MenuItem.model({
-        title: 'Top 10',
-        page: pages['top']._id,
-        placement: 'main',
-        order: 6
-      }).save()
-    ];
-    return Q.all(menuItems);
+    if (pages['top']) {
+      var menuItems = [
+        new MenuItem.model({
+          title: 'Top 10',
+          page: pages['top']._id,
+          placement: 'main',
+          order: 6
+        }).save()
+      ];
+      return Q.all(menuItems);
+    }
   }).then(function() {
     done();
   }, console.error);
