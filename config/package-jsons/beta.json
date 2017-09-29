@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "collections-online": "git+https://github.com/CopenhagenCityArchives/collections-online.git#testing",
+    "collections-online": "git+https://github.com/CopenhagenCityArchives/collections-online.git#testing"
   }
 }
