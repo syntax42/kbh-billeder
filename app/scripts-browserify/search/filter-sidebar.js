@@ -39,8 +39,17 @@ exports.update = function(filters, aggregations) {
   var filterLabels = {};
   Object.keys(config.search.filters).forEach(function(field) {
     var filter = config.search.filters[field];
+
     if(filter.type !== 'querystring') {
-      filterLabels[field] = filter;
+      // If the filter depends on a feature flag,
+      // check that the feature is enabled.
+      if(filter.feature) {
+        if(config.features[filter.feature]){
+          filterLabels[field] = filter;
+        }
+      } else {
+        filterLabels[field] = filter;
+      }
     }
   });
   // Render the markup

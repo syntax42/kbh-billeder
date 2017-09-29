@@ -20,8 +20,8 @@ const OVERLAY_VISIBLE_CLASS = 'geo-tagging__overlay--visible';
 
 const BACK_TO_MAP_SELECTOR = '[data-action="back-to-map"]';
 const SAVE_GEO_TAG_SELECTOR = '[data-action="save-geo-tag"]';
-const START_GEO_TAGGING_SELECTOR = '[data-action="start-geo-tagging"]';
-const STOP_GEOTAGGING_SELECTOR = '[data-action="stop-geo-tagging"]';
+const START_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:start"]';
+const STOP_GEOTAGGING_SELECTOR = '[data-action="geo-tagging:stop"]';
 const CLOSE_OVERLAY_SELECTOR = '[data-action="close-overlay"]';
 
 const LOCATION_SET_ZOOM = 16;
@@ -36,7 +36,6 @@ defaults.zoom = defaults.zoom || 16;
 
 // TODO: Re-introduce the use of Google Analytics events
 // TODO: Add pretty errors instead of silent fails
-// TODO: Use the "require('./contribution-counter')"
 
 // Precondition on the availability of the helpers
 if(!helpers.geoTagging ||
@@ -73,7 +72,20 @@ function addHeadingPolygon(map, latLng, heading, offset) {
     fillColor: '#333333',
     fillOpacity: 0.05,
     strokeWeight: 0,
+    clickable: false,
     paths: [headingLatLng1, latLng, headingLatLng2]
+  });
+}
+
+function addApproximateCircle(map, latLng) {
+  return new google.maps.Circle({
+    map,
+    fillColor: config.themeColor,
+    fillOpacity: 0.33,
+    strokeWeight: 0,
+    center: latLng,
+    clickable: false,
+    radius: 90
   });
 }
 
@@ -217,19 +229,23 @@ function addHeadingPolygon(map, latLng, heading, offset) {
       this.marker = new google.maps.Marker({
         map: this.map,
         icon: '/images/camera_pin_green.png',
-        draggable: true
+        draggable: true,
+        clickable: false
       });
 
       this.headingMarker = new google.maps.Marker({
         map: this.map,
         icon: '/images/heading_pin_red.png',
-        draggable: true
+        draggable: true,
+        clickable: false
       });
 
       this.headingLine = new google.maps.Polyline({
         map: this.map,
         strokeColor: '#333333'
       });
+
+      this.approximateCircle = addApproximateCircle(this.map, null);
 
       this.marker.addListener('drag', () => {
         this.state.heading = this.calculateHeading();
@@ -291,13 +307,16 @@ function addHeadingPolygon(map, latLng, heading, offset) {
 
     updateMarkersFromState() {
       const computeOffset = google.maps.geometry.spherical.computeOffset;
-      const latitude = this.state.latitude;
-      const longitude = this.state.longitude;
-      const heading = this.state.heading;
+      const { latitude, longitude, heading, isApproximate } = this.state;
 
       if(latitude && longitude) {
         const latLng = new google.maps.LatLng(latitude, longitude);
-        this.marker.setPosition(latLng);
+        if(isApproximate){
+          this.approximateCircle.setCenter(latLng);
+        }
+        else {
+          this.marker.setPosition(latLng);
+        }
         this.map.setCenter(latLng);
 
         if (heading) {
@@ -402,7 +421,14 @@ function addHeadingPolygon(map, latLng, heading, offset) {
       if(this.state.saving) {
         return;
       }
+
+      // No marker has been set yet, just ignore the user.
+      if (typeof this.marker.getPosition() == "undefined") {
+        return;
+      }
+
       this.state.saving = true;
+      $(SAVE_GEO_TAG_SELECTOR).prop('disabled', true);
       // Set the latitude and longitude, based on the markers current position
       const position = this.marker.getPosition();
       if(position) {
@@ -419,6 +445,7 @@ function addHeadingPolygon(map, latLng, heading, offset) {
           window.location.reload();
         }, 'json');
       } else {
+        $(SAVE_GEO_TAG_SELECTOR).prop('disabled', false);
         throw new Error('Expected a valid position for the marker');
       }
     }
@@ -478,21 +505,14 @@ function addHeadingPolygon(map, latLng, heading, offset) {
 
       const latLng = new google.maps.LatLng(latitude, longitude);
       if($map.data('approximate') === true) {
-        // Add a circle indicating approximate location
-        const headingPolyline = new google.maps.Circle({
-          map,
-          fillColor: config.themeColor,
-          fillOpacity: 0.33,
-          strokeWeight: 0,
-          center: latLng,
-          radius: 90
-        });
+        addApproximateCircle(map, latLng);
       } else {
         // Add a marker
         const marker = new google.maps.Marker({
           map,
           position: latLng,
-          icon: '/images/camera_pin_green.png'
+          icon: '/images/camera_pin_green.png',
+          clickable: false
         });
 
         // Add a marker indicating heading

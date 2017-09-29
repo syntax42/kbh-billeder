@@ -1,5 +1,6 @@
 extends index
 include mixins/meta
+include mixins/galleries
 
 append header
   +meta()
@@ -9,24 +10,14 @@ block content
     block content-top
     block content-bottom
       .container-fluid.frontpage-galleries
+        - var gridGalleryCount = 0
         each gallery, i in galleries
-          .row.gallery(class="gallery--" + (i % 2 == 0 ? 'even' : 'odd'))
-            .col-xs-12.col-sm-5
-              h2.gallery__title= gallery.title
-              p.gallery__text= gallery.description
-            .col-sm-1
-            .col-xs-12.col-sm-6
-              .row
-                each item, index in gallery.items
-                  - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center', quality: 60});
-                  - var indexClass = 'gallery-thumb-' + index
-                  .col-xs-6
-                    a.gallery-thumb.no-touch-hover(href=item.link, class=indexClass)
-                      img(src=itemImageUrl).gallery-thumb__image
-                      .gallery-thumb__overlay
-                        h3.gallery-thumb__title= item.title
-                        p.gallery-thumb__text= item.description
-
+          -if(gallery.appearance === 'grid')
+            - gridGalleryCount += 1
+            - var evenOrOdd = (gridGalleryCount % 2 == 0 ? 'even' : 'odd')
+            +gridGallery(gallery, i, evenOrOdd)
+          -if(gallery.appearance === 'carousel')
+            +carouselGallery(gallery)
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
   script(type="application/ld+json").

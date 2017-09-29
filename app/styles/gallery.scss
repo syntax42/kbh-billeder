@@ -43,6 +43,10 @@
       letter-spacing: -.01em;
     }
   }
+
+  &--slick {
+    visibility: hidden; // Overriden by .slick-initialized so content doesn't jump
+  }
 }
 
 .gallery-thumb {
@@ -89,4 +93,8 @@
     line-height: 1.2;
     margin-top: -.4rem;
   }
+}
+
+.gallery-thumb-carousel > .gallery-thumb__overlay {
+  width: calc(100% - 30px);
 }

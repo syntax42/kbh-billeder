@@ -10,9 +10,17 @@ module.exports = options => {
     require('./cookie-consent');
   }
 
+  if(config.features.users) {
+    require('./auth');
+  }
+
   // TODO: Remove this asset require, once downloading has been moved to a
   // seperate script.
   require('./asset');
+
+  if(config.features.feedback) {
+    require('./document/feedback');
+  }
 
   require('./document/expandable');
   require('./document/navigator');
@@ -25,15 +33,15 @@ module.exports = options => {
   if(config.features.motifTagging) {
     require('./document/motif-tagging');
   }
+
   if(config.features.scrollToTop) {
     require('./scroll-to-top');
   }
-  if(config.features.users) {
-    require('./auth');
-  }
+
 
   require('./sidebar-menu');
   require('./dropdown');
+  require('./galleries');
 
   window.helpers = options.helpers;
 };

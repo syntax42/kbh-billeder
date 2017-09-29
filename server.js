@@ -3,10 +3,11 @@
 const Q = require('q');
 const plugins = require('./plugins');
 const config = require('./lib/config');
+const promiseRetry = require('promise-retry');
 
 let co = {
-  config: (childPath) => {
-    require('./lib/config').setChildPath(childPath);
+  config: (customizationPath) => {
+    require('./lib/config').setCustomizationPath(customizationPath);
   },
   registerPlugins: () => {
     // Register the default fallback plugins
@@ -49,21 +50,25 @@ let co = {
       const indecies = Object.keys(config.types).map((type) => {
         return config.types[type].index;
       });
-      return ds.count({
-        index: indecies,
-        body: {
-          query: config.search.baseQuery
-        }
-      }).then(function(response) {
-        console.log('Index exists and has', response.count, 'documents.');
-      }, function(err) {
-        if(err.status === 404) {
-          console.error('Missing document index:', indecies.join(' or '));
-        } else {
+      return promiseRetry(retry => {
+        return ds.count({
+          index: indecies,
+          body: {
+            query: config.search.baseQuery
+          }
+        })
+        .catch(( err ) => {
           console.error('Could not connect to the Elasticsearch:',
                         'Is the elasticsearch service started?');
-          process.exit(1);
-        }
+          console.error('Retrying elasticsearch');
+          retry(err);
+        });
+      }, {minTimeout: 4000})
+      .then(response => {
+        console.log('Index exists and has', response.count, 'documents.');
+      }, err => {
+        console.log('Elasticsearch not found after several attempts.');
+        process.exit(1);
       })
       .then(() => {
         console.log('Starting up the server');
@@ -88,18 +93,9 @@ let co = {
       });
     });
   },
-  registerRoutes: (app) => {
-    // Require routes from each plugin, if they register routes
-    plugins.all().forEach((plugin) => {
-      try {
-        if(typeof(plugin.registerRoutes) === 'function') {
-          plugin.registerRoutes(app);
-        }
-      } catch (err) {
-        console.error('Error registering routes for a plugin: ', err);
-      }
-    });
-    console.log('Setting up routing for the collections-online core');
+  registerRoutes: app => {
+    // Ask plugins to register their routes
+    plugins.registerRoutes(app);
     // Register the core collections-online routes
     require('./lib/routes')(app);
   },

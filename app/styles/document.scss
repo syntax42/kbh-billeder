@@ -1,3 +1,8 @@
+@mixin document-section($index) {
+  background-color: map-get($document-section-backgrounds, $index);
+  color: map-get($document-section-colors, $index);
+}
+
 .document {
   h1,
   h2,
@@ -5,29 +10,66 @@
     font-family: $document-heading-font;
   }
 
-  &__top {
-    background-color: $document-top-bg;
-    color: $document-top-color;
+  table {
+    margin-top: .5rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  td,
+  th {
+    vertical-align: top;
+    word-wrap: break-word;
+  }
+
+  th {
+    padding-right: 1rem;
+    white-space: nowrap;
+  }
+
+  td {
+    width: 100%;
+
+    .btn {
+      margin: .5rem 0;
+    }
+  }
+
+  // Adding default padding to the sections
+  &__section-1,
+  &__section-2,
+  &__section-3,
+  &__section-4,
+  &__section-5 {
+    padding: 1rem 0 2rem;
+  }
+
+  &__section-1 {
+    @include document-section(1);
     padding-bottom: 2rem;
     position: relative;
-
     @media (min-width: $small-size) {
       padding-top: $topbar-height;
     }
-
     @media (min-width: $medium-size) {
       padding-top: $topbar-height * 3 / 2;
     }
   }
 
-  &__middle {
-    background-color: $document-middle-bg;
-    padding: 1rem 0 2rem;
+  &__section-2 {
+    @include document-section(2);
   }
 
-  &__bottom {
-    background-color: $document-bottom-bg;
-    padding: 1rem 0 3rem;
+  &__section-3 {
+    @include document-section(3);
+  }
+
+  &__section-4 {
+    @include document-section(4);
+  }
+
+  &__section-5 {
+    @include document-section(5);
   }
 
   &__title {
@@ -40,7 +82,7 @@
     white-space: pre-line;
   }
 
-  &__top-metadata {
+  &__metadata {
     // Makes sure a width: 100%; will not extend this
     position: relative;
   }
@@ -53,8 +95,8 @@
     position: relative; // Positions the navigator relative to the player
   }
 
-  &__player,
-  &__geo-tagging {
+  &__geo-tagging,
+  &__player {
     // Remove the padding from the col-* classes on small screens
     @media (max-width: $small-size) {
       padding-left: 0;
@@ -67,7 +109,7 @@
     text-align: right;
 
     svg {
-      fill: $document-top-color;
+      fill: map-get($document-section-colors, 1); // TODO: Could we inherit?
       height: $icon-size;
       width: $icon-size;
     }
@@ -84,19 +126,16 @@
         vertical-align: middle;
       }
     }
-
     // Left-align controls on a larger screen
     @media (min-width: $small-size) {
       text-align: left;
     }
-
     @media (max-width: $small-size) {
       padding: 0 1rem;
     }
   }
 
   &__navigator {
-
     &-preview {
       background: $white;
       display: none;
@@ -139,7 +178,6 @@
         opacity: 0;
         overflow: hidden;
       }
-
       @media (pointer: fine) {
         &:focus,
         &:hover {
@@ -153,32 +191,6 @@
 
     &-title {
       display: none;
-    }
-  }
-
-  // Styling related to tables of metadata within the document block
-  table {
-    margin-top: .5rem;
-    text-align: left;
-    width: 100%;
-  }
-
-  th,
-  td {
-    vertical-align: top;
-    word-wrap: break-word;
-  }
-
-  th {
-    padding-right: 1rem;
-    white-space: nowrap;
-  }
-
-  td {
-    width: 100%;
-
-    .btn {
-      margin: .5rem 0;
     }
   }
 
@@ -200,6 +212,23 @@
     }
 
     &--expanded {
+      // A little top-padding on larger screens
+      @media (min-width: $small-size) {
+        padding-top: 1rem;
+      }
+
+      [data-action='toggle-expandable'] {
+        cursor: zoom-out;
+      }
+
+      // What happens when a document expandable is expanded?
+      // The collumns inside the expandable .rows become wide
+      .row {
+        > [class*='col-'] {
+          width: 100%;
+        }
+      }
+
       .document__player-controls {
         .zoom-in {
           display: none;
@@ -218,25 +247,6 @@
       .row {
         > [class*='col-'] {
           transition: $anim-duration-fast;
-        }
-      }
-    }
-
-    &--expanded {
-      // A little top-padding on larger screens
-      @media (min-width: $small-size) {
-        padding-top: 1rem;
-      }
-
-      [data-action='toggle-expandable'] {
-        cursor: zoom-out;
-      }
-
-      // What happens when a document expandable is expanded?
-      // The collumns inside the expandable .rows become wide
-      .row {
-        > [class*='col-'] {
-          width: 100%;
         }
       }
     }

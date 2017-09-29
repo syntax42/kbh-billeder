@@ -1,5 +1,8 @@
-var passport = require('passport');
-var auth0 = require('../lib/services/auth0');
+const passport = require('passport');
+const auth0 = require('../lib/services/auth0');
+const Auth = auth0.Auth;
+const plugins = require('../plugins');
+const users = plugins.getFirst('users-controller');
 
 module.exports = {
   type: 'authentication',
@@ -24,23 +27,41 @@ module.exports = {
     });
   },
   registerRoutes: app => {
-    app.get('/login', function(req, res) {
-      res.render('login', {env: process.env});
-    });
-
     app.get('/logout', function(req, res) {
       req.logout();
       res.redirect('/');
     });
 
-    app.get('/user', function (req, res) {
-      res.render('user', {user: req.user});
+    // Most user facing routes are danish, so let's keep it that way.
+    app.get('/min-side', users.renderProfile);
+
+    app.get('/reset-password', async (req, res) => {
+      const {email, connection} = req.query;
+      let status;
+
+      try {
+        await Auth.requestChangePasswordEmail({email, connection});
+        status = 200;
+      }
+      catch(err) {
+        console.log(err.message);
+        status = 500;
+      }
+
+      res.status(status).json({});
     });
 
     app.get('/auth/callback', passport.authenticate('auth0', {
-      failureRedirect: '/url-if-something-fails'
+      failureRedirect: '/'
     }), function(req, res) {
-      res.redirect(req.session.returnTo || '/');
+      const serializedState = req.query.state;
+
+      if(typeof(serializedState) === 'string') {
+        const state = JSON.parse(Buffer.from(serializedState, 'base64'));
+        res.redirect(state.returnPath);
+      } else {
+        res.redirect('/');
+      }
     });
   }
 };
