@@ -33,3 +33,9 @@ ktmpl \
   -p FRONTEND_PUBLIC_HOSTNAME $FRONTEND_PUBLIC_HOSTNAME \
   $DIR/frontend-ingress.yaml \
   | kubectl apply -n $NAMESPACE -f -
+
+# Setup cron
+ktmpl \
+  -p FRONTEND_PUBLIC_HOSTNAME $FRONTEND_PUBLIC_HOSTNAME \
+  $DIR/cron-deployment.yaml \
+  | kubectl apply -n $NAMESPACE -f -
