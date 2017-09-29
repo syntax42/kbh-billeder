@@ -11,10 +11,8 @@ const production = _.merge({}, base, {
     clientID: 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP'
   },
   cip: {
-    baseURL: 'https://www.neaonline.dk:8443/CIP',
     client: {
-      endpoint: 'https://www.neaonline.dk:8443/CIP/',
-      trustSelfSigned: true
+      logRequests: true
     }
   },
   features: {
@@ -32,9 +30,6 @@ const production = _.merge({}, base, {
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
 });
-
-delete production.search.filters.location;
-delete production.search.filters.tags;
 
 const rows = production.types.asset.layout.sections.place.rows;
 const coordinatesIndex = rows.findIndex(r => r.title === 'Koordinater');
