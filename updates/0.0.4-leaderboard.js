@@ -25,7 +25,7 @@ module.exports = function(done) {
     var menuItems = [
       new MenuItem.model({
         title: 'Top 10',
-        page: pages['top-10']._id,
+        page: pages['top']._id,
         placement: 'main',
         order: 6
       }).save()
