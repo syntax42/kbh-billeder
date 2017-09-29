@@ -15,6 +15,7 @@ const production = _.merge({}, base, {
       logRequests: true
     }
   },
+  enforceHttps: true, 
   features: {
     feedback: false,
     geoTagging: false,
