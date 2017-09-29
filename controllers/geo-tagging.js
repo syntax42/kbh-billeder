@@ -35,9 +35,18 @@ const geoTagging = {
       }
     })
   },
+  // Update an asset in Elastic Search by retriving a fresh copy from Cumulus.
   updateIndex: metadata => {
     const indexController = require('./index');
     return indexController.updateAsset(metadata.collection, metadata.id)
+    .then(response => {
+      return metadata;
+    });
+  },
+  // Update an asset in Elastic Search with data provided by caller.
+  updateIndexFromData: metadata => {
+    const indexController = require('./index');
+    return indexController.updateAssetsFromData(metadata)
     .then(response => {
       return metadata;
     });

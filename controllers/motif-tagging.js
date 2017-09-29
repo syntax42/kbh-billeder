@@ -42,6 +42,13 @@ const motifTagging = {
     .then(response => {
       return metadata;
     });
+  },
+  updateIndexFromData: metadata => {
+    const indexController = require('./index');
+    return indexController.updateAssetsFromData(metadata)
+      .then(response => {
+        return metadata;
+      });
   }
 };
 

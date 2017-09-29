@@ -16,6 +16,7 @@
 
 const ds = require('collections-online/lib/services/documents');
 const config = require('collections-online/lib/config');
+const es = require('collections-online/lib/services/elasticsearch');
 
 if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
   throw new Error('Need exactly one index for Cumulus triggers to work.');
@@ -47,6 +48,7 @@ function createAsset(catalogAlias, assetId) {
   return indexing(state);
 }
 
+// Re-index an asset by retriving it from Cumulus and updating Elastic Search.
 function updateAsset(catalogAlias, assetId) {
   var state = {
     context: {
@@ -60,6 +62,51 @@ function updateAsset(catalogAlias, assetId) {
     reference: catalogAlias + '/' + assetId
   };
   return indexing(state);
+}
+
+// Update an already indexed asset with partial data providede by the caller.
+function updateAssetsFromData(partials) {
+  // Support both a single document and a list.
+  if (!Array.isArray(partials)) {
+    partials = [partials];
+  }
+
+  // Construct an array of bulk-updates. Each document update is prefixed with
+  // an update action object.
+  let items = [];
+  partials.forEach((partial) => {
+    const updateAction = {
+      'update': {
+        _index: config.es.index,
+        _type: 'asset',
+        '_id': partial.collection + '-' + partial.id
+      }
+    };
+    items.push(updateAction);
+    items.push({doc: partial});
+  });
+
+  const query = {
+    body: items
+  };
+
+  return es.bulk(query).then(response => {
+    const indexedIds = [];
+    let errors = [];
+    // Go through the items in the response and replace failures with errors
+    // in the assets
+    response.items.forEach(item => {
+      if (item.update.status >= 200 && item.update.status < 300) {
+        indexedIds.push(item.update._id);
+      } else {
+        // TODO: Consider using the AssetIndexingError instead
+        errors.push(new Error('Failed update ' + item.update._id));
+      }
+    });
+    console.log('Updated ', indexedIds.length, 'assets in ES');
+    // Return the result
+    return {errors, indexedIds};
+  });
 }
 
 function deleteAsset(catalogAlias, assetId) {
@@ -122,4 +169,5 @@ module.exports.asset = function(req, res, next) {
 
 module.exports.createAsset = createAsset;
 module.exports.updateAsset = updateAsset;
+module.exports.updateAssetsFromData = updateAssetsFromData;
 module.exports.deleteAsset = deleteAsset;
