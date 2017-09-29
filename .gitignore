@@ -38,3 +38,6 @@ generated
 
 # Keys and secrets
 google-key.json
+
+# mongodb
+data

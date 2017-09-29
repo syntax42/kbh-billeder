@@ -14,12 +14,12 @@ objects:
         spec:
           containers:
           - name: frontend
-            image: eu.gcr.io/kbh-billeder/frontend:latest
+            image: eu.gcr.io/kbh-billeder/frontend:$(BRANCH)-latest
             imagePullPolicy: Always
             livenessProbe:
               failureThreshold: 3
               httpGet:
-                path: /
+                path: /healthz
                 port: http
                 scheme: HTTP
                 httpHeaders:
@@ -38,4 +38,7 @@ objects:
 parameters:
   - name: FRONTEND_PUBLIC_HOSTNAME
     description: The public hostname of the frontend
+    required: true
+  - name: BRANCH
+    description: The branch to deploy
     required: true

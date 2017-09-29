@@ -6,17 +6,26 @@ var base = require('./base');
 const beta = _.merge({}, base, {
   allowRobots: false,
   auth0: {
-    callbackURL: 'http://beta.kbhbilleder.dk/auth/callback',
+    callbackURL: 'https://beta.kbhbilleder.dk/auth/callback',
     clientID: 'W6lhfnsLRK3UgBnCAOO3Lmr2lVjd5BDp'
+  },
+  cip: {
+    client: {
+      logRequests: true
+    }
   },
   siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
+    feedback: true,
+    geoTagging: true,
     motifTagging: true,
+    requireEmailVerification: true,
     sitewidePassword: true,
     users: true
   },
   host: 'beta.kbhbilleder.dk',
+  enforceHttps: true,
   ip: null,
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'

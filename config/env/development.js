@@ -9,13 +9,21 @@ const development = _.merge({}, base, {
     callbackURL: 'http://localhost:9000/auth/callback',
     clientID: 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu'
   },
+  cip: {
+    client: {
+      logRequests: true
+    }
+  },
   siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
   es: {
     log: 'error' //use 'trace' for verbose mode
   },
   features: {
+    feedback: true,
     motifTagging: true,
+    requireEmailVerification: true,
+    geoTagging: true,
     users: true
   }
 });

@@ -29,7 +29,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL: 'https://www.neaonline.dk:8443/CIP',
+    baseURL: 'https://www.neaonline.dk:8443/CIP-kbh-billeder',
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxy: {
@@ -45,7 +45,11 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: 'https://www.neaonline.dk:8443/CIP/',
+      endpoint: 'https://www.neaonline.dk:8443/CIP-kbh-billeder/',
+      authMechanism: 'http-basic',
+      username: process.env.CIP_USERNAME,
+      password: process.env.CIP_PASSWORD,
+      logRequests: false,
       constants: {
           catchAllAlias: "alle",
           layoutAlias: "stadsarkivet"
@@ -56,7 +60,19 @@ let config = {
     sessionRenewalRate: 30*60*1000, // Once every 30 minutes
     timeout: 55000
   },
+  email: {
+    baseUrl: '@api.mailgun.net/v3/kbhbilleder.dk',
+    mailgunKey: process.env.MAILGUN_API_KEY,
+    // Email to send errors to.
+    fallbackEmailTo: process.env.FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
+    fallbackEmailFrom: process.env.FALLBACK_EMAIL_FROM || 'postmaster@kbhbilleder.dk'
+  },
   imageTimeoutRedirect: '/billedet-kunne-ikke-downloades',
+  kbhBillederStatsApi: {
+    baseUrl: process.env.KBHSTATSAPI_URL || 'http://kbhbilleder-stats-production.xxfpqizzz3.eu-west-1.elasticbeanstalk.com',
+    cacheTTL: process.env.KBHSTATAPI_CACHE_TTL || 100,
+    cacheTTLCheck: process.env.KBHSTATAPI_CACHE_TTL_CHECK || 120,
+  },
   keystone: {
     options: {
       'auto update': true,
@@ -88,13 +104,21 @@ let config = {
   },
   features: {
     cookieConsent: true,
-    motifTagging: false,
+    feedback: false,
+    motifTagging: true,
     filterSidebar: true,
     geoTagging: true,
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
-    watermarks: true
+    watermarks: true,
+    // Whether to require users to verify their email before they can contribute.
+    requireEmailVerification: false
+  },
+  feedback: {
+    maxLength: 600,
+    recipients: 'contributors@kbhbilleder.dk',
+    fromAddress: 'Feedback@kbhbilleder.dk'
   },
   generatedDir: generatedDir,
   geoTagging: {
@@ -116,6 +140,10 @@ let config = {
       unrestricted: process.env.GOOGLE_UNRESTRICTED_API_KEY
     }
   },
+  httpWhitelist: [
+    '/healthz',
+    '/index/asset'
+  ],
   ip: process.env.IP || '0.0.0.0',
   licenseMapping: require('../license-mapping.json'),
   metatags: {
@@ -123,6 +151,7 @@ let config = {
   },
   port: process.env.PORT || 9000,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
+  reindexAccessKey: process.env.REINDEX_ACCESS_KEY || 'adelgade',
   search: {
     baseQuery: {
       'bool': {

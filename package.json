@@ -4,14 +4,14 @@
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"npm run gulp\" \"npm run start-dev\" \"kubectl port-forward -n beta elasticsearch-l2fwb 9201:9200\"",
-    "dev-local": "concurrently \"npm run gulp\" \"npm run start-dev\"",
     "gulp": "gulp",
     "index": "node indexing.js",
+    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js",
     "prepublish": "gulp build",
-    "start-dev": "NODE_ENV=development nodemon server.js",
-    "start": "node server.js",
-    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js"
+    "start:dev:es": "concurrently \"docker-compose up -d mongo\" \"npm run gulp\" \"npm run start:nodemon\" \"kubectl port-forward -n beta elasticsearch-czmt9 9200:9200\"",
+    "start:dev": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start:nodemon\"",
+    "start:nodemon": "NODE_ENV=development nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "collections-online": "git+https://github.com/CopenhagenCityArchives/collections-online.git",
-    "collections-online-cumulus": "git+https://github.com/collections-online/collections-online-cumulus.git",
+    "collections-online-cumulus": "git+https://github.com/CopenhagenCityArchives/collections-online-cumulus.git",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "lodash": "^4.12.0",
