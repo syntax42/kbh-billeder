@@ -4,7 +4,6 @@ var _ = require('lodash');
 var base = require('./base');
 
 const production = _.merge({}, base, {
-  env: 'production',
   allowRobots: true,
   auth0: {
     callbackURL: 'https://kbhbilleder.dk/auth/callback',
@@ -15,11 +14,13 @@ const production = _.merge({}, base, {
       logRequests: true
     }
   },
+  env: 'production',
   features: {
     feedback: true,
     geoTagging: true,
     motifTagging: true,
     requireEmailVerification: true,
+    sitewidePassword: false,
     users: true
   },
   google: {
@@ -31,9 +32,5 @@ const production = _.merge({}, base, {
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
 });
-
-const rows = production.types.asset.layout.sections.place.rows;
-const coordinatesIndex = rows.findIndex(r => r.title === 'Koordinater');
-delete rows.splice(coordinatesIndex);
 
 module.exports = production;

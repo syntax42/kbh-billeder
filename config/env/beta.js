@@ -14,7 +14,6 @@ const beta = _.merge({}, base, {
       logRequests: true
     }
   },
-  siteTitle: 'kbhbilleder.dk (beta)',
   env: 'beta',
   features: {
     feedback: true,
@@ -28,6 +27,7 @@ const beta = _.merge({}, base, {
   enforceHttps: true,
   ip: null,
   port: null,
+  siteTitle: 'kbhbilleder.dk (beta)',
   socketPath: '/tmp/kbh-billeder.sock'
 });
 
