@@ -1,5 +1,10 @@
 include ../../mixins/icon
 
+if Object.keys(metadata).length
+  <!-- map-coord: Metadata length -->
+if config.features.geoTagging
+  <!-- map-coord: Tagging -->
+
 - // Doing a conditional on metadata, makes sure that this section is shown
 if Object.keys(metadata).length > 0 && config.features.geoTagging
   - const latitude = helpers.getFirst(metadata, row.fields.latitude);
