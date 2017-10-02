@@ -16,11 +16,11 @@ const production = _.merge({}, base, {
     }
   },
   features: {
-    feedback: false,
-    geoTagging: false,
-    motifTagging: false,
-    requireEmailVerification: false,
-    users: false
+    feedback: true,
+    geoTagging: true,
+    motifTagging: true,
+    requireEmailVerification: true,
+    users: true
   },
   google: {
     analyticsPropertyID: 'UA-78446616-1'
