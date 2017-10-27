@@ -3,7 +3,6 @@ $map-background: #eaeaea;
 .geo-tagging {
   display: flex;
   flex-direction: row;
-  justify-content: center;
 
   @media (max-width: $small-size) {
     flex-direction: column;
