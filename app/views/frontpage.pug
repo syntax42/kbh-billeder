@@ -6,8 +6,12 @@ block content-top
   .jumbo
     .jumbo__image
     .jumbo__logos
-      +icon('kbh-museum')
-      +icon('kbh-arkiv')
+      a(href="/søg?institution=Københavns+Museum")
+        +icon('kbh-museum')
+      a(href="/søg?institution=Københavns+Stadsarkiv")
+        +icon('kbh-arkiv')
+      a(href="/søg?institution=Frederiksberg+Stadsarkiv")
+        +icon('frb-arkiv')  
     .jumbo__flex
       .container-fluid
         .row
