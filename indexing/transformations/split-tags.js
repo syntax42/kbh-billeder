@@ -2,7 +2,8 @@
 
 const fields = [
   'tags',
-  'tags_vision'
+  'tags_vision',
+  'tags_verified'
 ]
 
 module.exports = metadata => {
