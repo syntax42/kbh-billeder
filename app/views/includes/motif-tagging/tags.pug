@@ -1,6 +1,10 @@
 include ../../mixins/tag
 include ../../mixins/icon
 
+each tag in helpers.motifTagging.getVerifiedTags(metadata) || []
+  .btn-group
+    +tag(tag)
+
 each tag in helpers.motifTagging.getTags(metadata) || []
   .btn-group(data-tag=tag)
     +tag(tag)
