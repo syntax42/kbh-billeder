@@ -22,7 +22,7 @@ const renderer = {
     let motiftagsTotal = kbhStatsApi.motifTags();
     let geotagsTotal = kbhStatsApi.geotags();
     let usersWeek = kbhStatsApi.allUsersPoints('week');
-    let usersTotal = kbhStatsApi.allUsersPoints();
+    let usersTotal = kbhStatsApi.allUsersPoints('all', 25);
 
     // Prepare a function that maps auth0 user_ids to human-readable names.
     const mapUsers = async (data) => {
