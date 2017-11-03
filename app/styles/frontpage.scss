@@ -3,6 +3,7 @@
   height: 45vh;
   min-height: 30rem;
   position: relative;
+  align-items: center;
 
   @media (min-width: $small-size) and (orientation: landscape) {
     height: 55vh;
