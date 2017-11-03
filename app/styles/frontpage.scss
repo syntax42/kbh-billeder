@@ -30,6 +30,7 @@
     position: absolute;
     top: 0;
     width: 100%;
+    margin-top: 2rem;
 
     .container-fluid {
       max-width: $large-size;
@@ -42,6 +43,9 @@
     justify-content: center;
     padding-top: 1rem;
     z-index: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
 
     a:hover {
       svg {
