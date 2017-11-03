@@ -166,12 +166,10 @@ helpers.modifySearchQueryBody = (body, parameters) => {
 };
 
 helpers.motifTagging = {
-  getTags: metadata => {
-    return metadata.tags;
-  },
-  getVisionTags: metadata => {
-    return metadata.tags_vision;
-  },
+  getTags: ({ tags }) => tags,
+  getVerifiedTags: ({ tags_verified }) => tags_verified,
+  getVisionTags: ({ tags_vision }) => tags_vision,
+
   addTag: (metadata, tag) => {
     // Add it to the tags if not already there
     if(metadata.tags.indexOf(tag) === -1) {
