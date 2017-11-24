@@ -112,7 +112,7 @@
         },
         {
           "title": "Institution",
-          "template": "!= catalogSearchLink(catalog_name)"
+          "template": "!= searchInstitutionLink(catalog_name)"
         },
         {
           "title": "Tegnings nr.",

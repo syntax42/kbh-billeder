@@ -184,7 +184,8 @@ let config = {
   },
   watermarks: {
     'kbh-museum': path.join(appDir, 'images', 'watermarks', 'kbh-museum.png'),
-    'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png')
+    'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
+    'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png')    
   }
 };
 

@@ -5,6 +5,6 @@ tr
   td
     - var fromDate = metadata[row.fields.from];
     - var toDate = metadata[row.fields.to];
-    if(row.fields.estimated && metadata[row.fields.estimated])
-      | ca. 
+    if(row.fields.estimated && metadata[row.fields.estimated] && (fromDate || toDate))
+      | ca.
     +formatDateInterval(fromDate, toDate)
