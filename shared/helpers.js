@@ -140,6 +140,10 @@ helpers.link = function(url, text) {
   return '<a href="' + url + '" target="_blank">' + text + '</a>';
 };
 
+helpers.searchInstitutionLink = function(catalog) {
+  return '<a href="/søg?institution=' + catalog + '">' + catalog + '</a>';
+};
+
 // TODO: Consider if a localization function might be easier to use
 helpers.thousandsSeparator = (number) => {
   if(number) {
