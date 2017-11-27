@@ -210,5 +210,8 @@
   }, {
     "cumulusKey": "{64a1e1e9-47d7-46dd-9805-ca474f03c4b9}",
     "short": "tags"
+  },{
+    "cumulusKey": "{41a6cb08-7a11-4fad-8cab-ad3d9078a358}",
+    "short": "tags_verified"
   }
 ]

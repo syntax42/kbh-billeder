@@ -3,6 +3,7 @@
   height: 45vh;
   min-height: 30rem;
   position: relative;
+  align-items: center;
 
   @media (min-width: $small-size) and (orientation: landscape) {
     height: 55vh;
@@ -29,6 +30,7 @@
     position: absolute;
     top: 0;
     width: 100%;
+    margin-top: 2rem;
 
     .container-fluid {
       max-width: $large-size;
@@ -40,6 +42,16 @@
     display: flex;
     justify-content: center;
     padding-top: 1rem;
+    z-index: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+
+    a:hover {
+      svg {
+        filter: drop-shadow( -2.5px -2.5px 2.5px #000 );
+      }
+    }
 
     svg {
       fill: $white;
