@@ -17,10 +17,19 @@ $(function() {
   }, lock(), verify());
 
   function lock() {
+    let languageDictionary = {
+      title: config.siteTitle
+    };
+
+    if (config.auth0.acceptTermsText) {
+      languageDictionary.signUpTerms = config.auth0.acceptTermsText;
+    }
+
     return new Auth0Lock(config.auth0.clientID, config.auth0.domain, {
-      languageDictionary: {
-        title: config.siteTitle
-      },
+      languageDictionary: languageDictionary,
+      // If we've been configured with a path to the terms, we'll require the
+      // user to accept the terms.
+      mustAcceptTerms: !!config.auth0.acceptTermsText,
       theme: {
         logo: '/images/favicons/favicon-96x96.png',
         labeledSubmitButton: false,
