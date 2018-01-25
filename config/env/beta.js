@@ -7,7 +7,9 @@ const beta = _.merge({}, base, {
   allowRobots: false,
   auth0: {
     callbackURL: 'https://beta.kbhbilleder.dk/auth/callback',
-    clientID: 'W6lhfnsLRK3UgBnCAOO3Lmr2lVjd5BDp'
+    clientID: 'W6lhfnsLRK3UgBnCAOO3Lmr2lVjd5BDp',
+    // Enable required acceptance of terms and services.
+    acceptTermsText: base.auth0TermsText,
   },
   cip: {
     client: {
