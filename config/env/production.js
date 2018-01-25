@@ -7,7 +7,9 @@ const production = _.merge({}, base, {
   allowRobots: true,
   auth0: {
     callbackURL: 'https://kbhbilleder.dk/auth/callback',
-    clientID: 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP'
+    clientID: 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP',
+    // Enable required acceptance of terms and services.
+    acceptTermsText: base.auth0TermsText,
   },
   cip: {
     client: {
