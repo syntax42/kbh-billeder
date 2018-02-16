@@ -1,6 +1,6 @@
 if stats
   block stats
-    if stats.week
+    if stats.week.geotags || stats.week.motiftagged || stats.week.motiftags
       h3= "Seneste 7 dage"
       ul
         if stats.week.geotags
@@ -10,7 +10,7 @@ if stats
         if stats.week.motiftags
           li Antal emneord: #{stats.week.motiftags}
 
-    if stats.total
+    if stats.total.geotags || stats.total.motiftagged || stats.total.motiftags
       h3= "Total"
       ul
         if stats.total.geotags
