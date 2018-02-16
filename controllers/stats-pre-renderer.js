@@ -19,8 +19,10 @@ const renderer = {
     // Prepare fetching all statistics we need.
     let motiftagsWeek = kbhStatsApi.motifTags('week');
     let geotagsWeek = kbhStatsApi.geotags('week');
-    let motiftagsTotal = kbhStatsApi.motifTags();
-    let geotagsTotal = kbhStatsApi.geotags();
+    // @TODO Temporarily disabling totals while we wait for a more performant
+    // solution with a new API-call. See KB-3.
+    let motiftagsTotal = Promise.resolve([]);
+    let geotagsTotal = Promise.resolve([]);
     let usersWeek = kbhStatsApi.allUsersPoints('week');
     let usersTotal = kbhStatsApi.allUsersPoints('all', 25);
 
