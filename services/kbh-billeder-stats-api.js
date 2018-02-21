@@ -16,7 +16,8 @@ assert.ok(fallbackEmailFrom, 'Fallback email from undefined');
 const responsecache = new NodeCache({stdTTL: cacheTTL, checkperiod: cacheTTLCheck});
 
 // Setup urls for each endpoint.
-const URL_TAGS = baseUrl + '/tags';
+const URL_TAGSCOUNT = baseUrl + '/tags/count';
+const URL_ASSETSCOUNT = baseUrl + '/assets/count';
 const URL_GEOLOCATIONS = baseUrl + '/geolocations';
 const URL_USERS_POINTS = baseUrl + '/users/points';
 const URL_USERS = baseUrl + '/users';
@@ -68,12 +69,40 @@ const kbhStatsApi = {
     }, () => {return []});
   },
 
-  motifTags: function(timespan = 'all') {
-    return this._doGet(URL_TAGS, {'type': 'tag', 'timespan': timespan});
+  // Returns a promise that resolves to the count of tags.
+  motifTagsCount: function(timespan = 'all') {
+    return this
+      ._doGet(URL_TAGSCOUNT, {'type': 'tag', 'timespan': timespan})
+      .then(
+        // Return the count if we got it, if not return 0.
+        (data) => {
+          return data.tags;
+        }, () => { return 0; }
+      );
   },
 
-  geotags: function(timespan = 'all') {
-    return this._doGet(URL_TAGS, {'type': 'geolocation', 'timespan': timespan});
+  // Returns a promise that resolves to the count of geotags.
+  geoTagsCount: function(timespan = 'all') {
+    return this
+      ._doGet(URL_TAGSCOUNT, {'type': 'geolocation', 'timespan': timespan})
+      .then(
+        // Return the count if we got it, if not return 0.
+        (data) => {
+          return data.geolocations;
+        }, () => { return 0; }
+      );
+  },
+
+  // Returns a promise that resolves to the count images that has tags.
+  assetTagsCount: function(timespan = 'all') {
+    return this
+      ._doGet(URL_ASSETSCOUNT, {'type': 'tags', 'timespan': timespan})
+      .then(
+        // Return the count if we got it, if not return 0.
+        (data) => {
+          return data.count;
+        }, () => { return 0; }
+      );
   },
 
   // Store a user-submitted geotag.
