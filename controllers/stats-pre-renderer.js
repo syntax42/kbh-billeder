@@ -16,13 +16,13 @@ const renderer = {
       return;
     }
 
-    // Prepare fetching all statistics we need.
-    let motiftagsWeek = kbhStatsApi.motifTags('week');
-    let geotagsWeek = kbhStatsApi.geotags('week');
-    // @TODO Temporarily disabling totals while we wait for a more performant
-    // solution with a new API-call. See KB-3.
-    let motiftagsTotal = Promise.resolve([]);
-    let geotagsTotal = Promise.resolve([]);
+    // Prepare promises for all statistics we need.
+    let motifTagsCountWeek = kbhStatsApi.motifTagsCount('week');
+    let motifTagsCountAll = kbhStatsApi.motifTagsCount('all');
+    let geoTagsCountWeek = kbhStatsApi.geoTagsCount('week');
+    let geoTagsCountAll = kbhStatsApi.geoTagsCount('all');
+    let assetTagsCountWeek = kbhStatsApi.assetTagsCount('week');
+    let assetTagsCountAll = kbhStatsApi.assetTagsCount('all');
     let usersWeek = kbhStatsApi.allUsersPoints('week');
     let usersTotal = kbhStatsApi.allUsersPoints('all', 25);
 
@@ -93,17 +93,21 @@ const renderer = {
       usersWeek = await usersWeek;
       usersTotal = await usersTotal;
       [
-        motiftagsWeek,
-        geotagsWeek,
-        motiftagsTotal,
-        geotagsTotal,
+        motifTagsCountWeek,
+        motifTagsCountAll,
+        geoTagsCountWeek,
+        geoTagsCountAll,
+        assetTagsCountWeek,
+        assetTagsCountAll,
         usersWeek,
         usersTotal
       ] =  [
-        await motiftagsWeek,
-        await geotagsWeek,
-        await motiftagsTotal,
-        await geotagsTotal,
+        await motifTagsCountWeek,
+        await motifTagsCountAll,
+        await geoTagsCountWeek,
+        await geoTagsCountAll,
+        await assetTagsCountWeek,
+        await assetTagsCountAll,
         // We do a double lookup of users, we could improve performance slightly
         // by looking up the union of the id's first, and then do the mapping.
         await mapUsers(usersWeek),
@@ -112,6 +116,7 @@ const renderer = {
     } catch(err) {
       console.warn('Error while gathering user statistics');
       console.warn(err);
+      // Get rid of the placeholder and return.
       pageContent = pageContent.replace(PLACEHOLDER, '');
       next();
       return;
@@ -120,14 +125,14 @@ const renderer = {
     // We got all the data we needed, now prepare data for the template.
     const stats = {
       'week': {
-        'geotags': geotagsWeek.length,
-        'motiftagged': _.uniqBy(motiftagsWeek, 'asset_id').length,
-        'motiftags': motiftagsWeek.length
+        'geotags': geoTagsCountWeek,
+        'motiftagged': assetTagsCountWeek,
+        'motiftags': motifTagsCountWeek
       },
       'total': {
-        'geotags': geotagsTotal.length,
-        'motiftagged': _.uniqBy(motiftagsTotal, 'asset_id').length,
-        'motiftags': motiftagsTotal.length
+        'geotags': geoTagsCountAll,
+        'motiftagged': assetTagsCountAll,
+        'motiftags': motifTagsCountAll
       },
       'leaders': {
         'week': usersWeek,
