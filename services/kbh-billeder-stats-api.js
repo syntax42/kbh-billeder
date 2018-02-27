@@ -16,6 +16,7 @@ assert.ok(fallbackEmailFrom, 'Fallback email from undefined');
 const responsecache = new NodeCache({stdTTL: cacheTTL, checkperiod: cacheTTLCheck});
 
 // Setup urls for each endpoint.
+const URL_TAGS = baseUrl + '/tags';
 const URL_TAGSCOUNT = baseUrl + '/tags/count';
 const URL_ASSETSCOUNT = baseUrl + '/assets/count';
 const URL_GEOLOCATIONS = baseUrl + '/geolocations';
