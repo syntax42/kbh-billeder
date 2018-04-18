@@ -5,7 +5,6 @@ $heading-adjustment: 2px;
   min-width: 100%;
   display: block;
   height: $topbar-height + 2;
-  position: absolute;
   &__menu {
     position: absolute;
     right: 0;
@@ -16,6 +15,18 @@ $heading-adjustment: 2px;
     min-width: 300px;
     z-index: 10;
     @include shadow(3);
+    .dropdown {
+      &__options {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+      }
+      &__option {
+        &--active {
+          color: $brand-primary;
+        }
+      }
+    }
   }
   &__item {
     float: left;
