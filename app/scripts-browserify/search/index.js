@@ -12,6 +12,7 @@ const elasticsearchQueryBody = require('./es-query-body');
 const elasticsearchAggregationsBody = require('./es-aggregations-body');
 const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
+const sorting = require('./sorting');
 const navigator = require('../document/navigator');
 
 const templates = {
@@ -49,6 +50,7 @@ function initialize() {
       indicateLoading = true;
     }
     var searchParams = getSearchParams();
+    sorting.update(searchParams);
     // Update the freetext search input
     var queryString = searchParams.filters.q;
     $searchInput.val(queryString);
@@ -265,7 +267,7 @@ function initialize() {
     }
   });
 
-  $('#results-header').on('click', '#sorting .dropdown__options a', function() {
+  $('#sorting-menu').on('click', '.dropdown__options a', function() {
     var sorting = $(this).data('value');
     var searchParams = getSearchParams();
     searchParams.sorting = sorting;
