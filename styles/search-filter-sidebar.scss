@@ -132,7 +132,7 @@ $heading-adjustment: 2px;
 
   &__filters,
   &__chosen-filters {
-    background-color: rgba($gray-lighter, .5);
+    background-color: rgba(white, .5);
     padding: $spacer-sm;
 
     @media (min-width: $small-size) {
