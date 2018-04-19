@@ -304,6 +304,29 @@ function initialize() {
     }
   });
 
+  // Toggle filterbar menus
+  $('.search-filter-sidebar__tab').on('click', '[data-action="show-filterbar-menu"]', function() {
+      var wasExpanded = $(this).hasClass('expanded');
+      var $parentItem = $(this).closest('.filterbar__item');
+      var $filterbar = $(this).closest('.filterbar');
+
+      $filterbar.find('.filterbar__menu').hide();
+      $filterbar.find('.search-filter-sidebar__tab').css('background', '');
+      $filterbar.find('.expanded').each(function() {
+        $(this).removeClass('expanded');
+      });
+
+      if (!wasExpanded) {
+          $(this).addClass('expanded');
+          $parentItem.find('.filterbar__menu').show();
+          $parentItem.find('.search-filter-sidebar__tab').css('background', 'white');
+      } else {
+          $(this).removeClass('expanded');
+          $parentItem.find('.filterbar__menu').hide();
+          $parentItem.find('.search-filter-sidebar__tab').css('background', '');
+      }
+    });
+
   $searchInput.closest('form').submit(function(e) {
     e.preventDefault();
     var $form = $(this);
