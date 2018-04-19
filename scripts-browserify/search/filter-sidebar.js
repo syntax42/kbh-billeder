@@ -5,12 +5,14 @@ const config = require('collections-online/shared/config');
  */
 
 var template = require('views/includes/search-filter-sidebar');
+var chosenFilters = require('views/includes/search-filter-chosen-filters');
 
 /**
  * Updates the search filter sidebar based on the selected and available filters
  */
 exports.update = function(filters, aggregations) {
   var $sidebar = $('#sidebar');
+  var $filters = $('#filters');
   var filterCount = 0;
   Object.keys(filters).forEach(function(field) {
     filterCount += filters[field].length;
@@ -59,6 +61,15 @@ exports.update = function(filters, aggregations) {
     filterCount: filterCount,
     filterLabels: filterLabels
   });
+
+  var filtersMarkup = chosenFilters({
+    aggregations: aggregations,
+    filters: filters,
+    filterCount: filterCount,
+    filterLabels: filterLabels
+  });
+
   // Replace the HTML with the newly rendered markup
   $sidebar.html(markup);
+  $filters.html(filtersMarkup);
 };

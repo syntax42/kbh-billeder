@@ -227,7 +227,7 @@ function initialize() {
     inflateHistoryState(history.state);
   }
 
-  $('#sidebar').on('click', '.btn', function() {
+  $('#sidebar, #filters').on('click', '.btn', function() {
     var action = $(this).data('action');
     var field = $(this).data('field');
     var filter = config.search.filters[field];
