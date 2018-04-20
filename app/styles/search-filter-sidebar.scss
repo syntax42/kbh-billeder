@@ -5,6 +5,7 @@ $heading-adjustment: 2px;
   min-width: 100%;
   display: block;
   height: $topbar-height + 2;
+  padding: 0 20px;
   &__menu {
     position: absolute;
     right: 0;
@@ -16,6 +17,7 @@ $heading-adjustment: 2px;
     z-index: 10;
     @include shadow(3);
     .dropdown {
+      padding: 10px;
       &__options {
         position: static;
         opacity: 1;
@@ -36,6 +38,30 @@ $heading-adjustment: 2px;
     position: relative;
     z-index: 11;
     display: inline-block;
+    padding: 0;
+  }
+  &__item:not(:last-child) {
+    .filterbar__tab {
+      margin-right: $spacer-md;
+    }
+  }
+  .view-mode {
+    float: right;
+    svg {
+      width: 18px;
+      height: 18px;
+      margin-top: 12px;
+    }
+    .filterbar__tab {
+      padding: 0 5px;
+      &--active {
+        padding: 0 5px;
+        border-bottom: 3px solid $brand-primary;
+      }
+    }
+    .search-filter-sidebar__heading {
+      padding-left: 0;
+    }
   }
 }
 
@@ -111,7 +137,7 @@ $heading-adjustment: 2px;
 
   &__tab {
     float: left;
-    background: $gray-light;
+    background: none;
   }
 
   &__dates {

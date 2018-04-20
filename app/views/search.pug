@@ -15,16 +15,25 @@ block content
       .filterbar
         .filterbar__item
           .filterbar__tab
-            h2.search-filter-sidebar__heading.search-filter-sidebar__tab(tabindex="0")
+            h2.search-filter-sidebar__heading.search-filter-sidebar__tab
               span(data-action='show-filterbar-menu')= 'Filtrering'
           #sidebar.filterbar__menu
             block sidebar
         .filterbar__item
           .filterbar__tab
-            h2.search-filter-sidebar__heading.search-filter-sidebar__tab(tabindex="0")
+            h2.search-filter-sidebar__heading.search-filter-sidebar__tab
               span(data-action='show-filterbar-menu')= 'Sortering'
           #sorting-menu.filterbar__menu
             include includes/search-results-sorting
+        .view-mode
+          .filterbar__item
+            .filterbar__tab
+              h2(data-action='show-view-map').search-filter-sidebar__heading.search-filter-sidebar__tab Kort
+              +icon('location')
+          .filterbar__item
+            .filterbar__tab--active
+              h2(data-action='show-view-list').search-filter-sidebar__heading.search-filter-sidebar__tab Liste
+              +icon('view-thumb')
       .search-results.row
         section.container-fluid
           .col-lg-12.col-sm-12.col-xs-12
