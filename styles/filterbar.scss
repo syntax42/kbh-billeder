@@ -2,15 +2,27 @@ $heading-adjustment: 2px;
 
 .filterbar {
   background: $gray-light;
-  min-width: 100%;
   display: block;
-  height: $topbar-height + 2;
-  padding: 0 20px;
+  height: $topbar-height + 2px;
+  padding: 0 $spacer-md;
+  float: right;
+  .is-map-view &,
+  .is-initial-view & {
+    width: 50%;
+  }
+  .is-map-view &,
+  .is-list-view & {
+    transition: width 500ms ease-in;
+  }
+  .is-list-view & {
+    width: 100%;
+  }
   &__menu {
+    background: white;
     position: absolute;
     right: 0;
     left: 0;
-    top: $topbar-height + 2;
+    top: $topbar-height + 2px;
     display: none;
     width: auto;
     min-width: 300px;
@@ -22,6 +34,7 @@ $heading-adjustment: 2px;
         position: static;
         opacity: 1;
         visibility: visible;
+        margin-top: 0;
       }
       &__option {
         &--active {
@@ -39,10 +52,9 @@ $heading-adjustment: 2px;
     z-index: 11;
     display: inline-block;
     padding: 0;
-  }
-  &__item:not(:last-child) {
-    .filterbar__tab {
-      margin-right: $spacer-md;
+    background: none;
+    &.expanded {
+      background: white;
     }
   }
   .view-mode {
@@ -52,10 +64,13 @@ $heading-adjustment: 2px;
       height: 18px;
       margin-top: 12px;
     }
+    .filterbar__item {
+      cursor: pointer;
+      min-width: 80px;
+    }
     .filterbar__tab {
-      padding: 0 5px;
       &--active {
-        padding: 0 5px;
+        height: 42px;
         border-bottom: 3px solid $brand-primary;
       }
     }

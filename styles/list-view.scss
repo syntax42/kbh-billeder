@@ -1,0 +1,11 @@
+.list-view {
+  height: calc(100vh - 268px);
+  overflow: scroll;
+  transition: width 500ms ease-in;
+  float: right;
+  width: 50%;
+  @include shadow(3);
+  .is-list-view & {
+    width: 100%;
+  }
+}

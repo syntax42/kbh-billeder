@@ -313,19 +313,18 @@ function initialize() {
       var $filterbar = $(this).closest('.filterbar');
 
       $filterbar.find('.filterbar__menu').hide();
-      $filterbar.find('.search-filter-sidebar__tab').css('background', '');
       $filterbar.find('.expanded').each(function() {
         $(this).removeClass('expanded');
       });
 
       if (!wasExpanded) {
           $(this).addClass('expanded');
+          $parentItem.find('.filterbar__tab').addClass('expanded');
           $parentItem.find('.filterbar__menu').show();
-          $parentItem.find('.search-filter-sidebar__tab').css('background', 'white');
       } else {
           $(this).removeClass('expanded');
+          $parentItem.find('.filterbar__tab').removeClass('expanded');
           $parentItem.find('.filterbar__menu').hide();
-          $parentItem.find('.search-filter-sidebar__tab').css('background', '');
       }
     });
 
