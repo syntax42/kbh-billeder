@@ -1,0 +1,11 @@
+.map-view {
+  padding: 0;
+  height: calc(100vh - 226px);
+  transition: margin-left 500ms ease-in;
+  margin-left: 0;
+  float: left;
+  width: 50%;
+  .is-list-view & {
+    margin-left: -50%;
+  }
+}
