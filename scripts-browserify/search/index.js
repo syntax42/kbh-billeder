@@ -5,6 +5,7 @@
 const config = require('collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
+const Map = require('../map');
 require('./search-freetext-form');
 
 const getSearchParams = require('./get-parameters');
@@ -117,6 +118,13 @@ function initialize() {
         $results.append(markup);
         resultsLoaded.push(item);
       });
+
+      var coordinates = [];
+      resultsLoaded.forEach(function(result) {
+        coordinates.push(result.metadata);
+      });
+
+      Map.init(coordinates);
 
       // Save the results loaded in the session storage, so we can use them on
       // out other places.
