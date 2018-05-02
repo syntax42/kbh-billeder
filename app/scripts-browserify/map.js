@@ -1,6 +1,7 @@
 var Map = {
   init: function (items) {
     let map;
+
     const copenhagen = {
       lat: 55.6761,
       lng: 12.5683
@@ -12,6 +13,25 @@ var Map = {
     });
 
     let iconPath = '../images/icons/map/';
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var currentLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        var currentLocationMarker = new google.maps.Marker({
+          position: currentLocation,
+          title: 'Din placering',
+          animation: google.maps.Animation.DROP,
+          icon: iconPath + 'currentLocation.png'
+        });
+        currentLocationMarker.setMap(map);
+
+        map.setCenter(currentLocation);
+      });
+    }
 
     let markers = items.map(function(item) {
       return new google.maps.Marker({
@@ -46,7 +66,8 @@ var Map = {
         },
       ],
     };
-    let markerCluster = new MarkerClusterer(map, markers, options);
+
+    return new MarkerClusterer(map, markers, options);
   }
 };
 
