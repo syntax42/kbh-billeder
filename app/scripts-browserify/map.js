@@ -34,12 +34,24 @@ var Map = {
     }
 
     let markers = items.map(function(item) {
-      return new google.maps.Marker({
+      var marker = new google.maps.Marker({
         position: { lat: item.latitude, lng: item.longitude },
         title: item.short_title,
         animation: google.maps.Animation.DROP,
         icon: iconPath + 'pin.png'
       });
+
+      var collectionPlusID = item.collection + '/' + item.id;
+      var infoWindow = new google.maps.InfoWindow({
+        content: '<a href="/' + collectionPlusID + '"><img src="/' + collectionPlusID + '/thumbnail" width="220px" height="220px" /><h3>' + item.short_title + '</h3></a>',
+        maxWidth: 220
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+
+      return marker;
     });
 
     let textColor = '#E32166';
