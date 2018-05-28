@@ -5,6 +5,7 @@
 const config = require('collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
+const Map = require('../map');
 require('./search-freetext-form');
 
 const getSearchParams = require('./get-parameters');
@@ -12,6 +13,7 @@ const elasticsearchQueryBody = require('./es-query-body');
 const elasticsearchAggregationsBody = require('./es-aggregations-body');
 const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
+const sorting = require('./sorting');
 const navigator = require('../document/navigator');
 
 const templates = {
@@ -49,6 +51,7 @@ function initialize() {
       indicateLoading = true;
     }
     var searchParams = getSearchParams();
+    sorting.update(searchParams);
     // Update the freetext search input
     var queryString = searchParams.filters.q;
     $searchInput.val(queryString);
@@ -115,6 +118,13 @@ function initialize() {
         $results.append(markup);
         resultsLoaded.push(item);
       });
+
+      var coordinates = [];
+      resultsLoaded.forEach(function(result) {
+        coordinates.push(result.metadata);
+      });
+
+      Map.init(coordinates);
 
       // Save the results loaded in the session storage, so we can use them on
       // out other places.
@@ -227,7 +237,7 @@ function initialize() {
     inflateHistoryState(history.state);
   }
 
-  $('#sidebar').on('click', '.btn', function() {
+  $('#sidebar, #filters').on('click', '.btn', function() {
     var action = $(this).data('action');
     var field = $(this).data('field');
     var filter = config.search.filters[field];
@@ -265,7 +275,7 @@ function initialize() {
     }
   });
 
-  $('#results-header').on('click', '#sorting .dropdown__options a', function() {
+  $('#sorting-menu').on('click', '.dropdown__options a', function() {
     var sorting = $(this).data('value');
     var searchParams = getSearchParams();
     searchParams.sorting = sorting;
@@ -303,6 +313,28 @@ function initialize() {
       $filterSection.removeClass(visibleClass);
     }
   });
+
+  // Toggle filterbar menus
+  $('.search-filter-sidebar__tab').on('click', '[data-action="show-filterbar-menu"]', function() {
+      var wasExpanded = $(this).hasClass('expanded');
+      var $parentItem = $(this).closest('.filterbar__item');
+      var $filterbar = $(this).closest('.filterbar');
+
+      $filterbar.find('.filterbar__menu').hide();
+      $filterbar.find('.expanded').each(function() {
+        $(this).removeClass('expanded');
+      });
+
+      if (!wasExpanded) {
+          $(this).addClass('expanded');
+          $parentItem.find('.filterbar__tab').addClass('expanded');
+          $parentItem.find('.filterbar__menu').show();
+      } else {
+          $(this).removeClass('expanded');
+          $parentItem.find('.filterbar__tab').removeClass('expanded');
+          $parentItem.find('.filterbar__menu').hide();
+      }
+    });
 
   $searchInput.closest('form').submit(function(e) {
     e.preventDefault();

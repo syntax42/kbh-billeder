@@ -1,15 +1,95 @@
 $heading-adjustment: 2px;
 
+.filterbar {
+  background: $gray-light;
+  display: block;
+  height: $topbar-height + 2px;
+  padding: 0 $spacer-md;
+  float: right;
+  .is-map-view &,
+  .is-initial-view & {
+    width: 50%;
+  }
+  .is-map-view &,
+  .is-list-view & {
+    transition: width 500ms ease-in;
+  }
+  .is-list-view & {
+    width: 100%;
+  }
+  &__menu {
+    background: white;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: $topbar-height + 2px;
+    display: none;
+    width: auto;
+    min-width: 300px;
+    z-index: 10;
+    @include shadow(3);
+    .dropdown {
+      padding: 10px;
+      &__options {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        margin-top: 0;
+      }
+      &__option {
+        &--active {
+          color: $brand-primary;
+        }
+      }
+    }
+  }
+  &__item {
+    float: left;
+    position: relative;
+  }
+  &__tab {
+    position: relative;
+    z-index: 11;
+    display: inline-block;
+    padding: 0;
+    background: none;
+    &.expanded {
+      background: white;
+    }
+  }
+  .view-mode {
+    float: right;
+    svg {
+      width: 18px;
+      height: 18px;
+      margin-top: 12px;
+    }
+    .filterbar__item {
+      cursor: pointer;
+      min-width: 80px;
+    }
+    .filterbar__tab {
+      &--active {
+        height: 42px;
+        border-bottom: 3px solid $brand-primary;
+      }
+    }
+    .search-filter-sidebar__heading {
+      padding-left: 0;
+    }
+  }
+}
+
 .search-filter-sidebar {
-  margin: 0 $spacer-md * -1 $spacer-md;
-  top: $spacer-lg;
+  background: white;
+  margin: 0;
 
   @media (min-width: $small-size) {
-    margin: $spacer-lg + $spacer-md 0 $spacer-md;
+    margin: 0;
   }
 
   &__heading {
-    background-color: $gray-lighter;
+    background: white;
     font-family: $font-family-medium;
     font-size: 1rem;
     line-height: $spacer-sm * 4;
@@ -70,6 +150,11 @@ $heading-adjustment: 2px;
     }
   }
 
+  &__tab {
+    float: left;
+    background: none;
+  }
+
   &__dates {
     margin: $spacer-xs;
 
@@ -88,7 +173,7 @@ $heading-adjustment: 2px;
 
   &__filters,
   &__chosen-filters {
-    background-color: rgba($gray-lighter, .5);
+    background-color: rgba(white, .5);
     padding: $spacer-sm;
 
     @media (min-width: $small-size) {
