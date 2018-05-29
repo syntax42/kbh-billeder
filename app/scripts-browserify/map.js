@@ -42,13 +42,20 @@ var Map = {
       });
 
       var collectionPlusID = item.collection + '/' + item.id;
-      var infoWindow = new google.maps.InfoWindow({
-        content: '<a href="/' + collectionPlusID + '"><img src="/' + collectionPlusID + '/thumbnail" width="220px" height="220px" /><h3>' + item.short_title + '</h3></a>',
-        maxWidth: 220
-      });
+      var boxText = document.createElement('div');
+      boxText.innerHTML = '<a href="/' + collectionPlusID + '"><img src="/' + collectionPlusID + '/thumbnail" width="220px" height="220px" /><h1>' + item.short_title + '</h1></a>';
+      var myOptions = {
+        content: boxText,
+        maxWidth: 220,
+        zIndex: null,
+        closeBoxURL: '',
+        alignBottom: true,
+        pixelOffset: new google.maps.Size(-110, -40),
+      };
 
       marker.addListener('click', function() {
-        infoWindow.open(map, marker);
+        var ib = new InfoBox(myOptions);
+        ib.open(map, marker);
       });
 
       return marker;
