@@ -7,5 +7,6 @@ block content
 
   #map
 
-  script(src=`../../scripts-browserify/markerclusterer.js`)
-  script(async defer src=`//maps.googleapis.com/maps/api/js?key=AIzaSyDZpS9njLQsoRhlZTIibM3tRhiehUwbCAE`)
+script(async defer src=`//maps.googleapis.com/maps/api/js?key=` + config.google.keys.restricted)
+script(src=`../../scripts-browserify/markerclusterer.js`)
+script(async defer src=`../../scripts-browserify/infobox.js`)
