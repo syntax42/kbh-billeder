@@ -34,16 +34,11 @@ var Map = {
     }
 
     let markers = items.map(function(item) {
-      var marker = new google.maps.Marker({
-        position: { lat: item.latitude, lng: item.longitude },
-        title: item.short_title,
-        animation: google.maps.Animation.DROP,
-        icon: iconPath + 'pin.png'
-      });
-
-      var collectionPlusID = item.collection + '/' + item.id;
+      var colid = item.collection + '/' + item.id;
       var boxText = document.createElement('div');
-      boxText.innerHTML = '<a href="/' + collectionPlusID + '"><img src="/' + collectionPlusID + '/thumbnail" width="220px" height="220px" /><h1>' + item.short_title + '</h1></a>';
+
+      boxText.innerHTML = '<a href="/' + colid + '"><img src="/' + colid + '/thumbnail" width="220px" height="220px" /><h1>' + item.short_title + '</h1></a>';
+
       var myOptions = {
         content: boxText,
         maxWidth: 220,
@@ -53,12 +48,29 @@ var Map = {
         pixelOffset: new google.maps.Size(-110, -40),
       };
 
-      marker.addListener('click', function() {
-        var ib = new InfoBox(myOptions);
-        ib.open(map, marker);
+      var marker = new google.maps.Marker({
+        position: { lat: item.latitude, lng: item.longitude },
+        title: item.short_title,
+        animation: google.maps.Animation.DROP,
+        icon: iconPath + 'pin.png',
+        item: item,
+        infobox: new InfoBox(myOptions),
       });
 
       return marker;
+    });
+
+    markers.forEach(marker => {
+      marker.addListener('click', function() {
+        var currentMarker =  this;
+        $.each(markers, function(i, marker) {
+          if(marker !== currentMarker) {
+            marker.infobox.close();
+          }
+        });
+
+        marker.infobox.open(map, marker);
+      });
     });
 
     let textColor = '#E32166';
