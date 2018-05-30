@@ -1,3 +1,7 @@
+.is-mobile .list-view {
+  display: none;
+}
+
 .list-view {
   height: calc(100vh - 268px);
   overflow: scroll;
