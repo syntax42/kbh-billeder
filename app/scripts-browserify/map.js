@@ -61,8 +61,8 @@ var Map = {
     });
 
     markers.forEach(marker => {
-      marker.addListener('click', function() {
-        var currentMarker =  this;
+      marker.addListener('mousedown', function() {
+        var currentMarker = this;
         $.each(markers, function(i, marker) {
           if(marker !== currentMarker) {
             marker.infobox.close();
