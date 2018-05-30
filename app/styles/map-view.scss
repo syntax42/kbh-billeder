@@ -8,6 +8,9 @@
   .is-list-view & {
     margin-left: -50%;
   }
+  .is-mobile & {
+    width: 100%;
+  }
 }
 
 .infoBox {

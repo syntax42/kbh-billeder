@@ -10,6 +10,12 @@ $heading-adjustment: 2px;
   .is-initial-view & {
     width: 50%;
   }
+  .is-mobile & {
+    width: 100%;
+    .view-mode {
+      display: none;
+    }
+  }
   .is-map-view &,
   .is-list-view & {
     transition: width 500ms ease-in;
