@@ -9,7 +9,8 @@ var Map = {
 
     map = new google.maps.Map(document.getElementById('map'), {
       center: copenhagen,
-      zoom: 12
+      zoom: 12,
+      gestureHandling: 'greedy',
     });
 
     let iconPath = '../images/icons/map/';
