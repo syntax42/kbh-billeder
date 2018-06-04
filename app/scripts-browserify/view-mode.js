@@ -13,10 +13,10 @@ $(window).on('resize load ready', function() {
   $('body').removeClass('is-mobile is-desktop');
   if (mobilecheck() === true) {
     if (viewMode === 'map') {
-      $('body').addClass('is-mobile is-mobile-map-view is-map-view');
+      $('body').addClass('is-mobile is-map-view');
     }
     if (viewMode === 'list') {
-      $('body').addClass('is-mobile is-list-view').removeClass('is-mobile-map-view is-map-view');
+      $('body').addClass('is-mobile is-list-view').removeClass('is-map-view');
     }
   }
   else {
@@ -32,12 +32,12 @@ $('.view-mode').on('click', '[data-action="show-view-list"]', function() {
 });
 
 $('.filterbar--mobile__container').on('click', '[data-action="show-view-list"]', function() {
-  $('body').removeClass('is-mobile-map-view is-map-view').addClass('is-list-view');
+  $('body').removeClass('is-map-view').addClass('is-list-view');
   viewMode = 'list';
 });
 
 $('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', function() {
-  $('body').removeClass('is-mobile-is-list-view is-list-view').addClass('is-map-view');
+  $('body').removeClass('is-list-view').addClass('is-map-view');
   viewMode = 'map';
 });
 
