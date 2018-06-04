@@ -9,7 +9,8 @@ var Map = {
 
     map = new google.maps.Map(document.getElementById('map'), {
       center: copenhagen,
-      zoom: 12
+      zoom: 12,
+      gestureHandling: 'greedy',
     });
 
     let iconPath = '../images/icons/map/';
@@ -61,8 +62,8 @@ var Map = {
     });
 
     markers.forEach(marker => {
-      marker.addListener('click', function() {
-        var currentMarker =  this;
+      marker.addListener('mousedown', function() {
+        var currentMarker = this;
         $.each(markers, function(i, marker) {
           if(marker !== currentMarker) {
             marker.infobox.close();

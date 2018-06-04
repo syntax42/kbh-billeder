@@ -8,6 +8,14 @@
   .is-list-view & {
     margin-left: -50%;
   }
+  .is-mobile.is-map-view & {
+    width: 100%;
+    height: calc(100vh - 40px);
+    .is-list-view & {
+      display: none;
+    }
+    transition: none;
+  }
 }
 
 .infoBox {

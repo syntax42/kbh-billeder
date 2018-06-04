@@ -8,4 +8,23 @@
   .is-list-view & {
     width: 100%;
   }
+  .is-mobile.is-map-view & {
+    display: none;
+  }
+  .is-mobile & {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 40px;
+    background: white;
+    overflow: visible;
+    #filters, #results-header {
+      display: none;
+    }
+    .load-more {
+      display: inline-block;
+      margin-bottom: 100px;
+      width: 100%;
+    }
+  }
 }
