@@ -1,20 +1,16 @@
 .map-view {
   padding: 0;
   height: calc(100vh - 226px);
-  transition: margin-left 500ms ease-in;
   margin-left: 0;
   float: left;
-  width: 50%;
+  width: 100%;
+  // Don't display map on list view.
   .is-list-view & {
-    margin-left: -50%;
+    display: none;
   }
   .is-mobile.is-map-view & {
     width: 100%;
     height: calc(100vh - 40px);
-    .is-list-view & {
-      display: none;
-    }
-    transition: none;
   }
 }
 
