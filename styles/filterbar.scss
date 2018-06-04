@@ -9,13 +9,33 @@ $heading-adjustment: 2px;
   .is-mobile & {
     display: none;
   }
-  .is-map-view &,
+  .is-desktop.is-map-view &,
   .is-initial-view & {
     width: 50%;
   }
   &--mobile {
     .is-desktop & {
       display: none;
+    }
+    .is-map-view & {
+      &__button {
+        &--map {
+          display: none;
+        }
+        &--list {
+          display: block;
+        }
+      }
+    }
+    .is-list-view & {
+      &__button {
+        &--map {
+          display: block;
+        }
+        &--list {
+          display: none;
+        }
+      }
     }
     position: fixed;
     bottom: 18px;

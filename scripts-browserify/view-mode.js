@@ -36,6 +36,11 @@ $('.filterbar--mobile__container').on('click', '[data-action="show-view-list"]',
   viewMode = 'list';
 });
 
+$('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', function() {
+  $('body').removeClass('is-mobile-is-list-view is-list-view').addClass('is-map-view');
+  viewMode = 'map';
+});
+
 $('.view-mode').on('click', '[data-action="show-view-map"]', function() {
   var $viewModes = $(this).parent('.view-mode');
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
