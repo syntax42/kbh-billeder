@@ -13,6 +13,11 @@
  */
 
 /**
+ * NOTICE: MarkerClusterer.prototype.calculator_ has been modified to support
+ * hash-results.
+ */
+
+/**
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -360,7 +365,15 @@ MarkerClusterer.prototype.getMaxZoom = function() {
  */
 MarkerClusterer.prototype.calculator_ = function(markers, numStyles) {
   var index = 0;
-  var count = markers.length;
+
+  var count = 0;
+  // If the marker represents a group of markers, use that count instead.
+  if (markers[0].subCount) {
+    count = markers.reduce(function(acc, marker) { return acc + marker.subCount; }, 0);
+  } else {
+    count = markers.length;
+  }
+
   var dv = count;
   while (dv !== 0) {
     dv = parseInt(dv / 10, 10);
