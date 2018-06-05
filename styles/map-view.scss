@@ -5,6 +5,9 @@
   float: left;
   width: 100%;
   // Don't display map on list view.
+  .has-filter-open & {
+    display: none;
+  }
   .is-list-view & {
     display: none;
   }

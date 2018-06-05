@@ -1,3 +1,5 @@
+'use strict';
+
 const config = require('collections-online/shared/config');
 
 /**
@@ -11,8 +13,8 @@ var chosenFilters = require('views/includes/search-filter-chosen-filters');
  * Updates the search filter sidebar based on the selected and available filters
  */
 exports.update = function(filters, aggregations) {
-  var $sidebar = $('#sidebar');
-  var $filters = $('#filters');
+  var $sidebar = $('#sidebar, #sidebarmobile');
+  var $filters = $('#filters, #filtersmobile');
   var filterCount = 0;
   Object.keys(filters).forEach(function(field) {
     filterCount += filters[field].length;
@@ -26,13 +28,13 @@ exports.update = function(filters, aggregations) {
         var aggregation = filteredAggregation[field];
         if(aggregation.buckets) {
           aggregation.buckets = Object.keys(aggregation.buckets)
-          .map(function(b) {
-            var bucket = aggregation.buckets[b];
-            bucket.key = bucket.key || b; // Fallback to the objects key
-            return bucket;
-          }).filter(function(bucket) {
-            return bucket.doc_count > 0;
-          });
+            .map(function(b) {
+              var bucket = aggregation.buckets[b];
+              bucket.key = bucket.key || b; // Fallback to the objects key
+              return bucket;
+            }).filter(function(bucket) {
+              return bucket.doc_count > 0;
+            });
         }
       });
     });

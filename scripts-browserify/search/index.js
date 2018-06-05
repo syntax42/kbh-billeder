@@ -237,7 +237,7 @@ function initialize() {
     inflateHistoryState(history.state);
   }
 
-  $('#sidebar, #filters').on('click', '.btn', function() {
+  $('#sidebar, #sidebarmobile, #filters, #filtersmobile').on('click', '.btn', function() {
     var action = $(this).data('action');
     var field = $(this).data('field');
     var filter = config.search.filters[field];
@@ -299,7 +299,7 @@ function initialize() {
   */
 
   // Toggle filtersection visibility on mobile
-  $('#sidebar').on('click', '[data-action="show-filters"]', function() {
+  $('#sidebar, #sidebarmobile').on('click', '[data-action="show-filters"]', function() {
     var filterSection = $(this).data('id') + '-filters';
     var $filterSection = $('[data-id="' + filterSection + '"]');
     var wasExpanded = $(this).hasClass('expanded');
@@ -315,30 +315,37 @@ function initialize() {
   });
 
   // Toggle filterbar menus
+  $('.filterbar--mobile__button--filters').on('click', function() {
+    $('body').addClass('has-filter-open');
+  });
+
+  $('.filterbar--mobile__button--close').on('click', function() {
+    $('body').removeClass('has-filter-open');
+  });
+
   $('.search-filter-sidebar__tab').on('click', '[data-action="show-filterbar-menu"]', function() {
-      var wasExpanded = $(this).hasClass('expanded');
-      var $parentItem = $(this).closest('.filterbar__item');
-      var $filterbar = $(this).closest('.filterbar');
+    var wasExpanded = $(this).hasClass('expanded');
+    var $parentItem = $(this).closest('.filterbar__item');
+    var $filterbar = $(this).closest('.filterbar');
 
-      $filterbar.find('.filterbar__menu').hide();
-      $filterbar.find('.expanded').each(function() {
-        $(this).removeClass('expanded');
-      });
-
-      if (!wasExpanded) {
-          $(this).addClass('expanded');
-          $parentItem.find('.filterbar__tab').addClass('expanded');
-          $parentItem.find('.filterbar__menu').show();
-      } else {
-          $(this).removeClass('expanded');
-          $parentItem.find('.filterbar__tab').removeClass('expanded');
-          $parentItem.find('.filterbar__menu').hide();
-      }
+    $filterbar.find('.filterbar__menu').hide();
+    $filterbar.find('.expanded').each(function() {
+      $(this).removeClass('expanded');
     });
+
+    if (!wasExpanded) {
+      $(this).addClass('expanded');
+      $parentItem.find('.filterbar__tab').addClass('expanded');
+      $parentItem.find('.filterbar__menu').show();
+    } else {
+      $(this).removeClass('expanded');
+      $parentItem.find('.filterbar__tab').removeClass('expanded');
+      $parentItem.find('.filterbar__menu').hide();
+    }
+  });
 
   $searchInput.closest('form').submit(function(e) {
     e.preventDefault();
-    var $form = $(this);
     var queryString = $searchInput.val() || '';
     var searchParams = getSearchParams();
     searchParams.filters.q = queryString;
