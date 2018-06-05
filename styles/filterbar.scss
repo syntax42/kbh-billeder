@@ -3,8 +3,8 @@ $heading-adjustment: 2px;
 .filterbar {
   background: $gray-light;
   display: block;
-  height: $topbar-height + 2px;
-  padding: 0 $spacer-md;
+  height: $topbar-height;
+  padding: 0 $spacer-lg;
   float: right;
   width: 100%;
   .is-mobile & {
@@ -93,8 +93,8 @@ $heading-adjustment: 2px;
       }
     }
     .search-filter-sidebar__tab {
-      height: 48px;
-      line-height: 48px;
+      height: $topbar-height;
+      line-height: $topbar-height;
       padding: 0;
     }
   }
@@ -110,7 +110,7 @@ $heading-adjustment: 2px;
     position: absolute;
     right: 0;
     left: 0;
-    top: $topbar-height + 2px;
+    top: $topbar-height;
     display: none;
     width: auto;
     min-width: 300px;
@@ -150,7 +150,7 @@ $heading-adjustment: 2px;
     svg {
       width: 18px;
       height: 18px;
-      margin-top: 12px;
+      margin-top: 15px;
     }
     .filterbar__item {
       cursor: pointer;
@@ -162,19 +162,32 @@ $heading-adjustment: 2px;
     .filterbar__tab {
       .is-map-view & {
         &--map {
-          height: 42px;
+          height: $topbar-height;
           border-bottom: 3px solid $brand-primary;
         }
       }
       .is-list-view & {
         &--list {
-          height: 42px;
+          height: $topbar-height;
           border-bottom: 3px solid $brand-primary;
         }
+      }
+      &:last-child {
+        min-width: 0;
+      }
+    }
+    .filterbar__tab {
+      height: $topbar-height;
+      &--active {
+        height: $topbar-height;
+        border-bottom: 3px solid $brand-primary;
       }
     }
     .search-filter-sidebar__heading {
       padding-left: 0;
+      span {
+        height: $topbar-height;
+      }
     }
   }
 }
@@ -191,18 +204,21 @@ $heading-adjustment: 2px;
     background: white;
     font-family: $font-family-medium;
     font-size: 1rem;
-    line-height: $spacer-sm * 4;
+    line-height: $topbar-height;
     margin: 0;
     padding-left: $spacer-sm + $spacer-xs;
     padding-right: $spacer-sm + $spacer-xs;
     user-select: none;
+
+    &:first-of-type {
+      padding-left: 0;
+    }
 
     @media (min-width: $small-size) {
       font-size: 1.285714286rem; // 18/14
       padding-bottom: -$heading-adjustment;
       padding-left: $spacer-sm;
       padding-right: $spacer-sm;
-      padding-top: $heading-adjustment;
     }
 
     &::first-letter {
