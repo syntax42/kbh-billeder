@@ -14,9 +14,11 @@ $heading-adjustment: 2px;
     width: 100%;
   }
   &--mobile {
+    // Don't display the mobile variant on desktop.
     .is-desktop & {
       display: none;
     }
+    // Mobile map view.
     .is-map-view & {
       &__button {
         &--map {
@@ -27,6 +29,7 @@ $heading-adjustment: 2px;
         }
       }
     }
+    // Mobile list view.
     .is-list-view & {
       &__button {
         &--map {
@@ -37,6 +40,7 @@ $heading-adjustment: 2px;
         }
       }
     }
+    // Mobile filter/view buttons.
     position: fixed;
     bottom: 18px;
     width: 100%;
@@ -53,6 +57,19 @@ $heading-adjustment: 2px;
       height: 48px;
       width: 214px;
       @include shadow(3);
+      // Do not show standard button container on filter view.
+      .has-filter-open & {
+        display: none;
+      }
+      // Only show close button on filter view.
+      &--close {
+        .has-filter-open & {
+          display: inline-block;
+          position: absolute;
+          bottom: 10px;
+        }
+        display: none;
+      }
     }
     &__button {
       cursor: pointer;
@@ -60,6 +77,14 @@ $heading-adjustment: 2px;
       float: left;
       &:first-of-type {
         border-right: 1px solid rgba($color: #000000, $alpha: 0.10);
+      }
+      &--close {
+        min-width: 48px;
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        background: white;
+        @include shadow(3);
       }
       // Half width of container.
       min-width: 107px;
@@ -242,6 +267,13 @@ $heading-adjustment: 2px;
     background-color: rgba(white, .5);
     padding: $spacer-sm;
 
+    p {
+      margin-left: $spacer-xs;
+      .has-filter-open & {
+        margin-left: 0;
+      }
+    }
+
     @media (min-width: $small-size) {
       padding: $spacer-xs;
       padding-bottom: $spacer-sm;
@@ -258,6 +290,12 @@ $heading-adjustment: 2px;
     // expected max-width: 100%; would work, but margin gives issues.
     max-width: 90%;
     max-width: calc(100% - #{$spacer-xs * 2});
+
+    .has-filter-open & {
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
 
     &:not(:first-child) {
       margin-top: 0;
