@@ -1,0 +1,4 @@
+steps:
+- name: 'eu.gcr.io/kbh-billeder/kbhbilleder-container-builder'
+images: ['eu.gcr.io/kbh-billeder/kbhbilleder-docker']
+timeout: 20m0s
