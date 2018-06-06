@@ -1,3 +1,5 @@
+const searchController = require('./search');
+
 $('body').addClass('is-initial-view');
 
 var mobilecheck = function() {
@@ -25,10 +27,13 @@ $(window).on('resize load ready', function() {
 });
 
 $('.view-mode').on('click', '[data-action="show-view-list"]', function() {
+
   var $viewModes = $(this).parent('.view-mode');
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
   $('body').removeClass('is-map-view').addClass('is-list-view');
   $(this).find('.filterbar__tab').addClass('filterbar__tab--active');
+
+  searchController.setViewMode('list');
 });
 
 $('.filterbar--mobile__container').on('click', '[data-action="show-view-list"]', function() {
@@ -42,8 +47,11 @@ $('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', 
 });
 
 $('.view-mode').on('click', '[data-action="show-view-map"]', function() {
+
   var $viewModes = $(this).parent('.view-mode');
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
   $('body').removeClass('is-list-view').addClass('is-map-view');
   $(this).find('.filterbar__tab').addClass('filterbar__tab--active');
+
+  searchController.setViewMode('map');
 });
