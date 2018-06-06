@@ -18,7 +18,12 @@ objects:
               capabilities:
                 add:
                   - IPC_LOCK
-            image: quay.io/pires/docker-elasticsearch-kubernetes:2.3.2
+            # ES is doing some stuff with ulimit that requires this
+                  - SYS_RESOURCE
+              privileged: true
+            image: quay.io/pires/docker-elasticsearch-kubernetes:5.6.4
+            # Ensure max_map_count is bumped before we start ES.
+            command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144 && /run.sh']
             env:
             - name: NAMESPACE
               valueFrom:
