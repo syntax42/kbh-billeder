@@ -22,5 +22,13 @@ module.exports = metadata => {
       throw new Error('Encountered unexpected coordinate format.');
     }
   }
+  // Index into
+  if (metadata.latitude && metadata.longitude) {
+    metadata.location = {
+      "lat": metadata.latitude,
+      "lon": metadata.longitude
+    }
+  }
+
   return metadata;
 };
