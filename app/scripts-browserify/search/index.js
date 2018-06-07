@@ -31,19 +31,12 @@ let resultsTotal = Number.MAX_SAFE_INTEGER;
 let loadingResults = false;
 
 // Controls whether we should fetch search-results for a map or a list.
-let viewMode = 'map';
+let viewMode = 'list';
 
 let elasticsearch = require('elasticsearch');
 let es = new elasticsearch.Client({
   host: location.origin + '/api'
 });
-
-// Expose setter for view-mode so that eg. view-mode.js can reach it.
-let setViewMode = function(mode) {
-  viewMode = mode;
-};
-
-module.exports.setViewMode = setViewMode;
 
 function initialize() {
   const $searchInput = $('.search-freetext-form__input');
@@ -95,7 +88,6 @@ function initialize() {
     updateWidgets = resultsLoaded.length === 0 || updateWidgets;
 
     if(updateWidgets) {
-      resultsHeader.update(searchParams, resultsTotal);
       if(config.features.filterSidebar) {
         const sidebar = require('./filter-sidebar');
         // Update the sidebar right away
@@ -109,10 +101,6 @@ function initialize() {
         }, function (error) {
           console.trace(error.message);
         });
-      }
-      // Update the results header before the result comes in
-      if(indicateLoading) {
-        $('.search-results').addClass('search-results--loading');
       }
     }
 
@@ -129,10 +117,18 @@ function initialize() {
 
     // Do search depending on current viewmode.
     if (viewMode === 'map') {
-      resultsTotal = updateMap(searchParams, resultCallback);
+      resultsTotal = updateMap(searchParams);
     }
 
     if (viewMode === 'list') {
+      if (updateWidgets) {
+        // Start updating the results header
+        resultsHeader.update(searchParams, resultsTotal);
+        // Update the results header before the result comes in
+        if(indicateLoading) {
+          $('.search-results').addClass('search-results--loading');
+        }
+      }
       resultsTotal = updateList(searchParams, updateWidgets, resultCallback);
     }
   }
@@ -213,7 +209,7 @@ function initialize() {
   /**
    * Update the google map with search results.
    */
-  function updateMap(searchParams, resultCallback) {
+  function updateMap(searchParams) {
     // Get bounds from map and use it.
     let bounds = Map.getEsBounds();
     if (bounds) {
@@ -288,8 +284,6 @@ function initialize() {
       Map.update(coordinates);
       // TODO - add navigator code like what we have in updateList to make
       // history work.
-
-      resultCallback(resultsTotal);
     }, function (error) {
       console.trace(error.message);
     });
@@ -458,6 +452,18 @@ function initialize() {
 
   $('.filterbar--mobile__button--close').on('click', function() {
     $('body').removeClass('has-filter-open');
+  });
+
+  // When the view-mode is changed by the view-mode selector (view-mode.js),
+  // store the new value and trigger a search update.
+  $('body').on('search:viewModeChanged', function(e, eventViewMode) {
+    viewMode = eventViewMode;
+    $('body').trigger('search:update');
+  });
+
+  // Let anyone with access to the body element trigger search-updates.
+  $('body').on('search:update', function() {
+    update(true, true);
   });
 
   $('.search-filter-sidebar__tab').on('click', '[data-action="show-filterbar-menu"]', function() {
