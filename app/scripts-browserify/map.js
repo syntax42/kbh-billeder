@@ -147,6 +147,7 @@ var Map = {
       let googleMapReference = this.googleMap;
       markers.forEach(marker => {
         marker.addListener('mousedown', function() {
+          // Close all markers and then add listener on marker, so all infoboxes are closed even if the map is updated.
           google.maps.event.trigger(googleMapReference, 'closeAllInfoboxes');
           google.maps.event.addListener(googleMapReference, 'closeAllInfoboxes', function () {
             marker.infobox.close();
