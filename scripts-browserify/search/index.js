@@ -230,7 +230,7 @@ function initialize() {
       queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
     }
 
-    let belowAssetZoomLevel = Map.zoomLevel > config.search.assetZoomLevel;
+    let belowAssetZoomLevel = Map.zoomLevel >= config.search.assetZoomLevel;
     const maxAssets = config.search.maxAssetMarkers;
 
     // If we're zoomed in wide enough, use hash-based results.
@@ -355,7 +355,14 @@ function initialize() {
     inflateHistoryState(event.state);
   }, false);
 
-  Map.init(update);
+  // Setup the map with a callback it can use when it needs a new search trigged
+  // and a configuration for when we switch between hash and asset search-
+  // results.
+  Map.init({
+    updateCallback: update,
+    assetZoomLevel: config.search.assetZoomLevel,
+    clusterMaxZoom: config.search.clusterMaxZoom
+  });
 
   // Initialize the search results, either use the history state, or do an
   // update.
@@ -363,7 +370,7 @@ function initialize() {
     update();
   } else {
     update();
-    // TODO - make history work again.
+    // TODO - make history work again. KB-354.
     // Temporarily disabled while we figure out how to store geohashes in the history.
     // inflateHistoryState(history.state);
   }
