@@ -1,3 +1,5 @@
+'use strict';
+
 const searchController = require('./search');
 
 var mobilecheck = function() {
@@ -40,11 +42,15 @@ $('.view-mode').on('click', '[data-action="show-view-list"]', function() {
 $('.filterbar--mobile__container').on('click', '[data-action="show-view-list"]', function() {
   $('body').removeClass('is-map-view').addClass('is-list-view');
   viewMode = 'list';
+
+  searchController.setViewMode('list');
 });
 
 $('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', function() {
   $('body').removeClass('is-list-view').addClass('is-map-view');
   viewMode = 'map';
+
+  searchController.setViewMode('map');
 });
 
 $('.view-mode').on('click', '[data-action="show-view-map"]', function() {
