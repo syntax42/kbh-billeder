@@ -1,7 +1,5 @@
 const searchController = require('./search');
 
-$('body').addClass('is-initial-view');
-
 var mobilecheck = function() {
   if ($(window).width() < 768) {
     return true;
@@ -9,13 +7,15 @@ var mobilecheck = function() {
   return false;
 };
 
-var viewMode = 'map';
+var viewMode = 'list';
+
+$('body').addClass(`is-${viewMode}-view`);
 
 $(window).on('resize load ready', function() {
   $('body').removeClass('is-mobile is-desktop');
   if (mobilecheck() === true) {
     if (viewMode === 'map') {
-      $('body').addClass('is-mobile is-map-view');
+      $('body').addClass('is-mobile is-map-view').removeClass('is-list-view');
     }
     if (viewMode === 'list') {
       $('body').addClass('is-mobile is-list-view').removeClass('is-map-view');
@@ -27,7 +27,6 @@ $(window).on('resize load ready', function() {
 });
 
 $('.view-mode').on('click', '[data-action="show-view-list"]', function() {
-
   var $viewModes = $(this).parent('.view-mode');
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
   $('body').removeClass('is-map-view').addClass('is-list-view');
@@ -47,7 +46,6 @@ $('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', 
 });
 
 $('.view-mode').on('click', '[data-action="show-view-map"]', function() {
-
   var $viewModes = $(this).parent('.view-mode');
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
   $('body').removeClass('is-list-view').addClass('is-map-view');
