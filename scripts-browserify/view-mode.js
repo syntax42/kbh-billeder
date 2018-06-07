@@ -7,7 +7,9 @@ var mobilecheck = function() {
   return false;
 };
 
+// Set default view mode to list.
 var viewMode = 'list';
+searchController.setViewMode('list');
 
 $('body').addClass(`is-${viewMode}-view`);
 
