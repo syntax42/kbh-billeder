@@ -110,7 +110,8 @@ var Map = {
 
       // Set the properties the markers share.
       let markerData = {
-        position: {lat: item.location.lat, lng: item.location.lon}
+        position: {lat: item.location.lat, lng: item.location.lon},
+        map: this.googleMap
       };
 
       // Hash markers are all going to be aggregated so all we need to inject
@@ -147,11 +148,9 @@ var Map = {
       let googleMapReference = this.googleMap;
       markers.forEach(marker => {
         marker.addListener('mousedown', function() {
-          var currentMarker = this;
-          $.each(markers, function(i, marker) {
-            if(marker !== currentMarker) {
-              marker.infobox.close();
-            }
+          google.maps.event.trigger(googleMapReference, 'closeAllInfoboxes');
+          google.maps.event.addListener(googleMapReference, 'closeAllInfoboxes', function () {
+            marker.infobox.close();
           });
 
           marker.infobox.open(googleMapReference, marker);
@@ -203,6 +202,7 @@ var Map = {
     let clusteredMarkers = new MarkerClusterer(this.googleMap, markers, options);
     // Have the clustermarkers remove themselves if the map is touched.
     google.maps.event.addListenerOnce(this.googleMap, 'bounds_changed', function() {
+      google.maps.event.trigger(this.googleMap, 'closeAllInfoboxes');
       clusteredMarkers.clearMarkers();
     });
   },
