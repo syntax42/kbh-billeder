@@ -55,8 +55,13 @@ var Map = {
       let ne = this.googleMap.getBounds().getNorthEast();
       let sw = this.googleMap.getBounds().getSouthWest();
 
-      // Google maps gives us NE/SW coordinate, Elasticsearch wants a NW/SE, so
-      // we have to reorder the coordinates before using them.
+      // If the map is not yet fully initialized its corners will be identical.
+      if (ne.lat() === sw.lat() && ne.lng() === sw.lng()) {
+        return false;
+      }
+
+      // Google maps gives us NE/SW coordinate, Elasticsearch wants a NW/SE,
+      // so we have to reorder the coordinates before using them.
       return {
         'top_left': {
           'lat': ne.lat(),
@@ -67,9 +72,9 @@ var Map = {
           'lon': ne.lng()
         }
       };
-    } else {
-      return false;
     }
+
+    return false;
   },
 
   /**
