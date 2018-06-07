@@ -158,6 +158,9 @@ $heading-adjustment: 2px;
     .filterbar__item {
       cursor: pointer;
       min-width: 80px;
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
     }
     .filterbar__tab {
       &--active {
