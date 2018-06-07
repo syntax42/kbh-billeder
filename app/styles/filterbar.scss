@@ -299,16 +299,6 @@ $heading-adjustment: 2px;
     max-width: 90%;
     max-width: calc(100% - #{$spacer-xs * 2});
 
-    .has-filter-open & {
-      &:first-of-type {
-        margin-left: 0;
-      }
-    }
-
-    &:not(:first-child) {
-      margin-top: 0;
-    }
-
     // See http://stackoverflow.com/questions/35464067/flexbox-not-working-on-button-element-in-some-browsers
     &-container {
       display: flex;
