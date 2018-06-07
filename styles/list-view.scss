@@ -3,15 +3,11 @@
   overflow: scroll;
   width: 100%;
   @include shadow(3);
-  // Do not display list in initial view mode (map).
-  .is-initial-view & {
-    display: none;
-  }
   // Show when in list view mode.
   .is-list-view & {
     display: block;
   }
-  .is-mobile.is-map-view & {
+  .is-map-view & {
     display: none;
   }
   // Mobile styling.

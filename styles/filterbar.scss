@@ -6,12 +6,9 @@ $heading-adjustment: 2px;
   height: $topbar-height + 2px;
   padding: 0 $spacer-md;
   float: right;
+  width: 100%;
   .is-mobile & {
     display: none;
-  }
-  .is-desktop.is-map-view &,
-  .is-initial-view & {
-    width: 100%;
   }
   &--mobile {
     // Don't display the mobile variant on desktop.
@@ -163,9 +160,17 @@ $heading-adjustment: 2px;
       }
     }
     .filterbar__tab {
-      &--active {
-        height: 42px;
-        border-bottom: 3px solid $brand-primary;
+      .is-map-view & {
+        &--map {
+          height: 42px;
+          border-bottom: 3px solid $brand-primary;
+        }
+      }
+      .is-list-view & {
+        &--list {
+          height: 42px;
+          border-bottom: 3px solid $brand-primary;
+        }
       }
     }
     .search-filter-sidebar__heading {
