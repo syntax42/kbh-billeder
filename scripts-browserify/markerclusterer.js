@@ -13,8 +13,11 @@
  */
 
 /**
- * NOTICE: MarkerClusterer.prototype.calculator_ has been modified to support
+ * Modified for KBH-billeder with the following:
+ * - MarkerClusterer.prototype.calculator_ has been modified to support
  * hash-results.
+ * -  clickZoomLevel - a new property that alters the zoom behaviour when a
+ *    cluster is clicked.
  */
 
 /**
@@ -31,7 +34,6 @@
  * limitations under the License.
  */
 
-
 /**
  * A Marker Clusterer that clusters markers.
  *
@@ -44,6 +46,8 @@
  *                cluster.
  *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
  *                    cluster is to zoom into it.
+ *     'clickZoomLevel': (int) when zoomOnClick, a click should zoom to this
+ *                        level.
  *     'imagePath': (string) The base URL where the images representing
  *                  clusters will be found. The full URL will be:
  *                  {imagePath}[1-5].{imageExtension}
@@ -144,6 +148,16 @@ function MarkerClusterer(map, opt_markers, opt_options) {
 
   if (options['zoomOnClick'] != undefined) {
     this.zoomOnClick_ = options['zoomOnClick'];
+  }
+
+  /**
+   * @type {int}
+   * @private
+   */
+  this.clickZoomLevel_ = -1;
+
+  if (options['clickZoomLevel'] != undefined) {
+    this.clickZoomLevel_ = options['clickZoomLevel'];
   }
 
   /**
@@ -303,6 +317,18 @@ MarkerClusterer.prototype.getStyles = function() {
  */
 MarkerClusterer.prototype.isZoomOnClick = function() {
   return this.zoomOnClick_;
+};
+
+/**
+ * How far to zoom on click.
+ *
+ * When isZoomOnClick is set, zoom to this zoom-level instead of a bounding box
+ * around the cluster.
+ *
+ * @return {int} the zoom-level. -1 if disabled.
+ */
+MarkerClusterer.prototype.getClickZoomLevel = function() {
+  return this.clickZoomLevel_;
 };
 
 /**
@@ -1077,8 +1103,14 @@ ClusterIcon.prototype.triggerClusterClick = function() {
   google.maps.event.trigger(markerClusterer.map_, 'clusterclick', this.cluster_);
 
   if (markerClusterer.isZoomOnClick()) {
-    // Zoom into the cluster.
-    this.map_.fitBounds(this.cluster_.getBounds());
+    if (markerClusterer.getClickZoomLevel() >= 0) {
+      // Zoom into the cluster.
+      this.map.setCenter(this.cluster_.getCenter());
+      this.map.setZoom(markerClusterer.getClickZoomLevel());
+    } else {
+      // Zoom into the cluster.
+      this.map_.fitBounds(this.cluster_.getBounds());
+    }
   }
 };
 
