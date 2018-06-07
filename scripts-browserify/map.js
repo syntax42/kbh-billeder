@@ -147,11 +147,10 @@ var Map = {
       let googleMapReference = this.googleMap;
       markers.forEach(marker => {
         marker.addListener('mousedown', function() {
-          var currentMarker = this;
-          $.each(markers, function(i, marker) {
-            if(marker !== currentMarker) {
-              marker.infobox.close();
-            }
+          // Close all markers and then add listener on marker, so all infoboxes are closed even if the map is updated.
+          google.maps.event.trigger(googleMapReference, 'closeAllInfoboxes');
+          google.maps.event.addListener(googleMapReference, 'closeAllInfoboxes', function () {
+            marker.infobox.close();
           });
 
           marker.infobox.open(googleMapReference, marker);
@@ -203,6 +202,7 @@ var Map = {
     let clusteredMarkers = new MarkerClusterer(this.googleMap, markers, options);
     // Have the clustermarkers remove themselves if the map is touched.
     google.maps.event.addListenerOnce(this.googleMap, 'bounds_changed', function() {
+      google.maps.event.trigger(this.googleMap, 'closeAllInfoboxes');
       clusteredMarkers.clearMarkers();
     });
   },
