@@ -110,8 +110,7 @@ var Map = {
 
       // Set the properties the markers share.
       let markerData = {
-        position: {lat: item.location.lat, lng: item.location.lon},
-        map: this.googleMap
+        position: {lat: item.location.lat, lng: item.location.lon}
       };
 
       // Hash markers are all going to be aggregated so all we need to inject
