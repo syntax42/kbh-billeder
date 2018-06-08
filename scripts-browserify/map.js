@@ -129,13 +129,20 @@ var Map = {
       if(item.type === 'hash') {
         markerData.subCount = item.count;
       } else if (item.type === 'asset') {
-        var colid = item.assetData.collection + '/' + item.assetData.id;
-        var boxText = document.createElement('div');
+        var colid = `${item.assetData.collection}/${item.assetData.id}`;
+        var boxContent = document.createElement('a');
+        var boxText = document.createElement('h1');
+        var boxImage = document.createElement('div');
 
-        boxText.innerHTML = '<a href="/' + colid + '"><img data-src="/' + colid + '/thumbnail" width="220px" height="220px" /><h1>' + item.assetData.short_title + '</h1></a>';
+        boxText.innerHTML = item.assetData.short_title;
+        boxImage.className = 'infoBox__image';
+        boxImage.style.backgroundImage = `url(${colid}/thumbnail)`;
+        boxContent.appendChild(boxImage);
+        boxContent.appendChild(boxText);
+        boxContent.href = colid;
 
         var infoboxConfiguration = {
-          content: boxText,
+          content: boxContent,
           maxWidth: 220,
           zIndex: null,
           closeBoxURL: '',
