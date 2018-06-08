@@ -16,6 +16,8 @@ exports.update = function(filters, aggregations) {
   var $sidebar = $('#sidebar, #sidebarmobile');
   var $filters = $('#filters, #filtersmobile');
   var filterCount = 0;
+  // Do not show geobounds in filterbar.
+  delete filters.geobounds;
   Object.keys(filters).forEach(function(field) {
     filterCount += filters[field].length;
   });
@@ -44,7 +46,7 @@ exports.update = function(filters, aggregations) {
   Object.keys(config.search.filters).forEach(function(field) {
     var filter = config.search.filters[field];
 
-    if(filter.type !== 'querystring') {
+    if (filter.type !== 'querystring' || filter.type !== 'geobounds') {
       // If the filter depends on a feature flag,
       // check that the feature is enabled.
       if(filter.feature) {
