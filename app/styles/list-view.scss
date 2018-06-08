@@ -1,6 +1,4 @@
 .list-view {
-  height: calc(100vh - 268px);
-  overflow: scroll;
   width: 100%;
   @include shadow(3);
   // Show when in list view mode.
