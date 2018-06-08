@@ -55,8 +55,13 @@ var Map = {
       let ne = this.googleMap.getBounds().getNorthEast();
       let sw = this.googleMap.getBounds().getSouthWest();
 
-      // Google maps gives us NE/SW coordinate, Elasticsearch wants a NW/SE, so
-      // we have to reorder the coordinates before using them.
+      // If the map is not yet fully initialized its corners will be identical.
+      if (ne.lat() === sw.lat() && ne.lng() === sw.lng()) {
+        return false;
+      }
+
+      // Google maps gives us NE/SW coordinate, Elasticsearch wants a NW/SE,
+      // so we have to reorder the coordinates before using them.
       return {
         'top_left': {
           'lat': ne.lat(),
@@ -67,9 +72,9 @@ var Map = {
           'lon': ne.lng()
         }
       };
-    } else {
-      return false;
     }
+
+    return false;
   },
 
   /**
@@ -95,6 +100,12 @@ var Map = {
    * @param items
    */
   update: function(items) {
+    // Make sure to clear the map - this is mostly nessecary if the update is
+    // made on initiative outside the map-controller in which case we haven't
+    // been able to clear the map ourselves first.
+    google.maps.event.trigger(this.googleMap, 'closeAllInfoboxes');
+    google.maps.event.trigger(this.googleMap, 'clearMarkers');
+
     let iconPath = '../images/icons/map/';
     if (items.length === 0) {
       return;
@@ -201,8 +212,7 @@ var Map = {
 
     let clusteredMarkers = new MarkerClusterer(this.googleMap, markers, options);
     // Have the clustermarkers remove themselves if the map is touched.
-    google.maps.event.addListenerOnce(this.googleMap, 'bounds_changed', function() {
-      google.maps.event.trigger(this.googleMap, 'closeAllInfoboxes');
+    google.maps.event.addListenerOnce(this.googleMap, 'clearMarkers', function() {
       clusteredMarkers.clearMarkers();
     });
   },
@@ -259,15 +269,20 @@ var Map = {
     });
 
     // Setup variables for the closures below.
-    let thisReference = this;
+    let mapControllerReference = this;
 
-    // If any changes is made to the viewport of the map, mark it as in motion.
+    // React on the map being changed.
     google.maps.event.addListener(this.googleMap, 'bounds_changed', function() {
-      // Only act on change events if the map was previously reported idle.
-      if (!thisReference.mapInMotion) {
-        // Report the map as being non-idle.
-        thisReference.mapInMotion = true;
+      if(mapControllerReference.mapInMotion) {
+        // We're already in motion, no need to repeat the actions.
+        return;
       }
+      // Report the map as being non-idle.
+      mapControllerReference.mapInMotion = true;
+
+      // Clear all markers and infoboxes from the map.
+      google.maps.event.trigger(mapControllerReference.googleMap, 'clearMarkers');
+      google.maps.event.trigger(mapControllerReference.googleMap, 'closeAllInfoboxes');
     });
 
     // When the map stops moving, sync the state out into our own properties and
@@ -275,16 +290,16 @@ var Map = {
     google.maps.event.addListener(this.googleMap, 'idle', function(){
       // The initialization of the map will throw off a single idle event, so
       // ignore it and clear the initializing flag.
-      if (thisReference.isInitializing) {
-        thisReference.isInitializing = false;
-        thisReference.mapInMotion = false;
+      if (mapControllerReference.isInitializing) {
+        mapControllerReference.isInitializing = false;
+        mapControllerReference.mapInMotion = false;
         return;
       }
       // The map has settled down and we're ready to react on new changes.
-      if (thisReference.mapInMotion) {
-        thisReference.mapInMotion = false;
-        thisReference.sync();
-        thisReference.config.updateCallback(true, true);
+      if (mapControllerReference.mapInMotion) {
+        mapControllerReference.mapInMotion = false;
+        mapControllerReference.sync();
+        mapControllerReference.config.updateCallback(true, true);
       }
     });
 
