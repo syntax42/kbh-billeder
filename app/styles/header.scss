@@ -4,10 +4,39 @@
   font-family: $font-family-medium;
   letter-spacing: .02em;
   line-height: 1;
+  .is-mobile & {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__auth {
+    text-align: center;
+  }
 
   &__search {
+    height: 50px;
+    float: right;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
     .input-group {
-      max-width: 16rem;
+      background: $brand-secondary;
+      padding: 0 $spacer-md;
+      // Set the max width to 320px
+      // following the Sketch file with the design.
+      max-width: 320px;
+      width: 100%;
+      margin: 0;
+    }
+    .search-freetext-form {
+      float: right;
+      .is-mobile & {
+        margin: 0;
+      }
+    }
+    input {
+      height: $topbar-height;
     }
   }
 }
