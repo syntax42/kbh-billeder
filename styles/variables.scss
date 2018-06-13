@@ -49,12 +49,16 @@ $extra-small-size-min: $extra-small-size + 1px !default;
 $small-size: 768px !default;
 $medium-size: 992px !default;
 $large-size: 1070px !default;
+$extra-large-size: 1200px !default;
 // Spacers
 $spacer-base: 5px !default;
 $spacer-xs: $spacer-base !default;
 $spacer-sm: $spacer-base * 2 !default;
 $spacer-md: $spacer-base * 3 !default;
 $spacer-lg: $spacer-base * 6 !default;
+
+$spacer-layout: 20px;
+$spacer-layout-large: 130px;
 
 // item
 $button-bg: $gray !default;

@@ -4,7 +4,10 @@
   line-height: 1.5;
   position: relative;
   z-index: 10;
-  padding: 0 $spacer-lg;
+  padding: 0 $spacer-layout;
+  @media (min-width: $extra-large-size) {
+    padding: 0 $spacer-layout-large;
+  }
 
   .is-mobile & {
     position: fixed;
@@ -77,10 +80,6 @@
     align-items: center;
     display: flex;
     height: $topbar-height;
-
-    span {
-      width: 50%;
-    }
 
     &-link {
       color: $white;
