@@ -134,6 +134,7 @@ $heading-adjustment: 2px;
   &__item {
     float: left;
     position: relative;
+    margin-right: $spacer-sm;
   }
   &__tab {
     position: relative;
@@ -153,10 +154,15 @@ $heading-adjustment: 2px;
       margin-top: 15px;
     }
     .filterbar__item {
+      height: $topbar-height;
       cursor: pointer;
       min-width: 80px;
       &:not(:last-child) {
         margin-right: 20px;
+      }
+      &:last-child {
+        margin-right: 0;
+        float: right;
       }
     }
     .filterbar__tab {
@@ -210,15 +216,11 @@ $heading-adjustment: 2px;
     padding-right: $spacer-sm + $spacer-xs;
     user-select: none;
 
-    &:first-of-type {
-      padding-left: 0;
-    }
-
     @media (min-width: $small-size) {
       font-size: 1.285714286rem; // 18/14
       padding-bottom: -$heading-adjustment;
-      padding-left: $spacer-sm;
-      padding-right: $spacer-sm;
+      padding-left: $spacer-md;
+      padding-right: $spacer-md;
     }
 
     &::first-letter {
