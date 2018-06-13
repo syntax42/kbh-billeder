@@ -17,12 +17,6 @@
       color: $detail-color;
     }
   }
-
-  .input-group {
-    &::after {
-      background-color: $detail-color--dimmed;
-    }
-  }
 }
 
 .search-freetext-form {
