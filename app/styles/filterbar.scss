@@ -4,13 +4,17 @@ $heading-adjustment: 2px;
   background: $gray-light;
   display: block;
   height: $topbar-height;
-  padding: 0 $spacer-lg;
   float: right;
   width: 100%;
+  padding: 0 $spacer-layout;
+  @media (min-width: $extra-large-size) {
+    padding: 0 $spacer-layout-large;
+  }
   .is-mobile & {
     display: none;
   }
   &--mobile {
+    padding: 0;
     // Don't display the mobile variant on desktop.
     .is-desktop & {
       display: none;
