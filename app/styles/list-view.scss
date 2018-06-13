@@ -1,5 +1,6 @@
 .list-view {
   width: 100%;
+  padding: 0 140px;
   @include shadow(3);
   // Show when in list view mode.
   .is-list-view & {
@@ -13,6 +14,7 @@
     display: none;
   }
   .is-mobile & {
+    padding: 0 $spacer-lg;
     width: 100%;
     height: 100vh;
     position: absolute;

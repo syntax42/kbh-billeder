@@ -78,10 +78,19 @@
     display: flex;
     height: $topbar-height;
 
+    span {
+      width: 50%;
+    }
+
     &-link {
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
+      padding: $spacer-sm;
+
+      &:first-of-type {
+        padding-left: $spacer-md;
+      }
 
       &:focus,
       &:hover {
