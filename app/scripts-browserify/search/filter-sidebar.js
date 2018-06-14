@@ -18,6 +18,9 @@ exports.update = function(filters, aggregations) {
   var filterCount = 0;
   // Do not show geobounds in filterbar.
   delete filters.geobounds;
+  if (document.body.classList.contains('is-map-view')) {
+    delete filters.location;
+  }
   Object.keys(filters).forEach(function(field) {
     filterCount += filters[field].length;
   });
@@ -49,15 +52,17 @@ exports.update = function(filters, aggregations) {
     if (filter.type !== 'querystring' || filter.type !== 'geobounds') {
       // If the filter depends on a feature flag,
       // check that the feature is enabled.
-      if(filter.feature) {
-        if(config.features[filter.feature]){
+      if (filter.feature) {
+        if (config.features[filter.feature]) {
           filterLabels[field] = filter;
         }
-      } else {
+      }
+      else {
         filterLabels[field] = filter;
       }
     }
   });
+
   // Render the markup
   var markup = template({
     aggregations: aggregations,

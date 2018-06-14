@@ -210,6 +210,8 @@ function initialize() {
    * Update the google map with search results.
    */
   function updateMap(searchParams) {
+    // Only show results with location on map.
+    searchParams.filters.location = ['Har placering'];
     // Get bounds from map and use it.
     let bounds = Map.getEsBounds();
     if (bounds) {
