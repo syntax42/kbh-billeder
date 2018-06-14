@@ -17,6 +17,14 @@
       color: $detail-color;
     }
   }
+
+  .jumbo & {
+    .input-group {
+      &::after {
+        background-color: $detail-color--dimmed;
+      }
+    }
+  }
 }
 
 .search-freetext-form {
