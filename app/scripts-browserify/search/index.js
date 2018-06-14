@@ -148,7 +148,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ["collection", "id", "short_title", "type"],
+      _source: ["collection", "id", "short_title", "type", "description"],
       size: resultsDesired - resultsLoaded.length
     };
 
