@@ -227,6 +227,12 @@ $heading-adjustment: 2px;
       padding-right: $spacer-md;
     }
 
+    .is-map-view & {
+      &--location-filters {
+        display: none;
+      }
+    }
+
     &::first-letter {
       text-transform: uppercase;
     }
