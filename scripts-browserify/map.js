@@ -18,6 +18,9 @@
  * populated when the user lets go of the map and it becomes idle (see the idle-
  * event-handler registered in init().
  */
+
+const config = require('collections-online/shared/config');
+
 var Map = {
   // Start the map off over Copenhagen.
   mapCenter: {
@@ -140,6 +143,10 @@ var Map = {
         boxContent.appendChild(boxImage);
         boxContent.appendChild(boxText);
         boxContent.href = colid;
+
+        if (config.features.preferTargetBlank) {
+          boxContent.setAttribute('target', '_blank');
+        }
 
         var infoboxConfiguration = {
           content: boxContent,
