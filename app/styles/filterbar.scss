@@ -149,6 +149,11 @@ $heading-adjustment: 2px;
     &.expanded {
       background: white;
     }
+    &--sorting {
+      .is-map-view & {
+        display: none;
+      }
+    }
   }
   .view-mode {
     float: right;
