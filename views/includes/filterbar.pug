@@ -1,13 +1,13 @@
 if config.features.filterSidebar
   .filterbar
     .filterbar__item
-      .filterbar__tab
+      .filterbar__tab.filterbar__tab--filters
         h2.search-filter-sidebar__heading.search-filter-sidebar__tab
           span(data-action='show-filterbar-menu')= 'Filtrering'
       #sidebar.filterbar__menu.filterbar__menu--filters
         block sidebar
     .filterbar__item
-      .filterbar__tab
+      .filterbar__tab.filterbar__tab--sorting
         h2.search-filter-sidebar__heading.search-filter-sidebar__tab
           span(data-action='show-filterbar-menu')= 'Sortering'
       #sorting-menu.filterbar__menu.filterbar__menu--sorting
