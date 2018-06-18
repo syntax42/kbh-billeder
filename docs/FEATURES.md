@@ -25,3 +25,5 @@ Below is a list of the features that can be enabled or disabled per deployment:
 - **sitewidePassword**
   Prevents the spread of the website before its launched, by asking the
   visitor to provide a site-wide password.
+- **preferTargetBlank**
+  Set this to prefer target to be _blank, like when clicking on a photo from the map.

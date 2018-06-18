@@ -4,6 +4,17 @@
   line-height: 1.5;
   position: relative;
   z-index: 10;
+  padding: 0 $spacer-layout;
+  @media (min-width: $extra-large-size) {
+    padding: 0 $spacer-layout-large;
+  }
+
+  .is-mobile & {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    opacity: 0.95;
+  }
 
   &__logo {
     align-items: center;
@@ -74,6 +85,11 @@
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
+      padding: $spacer-sm;
+
+      &:first-of-type {
+        padding-left: $spacer-md;
+      }
 
       &:focus,
       &:hover {

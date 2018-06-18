@@ -18,9 +18,11 @@
     }
   }
 
-  .input-group {
-    &::after {
-      background-color: $detail-color--dimmed;
+  .jumbo & {
+    .input-group {
+      &::after {
+        background-color: $detail-color--dimmed;
+      }
     }
   }
 }
