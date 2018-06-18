@@ -85,5 +85,9 @@
   "q": {
     "type": "querystring",
     "skipSplit": true
+  },
+  "geobounds": {
+    "type": "geobounds",
+    "skipSplit": true
   }
 }

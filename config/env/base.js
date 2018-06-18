@@ -121,7 +121,8 @@ let config = {
     rotationalImages: false,
     watermarks: true,
     // Whether to require users to verify their email before they can contribute.
-    requireEmailVerification: false
+    requireEmailVerification: false,
+    preferTargetBlank: true,
   },
   feedback: {
     maxLength: 600,
