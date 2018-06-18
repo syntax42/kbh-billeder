@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('collections-online/shared/config');
+const helpers = require('../../shared/helpers');
 
 const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';
 const RESET_PASSWORD_SUCCESS_ELEMENT = '<p>Check din mail for videre instruktioner.</p>';
@@ -14,37 +15,7 @@ $(function() {
     'geo-tagging:start': 'verified',
     'motif-tagging:start': 'verified',
     'feedback:start': 'verified',
-  }, lock(), verify());
-
-  function lock() {
-    let languageDictionary = {
-      title: config.siteTitle
-    };
-
-    if (config.auth0.acceptTermsText) {
-      languageDictionary.signUpTerms = config.auth0.acceptTermsText;
-    }
-
-    return new Auth0Lock(config.auth0.clientID, config.auth0.domain, {
-      languageDictionary: languageDictionary,
-      // If we've been configured with a path to the terms, we'll require the
-      // user to accept the terms.
-      mustAcceptTerms: !!config.auth0.acceptTermsText,
-      theme: {
-        logo: '/images/favicons/favicon-96x96.png',
-        labeledSubmitButton: false,
-        primaryColor: config.themeColor
-      },
-      language: 'da',
-      auth: {
-        redirectUrl: config.auth0.callbackURL,
-        responseType: 'code',
-        params: {
-          scope: 'openid name email picture'
-        }
-      }
-    });
-  }
+  }, verify());
 
   function verify() {
     // Define a function that can be used to show and hide the overlay.
@@ -73,7 +44,7 @@ $(function() {
     return overlayHandler;
   }
 
-  function restrictActions(actions, lock, verify) {
+  function restrictActions(actions, verify) {
     const authenticated = $('meta[name="authenticated"]').attr('content');
     const verified = authenticated ? $('meta[name="verified"]').attr('content') : 'false';
     const dataActions = Object.keys(actions).map(action => {
@@ -84,16 +55,10 @@ $(function() {
       const requirement = actions[e.target.getAttribute('data-action')];
 
       // If the user is not authenticated, block the use of the action and
-      // display the logon overlay.
+      // redirect the user to a login saving the current url as state.
       if (authenticated !== 'true' && (requirement === 'authenticated' ||  requirement === 'verified')) {
         e.stopPropagation();
-        lock.show({
-          auth: {
-            params: {
-              state: btoa(JSON.stringify({returnPath: window.location.href}))
-            }
-          }
-        });
+        window.location = '/login?state=' + helpers.encodeReturnState(window.location.href);
       }
 
       // If the user is authenticated but not verified, show the verification
