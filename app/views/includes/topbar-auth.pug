@@ -9,4 +9,4 @@ include ../mixins/icon
         a.dropdown__option(href='/min-side') Min side
         a.dropdown__option(href='/logout') Log ud
   else
-    a.topbar__items-link(data-action='login') Log ind
+    a.topbar__items-link(href='/login?state=' + helpers.encodeReturnState(req.url)) Log ind
