@@ -1,4 +1,6 @@
+
 const passport = require('passport');
+const helpers = require('../shared/helpers');
 const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
 const plugins = require('../plugins');
@@ -26,7 +28,19 @@ module.exports = {
       next();
     });
   },
+
   registerRoutes: app => {
+    app.get('/login',
+      function(req, res, next) {
+        req.session["auth_redirect"] = req.query.state;
+        next();
+      },
+      passport.authenticate('auth0',auth0.passportConfig),
+      function(req, res) {
+        res.redirect('/');
+      }
+    );
+
     app.get('/logout', function(req, res) {
       req.logout();
       res.redirect('/');
@@ -54,11 +68,11 @@ module.exports = {
     app.get('/auth/callback', passport.authenticate('auth0', {
       failureRedirect: '/'
     }), function(req, res) {
-      const serializedState = req.query.state;
+      const serializedState = req.session["auth_redirect"];
 
       if(typeof(serializedState) === 'string') {
-        const state = JSON.parse(Buffer.from(serializedState, 'base64'));
-        res.redirect(state.returnPath);
+        const returnPath = helpers.decodeReturnState(serializedState);
+        res.redirect(returnPath);
       } else {
         res.redirect('/');
       }

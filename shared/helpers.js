@@ -244,4 +244,26 @@ helpers.determineMediaTypes = metadata => {
   return players.map(player => player.type);
 };
 
+/**
+ * Prepares a return-url for being added as return parameter.
+ *
+ * @param {string} returnUrl The url
+ * @returns {string} the encoded url
+ */
+helpers.encodeReturnState = function(returnUrl) {
+  // Do a simple base64 encoding.
+  return Buffer.from(returnUrl).toString('base64');
+};
+
+/**
+ * Parses an encoded return-url state parameter into its original form
+ *
+ * @param {string} encodedUrl The encoded value.
+ * @returns {string} The decoded value.
+ */
+helpers.decodeReturnState = function(encodedUrl) {
+  // Do a simple base64 decoding.
+  return Buffer.from(encodedUrl, 'base64').toString('ascii');
+};
+
 module.exports = helpers;
