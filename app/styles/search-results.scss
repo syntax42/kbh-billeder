@@ -27,11 +27,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: $spacer-md;
-  margin-top: $spacer-md;
-
-  @media (min-width: $small-size) {
-    margin-top: $spacer-lg + $spacer-md;
-  }
+  margin-top: $spacer-lg + $spacer-md;
 
   &__sorting {
     flex-shrink: 0;
