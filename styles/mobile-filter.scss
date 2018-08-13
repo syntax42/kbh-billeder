@@ -25,6 +25,18 @@
         padding-top: 30px;
       }
     }
+    &__chosen-filters {
+      .search-filter-sidebar__heading {
+        font-family: $font-family-medium;
+        font-size: 1rem;
+        line-height: $topbar-height;
+        @media (min-width: $small-size) {
+          font-size: 1.285714286rem; // 18/14
+        }
+        background: none;
+        padding-left: 5px;
+      }
+    }
     &__chosen-filters,
     &__filters {
       padding: 20px;
