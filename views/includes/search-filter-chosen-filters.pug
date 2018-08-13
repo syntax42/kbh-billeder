@@ -3,7 +3,7 @@ include ../mixins/search-filter-value
 
 if filterCount > 0
   .search-filter-sidebar__chosen-filters
-    p Valgte filtre
+    p.search-filter-sidebar__heading Valgte filtre
     for values, field in filters
       if typeof(values) === 'string'
           - values = [values]
