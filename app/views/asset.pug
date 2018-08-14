@@ -15,6 +15,13 @@ block document__section-1-metadata
     != assetSection('time', metadata)
     != assetSection('place', metadata)
 
+    if config.features.motifTagging
+      .motif-tagging
+        include ./includes/motif-tagging
+
+block document__section-2
+  // We do not want to show tags again.
+
 block document__section-3
   .document__section-3
     .container-fluid
