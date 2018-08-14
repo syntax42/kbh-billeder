@@ -3,7 +3,6 @@
   color: $white;
   line-height: 1.5;
   position: relative;
-  z-index: 10;
   padding: 0 $spacer-layout;
   @media (min-width: $extra-large-size) {
     padding: 0 $spacer-layout-large;
@@ -85,7 +84,8 @@
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
-      padding: $spacer-sm;
+      padding: $spacer-sm 7px;
+      display: inline-block;
 
       &:first-of-type {
         padding-left: $spacer-md;
@@ -98,7 +98,7 @@
       }
 
       &:not(:last-child, .topbar__name) {
-        margin-right: 1rem;
+        margin-right: 10px;
       }
     }
   }
@@ -136,9 +136,30 @@
     }
   }
 
+  &__name {
+    margin-top: 90px;
+    a {
+      padding: 0;
+    }
+  }
+
   &__auth {
+    width: 110px;
+    .dropdown {
+      width: 100%;
+      &__options {
+        z-index: 15;
+        position: relative;
+        top: 15px;
+      }
+      &__selected {
+        position: static;
+        padding: 0;
+      }
+    }
     .dropdown__selected::after {
       border-top-color: $white;
+      right: -20px;
     }
   }
 }
