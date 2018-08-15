@@ -2,7 +2,7 @@ include ../../mixins/tag
 include ../../mixins/icon
 - const tags = helpers.motifTagging.getVisionTags(metadata) || [];
 
-if tags && tags.length
+if tags && tags.length && config.features.enableVisionTagSuggestions
   h2 Kan nogle af disse emneord bruges?
 
   p.motif-tagging__suggestion-explanation Emneordene er skabt med automatisk billedanalyse. Godkend ved at klikke ’thumbs up’ eller slet ved at klikke på krydset.
