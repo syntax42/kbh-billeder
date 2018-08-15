@@ -310,8 +310,9 @@ $heading-adjustment: 2px;
     background-color: rgba(white, .5);
     padding: $spacer-sm;
 
-    p {
+    .search-filter-sidebar__heading {
       margin-left: $spacer-xs;
+      padding-left: 0;
       .has-filter-open & {
         margin-left: 0;
       }
