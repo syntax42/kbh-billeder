@@ -12,35 +12,37 @@ if Object.keys(metadata).length > 0 && config.features.geoTagging
   - const details = approximate ? ' (anslået)' : '';
 
   if latitude && longitude
-    tr
-      th #{row.title}:
-      td= latitude.toFixed(5) + ', ' + longitude.toFixed(5) + details
-      // Display heading if the asset contains one.
-      if row.titleHeading && heading
-        tr
-          th #{row.titleHeading}:
-          td= headingText + ' (' + heading.toFixed(0) + '°' + ')'
-    tr
-      td(colspan='2')
-        .geo-tagging-mini-map(
-          data-latitude=latitude,
-          data-longitude=longitude,
-          data-heading=heading,
-          data-approximate=approximate ? 'true' : 'false'
-        )
-    if geotaggable
-      - let extraClasses = approximate ? 'btn-primary' : 'btn-default btn-sm';
+    .map
+      .geo-tagging-mini-map(
+        data-latitude=latitude,
+        data-longitude=longitude,
+        data-heading=heading,
+        data-approximate=approximate ? 'true' : 'false'
+      )
+      h2.mini-map__title Sted
+    .map-data
+      tr
+        th #{row.title}:
+        td= latitude.toFixed(5) + ', ' + longitude.toFixed(5) + details
+        // Display heading if the asset contains one.
+        if row.titleHeading && heading
+          tr
+            th #{row.titleHeading}:
+            td= headingText + ' (' + heading.toFixed(0) + '°' + ')'
+      if geotaggable
+        - let extraClasses = approximate ? 'btn-primary' : 'btn-primary btn-sm';
+          tr
+            td(colspan='2')
+              button.btn.btn-block(data-action='geo-tagging:start', class=extraClasses)
+                block map-coordinates__edit-coordinates-text
+  else
+    .map-data
+      tr
+        th #{row.title}:
+        td
+          block map-coordinates__missing-coordinates-text
+      if geotaggable
         tr
           td(colspan='2')
-            button.btn.btn-block(data-action='geo-tagging:start', class=extraClasses)
-              block map-coordinates__edit-coordinates-text
-  else
-    tr
-      th #{row.title}:
-      td
-        block map-coordinates__missing-coordinates-text
-    if geotaggable
-      tr
-        td(colspan='2')
-          button.btn.btn-primary.btn-sm(data-action='geo-tagging:start')
-            block map-coordinates__add-coordinates-text
+            button.btn.btn-primary.btn-sm(data-action='geo-tagging:start')
+              block map-coordinates__add-coordinates-text
