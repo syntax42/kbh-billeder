@@ -1,5 +1,6 @@
 extends ./player-controls
 
-append document__player-controls
-  a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
-    +icon('pinterest')
+prepend document__player-controls
+  div.document__player-controls--social-share
+    a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
+      +icon('pinterest')
