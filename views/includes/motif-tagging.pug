@@ -4,13 +4,13 @@ h2 Emneord
 
 .row.motif-tagging__editing-container
   - const tags = helpers.motifTagging.getVisionTags(metadata) || [];
-  if tags && tags.length
+  if tags && tags.length && config.features.enableVisionTagSuggestions
     .col-md-6
       .motif-tagging__tag-suggestions(data-template='tag-suggestions')
 
   // Only set the offset class if we have tags (in which case we have a
   // suggestion element in front of us).
-  div(class={"col-md-4": true, "col-md-offset-1": tags && tags.length })
+  div(class={"col-md-4": true, "col-md-offset-1": tags && tags.length && config.features.enableVisionTagSuggestions })
     h2 Tilføj flere emneord
     div Husk at gemme til sidst.
     .motif-tagging__add-tag
