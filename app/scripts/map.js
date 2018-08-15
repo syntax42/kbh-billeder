@@ -1,134 +1,185 @@
 'use strict';
 
-var Map = (function () {
-    var vectorSource;
+/**
+ * Read in options and set defaults.
+ */
+function _prepareMapOptions (options) {
+  if (!options) {
+    options = {};
+  }
 
-    //function Map() {
-    //}
+  if (!options.center) {
+    options.center = [12.58, 55.67];
+  }
 
-    Map.prototype.init = function (mapElem, mc, options) {
-        if (!options)
-            options = {};
+  if (!options.zoomLevel) {
+    options.zoomLevel = 12;
+  }
 
-        if (!options.center)
-            options.center = [12.58, 55.67];
+  if (!options.onMoveStart) {
+    options.onMoveStart = function () {};
+  }
 
-        if (!options.zoomLevel)
-            options.zoomLevel = 12;
+  if (!options.onMoveStart) {
+    options.onMoveEnd = function () {};
+  }
 
-        var rasterLayer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
+  return options;
+}
+
+/**
+ * Setup a map instance and wrap it in an object containing references to
+ * everything we'll need to handle the map going forward.
+ */
+function _prepareMap (center, zoomLevel) {
+  // Collect any map-related objects we're going to be referencing in the rest
+  // of the setup and in callbacks.
+  var mapState = {};
+
+  mapState.vectorSource = new ol.source.Vector({
+    features: []
+  });
+
+  mapState.clusterSource = new ol.source.Cluster({
+    distance: 70,
+    source: mapState.vectorSource
+  });
+
+  var styleCache = {};
+
+  // TODO, consider if we can get ol injected to make it easier to eg. test.
+  mapState.vectorLayer = new ol.layer.Vector({
+    source: mapState.clusterSource,
+    updateWhileInteracting: true,
+    updateWhileAnimating: true,
+    style: function (feature) {
+      var subFeatures = feature.get('features');
+      var count = 0;
+      for (var i = 0; i < subFeatures.length; i++) {
+        count += subFeatures[i].asset.count;
+      }
+      var style = styleCache[count];
+      if (!style) {
+        style = new ol.style.Style({
+          image: new ol.style.Icon({
+            anchor: [0.5, 0.5],
+            // TODO, pass asset references in via eg. options.
+            src: '/app/images/icons/map/m' + Math.min(count.toString().length, 3) + '.png'
+          }),
+          text: new ol.style.Text({
+            text: count.toString(),
+            font: '11px Arial, sans-serif',
+            fill: new ol.style.Fill({
+              color: '#e32166'
+            }),
+            stroke: new ol.style.Stroke({
+              color: '#fff',
+              width: 3
             })
+          })
         });
-        this.vectorSource = new ol.source.Vector({
-            features: []
-        });
-        var clusterSource = new ol.source.Cluster({
-            distance: 70,
-            source: this.vectorSource
-        });
-        var styleCache = {};
-        var vectorLayer = new ol.layer.Vector({
-            source: clusterSource,
-            updateWhileInteracting: true,
-            updateWhileAnimating: true,
-            style: function (feature) {
-                var subFeatures = feature.get('features');
-                var count = 0;
-                for (var i = 0; i < subFeatures.length; i++)
-                    count += subFeatures[i].asset.count;
-                var style = styleCache[count];
-                if (!style) {
-                    style = new ol.style.Style({
-                        image: new ol.style.Icon({
-                            anchor: [0.5, 0.5],
-                            src: '/app/images/icons/map/m' + Math.min(count.toString().length, 3) + '.png'
-                        }),
-                        text: new ol.style.Text({
-                            text: count.toString(),
-                            font: '11px Arial, sans-serif',
-                            fill: new ol.style.Fill({
-                                color: '#e32166'
-                            }),
-                            stroke: new ol.style.Stroke({
-                                color: '#fff',
-                                width: 3
-                            })
-                        })
-                    })
-                    styleCache[count] = style;
-                }
-                return style;
-            }
-        });
-
-        this.view = new ol.View({
-            center: ol.proj.fromLonLat(options.center),
-            zoom: options.zoomLevel
-        })
-        var map = new ol.Map({
-            target: mapElem,
-            layers: [rasterLayer, vectorLayer],
-            view: this.view,
-            controls: [],
-            loadTilesWhileInteracting: true,
-            loadTilesWhileAnimating: true
-        });
-
-        var _vs = this.vectorSource;
-        map.on('movestart', function (evt) {
-            _vs.clear(true);
-        })
-        map.on('moveend', function (evt) {
-            mc.refresh();
-        })
-
-        //mc.refresh();
+        styleCache[count] = style;
+      }
+      return style;
     }
+  });
 
-    Map.prototype.show = function (assets) {
+  mapState.view = new ol.View({
+    center: ol.proj.fromLonLat(center),
+    zoom: zoomLevel
+  });
 
-        this.vectorSource.clear(true);
-        var features = [];
-        for (var i = 0; i < assets.length; i++) {
-            var asset = assets[i];
-            var feature = new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.fromLonLat([asset.longitude, asset.latitude]))
-            });
-            feature.asset = asset;
-            features.push(feature)
-        }
-        this.vectorSource.addFeatures(features);
+  var rasterLayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+      url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
+    })
+  });
+
+  mapState.map = new ol.Map({
+    target: mapElement,
+    layers: [rasterLayer, mapState.vectorLayer],
+    view: mapState.view,
+    controls: [],
+    loadTilesWhileInteracting: true,
+    loadTilesWhileAnimating: true
+  });
+
+  return mapState;
+}
+
+/**
+ * Integration between kbhbilleder and a map-provider.
+ */
+function Map(mapElement, options) {
+  // Clean up our options.
+  options = _prepareMapOptions(options);
+
+  // Then prepare the map for use and get a state object we can use to interact
+  // with the map.
+  var mapState = _prepareMap(options.center, options.zoomLevel);
+
+  // Setup handler functions the client will use to interact with the map - ie.
+  // we never expose the mapState to the user, only handler functions.
+  var mapHandler = {};
+
+  // TODO: Document handler functions, and deside whether "handler" is the
+  // best name.
+  mapHandler.show = function (assets) {
+    mapState.vectorSource.clear(true);
+    var features = [];
+    for (var i = 0; i < assets.length; i++) {
+      var asset = assets[i];
+      var feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([asset.longitude, asset.latitude]))
+      });
+      feature.asset = asset;
+      features.push(feature);
     }
+    mapState.vectorSource.addFeatures(features);
+  };
 
-    Map.prototype.getBoundingBox = function () {
-        var extent = this.view.calculateExtent();
-        var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
-        var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
-        return {
-            topLeft: {
-                longitude: topLeft[0],
-                latitude: topLeft[1]
-            },
-            bottomRight: {
-                longitude: bottomRight[0],
-                latitude: bottomRight[1]
-            }
-        }
-    }
+  mapHandler.getBoundingBox = function () {
+    var extent = mapState.view.calculateExtent();
+    var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
+    var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
+    return {
+      topLeft: {
+        longitude: topLeft[0],
+        latitude: topLeft[1]
+      },
+      bottomRight: {
+        longitude: bottomRight[0],
+        latitude: bottomRight[1]
+      }
+    };
+  };
 
-    Map.prototype.getCenter = function () {
-        var center = ol.proj.toLonLat(this.view.getCenter());
-        return {
-            longitude: center[0],
-            latitude: center[1]
-        }
-    }
+  mapHandler.getCenter = function () {
+    var center = ol.proj.toLonLat(mapState.view.getCenter());
+    return {
+      longitude: center[0],
+      latitude: center[1]
+    };
+  };
 
-    Map.prototype.getZoomLevel = function () {
-        return this.view.getZoom();
-    }
+  mapHandler.clear = function () {
+    mapState.vectorSource.clear(true);
+  };
 
-    return Map;
-}());
+  mapHandler.getZoomLevel = function () {
+    return mapState.view.getZoom();
+  };
+
+  // Event handling - integrate the clients event handlers.
+  mapState.map.on('movestart', function (event) {
+    options.onMoveStart(mapHandler);
+  });
+  mapState.map.on('moveend', function (event) {
+    options.onMoveEnd(mapHandler);
+  });
+
+  return mapHandler;
+};
+
+// TODO - integrate into the site.
+// module.exports = Map;
