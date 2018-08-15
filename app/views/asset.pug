@@ -5,6 +5,10 @@ block document__section-1-metadata
   - const documentDescription = helpers.documentDescription(metadata);
   - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
   .document__section-1-metadata.col-xs-12.col-md-5
+    div.document__back-link
+      a(onclick='window.history.back()')
+        +icon('arrow-thin-left')
+        | Tilbage til søgningen
     if(documentTitle)
       h1.document__title= documentTitle
     if(documentDescription)
