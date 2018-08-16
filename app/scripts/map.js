@@ -31,10 +31,12 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (center, zoomLevel) {
+function _prepareMap (mapElement, center, zoomLevel) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
+
+  mapState.mapElement = mapElement;
 
   mapState.vectorSource = new ol.source.Vector({
     features: []
@@ -116,7 +118,7 @@ function Map(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(options.center, options.zoomLevel);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -177,6 +179,33 @@ function Map(mapElement, options) {
   mapState.map.on('moveend', function (event) {
     options.onMoveEnd(mapHandler);
   });
+
+  mapState.map.on('pointermove', function (event) {
+    var hoverFeature;
+    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { hoverFeature = feature; return true; });
+    mapState.mapElement.style.cursor = hoverFeature ? 'pointer' : '';
+  })
+
+  mapState.map.on('click', function (event) {
+    var clickFeature;
+    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
+
+    if (!clickFeature)
+      return;
+
+    var subFeatures = clickFeature.get('features');
+
+    if (subFeatures.length == 1 && !subFeatures[0].asset.clustered) {
+      alert('clicked one asset'); // TODO...............
+      return;
+    }
+
+    mapState.view.animate({
+      center: clickFeature.getGeometry().getCoordinates(),
+      duration: 1000,
+      zoom: mapState.view.getZoom() + 2
+    });
+  })
 
   return mapHandler;
 };
