@@ -7,6 +7,8 @@ var Map = (function () {
     //}
 
     Map.prototype.init = function (mapElem, mc, options) {
+        var _this = this;
+
         if (!options)
             options = {};
 
@@ -25,7 +27,7 @@ var Map = (function () {
             features: []
         });
         var clusterSource = new ol.source.Cluster({
-            distance: 70,
+            distance: 60,
             source: this.vectorSource
         });
         var styleCache = {};
@@ -76,17 +78,44 @@ var Map = (function () {
             loadTilesWhileAnimating: true
         });
 
-        var _vs = this.vectorSource;
         map.on('movestart', function (evt) {
-            _vs.clear(true);
+            _this.vectorSource.clear(true);
         })
         map.on('moveend', function (evt) {
             mc.refresh();
         })
 
+        map.on('pointermove', function (evt) {
+            var hoverFeature;
+            map.forEachFeatureAtPixel(map.getEventPixel(evt.originalEvent), function (feature) { hoverFeature = feature; return true; });
+            mapElem.style.cursor = hoverFeature ? 'pointer' : '';
+        })
+
+        map.on('click', function (evt) {
+            var clickFeature;
+            map.forEachFeatureAtPixel(map.getEventPixel(evt.originalEvent), function (feature) { clickFeature = feature; return true; });
+
+            if (!clickFeature)
+                return;
+
+            var subFeatures = clickFeature.get('features');
+
+            if (subFeatures.length == 1 && !subFeatures[0].asset.clustered) {
+                alert('clicked one asset'); // TODO...............
+                return;
+            }
+
+            _this.view.animate({
+                center: clickFeature.getGeometry().getCoordinates(),
+                duration: 1000,
+                zoom: _this.view.getZoom() + 2
+            });
+        })
+
         //mc.refresh();
     }
 
+    //API
     Map.prototype.show = function (assets) {
 
         this.vectorSource.clear(true);
@@ -102,6 +131,7 @@ var Map = (function () {
         this.vectorSource.addFeatures(features);
     }
 
+    //API
     Map.prototype.getBoundingBox = function () {
         var extent = this.view.calculateExtent();
         var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
@@ -118,6 +148,7 @@ var Map = (function () {
         }
     }
 
+    //API
     Map.prototype.getCenter = function () {
         var center = ol.proj.toLonLat(this.view.getCenter());
         return {
@@ -125,7 +156,8 @@ var Map = (function () {
             latitude: center[1]
         }
     }
-
+    
+    //API
     Map.prototype.getZoomLevel = function () {
         return this.view.getZoom();
     }
