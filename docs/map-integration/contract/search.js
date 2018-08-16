@@ -15,6 +15,7 @@ var MC = (function () {
       console.log(mapHandler.getCenter());
       var xhr = new XMLHttpRequest();
       xhr.open('GET', 'search-asset-list.json', true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
       xhr.onload = function (e) {
         console.log("Showing");
         mapHandler.show(JSON.parse(xhr.responseText));
@@ -27,8 +28,8 @@ var MC = (function () {
     this.map = Map(
       document.getElementById('map'),
       {
-        center: [12.58, 55.67],
-        zoomLevel: 13,
+        center: [12.8, 55.67],
+        zoomLevel: 10,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd
       }
@@ -36,12 +37,13 @@ var MC = (function () {
   }
 
   //called by the map when a refresh of the assets is required
-  MC.prototype.refresh = function () {
+  MC.prototype.refresh = function () { //TODO, still needed or replaced by "onMoveEnd"?
     var _this = this;
 
     //STATIC demonstration
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'search-asset-list.json', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     xhr.onload = function (e) {
       _this.map.show(JSON.parse(xhr.responseText));
     };

@@ -56,6 +56,11 @@ function _prepareMap (mapElement, center, zoomLevel) {
     updateWhileAnimating: true,
     style: function (feature) {
       var subFeatures = feature.get('features');
+
+      if (subFeatures.length == 1)
+        if (!subFeatures[0].asset.clustered)
+          return subFeatures[0].getStyle();
+
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
         count += subFeatures[i].asset.count;
@@ -64,7 +69,7 @@ function _prepareMap (mapElement, center, zoomLevel) {
       if (!style) {
         style = new ol.style.Style({
           image: new ol.style.Icon({
-            anchor: [0.5, 0.5],
+            //anchor: [0.5, 0.5], TODO, needed?
             // TODO, pass asset references in via eg. options.
             src: '/app/images/icons/map/m' + Math.min(count.toString().length, 3) + '.png'
           }),
@@ -106,6 +111,10 @@ function _prepareMap (mapElement, center, zoomLevel) {
     loadTilesWhileAnimating: true
   });
 
+  //Create popup
+  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><h1 id="mapPopupHeading"></h1></div>');
+  mapState.mapPopupElement = document.getElementById('mapPopup');
+
   return mapState;
 }
 
@@ -134,6 +143,13 @@ function Map(mapElement, options) {
       var feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([asset.longitude, asset.latitude]))
       });
+      if (!asset.clustered)
+        feature.setStyle(new ol.style.Style({
+          image: new ol.style.Icon({
+            // TODO, pass asset references in via eg. options.
+            src: '/app/images/icons/map/pin.png'
+          })
+        }));
       feature.asset = asset;
       features.push(feature);
     }
@@ -174,6 +190,7 @@ function Map(mapElement, options) {
 
   // Event handling - integrate the clients event handlers.
   mapState.map.on('movestart', function (event) {
+    mapState.mapPopupElement.style.display = 'none';
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
@@ -190,13 +207,21 @@ function Map(mapElement, options) {
     var clickFeature;
     mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
 
+    mapState.mapPopupElement.style.display = 'none';
+
     if (!clickFeature)
       return;
 
     var subFeatures = clickFeature.get('features');
+    var asset = subFeatures[0].asset;
 
-    if (subFeatures.length == 1 && !subFeatures[0].asset.clustered) {
-      alert('clicked one asset'); // TODO...............
+    if (subFeatures.length == 1 && !asset.clustered) {
+      var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
+      mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
+      mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
+      document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
+      document.getElementById('mapPopupHeading').innerText = asset.short_title;
+      mapState.mapPopupElement.style.display = 'block';
       return;
     }
 
