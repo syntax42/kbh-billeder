@@ -21,6 +21,15 @@ helpers.documentLicense = (metadata) => {
   return metadata.license && metadata.license.id;
 };
 
+helpers.getBacksideAssets = (metadata) => {
+  // Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
+  let cumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
+  if (metadata.related && metadata.related.assets) {
+    return [metadata.related.assets.filter(asset => asset.id).filter(asset => asset.relation === cumulusKey)];
+  }
+  return [];
+};
+
 // TODO: Delete this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
   let path = [metadata.collection || metadata.catalog];
@@ -32,11 +41,26 @@ helpers.getDocumentURL = (metadata) => {
 };
 
 helpers.determinePlayers = metadata => {
-  return [{
-    type: 'image',
-    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-    title: helpers.documentTitle(metadata)
-  }];
+  const players = [];
+  let backsideAssets = helpers.getBacksideAssets(metadata);
+
+  if (backsideAssets) {
+    players.push({
+      type: 'backside',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      backsides: backsideAssets
+    });
+  }
+
+  else {
+    players.push({
+      type: 'image',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      title: helpers.documentTitle(metadata)
+    });
+  }
+
+  return players;
 };
 
 helpers.generateSitemapElements = (metadata) => {
