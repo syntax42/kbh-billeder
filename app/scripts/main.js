@@ -31,6 +31,14 @@ function pinterestshareCurrentPage() {
   return false;
 }
 
+function flipAsset() {
+  var image = document.getElementsByClassName('asset__image')[0];
+  var backside = document.getElementsByClassName('asset__image--backside')[0];
+  image.classList.toggle('asset__image--hide');
+  backside.classList.toggle('asset__image--hide');
+  return false;
+}
+
 $(function() {
   var AssetPage = window.AssetPage;
   AssetPage.init();
