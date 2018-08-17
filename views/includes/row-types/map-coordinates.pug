@@ -5,6 +5,7 @@ if Object.keys(metadata).length > 0 && config.features.geoTagging
   - const latitude = helpers.getFirst(metadata, row.fields.latitude);
   - const longitude = helpers.getFirst(metadata, row.fields.longitude);
   - const heading = helpers.getFirst(metadata, row.fields.heading);
+  - const headingText = helpers.headingToText(heading);
   - const approximate = helpers.getFirst(metadata, row.fields.approximate);
   - const geotaggable = helpers.geoTagging.enabled(metadata);
 
@@ -14,6 +15,11 @@ if Object.keys(metadata).length > 0 && config.features.geoTagging
     tr
       th #{row.title}:
       td= latitude.toFixed(5) + ', ' + longitude.toFixed(5) + details
+      // Display heading if the asset contains one.
+      if row.titleHeading && heading
+        tr
+          th #{row.titleHeading}:
+          td= headingText + ' (' + heading.toFixed(0) + '°' + ')'
     tr
       td(colspan='2')
         .geo-tagging-mini-map(
