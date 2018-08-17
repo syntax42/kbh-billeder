@@ -16,6 +16,10 @@ function _prepareMapOptions (options) {
     options.zoomLevel = 12;
   }
 
+  if (!options.clusterAtZoomLevel) {
+    options.clusterAtZoomLevel = 11;
+  }
+
   if (!options.onMoveStart) {
     options.onMoveStart = function () {};
   }
@@ -61,6 +65,8 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
     updateWhileAnimating: true,
     style: function (feature) {
       var subFeatures = feature.get('features');
+      if (!subFeatures)
+        subFeatures = [feature];
 
       if (subFeatures.length == 1)
         if (!subFeatures[0].asset.clustered)
@@ -196,6 +202,10 @@ function Map(mapElement, options) {
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
+    
+    //if (options.clusterAtZoomLevel < mapState.view.getZoom())
+    mapState.vectorLayer.setSource(options.clusterAtZoomLevel < mapState.view.getZoom() ? mapState.vectorSource : mapState.clusterSource);
+
     options.onMoveEnd(mapHandler);
   });
 
@@ -215,6 +225,9 @@ function Map(mapElement, options) {
       return;
 
     var subFeatures = clickFeature.get('features');
+    if (!subFeatures)
+      subFeatures = [clickFeature];
+
     var asset = subFeatures[0].asset;
 
     if (subFeatures.length == 1 && !asset.clustered) {

@@ -34,6 +34,7 @@ var MC = (function () {
       {
         center: [12.8, 55.67],
         zoomLevel: 10,
+        clusterAtZoomLevel: 11,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
         onPopupClick: onPopupClick,
