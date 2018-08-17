@@ -35,7 +35,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel) {
+function _prepareMap (mapElement, center, zoomLevel, icons) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -52,6 +52,7 @@ function _prepareMap (mapElement, center, zoomLevel) {
   });
 
   var styleCache = {};
+  var featureIcons = [, icons.clusterSmall, icons.clusterMedium, icons.clusterLarge];
 
   // TODO, consider if we can get ol injected to make it easier to eg. test.
   mapState.vectorLayer = new ol.layer.Vector({
@@ -73,8 +74,7 @@ function _prepareMap (mapElement, center, zoomLevel) {
       if (!style) {
         style = new ol.style.Style({
           image: new ol.style.Icon({
-            // TODO, pass asset references in via eg. options.
-            src: '/app/images/icons/map/m' + Math.min(count.toString().length, 3) + '.png'
+            src: featureIcons[Math.min(count.toString().length, 3)]
           }),
           text: new ol.style.Text({
             text: count.toString(),
@@ -130,7 +130,7 @@ function Map(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -149,8 +149,7 @@ function Map(mapElement, options) {
       if (!asset.clustered)
         feature.setStyle(new ol.style.Style({
           image: new ol.style.Icon({
-            // TODO, pass asset references in via eg. options.
-            src: '/app/images/icons/map/pin.png'
+            src: options.icons.asset
           })
         }));
       feature.asset = asset;

@@ -36,7 +36,13 @@ var MC = (function () {
         zoomLevel: 10,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
-        onPopupClick: onPopupClick
+        onPopupClick: onPopupClick,
+        icons: {
+          clusterSmall: '/app/images/icons/map/m1.png',
+          clusterMedium: '/app/images/icons/map/m2.png',
+          clusterLarge: '/app/images/icons/map/m3.png',
+          asset: '/app/images/icons/map/pin.png'
+        }
       }
     );
   }
