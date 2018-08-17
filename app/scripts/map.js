@@ -24,6 +24,10 @@ function _prepareMapOptions (options) {
     options.onMoveEnd = function () {};
   }
 
+  if (!options.onPopupClick) {
+    options.onPopupClick = function (id) { };
+  }
+
   return options;
 }
 
@@ -69,7 +73,6 @@ function _prepareMap (mapElement, center, zoomLevel) {
       if (!style) {
         style = new ol.style.Style({
           image: new ol.style.Icon({
-            //anchor: [0.5, 0.5], TODO, needed?
             // TODO, pass asset references in via eg. options.
             src: '/app/images/icons/map/m' + Math.min(count.toString().length, 3) + '.png'
           }),
@@ -222,6 +225,7 @@ function Map(mapElement, options) {
       document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
       document.getElementById('mapPopupHeading').innerText = asset.short_title;
       mapState.mapPopupElement.style.display = 'block';
+      mapState.mapPopupElement.assetId = asset.id;
       return;
     }
 
@@ -230,6 +234,10 @@ function Map(mapElement, options) {
       duration: 1000,
       zoom: mapState.view.getZoom() + 2
     });
+  })
+
+  mapState.mapPopupElement.addEventListener('click', function () {
+    options.onPopupClick(mapState.mapPopupElement.assetId);
   })
 
   return mapHandler;

@@ -24,6 +24,10 @@ var MC = (function () {
 
     };
 
+    var onPopupClick = function (id) {
+      console.log("popup click with id: " + id);
+    }
+
     //create and init map object
     this.map = Map(
       document.getElementById('map'),
@@ -31,7 +35,8 @@ var MC = (function () {
         center: [12.8, 55.67],
         zoomLevel: 10,
         onMoveStart: onMoveStart,
-        onMoveEnd: onMoveEnd
+        onMoveEnd: onMoveEnd,
+        onPopupClick: onPopupClick
       }
     );
   }
