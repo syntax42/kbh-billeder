@@ -37,6 +37,7 @@
         }, {
           "title": "Koordinater",
           "type": "map-coordinates",
+          "titleHeading": "Kompasretning",
           "fields": {
             "latitude": "latitude",
             "longitude": "longitude",

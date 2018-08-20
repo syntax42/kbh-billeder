@@ -1,6 +1,8 @@
 extends ./player-controls
 
 prepend document__player-controls
+  a.document__player-controls--rotate(href="javascript:flipAsset()")
+    +icon('clockwise')
   div.document__player-controls--social-share
     a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
       +icon('pinterest')

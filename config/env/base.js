@@ -123,6 +123,7 @@ let config = {
     // Whether to require users to verify their email before they can contribute.
     requireEmailVerification: false,
     preferTargetBlank: true,
+    enableVisionTagSuggestions: false,
   },
   feedback: {
     maxLength: 600,
