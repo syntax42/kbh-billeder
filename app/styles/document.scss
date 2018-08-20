@@ -5,7 +5,44 @@
     }
   }
   &__player-controls {
-    float: right;
+    .zoom-in {
+      display: inline-block;
+    }
+    .zoom-out {
+      display: none;
+    }
+    &__rotate {
+      position: absolute;
+      &--item {
+        float: left;
+        display: none;
+        &--active {
+          display: block;
+        }
+      }
+      svg {
+        transform: rotate(280deg);
+        float: left;
+      }
+    }
+    &--social-share {
+      float: right;
+      &:first-of-type {
+        margin-left: 12px;
+      }
+    }
+    a {
+      span {
+        margin-left: 5px;
+        color: $gray-darker;
+        font-weight: bold;
+        .document__expandable--expanded & {
+          .zoom-in {
+            display: none;
+          }
+        }
+      }
+    }
   }
   &__back-link {
     margin-bottom: 30px;
