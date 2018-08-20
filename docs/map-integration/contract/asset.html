@@ -3,16 +3,80 @@
 <head>
     <title>Map Search documentation</title>
 
-    <link rel="stylesheet" href="single.css" type="text/css" />
-    <link rel="stylesheet" href="map.css" type="text/css" />
+    <link rel="stylesheet" href="single.css" type="text/css"/>
+    <link rel="stylesheet" href="map.css" type="text/css"/>
 
     <script src="../../../app/scripts/ol.js"></script>
     <script src="../../../app/scripts/historisk-atlas.js"></script>
-    <script src="single.js"></script>
+    <script language="JavaScript">
+      var module = {exports: {}};
+    </script>
+    <script src="../../../controllers/map-controller.js"></script>
+    <script language="JavaScript">
+
+      (function(){
+          //MapController for demo purpose
+          var MC = (function () {
+              var ha;
+              function MC() {
+
+                  //create and init map object
+                  ha = HistoriskAtlas(
+                    document.getElementById('map'),
+                    {
+                        mode: 'single',
+                        center: [12.35760, 55.71490],
+                        zoomLevel: 16,
+                        icons: {
+                            asset: '/app/images/icons/map/pinselected.png',
+                            assetHeading: '/app/images/icons/map/pinheadingselected.png',
+                            assetEdit: '/app/images/icons/map/pinedit.png',
+                            assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
+                            camera: '/app/images/icons/map/camera.png'
+                        }
+                    }
+                  );
+
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('GET', 'asset-single-asset.json', true);
+                  xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                  xhr.onload = function (e) {
+                      console.log("Showing");
+                      ha.show([JSON.parse(xhr.responseText)]);
+                  };
+                  xhr.send(null);
+              }
+
+              MC.prototype.toggleEdit = function() {
+                  ha.toggleEditMode();
+              }
+
+              return MC;
+          }());
+
+          window.onload = function () {
+              //create and init map controller object
+              var mc = new MC();
+
+              document.getElementById("toggleedit").onclick = function () {
+                  mc.toggleEdit();
+              }
+          };
+
+      })();
+    </script>
+    <style>
+        #map {
+            width: 1000px;
+            height: 600px;
+        }
+    </style>
 </head>
 <body>
 
     <div id="map"></div>
+    <br>
+    <input type="button" id="toggleedit" value="Toggle edit mode" />
 
 </body>
 </html>
