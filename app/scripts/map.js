@@ -149,13 +149,15 @@ function Map(mapElement, options) {
     var features = [];
     for (var i = 0; i < assets.length; i++) {
       var asset = assets[i];
+      var coords = asset.geohash ? mapState.getCoordinateFromGeohash(asset.geohash) : [asset.longitude, asset.latitude];
       var feature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([asset.longitude, asset.latitude]))
+        geometry: new ol.geom.Point(ol.proj.fromLonLat(coords))
       });
       if (!asset.clustered)
         feature.setStyle(new ol.style.Style({
           image: new ol.style.Icon({
-            src: options.icons.asset
+            src: asset.heading == undefined ? options.icons.asset : options.icons.assetHeading,
+            rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
           })
         }));
       feature.asset = asset;
@@ -251,6 +253,59 @@ function Map(mapElement, options) {
   mapState.mapPopupElement.addEventListener('click', function () {
     options.onPopupClick(mapState.mapPopupElement.assetId);
   })
+
+  mapState.getCoordinateFromGeohash = function (geohash) {
+    var bounds = this.getBoundsFromGeohash(geohash);
+    var latMin = bounds.sw.lat, lonMin = bounds.sw.lon;
+    var latMax = bounds.ne.lat, lonMax = bounds.ne.lon;
+    var lat = (latMin + latMax) / 2;
+    var lon = (lonMin + lonMax) / 2;
+
+    lat = lat.toFixed(Math.floor(2 - Math.log(latMax - latMin) / Math.LN10));
+    lon = lon.toFixed(Math.floor(2 - Math.log(lonMax - lonMin) / Math.LN10));
+
+    return [Number(lon), Number(lat)];
+  }
+
+  mapState.getBoundsFromGeohash = function (geohash) {
+    if (geohash.length === 0) throw new Error('Invalid geohash');
+
+    geohash = geohash.toLowerCase();
+
+    var evenBit = true;
+    var latMin =  -90, latMax =  90;
+    var lonMin = -180, lonMax = 180;
+
+    for (var i=0; i<geohash.length; i++) {
+      var chr = geohash.charAt(i);
+      var idx = '0123456789bcdefghjkmnpqrstuvwxyz'.indexOf(chr);
+      if (idx == -1) throw new Error('Invalid geohash');
+
+      for (var n=4; n>=0; n--) {
+        var bitN = idx >> n & 1;
+        if (evenBit) {
+          // longitude
+          var lonMid = (lonMin+lonMax) / 2;
+          if (bitN == 1) {
+            lonMin = lonMid;
+          } else {
+            lonMax = lonMid;
+          }
+        } else {
+          // latitude
+          var latMid = (latMin+latMax) / 2;
+          if (bitN == 1) {
+            latMin = latMid;
+          } else {
+            latMax = latMid;
+          }
+        }
+        evenBit = !evenBit;
+      }
+    }
+
+    return { sw: { lat: latMin, lon: lonMin }, ne: { lat: latMax, lon: lonMax } };
+  }
 
   return mapHandler;
 };

@@ -1644,6 +1644,7 @@
     "latitude": 55.665,
     "longitude": 13.442,
     "clustered": false,
+    "heading": 0,
     "count": 1
   },
   {
@@ -1653,6 +1654,7 @@
     "latitude": 55.71490943396886,
     "longitude": 13.357608368122897,
     "clustered": false,
+    "heading": 42,
     "count": 1
   },
   {
