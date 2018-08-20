@@ -130,7 +130,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
 /**
  * Integration between kbhbilleder and a map-provider.
  */
-function Map(mapElement, options) {
+function HistoriskAtlas(mapElement, options) {
   // Clean up our options.
   options = _prepareMapOptions(options);
 
