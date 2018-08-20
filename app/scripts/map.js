@@ -121,7 +121,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
   });
 
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><h1 id="mapPopupHeading"></h1></div>');
+  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><h1 id="mapPopupHeading"></h1></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   return mapState;
@@ -252,6 +252,10 @@ function Map(mapElement, options) {
 
   mapState.mapPopupElement.addEventListener('click', function () {
     options.onPopupClick(mapState.mapPopupElement.assetId);
+  })
+
+  document.getElementById('mapPopupClose').addEventListener('click', function () {
+    mapState.mapPopupElement.style.display = 'none';
   })
 
   mapState.getCoordinateFromGeohash = function (geohash) {
