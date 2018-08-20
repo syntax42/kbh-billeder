@@ -2,6 +2,8 @@ extends ./player-controls
 
 block document__player-controls
   - const isDownloadable = helpers.isDownloadable(metadata);
+  - const hasBacksideAsset = helpers.hasBacksideAsset(metadata);
+
   a(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn
     +icon('zoom-in', 'zoom-in')
     +icon('zoom-out', 'zoom-out')
@@ -10,12 +12,14 @@ block document__player-controls
   a(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed')
     +icon('download')
     span Download
-  a.document__player-controls__rotate(href="javascript:flipAsset()")
-    +icon('clockwise')
-    span.document__player-controls__rotate--item.document__player-controls__rotate--backside.document__player-controls__rotate--item--active
-      | Se bagside
-    span.document__player-controls__rotate--item.document__player-controls__rotate--front
-      | Se forside
+
+  if hasBacksideAsset
+    a.document__player-controls__rotate(href="javascript:flipAsset()")
+      +icon('clockwise')
+      span.document__player-controls__rotate--item.document__player-controls__rotate--backside.document__player-controls__rotate--item--active
+        | Se bagside
+      span.document__player-controls__rotate--item.document__player-controls__rotate--front
+        | Se forside
 
   div.document__player-controls--social-share
     a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
