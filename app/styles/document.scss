@@ -7,4 +7,19 @@
   &__player-controls {
     float: right;
   }
+  &__back-link {
+    margin-bottom: 30px;
+    a {
+      color: $brand-primary;
+      font-weight: bold;
+    }
+    svg {
+      height: 25px;
+      width: 25px;
+      fill: $brand-primary;
+      position: relative;
+      top: 6px;
+      margin-right: 5px;
+    }
+  }
 }
