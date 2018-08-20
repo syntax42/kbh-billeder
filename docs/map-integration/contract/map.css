@@ -1,0 +1,60 @@
+/* from "main.css" */
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: FFUnitWebLight,sans-serif;
+    line-height: 1.6;
+    color: #555;
+}
+h1 {
+    font-size: 2em;
+    margin-left: -1px;
+    margin-top: 22px;
+    margin-right: 0px;
+    letter-spacing: -.03em;
+    line-height: 1.25;
+    font-weight: 400;
+    font-family: inherit;
+    color: inherit;
+}
+
+
+/* map specific */
+#mapPopup {
+    position: absolute;
+    display: none;
+    width: 220px;
+    cursor: pointer;
+    background-color: #fff;
+    border-top: 4px solid #e61a64;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
+}
+#mapPopup::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    width: 0;
+    height: 0;
+    border-top: solid 10px #fff;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+}
+#mapPopupImage {
+    height: 220px;
+    width: 220px;
+    background-size: cover;
+}
+
+#mapPopupHeading {
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    user-select: none;
+}
