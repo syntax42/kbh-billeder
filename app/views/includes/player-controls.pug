@@ -1,5 +1,7 @@
 extends ./player-controls
 
 append document__player-controls
+  a.document__player-controls--rotate(href="javascript:flipAsset()")
+    +icon('clockwise')
   a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
     +icon('pinterest')

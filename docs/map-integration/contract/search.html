@@ -3,16 +3,66 @@
 <head>
     <title>Map Search documentation</title>
 
-    <link rel="stylesheet" href="search.css" type="text/css" />
-    <link rel="stylesheet" href="map.css" type="text/css" />
-    
+    <link rel="stylesheet" href="search.css" type="text/css"/>
+    <link rel="stylesheet" href="map.css" type="text/css"/>
+
     <script src="../../../app/scripts/ol.js"></script>
-    <script src="../../../app/scripts/map.js"></script>
-    <script src="search.js"></script>
+    <script src="../../../app/scripts/historisk-atlas.js"></script>
+    <script language="JavaScript">
+      var module = {exports: {}};
+    </script>
+    <script src="../../../controllers/map-controller.js"></script>
+    <script language="JavaScript">
+      (function(){
+        var _currentSearchResult = [];
+
+        var _mockedSearchController = {
+          // Called by the map controller when the search controller asks it to
+          // update because the search results has been changed.
+          getCurrentResults: function() {
+            return _currentSearchResult;
+          },
+
+          // Called by the map controller prior to triggering a new search.
+          getCurrentSearchParameters: function () {
+            return {};
+          },
+
+          // Mocked search function, called by the map controller when HA changes.
+          search: function (params) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'search-asset-list.json', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            xhr.onload = function (e) {
+              _currentSearchResult = JSON.parse(xhr.responseText);
+              mapController.onUpdate();
+            };
+            xhr.send(null);
+          }
+        };
+
+        var mapController;
+        window.onload = function () {
+          mapController = MapController(document.getElementById('map'), _mockedSearchController);
+
+          document.getElementById("fakeupdate").onclick = function () {
+            mapController.onUpdate();
+          }
+        };
+
+      })();
+    </script>
+    <style>
+        #map {
+            width: 1000px;
+            height: 600px;
+        }
+    </style>
 </head>
 <body>
-
-    <div id="map"></div>
+<div id="map"></div>
+<br>
+<input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
 
 </body>
 </html>
