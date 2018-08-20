@@ -6,7 +6,7 @@ var MC = (function () {
   function MC () {
 
     //create and init map object
-    var map = Map(
+    var ha = HistoriskAtlas(
       document.getElementById('map'),
       {
         mode: 'single',
@@ -24,7 +24,7 @@ var MC = (function () {
     xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     xhr.onload = function (e) {
       console.log("Showing");
-      map.show([JSON.parse(xhr.responseText)]);
+      ha.show([JSON.parse(xhr.responseText)]);
     };
     xhr.send(null);
   }

@@ -24,7 +24,7 @@ function _prepareMapOptions (options) {
     options.onMoveStart = function () {};
   }
 
-  if (!options.onMoveStart) {
+  if (!options.onMoveEnd) {
     options.onMoveEnd = function () {};
   }
 
@@ -121,7 +121,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
   });
 
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><h1 id="mapPopupHeading"></h1></div>');
+  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><h1 id="mapPopupHeading"></h1></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   return mapState;
@@ -234,12 +234,19 @@ function HistoriskAtlas(mapElement, options) {
 
     if (subFeatures.length == 1 && !asset.clustered) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
-      mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
-      mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
-      document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
-      document.getElementById('mapPopupHeading').innerText = asset.short_title;
-      mapState.mapPopupElement.style.display = 'block';
-      mapState.mapPopupElement.assetId = asset.id;
+
+      if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
+        pixel[1] -= 155;
+        mapState.view.animate({
+          center: mapState.map.getCoordinateFromPixel(pixel),
+          duration: 500
+        }, function () {
+          mapState.showPopup(asset, mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
+        });
+        return;
+      }
+
+      mapState.showPopup(asset, pixel)
       return;
     }
 
@@ -253,6 +260,19 @@ function HistoriskAtlas(mapElement, options) {
   mapState.mapPopupElement.addEventListener('click', function () {
     options.onPopupClick(mapState.mapPopupElement.assetId);
   })
+
+  document.getElementById('mapPopupClose').addEventListener('click', function () {
+    mapState.mapPopupElement.style.display = 'none';
+  })
+
+  mapState.showPopup = function (asset, pixel) {
+    mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
+    mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
+    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
+    document.getElementById('mapPopupHeading').innerText = asset.short_title;
+    mapState.mapPopupElement.style.display = 'block';
+    mapState.mapPopupElement.assetId = asset.id;
+  }
 
   mapState.getCoordinateFromGeohash = function (geohash) {
     var bounds = this.getBoundsFromGeohash(geohash);
