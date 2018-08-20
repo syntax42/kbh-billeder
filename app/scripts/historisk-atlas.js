@@ -111,11 +111,17 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
     })
   });
 
+  mapState.translateCollection = new ol.Collection([]);
+  var translate = new ol.interaction.Translate({
+    features: mapState.translateCollection
+  });
+  
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [rasterLayer, mapState.vectorLayer],
     view: mapState.view,
     controls: [],
+    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom(), translate],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
@@ -154,17 +160,30 @@ function HistoriskAtlas(mapElement, options) {
         geometry: new ol.geom.Point(ol.proj.fromLonLat(coords))
       });
       if (!asset.clustered)
-        feature.setStyle(new ol.style.Style({
-          image: new ol.style.Icon({
-            src: asset.heading == undefined ? options.icons.asset : options.icons.assetHeading,
-            rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
-          })
-        }));
+        feature.setStyle(mapHandler.getFeatureStyle(asset));
       feature.asset = asset;
       features.push(feature);
     }
     mapState.vectorSource.addFeatures(features);
   };
+
+  mapHandler.getFeatureStyle = function (asset) {
+    var style = new ol.style.Style({
+      image: new ol.style.Icon({
+        src: asset.heading == undefined ? (mapState.isEditMode() ? options.icons.assetEdit : options.icons.asset) : (mapState.isEditMode() ? options.icons.assetHeadingEdit : options.icons.assetHeading),
+        rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
+      })
+    })
+
+    if (mapState.isEditMode())
+      style = [style, new ol.style.Style({
+        image: new ol.style.Icon({
+          src: options.icons.camera
+        })
+      })];
+
+    return style
+  }
 
   mapHandler.getBoundingBox = function () {
     var extent = mapState.view.calculateExtent();
@@ -193,10 +212,27 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.clear = function () {
     mapState.vectorSource.clear(true);
   };
-
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
   };
+  mapHandler.toggleEditMode = function () {
+    options.mode = options.mode == 'edit' ? 'single' : 'edit'
+    
+    var feature = mapState.vectorSource.getFeatures()[0];
+    if (options.mode == 'edit')
+      mapState.translateCollection.push(feature)
+    else
+      mapState.translateCollection.clear();
+
+    feature.setStyle(mapHandler.getFeatureStyle(feature.asset));
+  };
+
+  mapState.isSingleMode = function () {
+    return options.mode == 'single';
+  }
+  mapState.isEditMode = function () {
+    return options.mode == 'edit';
+  }
 
   // Event handling - integrate the clients event handlers.
   mapState.map.on('movestart', function (event) {
@@ -212,15 +248,20 @@ function HistoriskAtlas(mapElement, options) {
   });
 
   mapState.map.on('pointermove', function (event) {
+    if (mapState.isSingleMode())
+      return;
+
     var hoverFeature;
     mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { hoverFeature = feature; return true; });
-    mapState.mapElement.style.cursor = hoverFeature ? 'pointer' : '';
+    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : '';
   })
 
   mapState.map.on('click', function (event) {
+    if (mapState.isSingleMode() || mapState.isEditMode())
+      return;
+
     var clickFeature;
     mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
-
     mapState.mapPopupElement.style.display = 'none';
 
     if (!clickFeature)
