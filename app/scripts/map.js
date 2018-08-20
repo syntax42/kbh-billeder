@@ -204,10 +204,7 @@ function Map(mapElement, options) {
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
-    
-    //if (options.clusterAtZoomLevel < mapState.view.getZoom())
     mapState.vectorLayer.setSource(options.clusterAtZoomLevel < mapState.view.getZoom() ? mapState.vectorSource : mapState.clusterSource);
-
     options.onMoveEnd(mapHandler);
   });
 
@@ -234,12 +231,18 @@ function Map(mapElement, options) {
 
     if (subFeatures.length == 1 && !asset.clustered) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
-      mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
-      mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
-      document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
-      document.getElementById('mapPopupHeading').innerText = asset.short_title;
-      mapState.mapPopupElement.style.display = 'block';
-      mapState.mapPopupElement.assetId = asset.id;
+
+      if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
+        pixel[1] -= 155;
+        mapState.view.animate({
+          center: mapState.map.getCoordinateFromPixel(pixel),
+          duration: 500
+        }, function () {
+          mapState.showPopup(asset, mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
+        });
+        return;
+      }
+      mapState.showPopup(asset, pixel)
       return;
     }
 
@@ -257,6 +260,15 @@ function Map(mapElement, options) {
   document.getElementById('mapPopupClose').addEventListener('click', function () {
     mapState.mapPopupElement.style.display = 'none';
   })
+
+  mapState.showPopup = function (asset, pixel) {
+    mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
+    mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
+    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
+    document.getElementById('mapPopupHeading').innerText = asset.short_title;
+    mapState.mapPopupElement.style.display = 'block';
+    mapState.mapPopupElement.assetId = asset.id;
+  }
 
   mapState.getCoordinateFromGeohash = function (geohash) {
     var bounds = this.getBoundsFromGeohash(geohash);
