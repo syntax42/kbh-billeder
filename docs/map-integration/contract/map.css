@@ -43,10 +43,18 @@ h1 {
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
 }
+
 #mapPopupImage {
     height: 220px;
     width: 220px;
     background-size: cover;
+}
+#mapPopupClose {
+    content: url('/app/images/icons/map/close.png');
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
 }
 
 #mapPopupHeading {
