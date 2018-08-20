@@ -24,7 +24,7 @@ function _prepareMapOptions (options) {
     options.onMoveStart = function () {};
   }
 
-  if (!options.onMoveStart) {
+  if (!options.onMoveEnd) {
     options.onMoveEnd = function () {};
   }
 
