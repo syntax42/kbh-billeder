@@ -10,7 +10,9 @@ h2 Emneord
 
   // Only set the offset class if we have tags (in which case we have a
   // suggestion element in front of us).
-  div(class={"col-md-4": true, "col-md-offset-1": tags && tags.length && config.features.enableVisionTagSuggestions })
+  // Use 4 columns if vision tag suggestions are enabled to make space for suggestions.
+  // If vision tag suggestions are disabled, use all 12 columns.
+  div(class={"col-md-4": config.features.enableVisionTagSuggestions, "col-xs-12": !config.features.enableVisionTagSuggestions, "col-md-offset-1": tags && tags.length && config.features.enableVisionTagSuggestions })
     h2 Tilføj flere emneord
     div Husk at gemme til sidst.
     .motif-tagging__add-tag
