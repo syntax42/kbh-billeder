@@ -5,7 +5,7 @@
 const config = require('collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
-const Map = require('../map');
+const MapController = require('map-controller');
 require('./search-freetext-form');
 
 const getSearchParams = require('./get-parameters');
@@ -62,15 +62,21 @@ function initialize() {
    *
    * @param indicateLoading
    *   Whether to show a overlay as the results are loading.
+   *
+   * @param searchParams
+   *   Optional override search parameters.
    */
-  function update(updateWidgets, indicateLoading) {
+  function update(updateWidgets, indicateLoading, searchParams) {
     // If the indicateLoading is not set - default to true
     if(typeof(indicateLoading) === 'undefined') {
       indicateLoading = true;
     }
 
-    // Initialize search parameters from the url.
-    var searchParams = getSearchParams();
+    // Get search parameters if they have not been provided.
+    if (!searchParams) {
+      searchParams = getSearchParams();
+    }
+
     // Update the filter-bar.
     sorting.update(searchParams);
 
@@ -117,10 +123,49 @@ function initialize() {
 
     // Do search depending on current viewmode.
     if (viewMode === 'map') {
-      resultsTotal = updateMap(searchParams);
-    }
+      mapController.onUpdate(searchParams, function(updatedParams){
+        // Generate the query body, this will inject a bounds filter if we added
+        // one above.
+        let queryBody = elasticsearchQueryBody(updatedParams);
 
-    if (viewMode === 'list') {
+        // Let plugins modify the search body.
+        if(typeof(helpers.modifySearchQueryBody) === 'function') {
+          // If a modifySearchQueryBody helper is defined, call it
+          queryBody = helpers.modifySearchQueryBody(queryBody, updatedParams);
+        }
+
+        if (updatedParams.geohash) {
+          queryBody.aggregations = {
+            "geohash_grid" : {
+              "geohash_grid" : {
+                "field" : "location",
+                "precision" : config.search.geohashPrecision
+              }
+            }
+          };
+        }
+
+        const maxAssets = config.search.maxAssetMarkers;
+        // We've configured our search, now setup the query and execute it.
+        const searchObject = {
+          body: queryBody,
+          // We only want the aggregation so we don't care about the hits.
+          size: updatedParams.geohash ? 0 : maxAssets,
+          _source: ["location", "longitude", "latitude", "collection", "id", "short_title", "type", "heading"],
+        };
+
+        es.search(searchObject).then(function (response) {
+          resultsTotal = response.hits.total;
+          loadingResults = false;
+          mapController.onResults(response, updatedParams);
+
+          // TODO - add navigator code like what we have in updateList to make
+          // history work.
+        }, function (error) {
+          console.trace(error.message);
+        });
+      });
+    } else if (viewMode === 'list') {
       if (updateWidgets) {
         // Start updating the results header
         resultsHeader.update(searchParams, resultsTotal);
@@ -206,91 +251,6 @@ function initialize() {
     });
   }
 
-  /**
-   * Update the google map with search results.
-   */
-  function updateMap(searchParams) {
-    // Only show results with location on map.
-    searchParams.filters.location = ['Har placering'];
-    // Get bounds from map and use it.
-    let bounds = Map.getEsBounds();
-    if (bounds) {
-      searchParams.filters.geobounds = bounds;
-    }
-
-    // Generate the query body, this will inject a bounds filter if we added
-    // one above.
-    let queryBody = elasticsearchQueryBody(searchParams);
-
-    // Let plugins modify the search body.
-    if(typeof(helpers.modifySearchQueryBody) === 'function') {
-      // If a modifySearchQueryBody helper is defined, call it
-      queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
-    }
-
-    let belowAssetZoomLevel = Map.zoomLevel >= config.search.assetZoomLevel;
-    const maxAssets = config.search.maxAssetMarkers;
-
-    // If we're zoomed in wide enough, use hash-based results.
-    if (!belowAssetZoomLevel) {
-      queryBody.aggregations = {
-        "geohash_grid" : {
-          "geohash_grid" : {
-            "field" : "location",
-            "precision" : config.search.geohashPrecision
-          }
-        }
-      };
-    }
-
-    // We've configured our search, now setup the query and execute it.
-    const searchObject = {
-      body: queryBody,
-      // We only want the aggregation so we don't care about the hits.
-      size: belowAssetZoomLevel ? maxAssets : 0,
-      _source: ["location", "longitude", "latitude", "collection", "id", "short_title", "type"],
-    };
-
-    es.search(searchObject).then(function (response) {
-      resultsTotal = response.hits.total;
-      loadingResults = false;
-
-      let coordinates = [];
-      // Convert the hits to items of different types depending on our zoom-
-      // level.
-      if (belowAssetZoomLevel) {
-        // Asset hits contains a coordinate and metadata.
-        response.hits.hits.forEach(function(hit) {
-          coordinates.push({
-            type: 'asset',
-            // Pull lat/lon out into it's own property to allow us to share
-            // code between hash and asset code.
-            location: hit._source.location,
-            assetData: hit._source,
-          });
-        });
-      } else {
-        response.aggregations.geohash_grid.buckets.forEach(function(hashBucket) {
-          // Geohash hits contains a geocode we need to decode and a count.
-          // No actual data about the assets.
-          // Decode to {lat, lon}.
-          let coordinate = geohash.decode(hashBucket.key);
-          let count = hashBucket.doc_count;
-          coordinates.push({
-            type: 'hash',
-            count: count,
-            location: coordinate
-          });
-        });
-      }
-      Map.update(coordinates);
-      // TODO - add navigator code like what we have in updateList to make
-      // history work.
-    }, function (error) {
-      console.trace(error.message);
-    });
-  }
-
   function changeSearchParams(searchParams) {
     // Change the URL
     if(history) {
@@ -314,7 +274,6 @@ function initialize() {
         var scrollTop = $(window).scrollTop();
         var scrollBottom = scrollTop + $(window).height();
         if(scrollBottom > lastResultOffset.top && !loadingResults) {
-          console.log('Loading more results');
           resultsDesired += PAGE_SIZE;
           update();
         }
@@ -351,14 +310,27 @@ function initialize() {
     inflateHistoryState(event.state);
   }, false);
 
+
+  const searchControllerCallbacks = {
+    // Allow the caller to refresh the current search-results.
+    refresh: function(searchParameters) {
+      // Allow the caller to provide initial search parameteres. If none are
+      // given use our own defaults.
+      if (!searchParameters) {
+        searchParameters = getSearchParams();
+      }
+      update(true, false, searchParameters);
+    },
+
+    getCurrentSearchParameters: function (){
+      return getSearchParams();
+    },
+  }
+
   // Setup the map with a callback it can use when it needs a new search trigged
   // and a configuration for when we switch between hash and asset search-
   // results.
-  Map.init({
-    updateCallback: update,
-    assetZoomLevel: config.search.assetZoomLevel,
-    clusterMaxZoom: config.search.clusterMaxZoom
-  });
+  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks);
 
   // Initialize the search results, either use the history state, or do an
   // update.
