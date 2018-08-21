@@ -1,5 +1,10 @@
 [
   {
+    "geohash": "u3btb2j",
+    "clustered": true,
+    "count": 1
+  },
+  {
     "latitude": 55.676,
     "longitude": 12.574,
     "clustered": true,
@@ -1638,8 +1643,8 @@
     "count": 1
   },
   {
-    "id": 47938,
-    "short_title": "Lundegård",
+    "id": "kbh-museum/47938",
+    "short_title": "Lundegï¿½rd",
     "image_url": "https://kbhbilleder.dk/kbh-museum/47938/thumbnail",
     "latitude": 55.665,
     "longitude": 13.442,
@@ -1648,7 +1653,7 @@
     "count": 1
   },
   {
-    "id": 23602,
+    "id": "kbh-museum/23602",
     "short_title": "Hedeparken, Ballerup",
     "image_url": "https://kbhbilleder.dk/kbh-museum/23602/thumbnail",
     "latitude": 55.71490943396886,
@@ -1658,7 +1663,7 @@
     "count": 1
   },
   {
-    "id": 24235,
+    "id": "kbh-museum/24235",
     "short_title": "Roskildevej",
     "image_url": "https://kbhbilleder.dk/kbh-museum/24235/thumbnail",
     "latitude": 55.669707239933096,
