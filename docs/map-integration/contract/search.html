@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map Search documentation</title>
+
+    <link rel="stylesheet" href="search.css" type="text/css"/>
+    <link rel="stylesheet" href="map.css" type="text/css"/>
+
+    <script src="../../../app/scripts/ol.js"></script>
+    <script src="../../../app/scripts/historisk-atlas.js"></script>
+    <script language="JavaScript">
+      <!-- fake node module loading -->
+      var module = {exports: {}};
+    </script>
+    <script src="../../../app/scripts-browserify/map-controller.js"></script>
+    <script language="JavaScript">
+      (function () {
+        var _currentSearchResult = [];
+
+        var _mockedSearchController = {
+          // Called by the map controller prior to triggering a new search.
+          getCurrentSearchParameters: function () {
+            return {};
+          },
+
+          // Mocked search function, called by the map controller when HA changes.
+          refresh: function () {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'search-asset-list.json', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            xhr.onload = function (e) {
+              _currentSearchResult = JSON.parse(xhr.responseText);
+              mapController.onResults(_currentSearchResult);
+            };
+            xhr.send(null);
+          }
+        };
+
+        var mapController;
+        window.onload = function () {
+          var options = {
+            icons: {
+              clusterSmall: '/app/images/icons/map/m1.png',
+              clusterMedium: '/app/images/icons/map/m2.png',
+              clusterLarge: '/app/images/icons/map/m3.png',
+              asset: '/app/images/icons/map/pin.png',
+              assetHeading: '/app/images/icons/map/pinheading.png'
+            },
+            // Provide a mock mapper that just passes the results through.
+            // In the live setup results would come from ES and require mapping
+            // but as we're testing against a "contract" dataset, our results
+            // has already been mapped.
+            assetMapper: function(results) {
+              return results;
+            },
+            urlBase: "http://kbhbilleder.dk/"
+          };
+
+          mapController = MapController(document.getElementById('map'), _mockedSearchController, options);
+
+          document.getElementById('fakeupdate').onclick = function () {
+            mapController.onUpdate({}, function(params){
+              _mockedSearchController.refresh(params);
+            });
+          };
+
+          // Trigger an initial refresh to load the map.
+          _mockedSearchController.refresh();
+        };
+
+      })();
+    </script>
+    <style>
+        #map {
+            width: 1000px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<br>
+<input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
+
+</body>
+</html>
