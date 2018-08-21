@@ -3,6 +3,6 @@ alt=player.title,
 data-action='toggle-expandable').asset__image
 
 each backside in player.backsides
-  img(src=helpers.getThumbnailURL(backside),
+  img(src=helpers.getThumbnailURL(backside, 2000, 'bottom-right'),
   alt=player.title,
-  data-action='toggle-expandable').asset__image--hide.asset__image--backside
+  data-action='toggle-expandable').asset__image.asset__image--hide.asset__image--backside
