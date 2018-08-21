@@ -32,7 +32,9 @@
                             assetHeading: '/app/images/icons/map/pinheadingselected.png',
                             assetEdit: '/app/images/icons/map/pinedit.png',
                             assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
-                            camera: '/app/images/icons/map/camera.png'
+                            camera: '/app/images/icons/map/camera.png',
+                            target: '/app/images/icons/map/pintarget.png',
+                            image: '/app/images/icons/map/image.png'
                         }
                     }
                   );
@@ -48,7 +50,9 @@
               }
 
               MC.prototype.toggleEdit = function() {
-                  ha.toggleEditMode();
+                  var asset = ha.toggleEditMode();
+                  console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
+                  console.log("updated heading: " + asset.heading);
               }
 
               return MC;

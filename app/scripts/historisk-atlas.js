@@ -39,7 +39,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel, icons) {
+function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -49,7 +49,6 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
   mapState.vectorSource = new ol.source.Vector({
     features: []
   });
-
   mapState.clusterSource = new ol.source.Cluster({
     distance: 70,
     source: mapState.vectorSource
@@ -58,9 +57,8 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
   var styleCache = {};
   var featureIcons = [, icons.clusterSmall, icons.clusterMedium, icons.clusterLarge];
 
-  // TODO, consider if we can get ol injected to make it easier to eg. test.
   mapState.vectorLayer = new ol.layer.Vector({
-    source: mapState.clusterSource,
+    source: mode == 'single' ? mapState.vectorSource : mapState.clusterSource,
     updateWhileInteracting: true,
     updateWhileAnimating: true,
     style: function (feature) {
@@ -68,9 +66,12 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
       if (!subFeatures)
         subFeatures = [feature];
 
-      if (subFeatures.length == 1)
+      if (subFeatures.length == 1) {
+        if (!subFeatures[0].asset)
+          return subFeatures[0].getStyle();
         if (!subFeatures[0].asset.clustered)
           return subFeatures[0].getStyle();
+      }
 
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
@@ -110,18 +111,13 @@ function _prepareMap (mapElement, center, zoomLevel, icons) {
       url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
     })
   });
-
-  mapState.translateCollection = new ol.Collection([]);
-  var translate = new ol.interaction.Translate({
-    features: mapState.translateCollection
-  });
-  
+ 
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [rasterLayer, mapState.vectorLayer],
     view: mapState.view,
     controls: [],
-    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom(), translate],
+    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
@@ -142,7 +138,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -164,6 +160,8 @@ function HistoriskAtlas(mapElement, options) {
       feature.asset = asset;
       features.push(feature);
     }
+    if (features.length > 0)
+      mapState.feature = features[0];
     mapState.vectorSource.addFeatures(features);
   };
 
@@ -183,6 +181,19 @@ function HistoriskAtlas(mapElement, options) {
       })];
 
     return style
+  }
+
+  mapHandler.getTargetFeatureStyle = function (asset) {
+    return [new ol.style.Style({
+      image: new ol.style.Icon({
+        src: options.icons.target,
+        rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
+      })
+    }), new ol.style.Style({
+      image: new ol.style.Icon({
+        src: options.icons.image
+      })
+    })];
   }
 
   mapHandler.getBoundingBox = function () {
@@ -218,14 +229,80 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.toggleEditMode = function () {
     options.mode = options.mode == 'edit' ? 'single' : 'edit'
     
-    var feature = mapState.vectorSource.getFeatures()[0];
-    if (options.mode == 'edit')
-      mapState.translateCollection.push(feature)
-    else
-      mapState.translateCollection.clear();
+    //var feature = mapState.vectorSource.getFeatures()[0];
+    if (options.mode == 'edit') {
 
-    feature.setStyle(mapHandler.getFeatureStyle(feature.asset));
+      mapHandler.translate = new ol.interaction.Translate({
+        features: new ol.Collection([mapState.feature])
+      });
+      mapHandler.translate.on('translating', mapState.translating);
+      mapState.map.addInteraction(mapHandler.translate);
+
+      if (mapState.feature.asset.heading) {
+        var coordinates = mapState.feature.getGeometry().getCoordinates()
+        var pixel = mapState.map.getPixelFromCoordinate(coordinates);
+        var radian = (mapState.feature.asset.heading - 90) * (Math.PI / 180);
+        pixel[0] += Math.cos(radian) * 120;
+        pixel[1] += Math.sin(radian) * 120;
+        var targetCoordinates = mapState.map.getCoordinateFromPixel(pixel);
+        
+        mapState.lineFeature = new ol.Feature({
+          geometry: new ol.geom.LineString([coordinates, targetCoordinates])
+        });
+        mapState.lineFeature.setStyle(new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: '#ffffff',
+            width: 2,
+            lineDash: [5, 5]
+          })
+        }))
+        mapState.vectorSource.addFeature(mapState.lineFeature);
+
+        mapState.targetFeature = new ol.Feature({
+          geometry: new ol.geom.Point(targetCoordinates)
+        });
+        mapState.targetFeature.setStyle(mapHandler.getTargetFeatureStyle(mapState.feature.asset));
+
+        mapState.vectorSource.addFeature(mapState.targetFeature);
+        mapHandler.translateTarget = new ol.interaction.Translate({
+          features: new ol.Collection([mapState.targetFeature])
+        });
+        mapHandler.translateTarget.on('translating', mapState.translating);
+        mapState.map.addInteraction(mapHandler.translateTarget);
+      }
+    } else {
+      if (mapState.targetFeature) {
+        mapState.vectorSource.removeFeature(mapState.targetFeature);
+        mapState.vectorSource.removeFeature(mapState.lineFeature);
+      }
+      mapState.map.removeInteraction(mapHandler.translate);
+      mapState.map.removeInteraction(mapHandler.translateTarget);
+    }
+
+    mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset));
+
+    return mapState.feature.asset;
   };
+  mapState.translating = function (feature) {
+    var coordinates = mapState.feature.getGeometry().getCoordinates();
+
+    if (mapState.targetFeature) { 
+      var targetCoordinates = mapState.targetFeature.getGeometry().getCoordinates();
+      var pixel = mapState.map.getPixelFromCoordinate(coordinates);
+      var pixelTarget = mapState.map.getPixelFromCoordinate(targetCoordinates);
+      mapState.feature.asset.heading = (Math.atan2(pixel[1] - pixelTarget[1], pixel[0] - pixelTarget[0]) * 180 / Math.PI + 270) % 360;
+    }
+
+    var lonLat = ol.proj.toLonLat(coordinates);
+    mapState.feature.asset.longitude = lonLat[0];
+    mapState.feature.asset.latitude = lonLat[1];
+
+    if (mapState.targetFeature) {
+      mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
+      mapState.lineFeature.getGeometry().setCoordinates([coordinates, targetCoordinates]);
+      mapState.targetFeature.setStyle(mapHandler.getTargetFeatureStyle(mapState.feature.asset))
+    }
+  }
 
   mapState.isSingleMode = function () {
     return options.mode == 'single';
@@ -240,10 +317,8 @@ function HistoriskAtlas(mapElement, options) {
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
-    
-    //if (options.clusterAtZoomLevel < mapState.view.getZoom())
-    mapState.vectorLayer.setSource(options.clusterAtZoomLevel < mapState.view.getZoom() ? mapState.vectorSource : mapState.clusterSource);
-
+    if (!mapState.isSingleMode() && !mapState.isEditMode())
+      mapState.vectorLayer.setSource(options.clusterAtZoomLevel < mapState.view.getZoom() ? mapState.vectorSource : mapState.clusterSource);
     options.onMoveEnd(mapHandler);
   });
 
@@ -252,7 +327,12 @@ function HistoriskAtlas(mapElement, options) {
       return;
 
     var hoverFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { hoverFeature = feature; return true; });
+    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) {
+      if (feature != mapState.lineFeature) {
+        hoverFeature = feature;
+        return true;
+      }
+    });
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : '';
   })
 
