@@ -1,4 +1,10 @@
 .document {
+  &__expandable--expanded {
+    [class*='col-'] {
+      width: 100%;
+      left: 0;
+    }
+  }
   &__navigator {
     &-arrow {
       top: 100px;
