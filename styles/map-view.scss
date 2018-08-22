@@ -1,4 +1,7 @@
 .map-view {
+  // Ensure markup nested under the view can position relative to the map-view
+  // container.
+  position: relative;
   padding: 0;
   height: calc(100vh - 82px);
   margin-left: 0;
