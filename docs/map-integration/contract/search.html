@@ -4,8 +4,32 @@
     <title>Map Search documentation</title>
 
     <link rel="stylesheet" href="search.css" type="text/css"/>
-    <link rel="stylesheet" href="map.css" type="text/css"/>
+    <!-- The file is in pure css, not scss, but is named as such to fit into -->
+    <!-- the sites build pipline -->
+    <style>
+        /* from "main.css" */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: FFUnitWebLight,sans-serif;
+            line-height: 1.6;
+            color: #555;
+        }
+        h1 {
+            font-size: 2em;
+            margin-left: -1px;
+            margin-top: 22px;
+            margin-right: 0px;
+            letter-spacing: -.03em;
+            line-height: 1.25;
+            font-weight: 400;
+            font-family: inherit;
+            color: inherit;
+        }
 
+    </style>
+    <link rel="stylesheet" href="../../../app/styles/map-shared.css" type="text/css"/>
     <script src="../../../app/scripts/ol.js"></script>
     <script src="../../../app/scripts/historisk-atlas.js"></script>
     <script language="JavaScript">

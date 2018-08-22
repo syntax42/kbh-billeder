@@ -1,0 +1,7 @@
+// Styling shared between the live site and the map documentation.
+@import "map-shared";
+
+// Override map assets.
+#mapPopupClose {
+  content: url('/images/icons/map/close.png');
+}
