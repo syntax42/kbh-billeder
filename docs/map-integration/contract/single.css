@@ -1,0 +1,13 @@
+﻿html, body {
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+#map {
+    height:50%;
+}
