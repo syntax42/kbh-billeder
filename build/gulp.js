@@ -107,7 +107,8 @@ module.exports = (gulp, customizationPath) => {
       .pipe(plumber())
       .pipe(gulpif(isDevelopment, sourcemaps.init()))
       .pipe(sass().on('error', function(err) {
-        sass.logError(err);
+        console.error('\x07');
+        sass.logError.bind(this)(err);
         return notify().write({
           'message': 'Sass error'
         });
