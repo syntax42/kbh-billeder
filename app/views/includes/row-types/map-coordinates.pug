@@ -1,11 +1,22 @@
 extends map-coordinates
 
-block map-coordinates__add-coordinates-text
-  | Placer billede på kort
-
-block map-coordinates__edit-coordinates-text
-  | Rediger
-  +icon('pencil')
-
 block map-coordinates__missing-coordinates-text
   | Endnu ikke placeret på kort
+
+block map-coordinates__geotaggable
+  div.document__section-2__no-placement.col-sm-5
+    b Ved du hvor billedet er taget?
+    p Eller hvilket sted billedets motiv viser? Så tilføj lokationen på et kort.
+    button.btn.btn-primary(data-action='geo-tagging:start')
+      | Placer billede på kort
+      +icon('pencil')
+
+//- Do not show map here but put it in asset.pug.
+block map-coordinates__map
+
+block map-coordinates__map--edit-coordinates
+  tr
+    td
+      button.btn.btn-block(data-action='geo-tagging:start', class=extraClasses)
+        | Rediger
+        +icon('pencil')
