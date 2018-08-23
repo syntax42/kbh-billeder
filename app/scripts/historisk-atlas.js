@@ -229,7 +229,6 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.toggleEditMode = function () {
     options.mode = options.mode == 'edit' ? 'single' : 'edit'
     
-    //var feature = mapState.vectorSource.getFeatures()[0];
     if (options.mode == 'edit') {
 
       mapHandler.translate = new ol.interaction.Translate({
@@ -382,8 +381,9 @@ function HistoriskAtlas(mapElement, options) {
     options.onPopupClick(mapState.mapPopupElement.assetId);
   })
 
-  document.getElementById('mapPopupClose').addEventListener('click', function () {
+  document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
     mapState.mapPopupElement.style.display = 'none';
+    evt.stopPropagation();
   })
 
   mapState.showPopup = function (asset, pixel) {
