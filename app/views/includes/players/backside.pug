@@ -2,9 +2,7 @@ img(src=player.thumbnailUrl,
 alt=player.title,
 data-action='toggle-expandable').asset__image
 
-each backsides in player.backsides
-  if backsides.length > 0
-    each backside in backsides
-      img(src=helpers.getThumbnailURL(backside),
-      alt=player.title,
-      data-action='toggle-expandable').asset__image--hide.asset__image--backside
+each backside in player.backsides
+  img(src=helpers.getThumbnailURL(backside, 2000, 'bottom-right'),
+  alt=player.title,
+  data-action='toggle-expandable').asset__image.asset__image--hide.asset__image--backside

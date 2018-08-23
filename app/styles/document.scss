@@ -1,7 +1,68 @@
 .document {
+  &__expandable--expanded {
+    [class*='col-'] {
+      width: 100%;
+      left: 0;
+    }
+  }
   &__navigator {
     &-arrow {
       top: 100px;
+    }
+  }
+  &__player-controls {
+    .zoom-in {
+      display: inline-block;
+    }
+    .zoom-out {
+      display: none;
+    }
+    &__rotate {
+      position: absolute;
+      &--item {
+        float: left;
+        display: none;
+        &--active {
+          display: block;
+        }
+      }
+      svg {
+        transform: rotate(280deg);
+        float: left;
+      }
+    }
+    &--social-share {
+      float: right;
+      &:first-of-type {
+        margin-left: 12px;
+      }
+    }
+    a {
+      span {
+        margin-left: 5px;
+        color: $gray-darker;
+        font-weight: bold;
+        .document__expandable--expanded & {
+          .zoom-in {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  &__back-link {
+    margin-bottom: 30px;
+    a {
+      color: $brand-primary;
+      font-weight: bold;
+    }
+    svg {
+      height: 25px;
+      width: 25px;
+      fill: $brand-primary;
+      position: relative;
+      top: 6px;
+      margin-right: 5px;
     }
   }
 }

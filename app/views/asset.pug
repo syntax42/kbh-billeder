@@ -4,7 +4,11 @@ block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
   - const documentDescription = helpers.documentDescription(metadata);
   - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
-  .document__section-1-metadata.col-xs-12.col-md-5
+  .document__section-1-metadata.col-xs-12.col-md-5.col-md-pull-7
+    div.document__back-link
+      a(onclick='window.history.back()')
+        +icon('arrow-thin-left')
+        | Tilbage til søgningen
     if(documentTitle)
       h1.document__title= documentTitle
     if(documentDescription)
@@ -13,7 +17,15 @@ block document__section-1-metadata
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
-    != assetSection('place', metadata)
+
+    if config.features.motifTagging
+      .motif-tagging
+        include ./includes/motif-tagging
+
+block document__section-2
+  .document__section-2
+    .place-overlay
+      != assetSection('place', metadata)
 
 block document__section-3
   .document__section-3

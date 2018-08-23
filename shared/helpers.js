@@ -25,7 +25,7 @@ helpers.getBacksideAssets = (metadata) => {
   // Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
   let cumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
   if (metadata.related && metadata.related.assets) {
-    return [metadata.related.assets.filter(asset => asset.id).filter(asset => asset.relation === cumulusKey)];
+    return metadata.related.assets.filter(asset => asset.id).filter(asset => asset.relation === cumulusKey);
   }
   return [];
 };
@@ -42,13 +42,12 @@ helpers.getDocumentURL = (metadata) => {
 
 helpers.determinePlayers = metadata => {
   const players = [];
-  let backsideAssets = helpers.getBacksideAssets(metadata);
 
-  if (backsideAssets) {
+  if (helpers.hasBacksideAsset(metadata)) {
     players.push({
       type: 'backside',
       thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-      backsides: backsideAssets
+      backsides: helpers.getBacksideAssets(metadata)
     });
   }
 
@@ -151,6 +150,11 @@ if(config.downloadOptions) {
 
 helpers.isDownloadable = (metadata) => {
   return !metadata.license || metadata.license.id !== 7;
+};
+
+helpers.hasBacksideAsset = (metadata) => {
+  let backsideAssets = helpers.getBacksideAssets(metadata);
+  return backsideAssets.length > 0;
 };
 
 helpers.isWatermarkRequired = (metadata) => {
