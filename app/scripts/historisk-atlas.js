@@ -232,8 +232,8 @@ function _prepareTimeWarp(map, mapElement) {
     timeWarp.down(timeWarp.centerCoordFromTouches(event.touches));
   }
   timeWarp.down = function(coord, forceMove) {
-    //var offset: JQueryCoordinates = $('#map').offset()
-    //var mouseDownCoords = [coord[0] - offset.left, coord[1] - offset.top];
+    var offset = mapElement.getBoundingClientRect();
+    coord = [coord[0] - offset.left, coord[1] - offset.top];
     var dist = Math.sqrt(Math.pow(timeWarp.position[0] - coord[0], 2) + Math.pow(timeWarp.position[1] - coord[1], 2));
     if (timeWarp.position && timeWarp.mode == timeWarp.modes.CIRCLE) {
       if (dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8) && !forceMove) {
@@ -292,7 +292,7 @@ function _prepareTimeWarp(map, mapElement) {
 
   timeWarp.centerCoordFromTouches = function(touches, relative) {
     var center = [0, 0];
-    //var offset = $('#map').offset()
+    var offset = mapElement.getBoundingClientRect();
     var count = 0;
     for (var i = 0; i < touches.length; i++) {
       var x = relative ? touches[i].pageX - offset.left : touches[i].pageX;
