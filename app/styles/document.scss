@@ -1,4 +1,15 @@
 .document {
+  &__section-2 {
+    table {
+      width: 50%;
+    }
+    &__no-placement {
+      float: right;
+    }
+    &--map {
+      background: none;
+    }
+  }
   &__expandable--expanded {
     [class*='col-'] {
       width: 100%;
