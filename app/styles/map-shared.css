@@ -1,12 +1,12 @@
 /* Map styling shared between the live site and the map documentation. */
 #mapPopup {
+  color: black;
   position: absolute;
   display: none;
   width: 220px;
   cursor: pointer;
   background-color: #fff;
   border-top: 4px solid #e61a64;
-  text-align: center;
   box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
 }
 
@@ -39,10 +39,23 @@
 
 #mapPopupHeading {
   font-size: 18px;
-  margin-bottom: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  margin-top: 8px;
   padding: 0 10px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: hidden;
+  overflow: hidden;
+  user-select: none;
+}
+
+#mapPopupDescription {
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 5px;
+  padding: 0 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   user-select: none;
 }

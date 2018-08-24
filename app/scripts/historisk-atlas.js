@@ -125,7 +125,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
   mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement);
 
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><h1 id="mapPopupHeading"></h1></div>');
+  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   return mapState;
@@ -646,6 +646,7 @@ function HistoriskAtlas(mapElement, options) {
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = asset.short_title;
+    document.getElementById('mapPopupDescription').innerText = asset.description;
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = asset.id;
   }
