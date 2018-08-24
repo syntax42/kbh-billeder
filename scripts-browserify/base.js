@@ -27,7 +27,7 @@ module.exports = options => {
   if(config.features.geoTagging || config.features.motifTagging) {
     require('./document/contribution-counter');
   }
-  if(config.features.geoTagging) {
+  if(config.features.geoTagging && config.features.geoTagging !== 'override') {
     require('./document/geo-tagging');
   }
   if(config.features.motifTagging) {
