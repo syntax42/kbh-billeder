@@ -12,8 +12,9 @@ append header
 
 append javascript
   if config.features.geoTagging
-    - const key = config.google.keys.restricted;
-    script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap&libraries=geometry,places")
+    if config.features.geoTagging !== 'override'
+      - const key = config.google.keys.restricted;
+      script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap&libraries=geometry,places")
 
 block content
   section.document.let-it-grow(
