@@ -116,7 +116,9 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
     target: mapElement,
     layers: [rasterLayer, mapState.vectorLayer],
     view: mapState.view,
-    controls: [],
+    controls: [new ol.control.Zoom({
+      zoomOutLabel: '-'
+    })],
     interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
