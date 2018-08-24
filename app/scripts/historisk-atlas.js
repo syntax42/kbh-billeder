@@ -111,7 +111,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
       url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
     })
   });
- 
+
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [rasterLayer, mapState.vectorLayer],
@@ -122,11 +122,249 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
     loadTilesWhileAnimating: true
   });
 
+  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement);
+
   //Create popup
   mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><h1 id="mapPopupHeading"></h1></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   return mapState;
+}
+
+function _prepareTimeWarp(map, mapElement) {
+
+  var timeWarp = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+      url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/55/{z}/{x}/{y}.jpg'
+    })
+  });
+
+  timeWarp.setVisible(false);
+  map.getLayers().insertAt(1, timeWarp);
+
+  timeWarp.modes = { CIRCLE: 0, SPLIT: 1 };
+  timeWarp.mode = timeWarp.modes.CIRCLE;
+
+  timeWarp.dragModes = { NONE: 0, CIRCLE_RADIUS: 1, CIRCLE_MOVE: 2, SPLIT: 3 }
+  timeWarp.dragMode = timeWarp.dragModes.NONE;
+
+  timeWarp.position = [300, 300];
+  timeWarp.radius = 200;
+  timeWarp.minRadius = 100;
+  //timeWarp.radiusDisplace;
+  timeWarp.rectWidth = 2;
+  //timeWarp.rectX;
+  timeWarp.lineWidth = 4.0;
+
+  //timeWarp.listenerKeyPointerDrag;
+  //timeWarp.listenerKeyPointerMove;
+
+  timeWarp.precomposeTimeWarp = function(event) {
+    var ctx = event.context;
+    timeWarp.pixelRatio = event.frameState.pixelRatio;
+    this.applyPath(ctx);
+    ctx.save();
+    ctx.clip();
+  }
+  timeWarp.on('precompose', timeWarp.precomposeTimeWarp);
+
+  timeWarp.postcomposeTimeWarp = function (event) {
+    var ctx = event.context;
+    ctx.restore();
+    timeWarp.applyPath(ctx);
+    if (timeWarp.position) {
+      ctx.strokeStyle = '#e61a64';
+      ctx.lineWidth = timeWarp.lineWidth * timeWarp.pixelRatio;
+      ctx.stroke();
+
+    }
+  }
+  timeWarp.on('postcompose', timeWarp.postcomposeTimeWarp);
+
+  timeWarp.applyPath = function (ctx) {
+    var x = timeWarp.position[0] * timeWarp.pixelRatio;
+    var y = timeWarp.position[1] * timeWarp.pixelRatio;
+    ctx.beginPath();
+    switch (timeWarp.mode) {
+      case timeWarp.modes.CIRCLE:
+        ctx.arc(x, y, timeWarp.radius * timeWarp.pixelRatio, 0, 2 * Math.PI);
+        break;
+      case timeWarp.modes.SPLIT:
+        var rectY = -10.0;
+        var rectHeight = $(window).height() + 20.0;
+        ctx.rect((timeWarp.rectX * timeWarp.pixelRatio), (rectY * timeWarp.pixelRatio), (timeWarp.rectWidth * timeWarp.pixelRatio), (rectHeight * timeWarp.pixelRatio));
+        break;
+    }
+  }
+
+  timeWarp.show = function() {
+    timeWarp.mode = timeWarp.modes.CIRCLE;
+    var size = map.getSize();
+    timeWarp.position = [size[0] / 2, size[1] / 2];
+    timeWarp.radius = Math.min(size[0], size[1]) * 0.3;
+    timeWarp._show();
+  }
+  timeWarp._show = function() {
+    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event.originalEvent) });
+    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event.originalEvent) });
+    mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
+    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
+    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
+    timeWarp.setVisible(true);
+    //this.setOpacity(1);
+    //App.timeWarpClosed.hide();
+  }
+
+  timeWarp.hide = function () {
+    mapElement.removeEventListener('touchstart', timeWarp.touchDownEventHandle);
+    window.removeEventListener('touchend', timeWarp.touchUpEventHandle);
+    mapElement.removeEventListener('mousedown', timeWarp.downEventHandle);
+    window.removeEventListener('mouseup', timeWarp.upEventHandle);
+    ol.Observable.unByKey(this.listenerKeyPointerDrag);
+    timeWarp.setVisible(false);
+  }
+
+  timeWarp.touchDown = function(event) {
+    timeWarp.lastTouchDist = 0;
+    timeWarp.lastTouchDist = timeWarp.touchDistFromTouches(event.touches);
+    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches));
+  }
+  timeWarp.down = function(coord, forceMove) {
+    //var offset: JQueryCoordinates = $('#map').offset()
+    //var mouseDownCoords = [coord[0] - offset.left, coord[1] - offset.top];
+    var dist = Math.sqrt(Math.pow(timeWarp.position[0] - coord[0], 2) + Math.pow(timeWarp.position[1] - coord[1], 2));
+    if (timeWarp.position && timeWarp.mode == timeWarp.modes.CIRCLE) {
+      if (dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8) && !forceMove) {
+        timeWarp.dragMode = timeWarp.dragModes.CIRCLE_RADIUS;
+        timeWarp.radiusDisplace = timeWarp.radius - dist;
+      }
+      else if (dist < timeWarp.radius) {
+        timeWarp.dragMode = timeWarp.dragModes.CIRCLE_MOVE;
+        timeWarp.mouseDisplace = [timeWarp.position[0] - coord[0], timeWarp.position[1] - coord[1]]
+        //if (!timeWarp.intervalHandle)
+        //  timeWarp.intervalHandle = setInterval(() => timeWarp.pan(), 1000 / 60);
+        //timeWarp.panCounter = 0;
+      }
+      else
+        timeWarp.dragMode = timeWarp.dragModes.NONE;
+    }
+    else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
+      var displace = timeWarp.rectX - mouseDownCoords[0];
+      if (Math.abs(displace) < 8) {
+        timeWarp.dragMode = timeWarp.dragModes.SPLIT;
+        timeWarp.mouseDisplace = [displace, 0];
+      }
+    } else
+      timeWarp.dragMode = timeWarp.dragModes.NONE;
+  }
+
+  timeWarp.pointerDrag = function(event) {
+    var newposition = event.originalEvent.type == 'touchmove' ? timeWarp.centerCoordFromTouches(event.originalEvent.touches, true) : (event.pixel ? event.pixel : [event.offsetX, event.offsetY]);
+    switch (timeWarp.dragMode) {
+      case timeWarp.dragModes.CIRCLE_RADIUS:
+        var dist = Math.sqrt(Math.pow(timeWarp.position[0] - newposition[0], 2) + Math.pow(timeWarp.position[1] - newposition[1], 2));
+        dist += timeWarp.radiusDisplace;
+        timeWarp.radius = dist > timeWarp.minRadius ? dist : timeWarp.minRadius;
+        event.preventDefault();
+        break;
+      case timeWarp.dragModes.CIRCLE_MOVE:
+        timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
+        if (event.originalEvent.type == 'touchmove') {
+          var touchDist = timeWarp.touchDistFromTouches(event.originalEvent.touches);
+          timeWarp.radius += touchDist - timeWarp.lastTouchDist;
+          timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
+          timeWarp.lastTouchDist = touchDist;
+        }
+        event.preventDefault();
+        break;
+      case timeWarp.dragModes.SPLIT:
+        timeWarp.rectX = newposition[0] + timeWarp.mouseDisplace[0];
+        timeWarp.rectWidth = App.map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        event.preventDefault();
+        break;
+    }
+    map.renderSync();
+    //TimeWarpButton.updateTimeWarpUI();
+    //App.map.changeTimeWarp();
+  }
+
+  timeWarp.centerCoordFromTouches = function(touches, relative) {
+    var center = [0, 0];
+    //var offset = $('#map').offset()
+    var count = 0;
+    for (var i = 0; i < touches.length; i++) {
+      var x = relative ? touches[i].pageX - offset.left : touches[i].pageX;
+      var y = relative ? touches[i].pageY - offset.top : touches[i].pageY;
+
+      if (timeWarp.dragMode == timeWarp.dragModes.CIRCLE_MOVE || timeWarp.dragMode == timeWarp.dragModes.NONE) {
+        var dist = Math.sqrt(Math.pow(timeWarp.position[0] - x, 2) + Math.pow(timeWarp.position[1] - y, 2));
+        if (dist > timeWarp.radius + 8)
+          continue;
+      }
+
+      center[0] += x;
+      center[1] += y;
+      count++;
+    }
+    center[0] /= count;
+    center[1] /= count;
+    return center;
+  }
+
+  timeWarp.touchDistFromTouches = function(touches) {
+    if (touches.length < 2)
+      return timeWarp.lastTouchDist;
+
+    if (Math.sqrt(Math.pow(timeWarp.position[0] - touches[0].pageX, 2) + Math.pow(timeWarp.position[1] - touches[0].pageY, 2)) > timeWarp.radius + 8)
+      return timeWarp.lastTouchDist;
+
+    if (Math.sqrt(Math.pow(timeWarp.position[0] - touches[1].pageX, 2) + Math.pow(timeWarp.position[1] - touches[1].pageY, 2)) > timeWarp.radius + 8)
+      return timeWarp.lastTouchDist;
+
+    return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
+  }
+
+  timeWarp.touchUp = function(event)
+  {
+    if(event.touches.length == 0)
+      timeWarp.up();
+    else
+      timeWarp.touchDown(event);
+  }
+
+  timeWarp.up = function() {
+    clearInterval(timeWarp.intervalHandle);
+    timeWarp.intervalHandle = null;
+    timeWarp.dragMode = timeWarp.dragModes.NONE;
+    //TimeWarpButton.updateTimeWarpUI();
+  }
+
+  timeWarp.getHoverInterface = function(pixel) {
+    if (!timeWarp.getVisible())
+      return '';
+
+    if (timeWarp.mode == timeWarp.modes.SPLIT)
+      return Math.abs(timeWarp.rectX - pixel[0]) < 8 ? 'ew-resize' : '';
+
+    if (timeWarp.mode == timeWarp.modes.CIRCLE) {
+      var dist = Math.sqrt(Math.pow(timeWarp.position[0] - pixel[0], 2) + Math.pow(timeWarp.position[1] - pixel[1], 2));
+      if ((dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8)) || timeWarp.dragMode == timeWarp.dragModes.CIRCLE_RADIUS) {
+        var radiusX = timeWarp.position[0] * timeWarp.pixelRatio;
+        var radiusY = timeWarp.position[1] * timeWarp.pixelRatio;
+        if (pixel[0] < (radiusY + 40) && pixel[1] > (radiusY - 40)) return 'ew-resize';
+        if (pixel[0] < (radiusX + 40) && pixel[0] > (radiusX - 40)) return 'n-resize';
+        if (pixel[0] < radiusX && pixel[1] > radiusY) return 'sw-resize';
+        if (pixel[0] > radiusX && pixel[1] < radiusY) return 'sw-resize';
+        return 'se-resize';
+      }
+      if (dist < timeWarp.radius)
+        return 'move';
+    }
+
+    return '';
+  }
+
+  return timeWarp;
 }
 
 /**
@@ -146,6 +384,14 @@ function HistoriskAtlas(mapElement, options) {
 
   // TODO: Document handler functions, and deside whether "handler" is the
   // best name.
+  mapHandler.toggleTimeWarp = function () {
+
+    if (mapState.timeWarp.getVisible())
+      mapState.timeWarp.hide();
+    else
+      mapState.timeWarp.show();
+  }
+
   mapHandler.show = function (assets) {
     mapState.vectorSource.clear(true);
     var features = [];
@@ -282,6 +528,7 @@ function HistoriskAtlas(mapElement, options) {
 
     return mapState.feature.asset;
   };
+
   mapState.translating = function (feature) {
     var coordinates = mapState.feature.getGeometry().getCoordinates();
 
@@ -326,14 +573,22 @@ function HistoriskAtlas(mapElement, options) {
       return;
 
     var hoverFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) {
+    var pixel = mapState.map.getEventPixel(event.originalEvent);
+    mapState.map.forEachFeatureAtPixel(pixel, function (feature) {
       if (feature != mapState.lineFeature) {
         hoverFeature = feature;
         return true;
       }
     });
-    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : '';
+    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : mapState.timeWarp.getHoverInterface(pixel);
   })
+  //mapState.map.on('pointerdrag', function (event) {
+  //  if (mapState.isSingleMode())
+  //    return;
+
+  //  var pixel = mapState.map.getEventPixel(event.originalEvent);
+  //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
+  //})
 
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode() || mapState.isEditMode())

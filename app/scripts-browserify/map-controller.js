@@ -252,6 +252,10 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // Hand the parameters back to the search controller and let it do the the
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
+    },
+
+    toggleTimeWarp: function (){
+      defaultMapHandler.toggleTimeWarp();
     }
   };
 

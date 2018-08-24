@@ -88,6 +88,10 @@
             });
           };
 
+          document.getElementById('toggletimewarp').onclick = function () {
+            mapController.toggleTimeWarp();
+          };
+
           // Trigger an initial refresh to load the map.
           _mockedSearchController.refresh();
         };
@@ -105,6 +109,7 @@
 <div id="map"></div>
 <br>
 <input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
+<input type="button" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />
 
 </body>
 </html>
