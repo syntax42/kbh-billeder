@@ -282,14 +282,18 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
     },
-
     toggleEditMode: function() {
       if (options.mode !== 'single') {
         return false;
       }
 
       return defaultMapHandler.toggleEditMode();
-    }
+    },
+
+    toggleTimeWarp: function () {
+      defaultMapHandler.toggleTimeWarp();
+    },
+
   };
 
   // Hand the callbacks back to the Search Controller.

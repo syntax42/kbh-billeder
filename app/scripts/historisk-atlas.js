@@ -32,6 +32,17 @@ function _prepareMapOptions (options) {
     options.onPopupClick = function (id) { };
   }
 
+  options.maps = options.maps || [
+    { id: 161, title: 'Standard', year: '2018' },
+    { id: 85, title: 'Luftfoto', year: '2016' },
+    { id: 39, title: '4 cm kort', year: '1977-85' },
+    { id: 38, title: '4 cm kort', year: '1953-76' },
+    { id: 105, title: 'København', year: '1939' },
+    { id: 54, title: 'Lavkantkort', year: '1901-1945' },
+    { id: 55, title: 'Højkantkort', year: '1840-1899' },
+    { id: 154, title: 'Geddes kort', year: '1761' }
+  ];
+
   return options;
 }
 
@@ -39,12 +50,45 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
+function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
 
   mapState.mapElement = mapElement;
+
+  mapState.mapSelectControl = function () {
+
+    mapState.mapSelectElement = document.createElement('select');
+    mapState.mapSelectElement.addEventListener('change', function (event) {
+      
+      var source = mapState.rasterLayer.getSource();
+      source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
+
+    }, false);
+
+    for (var i = 0; i < maps.length; i++) {
+      var elementOption = document.createElement('option');
+      elementOption.value = maps[i].id;
+      elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      mapState.mapSelectElement.appendChild(elementOption);
+    }
+
+    var element = document.createElement('div');
+    element.id = 'mapSelect';
+    element.className = 'ol-unselectable ol-control';
+    element.appendChild(mapState.mapSelectElement);
+
+    ol.control.Control.call(this, {
+      element: element
+    });
+
+  };
+  ol.inherits(mapState.mapSelectControl, ol.control.Control);
+
+  mapState.getMapUrl = function(id) {
+    return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
+  }
 
   mapState.vectorSource = new ol.source.Vector({
     features: []
@@ -106,27 +150,269 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
     zoom: zoomLevel
   });
 
-  var rasterLayer = new ol.layer.Tile({
+  mapState.rasterLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
+      url: mapState.getMapUrl(161)
     })
   });
- 
+
+  var minus = document.createElement('span')
+  minus.innerHTML = '&minus;'
   mapState.map = new ol.Map({
     target: mapElement,
-    layers: [rasterLayer, mapState.vectorLayer],
+    layers: [mapState.rasterLayer, mapState.vectorLayer],
     view: mapState.view,
-    controls: [],
+    controls: [new ol.control.Zoom({
+      zoomOutLabel: minus
+    }), new mapState.mapSelectControl()],
     interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
 
+  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.getMapUrl);
+
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><h1 id="mapPopupHeading"></h1></div>');
+  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   return mapState;
+}
+
+function _prepareTimeWarp(map, mapElement, getMapUrl) {
+
+  var timeWarp = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+      url: getMapUrl(55)
+    })
+  });
+
+  timeWarp.setVisible(false);
+  map.getLayers().insertAt(1, timeWarp);
+
+  timeWarp.modes = { CIRCLE: 0, SPLIT: 1 };
+  timeWarp.mode = timeWarp.modes.CIRCLE;
+
+  timeWarp.dragModes = { NONE: 0, CIRCLE_RADIUS: 1, CIRCLE_MOVE: 2, SPLIT: 3 }
+  timeWarp.dragMode = timeWarp.dragModes.NONE;
+
+  timeWarp.position = [300, 300];
+  timeWarp.radius = 200;
+  timeWarp.minRadius = 100;
+  //timeWarp.radiusDisplace;
+  timeWarp.rectWidth = 2;
+  //timeWarp.rectX;
+  timeWarp.lineWidth = 4.0;
+
+  //timeWarp.listenerKeyPointerDrag;
+  //timeWarp.listenerKeyPointerMove;
+
+  timeWarp.precomposeTimeWarp = function(event) {
+    var ctx = event.context;
+    timeWarp.pixelRatio = event.frameState.pixelRatio;
+    this.applyPath(ctx);
+    ctx.save();
+    ctx.clip();
+  }
+  timeWarp.on('precompose', timeWarp.precomposeTimeWarp);
+
+  timeWarp.postcomposeTimeWarp = function (event) {
+    var ctx = event.context;
+    ctx.restore();
+    timeWarp.applyPath(ctx);
+    if (timeWarp.position) {
+      ctx.strokeStyle = '#e61a64';
+      ctx.lineWidth = timeWarp.lineWidth * timeWarp.pixelRatio;
+      ctx.stroke();
+
+    }
+  }
+  timeWarp.on('postcompose', timeWarp.postcomposeTimeWarp);
+
+  timeWarp.applyPath = function (ctx) {
+    var x = timeWarp.position[0] * timeWarp.pixelRatio;
+    var y = timeWarp.position[1] * timeWarp.pixelRatio;
+    ctx.beginPath();
+    switch (timeWarp.mode) {
+      case timeWarp.modes.CIRCLE:
+        ctx.arc(x, y, timeWarp.radius * timeWarp.pixelRatio, 0, 2 * Math.PI);
+        break;
+      case timeWarp.modes.SPLIT:
+        var rectY = -10.0;
+        var rectHeight = $(window).height() + 20.0;
+        ctx.rect((timeWarp.rectX * timeWarp.pixelRatio), (rectY * timeWarp.pixelRatio), (timeWarp.rectWidth * timeWarp.pixelRatio), (rectHeight * timeWarp.pixelRatio));
+        break;
+    }
+  }
+
+  timeWarp.show = function() {
+    timeWarp.mode = timeWarp.modes.CIRCLE;
+    var size = map.getSize();
+    timeWarp.position = [size[0] / 2, size[1] / 2];
+    timeWarp.radius = Math.min(size[0], size[1]) * 0.3;
+    timeWarp._show();
+  }
+  timeWarp._show = function() {
+    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event.originalEvent) });
+    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event.originalEvent) });
+    mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
+    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
+    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
+    timeWarp.setVisible(true);
+    //this.setOpacity(1);
+    //App.timeWarpClosed.hide();
+  }
+
+  timeWarp.hide = function () {
+    mapElement.removeEventListener('touchstart', timeWarp.touchDownEventHandle);
+    window.removeEventListener('touchend', timeWarp.touchUpEventHandle);
+    mapElement.removeEventListener('mousedown', timeWarp.downEventHandle);
+    window.removeEventListener('mouseup', timeWarp.upEventHandle);
+    ol.Observable.unByKey(this.listenerKeyPointerDrag);
+    timeWarp.setVisible(false);
+  }
+
+  timeWarp.touchDown = function(event) {
+    timeWarp.lastTouchDist = 0;
+    timeWarp.lastTouchDist = timeWarp.touchDistFromTouches(event.touches);
+    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches));
+  }
+  timeWarp.down = function(coord, forceMove) {
+    var offset = mapElement.getBoundingClientRect();
+    coord = [coord[0] - offset.left, coord[1] - offset.top];
+    var dist = Math.sqrt(Math.pow(timeWarp.position[0] - coord[0], 2) + Math.pow(timeWarp.position[1] - coord[1], 2));
+    if (timeWarp.position && timeWarp.mode == timeWarp.modes.CIRCLE) {
+      if (dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8) && !forceMove) {
+        timeWarp.dragMode = timeWarp.dragModes.CIRCLE_RADIUS;
+        timeWarp.radiusDisplace = timeWarp.radius - dist;
+      }
+      else if (dist < timeWarp.radius) {
+        timeWarp.dragMode = timeWarp.dragModes.CIRCLE_MOVE;
+        timeWarp.mouseDisplace = [timeWarp.position[0] - coord[0], timeWarp.position[1] - coord[1]]
+        //if (!timeWarp.intervalHandle)
+        //  timeWarp.intervalHandle = setInterval(() => timeWarp.pan(), 1000 / 60);
+        //timeWarp.panCounter = 0;
+      }
+      else
+        timeWarp.dragMode = timeWarp.dragModes.NONE;
+    }
+    else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
+      var displace = timeWarp.rectX - mouseDownCoords[0];
+      if (Math.abs(displace) < 8) {
+        timeWarp.dragMode = timeWarp.dragModes.SPLIT;
+        timeWarp.mouseDisplace = [displace, 0];
+      }
+    } else
+      timeWarp.dragMode = timeWarp.dragModes.NONE;
+  }
+
+  timeWarp.pointerDrag = function(event) {
+    var newposition = event.originalEvent.type == 'touchmove' ? timeWarp.centerCoordFromTouches(event.originalEvent.touches, true) : (event.pixel ? event.pixel : [event.offsetX, event.offsetY]);
+    switch (timeWarp.dragMode) {
+      case timeWarp.dragModes.CIRCLE_RADIUS:
+        var dist = Math.sqrt(Math.pow(timeWarp.position[0] - newposition[0], 2) + Math.pow(timeWarp.position[1] - newposition[1], 2));
+        dist += timeWarp.radiusDisplace;
+        timeWarp.radius = dist > timeWarp.minRadius ? dist : timeWarp.minRadius;
+        event.preventDefault();
+        break;
+      case timeWarp.dragModes.CIRCLE_MOVE:
+        timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
+        if (event.originalEvent.type == 'touchmove') {
+          var touchDist = timeWarp.touchDistFromTouches(event.originalEvent.touches);
+          timeWarp.radius += touchDist - timeWarp.lastTouchDist;
+          timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
+          timeWarp.lastTouchDist = touchDist;
+        }
+        event.preventDefault();
+        break;
+      case timeWarp.dragModes.SPLIT:
+        timeWarp.rectX = newposition[0] + timeWarp.mouseDisplace[0];
+        timeWarp.rectWidth = App.map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        event.preventDefault();
+        break;
+    }
+    map.renderSync();
+    //TimeWarpButton.updateTimeWarpUI();
+    //App.map.changeTimeWarp();
+  }
+
+  timeWarp.centerCoordFromTouches = function(touches, relative) {
+    var center = [0, 0];
+    var offset = mapElement.getBoundingClientRect();
+    var count = 0;
+    for (var i = 0; i < touches.length; i++) {
+      var x = relative ? touches[i].pageX - offset.left : touches[i].pageX;
+      var y = relative ? touches[i].pageY - offset.top : touches[i].pageY;
+
+      if (timeWarp.dragMode == timeWarp.dragModes.CIRCLE_MOVE || timeWarp.dragMode == timeWarp.dragModes.NONE) {
+        var dist = Math.sqrt(Math.pow(timeWarp.position[0] - x, 2) + Math.pow(timeWarp.position[1] - y, 2));
+        if (dist > timeWarp.radius + 8)
+          continue;
+      }
+
+      center[0] += x;
+      center[1] += y;
+      count++;
+    }
+    center[0] /= count;
+    center[1] /= count;
+    return center;
+  }
+
+  timeWarp.touchDistFromTouches = function(touches) {
+    if (touches.length < 2)
+      return timeWarp.lastTouchDist;
+
+    if (Math.sqrt(Math.pow(timeWarp.position[0] - touches[0].pageX, 2) + Math.pow(timeWarp.position[1] - touches[0].pageY, 2)) > timeWarp.radius + 8)
+      return timeWarp.lastTouchDist;
+
+    if (Math.sqrt(Math.pow(timeWarp.position[0] - touches[1].pageX, 2) + Math.pow(timeWarp.position[1] - touches[1].pageY, 2)) > timeWarp.radius + 8)
+      return timeWarp.lastTouchDist;
+
+    return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
+  }
+
+  timeWarp.touchUp = function(event)
+  {
+    if(event.touches.length == 0)
+      timeWarp.up();
+    else
+      timeWarp.touchDown(event);
+  }
+
+  timeWarp.up = function() {
+    clearInterval(timeWarp.intervalHandle);
+    timeWarp.intervalHandle = null;
+    timeWarp.dragMode = timeWarp.dragModes.NONE;
+    //TimeWarpButton.updateTimeWarpUI();
+  }
+
+  timeWarp.getHoverInterface = function(pixel) {
+    if (!timeWarp.getVisible())
+      return '';
+
+    if (timeWarp.mode == timeWarp.modes.SPLIT)
+      return Math.abs(timeWarp.rectX - pixel[0]) < 8 ? 'ew-resize' : '';
+
+    if (timeWarp.mode == timeWarp.modes.CIRCLE) {
+      var dist = Math.sqrt(Math.pow(timeWarp.position[0] - pixel[0], 2) + Math.pow(timeWarp.position[1] - pixel[1], 2));
+      if ((dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8)) || timeWarp.dragMode == timeWarp.dragModes.CIRCLE_RADIUS) {
+        var radiusX = timeWarp.position[0] * timeWarp.pixelRatio;
+        var radiusY = timeWarp.position[1] * timeWarp.pixelRatio;
+        if (pixel[0] < (radiusY + 40) && pixel[1] > (radiusY - 40)) return 'ew-resize';
+        if (pixel[0] < (radiusX + 40) && pixel[0] > (radiusX - 40)) return 'n-resize';
+        if (pixel[0] < radiusX && pixel[1] > radiusY) return 'sw-resize';
+        if (pixel[0] > radiusX && pixel[1] < radiusY) return 'sw-resize';
+        return 'se-resize';
+      }
+      if (dist < timeWarp.radius)
+        return 'move';
+    }
+
+    return '';
+  }
+
+  return timeWarp;
 }
 
 /**
@@ -138,7 +424,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -146,6 +432,14 @@ function HistoriskAtlas(mapElement, options) {
 
   // TODO: Document handler functions, and deside whether "handler" is the
   // best name.
+  mapHandler.toggleTimeWarp = function () {
+
+    if (mapState.timeWarp.getVisible())
+      mapState.timeWarp.hide();
+    else
+      mapState.timeWarp.show();
+  }
+
   mapHandler.show = function (assets) {
     mapState.vectorSource.clear(true);
     var features = [];
@@ -282,6 +576,7 @@ function HistoriskAtlas(mapElement, options) {
 
     return mapState.feature.asset;
   };
+
   mapState.translating = function (feature) {
     var coordinates = mapState.feature.getGeometry().getCoordinates();
 
@@ -326,14 +621,22 @@ function HistoriskAtlas(mapElement, options) {
       return;
 
     var hoverFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) {
+    var pixel = mapState.map.getEventPixel(event.originalEvent);
+    mapState.map.forEachFeatureAtPixel(pixel, function (feature) {
       if (feature != mapState.lineFeature) {
         hoverFeature = feature;
         return true;
       }
     });
-    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : '';
+    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : mapState.timeWarp.getHoverInterface(pixel);
   })
+  //mapState.map.on('pointerdrag', function (event) {
+  //  if (mapState.isSingleMode())
+  //    return;
+
+  //  var pixel = mapState.map.getEventPixel(event.originalEvent);
+  //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
+  //})
 
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode() || mapState.isEditMode())
@@ -391,6 +694,7 @@ function HistoriskAtlas(mapElement, options) {
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = asset.short_title;
+    document.getElementById('mapPopupDescription').innerText = asset.description;
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = asset.id;
   }

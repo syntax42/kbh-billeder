@@ -1644,7 +1644,8 @@
   },
   {
     "id": "kbh-museum/47938",
-    "short_title": "Lundeg�rd",
+    "short_title": "Lundegaard",
+    "description": "Sti mellem træer og buske",
     "image_url": "https://kbhbilleder.dk/kbh-museum/47938/thumbnail",
     "latitude": 55.665,
     "longitude": 13.442,
@@ -1655,6 +1656,7 @@
   {
     "id": "kbh-museum/23602",
     "short_title": "Hedeparken, Ballerup",
+    "description": "Boligblokke med store plæner",
     "image_url": "https://kbhbilleder.dk/kbh-museum/23602/thumbnail",
     "latitude": 55.71490943396886,
     "longitude": 13.357608368122897,
@@ -1665,6 +1667,7 @@
   {
     "id": "kbh-museum/24235",
     "short_title": "Roskildevej",
+    "description": "Gadebillede",
     "image_url": "https://kbhbilleder.dk/kbh-museum/24235/thumbnail",
     "latitude": 55.669707239933096,
     "longitude": 13.438076972175622,
