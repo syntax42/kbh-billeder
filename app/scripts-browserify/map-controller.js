@@ -123,6 +123,15 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         target: '../images/icons/map/pintarget.png',
         image: '../images/icons/map/image.png'
       };
+
+      // If the user has not given us a specific set of icons, switch to a
+      // different set for single assets.
+      if (options.mode === 'single') {
+        options.icons.asset = '../images/icons/map/pinselected.png';
+        options.icons.assetHeading = '../images/icons/map/pinheadingselected.png';
+        options.icons.assetEdit = '../images/icons/map/pinedit.png';
+        options.icons.assetHeadingEdit = '../images/icons/map/pinheadingedit.png';
+      }
     }
 
     if (!options.geohashAtZoomLevel) {
