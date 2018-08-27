@@ -159,7 +159,10 @@ helpers.hasBacksideAsset = (metadata) => {
 
 helpers.hasRelations = metadata => {
   // Filter out backside assets.
-  return metadata.related.assets.filter(asset => asset.relation !== backsideAssetCumulusKey).length > 0;
+  if (metadata.related.assets) {
+    return metadata.related.assets.filter(asset => asset.relation !== backsideAssetCumulusKey).length > 0;
+  }
+  return false;
 };
 
 helpers.isWatermarkRequired = (metadata) => {
