@@ -9,64 +9,69 @@
     <script src="../../../app/scripts/ol.js"></script>
     <script src="../../../app/scripts/historisk-atlas.js"></script>
     <script language="JavaScript">
+      //fake node module loading
       var module = {exports: {}};
     </script>
-    <script src="../../../controllers/map-controller.js"></script>
+    <script src="../../../app/scripts-browserify/map-controller.js"></script>
     <script language="JavaScript">
+      (function () {
+        var _currentSearchResult = [];
 
-      (function(){
-          //MapController for demo purpose
-          var MC = (function () {
-              var ha;
-              function MC() {
+        var _mockedSearchController = {
+          // Called by the map controller prior to triggering a new search.
+          getCurrentSearchParameters: function () {
+            return {};
+          },
 
-                  //create and init map object
-                  ha = HistoriskAtlas(
-                    document.getElementById('map'),
-                    {
-                        mode: 'single',
-                        center: [12.35760, 55.71490],
-                        zoomLevel: 16,
-                        icons: {
-                            asset: '/app/images/icons/map/pinselected.png',
-                            assetHeading: '/app/images/icons/map/pinheadingselected.png',
-                            assetEdit: '/app/images/icons/map/pinedit.png',
-                            assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
-                            camera: '/app/images/icons/map/camera.png',
-                            target: '/app/images/icons/map/pintarget.png',
-                            image: '/app/images/icons/map/image.png'
-                        }
-                    }
-                  );
+          // Mocked search function, called by the map controller when HA changes.
+          refresh: function () {
 
-                  var xhr = new XMLHttpRequest();
-                  xhr.open('GET', 'asset-single-asset.json', true);
-                  xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-                  xhr.onload = function (e) {
-                      console.log("Showing");
-                      ha.show([JSON.parse(xhr.responseText)]);
-                  };
-                  xhr.send(null);
-              }
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'asset-single-asset.json', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            xhr.onload = function (e) {
+              _currentSearchResult = JSON.parse(xhr.responseText);
+              mapController.onResults([_currentSearchResult]);
+            };
+            xhr.send(null);
+          }
+        };
 
-              MC.prototype.toggleEdit = function() {
-                  var asset = ha.toggleEditMode();
-                  console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
-                  console.log("updated heading: " + asset.heading);
-              }
-
-              return MC;
-          }());
-
-          window.onload = function () {
-              //create and init map controller object
-              var mc = new MC();
-
-              document.getElementById("toggleedit").onclick = function () {
-                  mc.toggleEdit();
-              }
+        var mapController;
+        window.onload = function () {
+          var options = {
+            mode: 'single',
+            center: [12.35760, 55.71490],
+            zoomLevel: 16,
+            icons: {
+              asset: '/app/images/icons/map/pinselected.png',
+              assetHeading: '/app/images/icons/map/pinheadingselected.png',
+              assetEdit: '/app/images/icons/map/pinedit.png',
+              assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
+              camera: '/app/images/icons/map/camera.png',
+              target: '/app/images/icons/map/pintarget.png',
+              image: '/app/images/icons/map/image.png'
+            },
+            // Provide a mock mapper that just passes the results through.
+            // In the live setup results would come from ES and require mapping
+            // but as we're testing against a "contract" dataset, our results
+            // has already been mapped.
+            assetMapper: function(results) {
+              return results;
+            }
           };
 
+          mapController = MapController(document.getElementById('map'), _mockedSearchController, options);
+
+          document.getElementById('toggleedit').onclick = function () {
+            var asset = mapController.toggleEditMode();
+            console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
+            console.log("updated heading: " + asset.heading);
+          };
+
+          // Trigger an initial refresh to load the map.
+          _mockedSearchController.refresh();
+        };
       })();
     </script>
     <style>

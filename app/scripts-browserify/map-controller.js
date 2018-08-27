@@ -136,6 +136,10 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       options.initialZoomLevel = 10;
     }
 
+    if (!options.mode) {
+      options.mode = 'search';
+    }
+
     // Allow the client to inset a custom mapper that maps from the search-
     // providers results to assets that can be handled by the map-provider.
     if(options.assetMapper) {
@@ -148,14 +152,18 @@ function MapController (mapElement, searchControllerCallbacks, options) {
 
     // Clear the map when the user interacts with it.
     var onMoveStart = function (eventMapHandler) {
-      eventMapHandler.clear();
+      if (options.mode === 'search') {
+        eventMapHandler.clear();
+      }
     };
 
     // When the user lets go of the map, trigger a refresh of the search.
     var onMoveEnd = function (eventMapHandler) {
       // Trigger a new search, well get pinged via onUpdate where we'll set our
       // bounding box.
-      searchControllerCallbacks.refresh();
+      if (options.mode === 'search') {
+        searchControllerCallbacks.refresh();
+      }
     };
 
     // The user has clicked on an asset on the map that needs to be displayed.
@@ -167,6 +175,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
     defaultMapHandler = HistoriskAtlas(
       mapElement,
       {
+        mode: options.mode,
         center: options.initialCenter,
         zoomLevel: options.initialZoomLevel,
         clusterAtZoomLevel: options.clusterAtZoomLevel,
@@ -252,6 +261,14 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // Hand the parameters back to the search controller and let it do the the
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
+    },
+
+    toggleEditMode: function() {
+      if (options.mode !== 'single') {
+        return false;
+      }
+
+      return defaultMapHandler.toggleEditMode();
     }
   };
 
