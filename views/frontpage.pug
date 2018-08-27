@@ -18,6 +18,8 @@ block content
             +gridGallery(gallery, i, evenOrOdd)
           -if(gallery.appearance === 'carousel')
             +carouselGallery(gallery)
+          -if(gallery.appearance === 'block')
+            +blockGallery(gallery)
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
   script(type="application/ld+json").
