@@ -19,7 +19,6 @@ const production = _.merge({}, base, {
   env: 'production',
   features: {
     feedback: true,
-    geoTagging: true,
     motifTagging: true,
     requireEmailVerification: true,
     sitewidePassword: false,

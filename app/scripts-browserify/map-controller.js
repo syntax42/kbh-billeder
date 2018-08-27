@@ -116,7 +116,12 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         clusterMedium: '../images/icons/map/m2.png',
         clusterLarge: '../images/icons/map/m3.png',
         asset: '../images/icons/map/pin.png',
-        assetHeading: '../images/icons/map/pinheading.png'
+        assetHeading: '../images/icons/map/pinheading.png',
+        assetEdit: '../images/icons/map/pinedit.png',
+        assetHeadingEdit: '../images/icons/map/pinheadingedit.png',
+        camera: '../images/icons/map/camera.png',
+        target: '../images/icons/map/pintarget.png',
+        image: '../images/icons/map/image.png'
       };
     }
 
@@ -192,6 +197,21 @@ function MapController (mapElement, searchControllerCallbacks, options) {
 
   // Produce callback object for the caller.
   const handlerCallbacks = {
+    /**
+     * Plot a single asset on map.
+     *
+     * Use this function for populating a map with mode=single
+     *
+     * @param asset
+     *   An asset to plot with the properties latitude, longitude,
+     *   heading(optional), approximate
+     */
+    onSingleResult: function (asset) {
+      // Make sure we're not working on an uninitialized map.
+      _initializeMap();
+      defaultMapHandler.show([asset]);
+    },
+
     /**
      * Triggered when new search results are available.
      *

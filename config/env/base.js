@@ -115,7 +115,7 @@ let config = {
     feedback: false,
     motifTagging: true,
     filterSidebar: true,
-    geoTagging: true,
+    geoTagging: 'override',
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
