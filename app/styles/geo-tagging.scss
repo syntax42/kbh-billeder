@@ -8,7 +8,14 @@
   max-width: $large-size;
   margin: 0 auto;
   top: -455px;
+  .is-mobile & {
+    position: static;
+  }
   &__inner {
+    .is-mobile & {
+      position: static;
+      @include shadow(0);
+    }
     display: inline-block;
     position: absolute;
     background: white;
