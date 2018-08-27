@@ -34,10 +34,10 @@ block document__section-2
   else
     .document__section-2--map
       .geo-tagging-mini-map(
-        data-latitude=latitude,
-        data-longitude=longitude,
-        data-heading=heading,
-        data-approximate=approximate ? 'true' : 'false'
+        data-latitude=location.latitude,
+        data-longitude=location.longitude,
+        data-heading=location.heading,
+        data-approximate=location.approximate ? 'true' : 'false'
       )
       .place-overlay
         .place-overlay__inner
