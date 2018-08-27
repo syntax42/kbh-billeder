@@ -22,6 +22,15 @@
     }
   }
   &__player-controls {
+    .is-mobile & {
+      text-align: left;
+      font-family: $font-family-medium;
+    }
+    &__actions {
+      .is-mobile & {
+        float: left;
+      }
+    }
     .zoom-in {
       display: inline-block;
     }
@@ -62,6 +71,11 @@
     }
   }
   &__back-link {
+    .is-mobile & {
+      font-weight: bold;
+      margin: 2rem 0;
+      font-family: $font-family-medium;
+    }
     margin-bottom: 30px;
     a {
       color: $brand-primary;
