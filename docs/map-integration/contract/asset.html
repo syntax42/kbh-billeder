@@ -15,67 +15,76 @@
     <script src="../../../app/scripts-browserify/map-controller.js"></script>
     <script language="JavaScript">
       (function () {
-        var _currentSearchResult = [];
-
-        var _mockedSearchController = {
-          // Called by the map controller prior to triggering a new search.
-          getCurrentSearchParameters: function () {
-            return {};
-          },
-
-          // Mocked search function, called by the map controller when HA changes.
-          refresh: function () {
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'asset-single-asset.json', true);
-            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-            xhr.onload = function (e) {
-              _currentSearchResult = JSON.parse(xhr.responseText);
-              mapController.onResults([_currentSearchResult]);
-            };
-            xhr.send(null);
-          }
-        };
-
-        var mapController;
         window.onload = function () {
-          var options = {
-            mode: 'single',
-            center: [12.35760, 55.71490],
-            zoomLevel: 16,
-            icons: {
-              asset: '/app/images/icons/map/pinselected.png',
-              assetHeading: '/app/images/icons/map/pinheadingselected.png',
-              assetEdit: '/app/images/icons/map/pinedit.png',
-              assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
-              camera: '/app/images/icons/map/camera.png',
-              target: '/app/images/icons/map/pintarget.png',
-              image: '/app/images/icons/map/image.png'
-            },
-            // Provide a mock mapper that just passes the results through.
-            // In the live setup results would come from ES and require mapping
-            // but as we're testing against a "contract" dataset, our results
-            // has already been mapped.
-            assetMapper: function(results) {
-              return results;
-            }
+
+          // Set up the first map.
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'asset-single-asset.json', true);
+          xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          xhr.onload = function (e) {
+            _currentSearchResult = JSON.parse(xhr.responseText);
+
+            var mapController = _initMap(document.getElementById('map1'), _currentSearchResult);
+
+            document.getElementById('toggleedit1').onclick = function () {
+              var asset = mapController.toggleEditMode();
+              console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
+              console.log("updated heading: " + asset.heading);
+            };
+
           };
+          xhr.send(null);
 
-          mapController = MapController(document.getElementById('map'), _mockedSearchController, options);
+          // Set up the second map.
+          var xhr2 = new XMLHttpRequest();
+          xhr2.open('GET', 'asset-single-asset-approximate.json', true);
+          xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          xhr2.onload = function (e) {
+            _currentSearchResult = JSON.parse(xhr2.responseText);
 
-          document.getElementById('toggleedit').onclick = function () {
-            var asset = mapController.toggleEditMode();
-            console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
-            console.log("updated heading: " + asset.heading);
+            var mapController = _initMap(document.getElementById('map2'), _currentSearchResult);
+
+            document.getElementById('toggleedit2').onclick = function () {
+              var asset = mapController.toggleEditMode();
+              console.log("updated coordinates: " + asset.latitude + " , " + asset.longitude);
+              console.log("updated heading: " + asset.heading);
+            };
+
           };
+          xhr2.send(null);
 
-          // Trigger an initial refresh to load the map.
-          _mockedSearchController.refresh();
         };
+
+        function _initMap(element, asset) {
+
+          // Callbacks required by the map controller. For mode = single none
+          // are currently required.
+            var mapCallbacks = {};
+
+            var options = {
+              mode: 'single',
+              icons: {
+                asset: '/app/images/icons/map/pinselected.png',
+                assetHeading: '/app/images/icons/map/pinheadingselected.png',
+                assetEdit: '/app/images/icons/map/pinedit.png',
+                assetHeadingEdit: '/app/images/icons/map/pinheadingedit.png',
+                camera: '/app/images/icons/map/camera.png',
+                target: '/app/images/icons/map/pintarget.png',
+                image: '/app/images/icons/map/image.png'
+              }
+            };
+
+            mapController = MapController(element, mapCallbacks, options);
+
+            // Deliver a single search-result to the map.
+            mapController.onSingleResult(asset);
+
+            return mapController;
+        }
       })();
     </script>
     <style>
-        #map {
+        .map {
             width: 1000px;
             height: 600px;
         }
@@ -83,9 +92,15 @@
 </head>
 <body>
 
-    <div id="map"></div>
+    <h1>Precise</h1>
+    <input type="button" id="toggleedit1" value="Toggle edit mode" />
     <br>
-    <input type="button" id="toggleedit" value="Toggle edit mode" />
+    <div class="map" id="map1"></div>
+    <hr>
+    <h1>Approximate</h1>
+    <input type="button" id="toggleedit2" value="Toggle edit mode" />
+    <br>
+    <div class="map" id="map2"></div>
 
 </body>
 </html>
