@@ -32,6 +32,17 @@ function _prepareMapOptions (options) {
     options.onPopupClick = function (id) { };
   }
 
+  options.maps = options.maps || [
+    { id: 161, title: 'Standard', year: '2018' },
+    { id: 85, title: 'Luftfoto', year: '2016' },
+    { id: 39, title: '4 cm kort', year: '1977-85' },
+    { id: 38, title: '4 cm kort', year: '1953-76' },
+    { id: 105, title: 'København', year: '1939' },
+    { id: 54, title: 'Lavkantkort', year: '1901-1945' },
+    { id: 55, title: 'Højkantkort', year: '1840-1899' },
+    { id: 154, title: 'Geddes kort', year: '1761' }
+  ];
+
   return options;
 }
 
@@ -39,12 +50,45 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
+function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
 
   mapState.mapElement = mapElement;
+
+  mapState.mapSelectControl = function () {
+
+    mapState.mapSelectElement = document.createElement('select');
+    mapState.mapSelectElement.addEventListener('change', function (event) {
+      
+      var source = mapState.rasterLayer.getSource();
+      source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
+
+    }, false);
+
+    for (var i = 0; i < maps.length; i++) {
+      var elementOption = document.createElement('option');
+      elementOption.value = maps[i].id;
+      elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      mapState.mapSelectElement.appendChild(elementOption);
+    }
+
+    var element = document.createElement('div');
+    element.id = 'mapSelect';
+    element.className = 'ol-unselectable ol-control';
+    element.appendChild(mapState.mapSelectElement);
+
+    ol.control.Control.call(this, {
+      element: element
+    });
+
+  };
+  ol.inherits(mapState.mapSelectControl, ol.control.Control);
+
+  mapState.getMapUrl = function(id) {
+    return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
+  }
 
   mapState.vectorSource = new ol.source.Vector({
     features: []
@@ -106,25 +150,27 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
     zoom: zoomLevel
   });
 
-  var rasterLayer = new ol.layer.Tile({
+  mapState.rasterLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/161/{z}/{x}/{y}.jpg'
+      url: mapState.getMapUrl(161)
     })
   });
 
+  var minus = document.createElement('span')
+  minus.innerHTML = '&minus;'
   mapState.map = new ol.Map({
     target: mapElement,
-    layers: [rasterLayer, mapState.vectorLayer],
+    layers: [mapState.rasterLayer, mapState.vectorLayer],
     view: mapState.view,
     controls: [new ol.control.Zoom({
-      zoomOutLabel: '-'
-    })],
+      zoomOutLabel: minus
+    }), new mapState.mapSelectControl()],
     interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
 
-  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement);
+  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.getMapUrl);
 
   //Create popup
   mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
@@ -133,11 +179,11 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode) {
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement) {
+function _prepareTimeWarp(map, mapElement, getMapUrl) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/55/{z}/{x}/{y}.jpg'
+      url: getMapUrl(55)
     })
   });
 
@@ -378,7 +424,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.

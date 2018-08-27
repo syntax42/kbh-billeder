@@ -63,13 +63,32 @@
 .ol-zoom {
     top: 18px;
     left: 18px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
+    width: 42px;
+    height: 84px;
 }
+#mapSelect {
+    bottom: 18px;
+    right: 18px;
+    height: 42px;
+}
+#mapSelect::after {
+    font-family: FFUnitWebMedium;
+    color: black;
+    font-size: 14px;
+    content: 'Kort';
+    position: absolute;
+    top: 0px;
+    padding-top: 10px;
+    padding-left: 15px;
+    pointer-events: none;
+}
+
 .ol-control {
     position: absolute;
     background-color: white;
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 2px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
 }
 .ol-viewport, .ol-unselectable {
     -webkit-touch-callout: none;
@@ -80,9 +99,9 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
-.ol-touch .ol-control button {
+/*.ol-touch .ol-control button, .ol-touch .ol-control select {
     font-size: 1.5em;
-}
+}*/
 .ol-zoom-out {
     border-top: 1px solid rgba(0,0,0,.1) !important;
 }
@@ -90,22 +109,33 @@
     font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
 }
 .ol-control button {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    height: 40px;
+    padding-bottom: 3px !important
+}
+.ol-control select {
+    font-family: FFUnitWebLight;
+    font-size: 14px;
+    height: 100%;
+    padding: 0px 35px 0px 55px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('/app/images/icons/map/downarrow.png') no-repeat;
+    background-position: right 10px center;
+}
+.ol-control button, .ol-control select {
     display: block;
     background-color: white;
-    margin: 1px;
     padding: 0;
     color: black;
-    font-size: 1.14em;
-    font-weight: bold;
     text-decoration: none;
-    text-align: center;
-    height: 1.375em;
-    width: 1.375em;
-    line-height: .4em;
     border: none;
     cursor: pointer;
-    padding-bottom: 3px;
+    width: 100%;
 }
-.ol-control button:focus {
+.ol-control button:focus, .ol-control select:focus {
     outline: 0;
 }
