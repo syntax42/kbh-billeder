@@ -661,6 +661,10 @@ function HistoriskAtlas(mapElement, options) {
   //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
   })
 
+  mapState.map.getView().on('change:resolution', function () {
+    mapState.hidePopup();
+  });
+
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode() || mapState.isEditMode())
       return;
