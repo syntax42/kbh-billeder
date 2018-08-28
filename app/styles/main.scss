@@ -40,6 +40,12 @@ body {
   }
 }
 
+@media (min-width: $extra-large-size) {
+  .container-fluid {
+    width: $extra-large-size;
+  }
+}
+
 .sprite {
   display: none;
 }
