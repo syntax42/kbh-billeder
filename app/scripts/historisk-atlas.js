@@ -117,6 +117,10 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
           return subFeatures[0].getStyle();
       }
 
+      //var style = feature.getStyle()
+      //if (style)
+      //  return style;
+
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
         count += subFeatures[i].asset.count;
@@ -453,16 +457,29 @@ function HistoriskAtlas(mapElement, options) {
         feature.setStyle(mapHandler.getFeatureStyle(asset));
       feature.asset = asset;
       features.push(feature);
+
+      if (mapState.feature) {
+        if (asset.id == mapState.feature.asset.id) {
+          mapState.feature = feature;
+          mapState.feature.setStyle(mapHandler.getFeatureStyle(feature, true))
+        }
+      }
     }
-    if (features.length > 0)
-      mapState.feature = features[0];
     mapState.vectorSource.addFeatures(features);
+    if (features.length > 0) {
+      if (options.mode == 'edit' || options.mode == 'single')
+        mapState.feature = features[0];
+      else {
+        if (mapState.feature)
+          mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
+      }
+    }
   };
 
-  mapHandler.getFeatureStyle = function (asset) {
+  mapHandler.getFeatureStyle = function (asset, selected) {
     var style = new ol.style.Style({
       image: new ol.style.Icon({
-        src: asset.heading == undefined ? (mapState.isEditMode() ? options.icons.assetEdit : options.icons.asset) : (mapState.isEditMode() ? options.icons.assetHeadingEdit : options.icons.assetHeading),
+        src: asset.heading == undefined ? (mapState.isEditMode() ? options.icons.assetEdit : (selected ? options.icons.assetSelected : options.icons.asset)) : (mapState.isEditMode() ? options.icons.assetHeadingEdit : (selected ? options.icons.assetHeadingSelected : options.icons.assetHeading)),
         rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
       })
     })
@@ -607,7 +624,6 @@ function HistoriskAtlas(mapElement, options) {
 
   // Event handling - integrate the clients event handlers.
   mapState.map.on('movestart', function (event) {
-    mapState.mapPopupElement.style.display = 'none';
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
@@ -630,13 +646,14 @@ function HistoriskAtlas(mapElement, options) {
     });
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : mapState.timeWarp.getHoverInterface(pixel);
   })
-  //mapState.map.on('pointerdrag', function (event) {
-  //  if (mapState.isSingleMode())
+  mapState.map.on('pointerdrag', function (event) {
+    mapState.hidePopup();
+    //  if (mapState.isSingleMode())
   //    return;
 
   //  var pixel = mapState.map.getEventPixel(event.originalEvent);
   //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
-  //})
+  })
 
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode() || mapState.isEditMode())
@@ -644,7 +661,7 @@ function HistoriskAtlas(mapElement, options) {
 
     var clickFeature;
     mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
-    mapState.mapPopupElement.style.display = 'none';
+    mapState.hidePopup();
 
     if (!clickFeature)
       return;
@@ -659,17 +676,18 @@ function HistoriskAtlas(mapElement, options) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
 
       if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
+        mapState.feature = subFeatures[0];
         pixel[1] -= 155;
         mapState.view.animate({
           center: mapState.map.getCoordinateFromPixel(pixel),
           duration: 500
         }, function () {
-          mapState.showPopup(asset, mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
+          //mapState.showPopup(subFeatures[0], mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
         });
         return;
       }
-
-      mapState.showPopup(asset, pixel)
+      
+      mapState.showPopup(subFeatures[0], pixel)
       return;
     }
 
@@ -685,20 +703,31 @@ function HistoriskAtlas(mapElement, options) {
   })
 
   document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
-    mapState.mapPopupElement.style.display = 'none';
+    mapState.hidePopup();
     evt.stopPropagation();
   })
 
-  mapState.showPopup = function (asset, pixel) {
+  mapState.showPopup = function (feature, pixel) {
+    mapState.feature = feature;
+    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
+
     var offset = mapElement.getBoundingClientRect();
     pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
-    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
-    document.getElementById('mapPopupHeading').innerText = asset.short_title;
-    document.getElementById('mapPopupDescription').innerText = asset.description;
+    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
+    document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
+    document.getElementById('mapPopupDescription').innerText = feature.asset.description;
     mapState.mapPopupElement.style.display = 'block';
-    mapState.mapPopupElement.assetId = asset.id;
+    mapState.mapPopupElement.assetId = feature.asset.id;
+  }
+
+  mapState.hidePopup = function () {
+    mapState.mapPopupElement.style.display = 'none';
+    if (mapState.feature) {
+      mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
+      mapState.feature = null;
+    }
   }
 
   mapState.getCoordinateFromGeohash = function (geohash) {
