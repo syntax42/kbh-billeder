@@ -467,7 +467,7 @@ function HistoriskAtlas(mapElement, options) {
     }
     mapState.vectorSource.addFeatures(features);
     if (features.length > 0) {
-      if (options.mode == 'edit' || options.mode == 'single')
+      if (mapState.isSingleOrEditMode())
         mapState.feature = features[0];
       else {
         if (mapState.feature)
@@ -621,6 +621,12 @@ function HistoriskAtlas(mapElement, options) {
   mapState.isEditMode = function () {
     return options.mode == 'edit';
   }
+  mapState.isSingleOrEditMode = function () {
+    return options.mode == 'edit' || options.mode == 'single';
+  }
+  mapState.isMultiMode = function () {
+    return options.mode == 'multi' || !options.mode;
+  }
 
   // Event handling - integrate the clients event handlers.
   mapState.map.on('movestart', function (event) {
@@ -724,7 +730,7 @@ function HistoriskAtlas(mapElement, options) {
 
   mapState.hidePopup = function () {
     mapState.mapPopupElement.style.display = 'none';
-    if (mapState.feature) {
+    if (mapState.feature && mapState.isMultiMode()) {
       mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
       mapState.feature = null;
     }
