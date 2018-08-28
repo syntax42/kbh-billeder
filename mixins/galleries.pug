@@ -22,7 +22,7 @@ mixin blockGallery(gallery)
   .row.gallery
     .col-xs-12
       h2.gallery__title= gallery.title
-      h3= gallery.description
+      h3.gallery__text= gallery.description
       each item, index in gallery.items
         +galleryItem(item, index, 'block')
   
