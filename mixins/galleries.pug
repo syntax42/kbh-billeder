@@ -10,16 +10,16 @@ mixin gridGallery(gallery, i, evenOrOdd)
           .col-xs-6
             +galleryItem(item, index, 'grid', true)
                 
-mixin carouselGallery(gallery)
-  .row.gallery
+mixin carouselGallery(gallery, evenOrOdd)
+  .row.gallery(class="gallery--" + evenOrOdd)
     .col-xs-12
       h2.gallery__title= gallery.title
       .gallery--slick
           each item, index in gallery.items
               +galleryItem(item, index, 'carousel', true)
 
-mixin blockGallery(gallery)
-  .row.gallery
+mixin blockGallery(gallery, evenOrOdd)
+  .row.gallery(class="gallery--" + evenOrOdd)
     .col-xs-12
       h2.gallery__title= gallery.title
       h3.gallery__text= gallery.description
