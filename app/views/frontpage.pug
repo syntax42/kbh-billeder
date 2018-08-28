@@ -5,22 +5,23 @@ include mixins/search-freetext-form
 block content-top
   .jumbo
     .jumbo__image
-    .jumbo__logos
-      a(href="/søg?institution=Københavns+Museum")
-        +icon('kbh-museum')
-      a(href="/søg?institution=Københavns+Stadsarkiv")
-        +icon('kbh-arkiv')
-      a(href="/søg?institution=Frederiksberg+Stadsarkiv")
-        +icon('frb-arkiv')  
-    .jumbo__flex
-      .container-fluid
-        .row
-          .col-xs-12.col-sm-8.col-md-6
-            .jumbo__teaser
-              include includes/tagline
-    .jumbo__search
-      .container-fluid
-        +searchFreetextForm('Søg på kbhbilleder.dk', 'on-white', 'large')
+    .container-fluid
+      .jumbo__inner
+        .col-xs-12.col-xs-12.col-sm-8.col-md-8
+          .jumbo__teaser
+            include includes/tagline
+        .col-xs-12.col-xs-12.col-sm-8.col-md-8.clear
+          .jumbo__search
+            +searchFreetextForm('Søg efter billeder', 'jumbo')
+        .col-xs-12
+          .jumbo__logos
+            a(href="/søg?institution=Københavns+Museum")
+              +icon('kbh-museum')
+            a(href="/søg?institution=Københavns+Stadsarkiv")
+              +icon('kbh-arkiv')
+            a(href="/søg?institution=Frederiksberg+Stadsarkiv")
+              +icon('frb-arkiv')
+    .jumbo__triangle
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
