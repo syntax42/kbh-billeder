@@ -1,14 +1,55 @@
 .gallery {
+  &--block {
+    text-align: left;
+    a {
+      text-align: center;
+      padding: 50px 15px;
+      &:hover {
+        background: white;
+        text-decoration: none;
+        @include shadow(5);
+      }
+    }
+    .gallery {
+      &-thumb {
+        svg {
+          fill: white;
+        }
+        &__title {
+          margin: 1.5rem 0;
+        }
+        &__text {
+          line-height: 2rem;
+        }
+      }
+    }
+  }
   &__title {
     font-size: 1.75rem;
     font-weight: bold;
     color: $black;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0;
   }
   &__text, &__description {
     font-size: 1rem;
     line-height: 2rem;
     font-weight: bold;
+  }
+  &-thumb {
+    &__text {
+      display: block;
+    }
+    &__overlay {
+      background: none;
+      color: $gray-darker;
+      padding: 0;
+      width: auto;
+      max-width: 230px;
+      position: static;
+    }
+  }
+  &--odd {
+    flex-direction: row;
   }
   &--even {
     background: $gray-lighter;
