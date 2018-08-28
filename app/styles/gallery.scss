@@ -10,4 +10,7 @@
     line-height: 2rem;
     font-weight: bold;
   }
+  &--even {
+    background: $gray-lighter;
+  }
 }

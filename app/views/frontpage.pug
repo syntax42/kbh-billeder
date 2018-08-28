@@ -23,6 +23,25 @@ block content-top
               +icon('frb-arkiv')
     .jumbo__triangle
 
+block content-bottom
+  .frontpage-galleries
+    - var gridGalleryCount = 0
+    each gallery, i in galleries
+      - gridGalleryCount += 1
+      - var evenOrOdd = (gridGalleryCount % 2 == 0 ? 'even' : 'odd')
+      -if(gallery.appearance === 'grid')
+        .gallery__container(class="gallery--" + evenOrOdd)
+          .container-fluid
+            +gridGallery(gallery, i, evenOrOdd)
+      -if(gallery.appearance === 'carousel')
+        .gallery__container(class="gallery--" + evenOrOdd)
+          .container-fluid
+            +carouselGallery(gallery, evenOrOdd)
+      -if(gallery.appearance === 'block')
+        .gallery__container(class="gallery--" + evenOrOdd)
+          .container-fluid
+            +blockGallery(gallery, evenOrOdd)
+
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
   script(type="application/ld+json").
