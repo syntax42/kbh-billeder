@@ -690,6 +690,8 @@ function HistoriskAtlas(mapElement, options) {
   })
 
   mapState.showPopup = function (asset, pixel) {
+    var offset = mapElement.getBoundingClientRect();
+    pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
