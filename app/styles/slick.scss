@@ -1,0 +1,55 @@
+.slick {
+  &-prev {
+    left: -85px;
+    background: url(../images/icons/arrow-thin-left.png) no-repeat center;
+    &:hover {
+      background: url(../images/icons/arrow-thin-left-hover.png) no-repeat center;
+    }
+  }
+  &-next {
+    background: url(../images/icons/arrow-thin-right.png) no-repeat center;
+    right: -85px;
+    &:hover {
+      background: url(../images/icons/arrow-thin-right-hover.png) no-repeat center;
+    }
+  }
+  &-next, &-prev {
+    bottom: 0;
+    top: 120px;
+    height: 48px;
+    width: 48px;
+    border-radius: 48px;
+    opacity: 1;
+    background-size: 16px;
+    content: '';
+    @include shadow(3);
+    &::before {
+      content: '';
+    }
+    &:hover {
+      background-color: $brand-primary;
+      background-size: 16px;
+    }
+  }
+  &-dots {
+    margin-top: 20px;
+    position: static;
+    li button::before {
+      font-size: 45px;
+      opacity: 1;
+    }
+    li.slick-active {
+      button:before {
+        color: white;
+      }
+      button::before {
+        color: white;
+        opacity: 1;
+        border: 2px solid black;
+        border-radius: 10px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
