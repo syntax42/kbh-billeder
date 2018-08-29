@@ -83,6 +83,10 @@
             assetMapper: function(results) {
               return results;
             },
+            onTimeWarpToggle: function() {
+                var elm = document.getElementById('toggletimewarp');
+                elm.checked = !elm.checked;
+            },
             urlBase: "http://kbhbilleder.dk/"
           };
 
@@ -104,18 +108,12 @@
 
       })();
     </script>
-    <style>
-        #map {
-            width: 1000px;
-            height: 600px;
-        }
-    </style>
 </head>
 <body>
 <div id="map"></div>
 <br>
 <input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
-<input type="button" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />
+<label><input type="checkbox" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />Time Warp</label>
 
 </body>
 </html>

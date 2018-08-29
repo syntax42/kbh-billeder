@@ -62,7 +62,7 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     mapState.mapSelectElement = document.createElement('select');
     mapState.mapSelectElement.addEventListener('change', function (event) {
       
-      var source = mapState.rasterLayer.getSource();
+      var source = mapState.isMultiMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
       source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
 
     }, false);
@@ -174,16 +174,23 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     loadTilesWhileAnimating: true
   });
 
-  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.getMapUrl);
-
   //Create popup
   mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
+  mapState.mapSelectDivElement = document.getElementById('mapSelect');
+  if (mode == 'single') {
+    mapState.mapSelectDivElement.style.display = 'block';
+    mapState.mapSelectDivElement.style.bottom = '18px';
+    mapState.mapSelectDivElement.style.right = '18px';
+  }
+
+  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl);
+
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement, getMapUrl) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
@@ -263,8 +270,8 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
     window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
     timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
-    //this.setOpacity(1);
-    //App.timeWarpClosed.hide();
+    mapSelectDivElement.style.display = 'block';
+    timeWarp.updateMapSelect();
   }
 
   timeWarp.hide = function () {
@@ -274,6 +281,12 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
     window.removeEventListener('mouseup', timeWarp.upEventHandle);
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
     timeWarp.setVisible(false);
+    mapSelectDivElement.style.display = 'none';
+  }
+
+  timeWarp.updateMapSelect = function () {
+    mapSelectDivElement.style.left = (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px';
+    mapSelectDivElement.style.top = (timeWarp.position[1] + timeWarp.radius - 21) + 'px';
   }
 
   timeWarp.touchDown = function(event) {
@@ -336,6 +349,7 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
         break;
     }
     map.renderSync();
+    timeWarp.updateMapSelect();
     //TimeWarpButton.updateTimeWarpUI();
     //App.map.changeTimeWarp();
   }

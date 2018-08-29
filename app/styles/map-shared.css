@@ -67,9 +67,8 @@
     height: 84px;
 }
 #mapSelect {
-    bottom: 18px;
-    right: 18px;
     height: 42px;
+    display: none;
 }
 #mapSelect::after {
     font-family: FFUnitWebMedium;
