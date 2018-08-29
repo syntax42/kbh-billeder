@@ -16,7 +16,11 @@ block map-coordinates__map
 
 block map-coordinates__map--edit-coordinates
   tr
-    td
+    td(colspan=2, class='map-coordinates__map--edit')
       button.btn.btn-block(data-action='geo-tagging:start', class=extraClasses)
         | Rediger
         +icon('pencil')
+      button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
+        | Annuller
+      button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
+        | Gem placering

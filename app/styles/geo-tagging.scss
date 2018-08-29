@@ -2,6 +2,11 @@
   height: 455px;
 }
 
+// Have floated buttons seperate a bit.
+.map-coordinates__map--edit .btn.btn-primary {
+  margin-right: 10px;
+}
+
 .place-overlay {
   width: 100%;
   position: relative;
