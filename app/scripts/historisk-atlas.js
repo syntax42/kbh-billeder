@@ -37,9 +37,9 @@ function _prepareMapOptions (options) {
     { id: 85, title: 'Luftfoto', year: '2016' },
     { id: 39, title: '4 cm kort', year: '1977-85' },
     { id: 38, title: '4 cm kort', year: '1953-76' },
-    { id: 105, title: 'København', year: '1939' },
+    { id: 105, title: 'K\u00F8benhavn', year: '1939' },
     { id: 54, title: 'Lavkantkort', year: '1901-1945' },
-    { id: 55, title: 'Højkantkort', year: '1840-1899' },
+    { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
     { id: 154, title: 'Geddes kort', year: '1761' }
   ];
 
@@ -592,10 +592,16 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
   };
-  mapHandler.toggleEditMode = function () {
-    options.mode = options.mode == 'edit' ? 'single' : 'edit'
-    
-    if (options.mode == 'edit') {
+  mapHandler.toggleEditMode = function (editOn) {
+    // If the user specifically requested a mode, use it.
+    if (editOn !== undefined){
+      options.mode = editOn ? 'edit' : 'single';
+    } else {
+      // Otherwise go for toggle.
+      options.mode = options.mode === 'edit' ? 'single' : 'edit';
+    }
+
+    if (options.mode === 'edit') {
 
       mapHandler.translate = new ol.interaction.Translate({
         features: new ol.Collection([mapState.feature])

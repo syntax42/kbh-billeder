@@ -19,7 +19,6 @@ const beta = _.merge({}, base, {
   env: 'beta',
   features: {
     feedback: true,
-    geoTagging: true,
     motifTagging: true,
     requireEmailVerification: true,
     sitewidePassword: true,

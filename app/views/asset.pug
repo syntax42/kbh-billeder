@@ -23,9 +23,25 @@ block document__section-1-metadata
         include ./includes/motif-tagging
 
 block document__section-2
-  .document__section-2
-    .place-overlay
-      != assetSection('place', metadata)
+  - const location = helpers.geoTagging.getLocation(metadata);
+
+  if !location.longitude && !location.latitude
+    .document__section-2
+      .container-fluid
+        .row
+          .col-sm-12
+            != assetSection('place', metadata)
+  else
+    .document__section-2--map
+      .geo-tagging-mini-map(
+        data-latitude=location.latitude,
+        data-longitude=location.longitude,
+        data-heading=location.heading,
+        data-approximate=location.isApproximate ? 'true' : 'false'
+      )
+      .place-overlay
+        .place-overlay__inner
+          != assetSection('place', metadata)
 
 block document__section-3
   .document__section-3
