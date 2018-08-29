@@ -50,7 +50,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
+function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -58,13 +58,10 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
   mapState.mapElement = mapElement;
 
   mapState.mapSelectControl = function () {
-
     mapState.mapSelectElement = document.createElement('select');
-    mapState.mapSelectElement.addEventListener('change', function (event) {
-      
+    mapState.mapSelectElement.addEventListener('change', function (event) {      
       var source = mapState.isMultiMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
       source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
-
     }, false);
 
     for (var i = 0; i < maps.length; i++) {
@@ -82,7 +79,6 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     ol.control.Control.call(this, {
       element: element
     });
-
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
 
@@ -183,14 +179,13 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     mapState.mapSelectDivElement.style.display = 'block';
     mapState.mapSelectDivElement.style.bottom = '18px';
     mapState.mapSelectDivElement.style.right = '18px';
-  }
-
-  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl);
+  } else
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
 
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
@@ -217,6 +212,44 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
 
   //timeWarp.listenerKeyPointerDrag;
   //timeWarp.listenerKeyPointerMove;
+
+  timeWarp.closeControl = function () {
+    timeWarp.closeElement = document.createElement('div');
+    timeWarp.closeElement.id = 'timeWarpClose';
+    timeWarp.closeElement.className = 'ol-unselectable ol-control time-warp-button';
+    timeWarp.closeElement.addEventListener('click', function (event) {
+      timeWarp.hide();
+      if (onTimeWarpToggle)
+        onTimeWarpToggle();
+    }, false);
+    ol.control.Control.call(this, {
+      element: timeWarp.closeElement
+    });
+  };
+  ol.inherits(timeWarp.closeControl, ol.control.Control);
+  map.addControl(new timeWarp.closeControl());
+
+  timeWarp.modeControl = function () {
+    timeWarp.modeElement = document.createElement('div');
+    timeWarp.modeElement.id = 'timeWarpMode';
+    timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button';
+    timeWarp.modeElement.addEventListener('click', function (event) {
+      timeWarp.mode = timeWarp.mode == timeWarp.modes.CIRCLE ? timeWarp.modes.SPLIT : timeWarp.modes.CIRCLE
+      if (timeWarp.mode == timeWarp.modes.SPLIT) {
+        timeWarp.rectX = map.getSize()[0] / 2;
+        timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button split'
+      } else
+        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button'
+      timeWarp.updateControls();
+      map.renderSync();
+    }, false);
+    ol.control.Control.call(this, {
+      element: timeWarp.modeElement
+    });
+  };
+  ol.inherits(timeWarp.modeControl, ol.control.Control);
+  map.addControl(new timeWarp.modeControl());
 
   timeWarp.precomposeTimeWarp = function(event) {
     var ctx = event.context;
@@ -250,7 +283,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
         break;
       case timeWarp.modes.SPLIT:
         var rectY = -10.0;
-        var rectHeight = $(window).height() + 20.0;
+        var rectHeight = map.getSize()[1] + 20.0;
         ctx.rect((timeWarp.rectX * timeWarp.pixelRatio), (rectY * timeWarp.pixelRatio), (timeWarp.rectWidth * timeWarp.pixelRatio), (rectHeight * timeWarp.pixelRatio));
         break;
     }
@@ -271,7 +304,9 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
     timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
     mapSelectDivElement.style.display = 'block';
-    timeWarp.updateMapSelect();
+    timeWarp.closeElement.style.display = 'block';
+    timeWarp.modeElement.style.display = 'block';
+    timeWarp.updateControls();
   }
 
   timeWarp.hide = function () {
@@ -282,11 +317,23 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
     timeWarp.setVisible(false);
     mapSelectDivElement.style.display = 'none';
+    timeWarp.closeElement.style.display = 'none';
+    timeWarp.modeElement.style.display = 'none';
   }
 
-  timeWarp.updateMapSelect = function () {
-    mapSelectDivElement.style.left = (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px';
-    mapSelectDivElement.style.top = (timeWarp.position[1] + timeWarp.radius - 21) + 'px';
+  timeWarp.updateControls = function () {
+    mapSelectDivElement.style.left = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px' : null;
+    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ?(timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
+    mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
+    mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
+
+    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18)
+    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62)
+  }
+  timeWarp.updateButton = function (element, circle, radians) {
+    element.style.left = circle ? (timeWarp.position[0] + Math.cos(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : null;
+    element.style.top = circle ? (timeWarp.position[1] + Math.sin(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : radians + 'px';
+    element.style.right = circle ? null : '18px';
   }
 
   timeWarp.touchDown = function(event) {
@@ -314,7 +361,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
         timeWarp.dragMode = timeWarp.dragModes.NONE;
     }
     else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
-      var displace = timeWarp.rectX - mouseDownCoords[0];
+      var displace = timeWarp.rectX - coord[0]; // - mouseDownCoords[0]
       if (Math.abs(displace) < 8) {
         timeWarp.dragMode = timeWarp.dragModes.SPLIT;
         timeWarp.mouseDisplace = [displace, 0];
@@ -344,14 +391,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
         break;
       case timeWarp.dragModes.SPLIT:
         timeWarp.rectX = newposition[0] + timeWarp.mouseDisplace[0];
-        timeWarp.rectWidth = App.map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
         event.preventDefault();
         break;
     }
     map.renderSync();
-    timeWarp.updateMapSelect();
-    //TimeWarpButton.updateTimeWarpUI();
-    //App.map.changeTimeWarp();
+    timeWarp.updateControls();
   }
 
   timeWarp.centerCoordFromTouches = function(touches, relative) {
@@ -402,7 +447,6 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl) {
     clearInterval(timeWarp.intervalHandle);
     timeWarp.intervalHandle = null;
     timeWarp.dragMode = timeWarp.dragModes.NONE;
-    //TimeWarpButton.updateTimeWarpUI();
   }
 
   timeWarp.getHoverInterface = function(pixel) {
@@ -442,7 +486,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
