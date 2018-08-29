@@ -1,5 +1,5 @@
 mixin gridGallery(gallery, i, evenOrOdd)
-  .row.gallery(class="gallery--" + evenOrOdd)
+  .row.gallery.gallery--grid(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-5
       h2.gallery__title= gallery.title
       p.gallery__text= gallery.description
@@ -11,20 +11,23 @@ mixin gridGallery(gallery, i, evenOrOdd)
             +galleryItem(item, index, 'grid', true)
                 
 mixin carouselGallery(gallery, evenOrOdd)
-  .row.gallery(class="gallery--" + evenOrOdd)
+  .row.gallery.gallery--carousel(class="gallery--" + evenOrOdd)
     .col-xs-12
       h2.gallery__title= gallery.title
+      h3.gallery__subtitle= ' — ' + gallery.description
       .gallery--slick
           each item, index in gallery.items
-              +galleryItem(item, index, 'carousel', true)
+            +galleryItem(item, index, 'carousel', true)
 
 mixin blockGallery(gallery, evenOrOdd)
-  .row.gallery(class="gallery--" + evenOrOdd).gallery--block
-    .col-xs-12.col-sm-3
+  .row.gallery.gallery--block(class="gallery--" + evenOrOdd).gallery--block
+    .col-xs-12.col-sm-4
       h2.gallery__title= gallery.title
       h3.gallery__text= gallery.description
-    each item, index in gallery.items
-      +galleryItem(item, index, 'block')
+    .gallery__items
+      each item, index in gallery.items
+        .col-xs-12.col-sm-6.col-md-3
+          +galleryItem(item, index, 'block')
   
 mixin galleryItem(item, index, type, fill)
   - var fill = fill
