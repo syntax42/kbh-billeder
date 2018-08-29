@@ -73,7 +73,7 @@ $(function ($) {
       _setStateEdit();
     });
 
-    // The clicked "cancel".
+    // The user clicked "cancel".
     $(document).on('click', STOP_GEOTAGGING_SELECTOR, () => {
       // Switch the map back to single mode.
       mapController.toggleEditMode(false);
@@ -115,8 +115,8 @@ $(function ($) {
         saveObject.heading = liveAsset.heading;
       }
 
-      const url = location.pathname + '/save-geotag';
-      $.post(url, saveObject, () => {
+      const saveGeotagUrl = location.pathname + '/save-geotag';
+      $.post(saveGeotagUrl, saveObject, () => {
         // We're done saving, lift the protection and reload the page.
         controllerState.saving = false;
         window.location.reload();

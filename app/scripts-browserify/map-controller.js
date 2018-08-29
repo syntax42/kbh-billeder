@@ -32,6 +32,7 @@ function _mapEsResultsToAssets(results, searchParameters) {
       var assetResult = {
         id: colid,
         short_title: asset.short_title,
+        description: '',
         image_url: `${colid}/thumbnail`,
         latitude: asset.location.lat,
         longitude: asset.location.lon,
@@ -116,7 +117,9 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         clusterMedium: '../images/icons/map/m2.png',
         clusterLarge: '../images/icons/map/m3.png',
         asset: '../images/icons/map/pin.png',
+        assetSelected: '../images/icons/map/pinselected.png',
         assetHeading: '../images/icons/map/pinheading.png',
+        assetHeadingSelected: '../images/icons/map/pinheadingselected.png',
         assetEdit: '../images/icons/map/pinedit.png',
         assetHeadingEdit: '../images/icons/map/pinheadingedit.png',
         camera: '../images/icons/map/camera.png',
