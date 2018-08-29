@@ -2,36 +2,52 @@
   height: 455px;
 }
 
-.place-overlay {
-  position: relative;
-  width: 100%;
-  height: 420px;
-  table {
-    position: absolute;
-    top: 50px;
-    background: white;
-    left: 235px;
-    width: 400px;
-    height: 280px;
-    padding: 20px;
-    padding-top: 75px;
-    border-collapse: separate;
-    border-spacing: 10px;
-    @include shadow(5);
-  }
-  h2 {
-    position: absolute;
-    top: 80px;
-    z-index: 1;
-    left: 235+30px;
-  }
-  .btn {
-    float: left;
-    width: auto;
-    font-size: 1rem;
-  }
+// Have floated buttons seperate a bit.
+.map-coordinates__map--edit .btn.btn-primary {
+  margin-right: 10px;
 }
 
-.document__section-2 {
-  background: none;
+.place-overlay {
+  width: 100%;
+  position: relative;
+  max-width: $large-size;
+  margin: 0 auto;
+  top: -455px;
+  .is-mobile & {
+    position: static;
+  }
+  &__inner {
+    .is-mobile & {
+      position: static;
+      @include shadow(0);
+    }
+    display: inline-block;
+    position: absolute;
+    background: white;
+    top: 5rem;
+    left: 15px;
+    width: 400px;
+    padding: 2rem;
+    @include shadow(5);
+    .btn {
+      float: left;
+      width: auto;
+      font-size: 1rem;
+    }
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  table {
+    th {
+      width: 120px;
+    }
+    td {
+      width: auto;
+    }
+    .btn {
+      margin-top: 1.5rem;
+    }
+  }
 }

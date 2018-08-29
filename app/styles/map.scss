@@ -5,3 +5,16 @@
 #mapPopupClose {
   content: url('/images/icons/map/close.png');
 }
+.ol-control select {
+  background-image: url('/images/icons/map/downarrow.png');
+}
+
+#timeWarpClose {
+  background-image: url('/images/icons/map/timewarpclose.png');
+}
+#timeWarpMode {
+  background-image: url('/images/icons/map/timewarpsplit.png');
+}
+#timeWarpMode.split {
+  background-image: url('/images/icons/map/timewarpcircle.png');
+}

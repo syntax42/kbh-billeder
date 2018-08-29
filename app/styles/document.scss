@@ -1,4 +1,15 @@
 .document {
+  &__section-2 {
+    table {
+      width: 50%;
+    }
+    &__no-placement {
+      float: right;
+    }
+    &--map {
+      background: none;
+    }
+  }
   &__expandable--expanded {
     [class*='col-'] {
       width: 100%;
@@ -11,6 +22,15 @@
     }
   }
   &__player-controls {
+    .is-mobile & {
+      text-align: left;
+      font-family: $font-family-medium;
+    }
+    &__actions {
+      .is-mobile & {
+        float: left;
+      }
+    }
     .zoom-in {
       display: inline-block;
     }
@@ -51,6 +71,11 @@
     }
   }
   &__back-link {
+    .is-mobile & {
+      font-weight: bold;
+      margin: 2rem 0;
+      font-family: $font-family-medium;
+    }
     margin-bottom: 30px;
     a {
       color: $brand-primary;

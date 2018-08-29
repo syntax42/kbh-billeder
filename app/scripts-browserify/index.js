@@ -9,6 +9,8 @@ require('../../node_modules/collections-online/app/scripts-browserify/base')({
 // Project specific
 require('analytics');
 
+require('document/geo-tagging');
+
 if(config.features.sitewidePassword) {
   require('./sitewide-password');
 }
