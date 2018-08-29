@@ -57,9 +57,11 @@ jobs:
       # Do the build and tag and push the image.
       - run: |
           docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest-test -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-test .
-      - run: |
-          docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-test
-          docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest-test
+      - run:
+          no_output_timeout: 15m 
+          command: |
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-test
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest-test
 
       # Update the kube frontend deploymen to use our new image.
       - run: |
