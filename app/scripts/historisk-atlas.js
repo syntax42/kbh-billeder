@@ -50,7 +50,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
+function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -58,13 +58,10 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
   mapState.mapElement = mapElement;
 
   mapState.mapSelectControl = function () {
-
     mapState.mapSelectElement = document.createElement('select');
-    mapState.mapSelectElement.addEventListener('change', function (event) {
-      
-      var source = mapState.rasterLayer.getSource();
+    mapState.mapSelectElement.addEventListener('change', function (event) {      
+      var source = mapState.isMultiMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
       source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
-
     }, false);
 
     for (var i = 0; i < maps.length; i++) {
@@ -82,7 +79,6 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     ol.control.Control.call(this, {
       element: element
     });
-
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
 
@@ -116,6 +112,10 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
         if (!subFeatures[0].asset.clustered)
           return subFeatures[0].getStyle();
       }
+
+      //var style = feature.getStyle()
+      //if (style)
+      //  return style;
 
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
@@ -170,16 +170,22 @@ function _prepareMap (mapElement, center, zoomLevel, icons, mode, maps) {
     loadTilesWhileAnimating: true
   });
 
-  mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.getMapUrl);
-
   //Create popup
   mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
+  mapState.mapSelectDivElement = document.getElementById('mapSelect');
+  if (mode == 'single') {
+    mapState.mapSelectDivElement.style.display = 'block';
+    mapState.mapSelectDivElement.style.bottom = '18px';
+    mapState.mapSelectDivElement.style.right = '18px';
+  } else
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
+
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement, getMapUrl) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
@@ -206,6 +212,44 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
 
   //timeWarp.listenerKeyPointerDrag;
   //timeWarp.listenerKeyPointerMove;
+
+  timeWarp.closeControl = function () {
+    timeWarp.closeElement = document.createElement('div');
+    timeWarp.closeElement.id = 'timeWarpClose';
+    timeWarp.closeElement.className = 'ol-unselectable ol-control time-warp-button';
+    timeWarp.closeElement.addEventListener('click', function (event) {
+      timeWarp.hide();
+      if (onTimeWarpToggle)
+        onTimeWarpToggle();
+    }, false);
+    ol.control.Control.call(this, {
+      element: timeWarp.closeElement
+    });
+  };
+  ol.inherits(timeWarp.closeControl, ol.control.Control);
+  map.addControl(new timeWarp.closeControl());
+
+  timeWarp.modeControl = function () {
+    timeWarp.modeElement = document.createElement('div');
+    timeWarp.modeElement.id = 'timeWarpMode';
+    timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button';
+    timeWarp.modeElement.addEventListener('click', function (event) {
+      timeWarp.mode = timeWarp.mode == timeWarp.modes.CIRCLE ? timeWarp.modes.SPLIT : timeWarp.modes.CIRCLE
+      if (timeWarp.mode == timeWarp.modes.SPLIT) {
+        timeWarp.rectX = map.getSize()[0] / 2;
+        timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button split'
+      } else
+        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button'
+      timeWarp.updateControls();
+      map.renderSync();
+    }, false);
+    ol.control.Control.call(this, {
+      element: timeWarp.modeElement
+    });
+  };
+  ol.inherits(timeWarp.modeControl, ol.control.Control);
+  map.addControl(new timeWarp.modeControl());
 
   timeWarp.precomposeTimeWarp = function(event) {
     var ctx = event.context;
@@ -239,7 +283,7 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
         break;
       case timeWarp.modes.SPLIT:
         var rectY = -10.0;
-        var rectHeight = $(window).height() + 20.0;
+        var rectHeight = map.getSize()[1] + 20.0;
         ctx.rect((timeWarp.rectX * timeWarp.pixelRatio), (rectY * timeWarp.pixelRatio), (timeWarp.rectWidth * timeWarp.pixelRatio), (rectHeight * timeWarp.pixelRatio));
         break;
     }
@@ -259,8 +303,10 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
     window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
     timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
-    //this.setOpacity(1);
-    //App.timeWarpClosed.hide();
+    mapSelectDivElement.style.display = 'block';
+    timeWarp.closeElement.style.display = 'block';
+    timeWarp.modeElement.style.display = 'block';
+    timeWarp.updateControls();
   }
 
   timeWarp.hide = function () {
@@ -270,6 +316,24 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
     window.removeEventListener('mouseup', timeWarp.upEventHandle);
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
     timeWarp.setVisible(false);
+    mapSelectDivElement.style.display = 'none';
+    timeWarp.closeElement.style.display = 'none';
+    timeWarp.modeElement.style.display = 'none';
+  }
+
+  timeWarp.updateControls = function () {
+    mapSelectDivElement.style.left = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px' : null;
+    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ?(timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
+    mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
+    mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
+
+    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18)
+    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62)
+  }
+  timeWarp.updateButton = function (element, circle, radians) {
+    element.style.left = circle ? (timeWarp.position[0] + Math.cos(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : null;
+    element.style.top = circle ? (timeWarp.position[1] + Math.sin(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : radians + 'px';
+    element.style.right = circle ? null : '18px';
   }
 
   timeWarp.touchDown = function(event) {
@@ -297,7 +361,7 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
         timeWarp.dragMode = timeWarp.dragModes.NONE;
     }
     else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
-      var displace = timeWarp.rectX - mouseDownCoords[0];
+      var displace = timeWarp.rectX - coord[0]; // - mouseDownCoords[0]
       if (Math.abs(displace) < 8) {
         timeWarp.dragMode = timeWarp.dragModes.SPLIT;
         timeWarp.mouseDisplace = [displace, 0];
@@ -327,13 +391,12 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
         break;
       case timeWarp.dragModes.SPLIT:
         timeWarp.rectX = newposition[0] + timeWarp.mouseDisplace[0];
-        timeWarp.rectWidth = App.map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
+        timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
         event.preventDefault();
         break;
     }
     map.renderSync();
-    //TimeWarpButton.updateTimeWarpUI();
-    //App.map.changeTimeWarp();
+    timeWarp.updateControls();
   }
 
   timeWarp.centerCoordFromTouches = function(touches, relative) {
@@ -384,7 +447,6 @@ function _prepareTimeWarp(map, mapElement, getMapUrl) {
     clearInterval(timeWarp.intervalHandle);
     timeWarp.intervalHandle = null;
     timeWarp.dragMode = timeWarp.dragModes.NONE;
-    //TimeWarpButton.updateTimeWarpUI();
   }
 
   timeWarp.getHoverInterface = function(pixel) {
@@ -424,7 +486,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps);
+  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -453,16 +515,29 @@ function HistoriskAtlas(mapElement, options) {
         feature.setStyle(mapHandler.getFeatureStyle(asset));
       feature.asset = asset;
       features.push(feature);
+
+      if (mapState.feature && mapState.isMultiMode()) {
+        if (asset.id == mapState.feature.asset.id) {
+          mapState.feature = feature;
+          mapState.feature.setStyle(mapHandler.getFeatureStyle(feature, true))
+        }
+      }
     }
-    if (features.length > 0)
-      mapState.feature = features[0];
     mapState.vectorSource.addFeatures(features);
+    if (features.length > 0) {
+      if (mapState.isSingleOrEditMode())
+        mapState.feature = features[0];
+      else {
+        if (mapState.feature)
+          mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
+      }
+    }
   };
 
-  mapHandler.getFeatureStyle = function (asset) {
+  mapHandler.getFeatureStyle = function (asset, selected) {
     var style = new ol.style.Style({
       image: new ol.style.Icon({
-        src: asset.heading == undefined ? (mapState.isEditMode() ? options.icons.assetEdit : options.icons.asset) : (mapState.isEditMode() ? options.icons.assetHeadingEdit : options.icons.assetHeading),
+        src: asset.heading == undefined ? (mapState.isEditMode() ? options.icons.assetEdit : (selected ? options.icons.assetSelected : options.icons.asset)) : (mapState.isEditMode() ? options.icons.assetHeadingEdit : (selected ? options.icons.assetHeadingSelected : options.icons.assetHeading)),
         rotation: asset.heading ? asset.heading * (Math.PI / 180) : 0
       })
     })
@@ -604,10 +679,15 @@ function HistoriskAtlas(mapElement, options) {
   mapState.isEditMode = function () {
     return options.mode == 'edit';
   }
+  mapState.isSingleOrEditMode = function () {
+    return options.mode == 'edit' || options.mode == 'single';
+  }
+  mapState.isMultiMode = function () {
+    return options.mode == 'multi' || !options.mode;
+  }
 
   // Event handling - integrate the clients event handlers.
   mapState.map.on('movestart', function (event) {
-    mapState.mapPopupElement.style.display = 'none';
     options.onMoveStart(mapHandler);
   });
   mapState.map.on('moveend', function (event) {
@@ -628,15 +708,20 @@ function HistoriskAtlas(mapElement, options) {
         return true;
       }
     });
-    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : mapState.timeWarp.getHoverInterface(pixel);
+    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
-  //mapState.map.on('pointerdrag', function (event) {
-  //  if (mapState.isSingleMode())
+  mapState.map.on('pointerdrag', function (event) {
+    mapState.hidePopup();
+    //  if (mapState.isSingleMode())
   //    return;
 
   //  var pixel = mapState.map.getEventPixel(event.originalEvent);
   //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
-  //})
+  })
+
+  mapState.map.getView().on('change:resolution', function () {
+    mapState.hidePopup();
+  });
 
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode() || mapState.isEditMode())
@@ -644,7 +729,7 @@ function HistoriskAtlas(mapElement, options) {
 
     var clickFeature;
     mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
-    mapState.mapPopupElement.style.display = 'none';
+    mapState.hidePopup();
 
     if (!clickFeature)
       return;
@@ -659,17 +744,18 @@ function HistoriskAtlas(mapElement, options) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
 
       if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
+        mapState.feature = subFeatures[0];
         pixel[1] -= 155;
         mapState.view.animate({
           center: mapState.map.getCoordinateFromPixel(pixel),
           duration: 500
         }, function () {
-          mapState.showPopup(asset, mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
+          //mapState.showPopup(subFeatures[0], mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates()))
         });
         return;
       }
-
-      mapState.showPopup(asset, pixel)
+      
+      mapState.showPopup(subFeatures[0], pixel)
       return;
     }
 
@@ -685,18 +771,31 @@ function HistoriskAtlas(mapElement, options) {
   })
 
   document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
-    mapState.mapPopupElement.style.display = 'none';
+    mapState.hidePopup();
     evt.stopPropagation();
   })
 
-  mapState.showPopup = function (asset, pixel) {
+  mapState.showPopup = function (feature, pixel) {
+    mapState.feature = feature;
+    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
+
+    var offset = mapElement.getBoundingClientRect();
+    pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
-    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + asset.image_url + "')";
-    document.getElementById('mapPopupHeading').innerText = asset.short_title;
-    document.getElementById('mapPopupDescription').innerText = asset.description;
+    document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
+    document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
+    document.getElementById('mapPopupDescription').innerText = feature.asset.description;
     mapState.mapPopupElement.style.display = 'block';
-    mapState.mapPopupElement.assetId = asset.id;
+    mapState.mapPopupElement.assetId = feature.asset.id;
+  }
+
+  mapState.hidePopup = function () {
+    mapState.mapPopupElement.style.display = 'none';
+    if (mapState.feature && mapState.isMultiMode()) {
+      mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
+      mapState.feature = null;
+    }
   }
 
   mapState.getCoordinateFromGeohash = function (geohash) {

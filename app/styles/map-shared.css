@@ -63,13 +63,12 @@
 .ol-zoom {
     top: 18px;
     left: 18px;
-    width: 42px;
-    height: 84px;
+    width: 36px;
+    height: 72px;
 }
 #mapSelect {
-    bottom: 18px;
-    right: 18px;
-    height: 42px;
+    height: 36px;
+    display: none;
 }
 #mapSelect::after {
     font-family: FFUnitWebMedium;
@@ -78,14 +77,30 @@
     content: 'Kort';
     position: absolute;
     top: 0px;
-    padding-top: 10px;
+    padding-top: 7px;
     padding-left: 15px;
     pointer-events: none;
+}
+.time-warp-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 21px !important;
+    cursor: pointer;
+    display: none;
+}
+#timeWarpClose {
+    background: url('/app/images/icons/map/timewarpclose.png') no-repeat center center;
+}
+#timeWarpMode {
+    background: url('/app/images/icons/map/timewarpsplit.png') no-repeat center center;
+}
+#timeWarpMode.split {
+    background: url('/app/images/icons/map/timewarpcircle.png') no-repeat center center;
 }
 
 .ol-control {
     position: absolute;
-    background-color: white;
+    background-color: white !important;
     border-radius: 2px;
     padding: 2px;
     box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
@@ -112,7 +127,7 @@
     font-size: 20px;
     font-weight: bold;
     text-align: center;
-    height: 40px;
+    height: 34px;
     padding-bottom: 3px !important
 }
 .ol-control select {
