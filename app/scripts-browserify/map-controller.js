@@ -196,6 +196,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
         onPopupClick: onPopupClick,
+        onTimeWarpToggle: options.onTimeWarpToggle,
         icons: options.icons
       }
     );

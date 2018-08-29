@@ -9,8 +9,14 @@ body {
 }
 
 #map {
-    height:100%;
     position: absolute;
     left: 100px;
     top: 100px;
+    width: 1000px;
+    height: 600px;
+}
+
+label, input {
+    cursor: pointer;
+    user-select: none;
 }

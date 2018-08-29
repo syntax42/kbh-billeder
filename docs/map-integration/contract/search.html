@@ -72,7 +72,9 @@
               clusterMedium: '/app/images/icons/map/m2.png',
               clusterLarge: '/app/images/icons/map/m3.png',
               asset: '/app/images/icons/map/pin.png',
-              assetHeading: '/app/images/icons/map/pinheading.png'
+              assetHeading: '/app/images/icons/map/pinheading.png',
+              assetSelected: '/app/images/icons/map/pinselected.png',
+              assetHeadingSelected: '/app/images/icons/map/pinheadingselected.png',
             },
             // Provide a mock mapper that just passes the results through.
             // In the live setup results would come from ES and require mapping
@@ -80,6 +82,10 @@
             // has already been mapped.
             assetMapper: function(results) {
               return results;
+            },
+            onTimeWarpToggle: function() {
+                var elm = document.getElementById('toggletimewarp');
+                elm.checked = !elm.checked;
             },
             urlBase: "http://kbhbilleder.dk/"
           };
@@ -102,18 +108,12 @@
 
       })();
     </script>
-    <style>
-        #map {
-            width: 1000px;
-            height: 600px;
-        }
-    </style>
 </head>
 <body>
 <div id="map"></div>
 <br>
 <input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
-<input type="button" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />
+<label><input type="checkbox" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />Time Warp</label>
 
 </body>
 </html>
