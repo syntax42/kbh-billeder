@@ -595,10 +595,16 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
   };
-  mapHandler.toggleEditMode = function () {
-    options.mode = options.mode == 'edit' ? 'single' : 'edit'
-    
-    if (options.mode == 'edit') {
+  mapHandler.toggleEditMode = function (editOn) {
+    // If the user specifically requested a mode, use it.
+    if (editOn !== undefined){
+      options.mode = editOn ? 'edit' : 'single';
+    } else {
+      // Otherwise go for toggle.
+      options.mode = options.mode === 'edit' ? 'single' : 'edit';
+    }
+
+    if (options.mode === 'edit') {
 
       mapHandler.translate = new ol.interaction.Translate({
         features: new ol.Collection([mapState.feature])
