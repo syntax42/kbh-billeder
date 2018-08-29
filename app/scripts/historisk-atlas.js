@@ -171,7 +171,7 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   });
 
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
+  mapElement.insertAdjacentHTML('beforeend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
@@ -353,15 +353,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       else if (dist < timeWarp.radius) {
         timeWarp.dragMode = timeWarp.dragModes.CIRCLE_MOVE;
         timeWarp.mouseDisplace = [timeWarp.position[0] - coord[0], timeWarp.position[1] - coord[1]]
-        //if (!timeWarp.intervalHandle)
-        //  timeWarp.intervalHandle = setInterval(() => timeWarp.pan(), 1000 / 60);
-        //timeWarp.panCounter = 0;
       }
       else
         timeWarp.dragMode = timeWarp.dragModes.NONE;
     }
     else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
-      var displace = timeWarp.rectX - coord[0]; // - mouseDownCoords[0]
+      var displace = timeWarp.rectX - coord[0];
       if (Math.abs(displace) < 8) {
         timeWarp.dragMode = timeWarp.dragModes.SPLIT;
         timeWarp.mouseDisplace = [displace, 0];
@@ -779,8 +776,8 @@ function HistoriskAtlas(mapElement, options) {
     mapState.feature = feature;
     feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
 
-    var offset = mapElement.getBoundingClientRect();
-    pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
+    //var offset = mapElement.getBoundingClientRect();
+    //pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
