@@ -292,12 +292,12 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
     },
-    toggleEditMode: function() {
+    toggleEditMode: function(editOn) {
       if (options.mode !== 'single') {
         return false;
       }
 
-      return defaultMapHandler.toggleEditMode();
+      return defaultMapHandler.toggleEditMode(editOn);
     },
 
     toggleTimeWarp: function () {
