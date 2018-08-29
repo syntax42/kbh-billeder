@@ -516,7 +516,7 @@ function HistoriskAtlas(mapElement, options) {
       feature.asset = asset;
       features.push(feature);
 
-      if (mapState.feature) {
+      if (mapState.feature && mapState.isMultiMode()) {
         if (asset.id == mapState.feature.asset.id) {
           mapState.feature = feature;
           mapState.feature.setStyle(mapHandler.getFeatureStyle(feature, true))
@@ -708,7 +708,7 @@ function HistoriskAtlas(mapElement, options) {
         return true;
       }
     });
-    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : mapState.timeWarp.getHoverInterface(pixel);
+    mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
   mapState.map.on('pointerdrag', function (event) {
     mapState.hidePopup();
