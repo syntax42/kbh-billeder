@@ -5,7 +5,7 @@
   position: relative;
   padding: 0 $spacer-layout;
   @media (min-width: $extra-large-size) {
-    padding: 0 $spacer-layout-large;
+    padding: 0 20px;
   }
 
   .is-mobile & {

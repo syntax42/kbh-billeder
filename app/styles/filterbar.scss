@@ -10,7 +10,7 @@ $heading-adjustment: 2px;
   position: relative;
   z-index: 1;
   @media (min-width: $extra-large-size) {
-    padding: 0 $spacer-layout-large;
+    padding: 0 20px;
   }
   .is-mobile & {
     display: none;
