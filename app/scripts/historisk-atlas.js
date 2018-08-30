@@ -113,10 +113,6 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
           return subFeatures[0].getStyle();
       }
 
-      //var style = feature.getStyle()
-      //if (style)
-      //  return style;
-
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
         count += subFeatures[i].asset.count;
@@ -508,8 +504,18 @@ function HistoriskAtlas(mapElement, options) {
       var feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat(coords))
       });
-      if (!asset.clustered)
-        feature.setStyle(mapHandler.getFeatureStyle(asset));
+
+      if (asset.approximate) {
+        feature.setStyle(new ol.style.Style({
+          geometry: new ol.geom.Circle(ol.proj.fromLonLat(coords), 90, 'XY'),
+          fill: new ol.style.Fill({
+            color: 'rgba(227,33,102,0.33)'
+          })
+        }));
+      } else
+        if (!asset.clustered)
+          feature.setStyle(mapHandler.getFeatureStyle(asset));
+
       feature.asset = asset;
       features.push(feature);
 
@@ -522,9 +528,9 @@ function HistoriskAtlas(mapElement, options) {
     }
     mapState.vectorSource.addFeatures(features);
     if (features.length > 0) {
-      if (mapState.isSingleOrEditMode())
+      if (mapState.isSingleOrEditMode()) {
         mapState.feature = features[0];
-      else {
+      } else {
         if (mapState.feature)
           mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
       }
@@ -641,6 +647,7 @@ function HistoriskAtlas(mapElement, options) {
         mapHandler.translateTarget.on('translating', mapState.translating);
         mapState.map.addInteraction(mapHandler.translateTarget);
       }
+
     } else {
       if (mapState.targetFeature) {
         mapState.vectorSource.removeFeature(mapState.targetFeature);
