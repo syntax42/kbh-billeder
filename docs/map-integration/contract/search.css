@@ -9,11 +9,12 @@ body {
 }
 
 #map {
-    position: absolute;
-    left: 100px;
-    top: 100px;
     width: 1000px;
     height: 600px;
+}
+
+#spacer {
+    height: 100px;
 }
 
 label, input {

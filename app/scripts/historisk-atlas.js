@@ -60,7 +60,7 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   mapState.mapSelectControl = function () {
     mapState.mapSelectElement = document.createElement('select');
     mapState.mapSelectElement.addEventListener('change', function (event) {      
-      var source = mapState.isMultiMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
+      var source = mapState.isSearchMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
       source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
     }, false);
 
@@ -112,10 +112,6 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
         if (!subFeatures[0].asset.clustered)
           return subFeatures[0].getStyle();
       }
-
-      //var style = feature.getStyle()
-      //if (style)
-      //  return style;
 
       var count = 0;
       for (var i = 0; i < subFeatures.length; i++) {
@@ -171,7 +167,7 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   });
 
   //Create popup
-  mapElement.insertAdjacentHTML('afterend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
+  mapElement.insertAdjacentHTML('beforeend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
@@ -353,15 +349,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       else if (dist < timeWarp.radius) {
         timeWarp.dragMode = timeWarp.dragModes.CIRCLE_MOVE;
         timeWarp.mouseDisplace = [timeWarp.position[0] - coord[0], timeWarp.position[1] - coord[1]]
-        //if (!timeWarp.intervalHandle)
-        //  timeWarp.intervalHandle = setInterval(() => timeWarp.pan(), 1000 / 60);
-        //timeWarp.panCounter = 0;
       }
       else
         timeWarp.dragMode = timeWarp.dragModes.NONE;
     }
     else if (timeWarp.position && timeWarp.mode == timeWarp.modes.SPLIT) {
-      var displace = timeWarp.rectX - coord[0]; // - mouseDownCoords[0]
+      var displace = timeWarp.rectX - coord[0];
       if (Math.abs(displace) < 8) {
         timeWarp.dragMode = timeWarp.dragModes.SPLIT;
         timeWarp.mouseDisplace = [displace, 0];
@@ -511,12 +504,22 @@ function HistoriskAtlas(mapElement, options) {
       var feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat(coords))
       });
-      if (!asset.clustered)
-        feature.setStyle(mapHandler.getFeatureStyle(asset));
+
+      if (asset.approximate) {
+        feature.setStyle(new ol.style.Style({
+          geometry: new ol.geom.Circle(ol.proj.fromLonLat(coords), 90, 'XY'),
+          fill: new ol.style.Fill({
+            color: 'rgba(227,33,102,0.33)'
+          })
+        }));
+      } else
+        if (!asset.clustered)
+          feature.setStyle(mapHandler.getFeatureStyle(asset));
+
       feature.asset = asset;
       features.push(feature);
 
-      if (mapState.feature && mapState.isMultiMode()) {
+      if (mapState.feature && mapState.isSearchMode()) {
         if (asset.id == mapState.feature.asset.id) {
           mapState.feature = feature;
           mapState.feature.setStyle(mapHandler.getFeatureStyle(feature, true))
@@ -525,9 +528,9 @@ function HistoriskAtlas(mapElement, options) {
     }
     mapState.vectorSource.addFeatures(features);
     if (features.length > 0) {
-      if (mapState.isSingleOrEditMode())
+      if (mapState.isSingleOrEditMode()) {
         mapState.feature = features[0];
-      else {
+      } else {
         if (mapState.feature)
           mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
       }
@@ -644,6 +647,7 @@ function HistoriskAtlas(mapElement, options) {
         mapHandler.translateTarget.on('translating', mapState.translating);
         mapState.map.addInteraction(mapHandler.translateTarget);
       }
+
     } else {
       if (mapState.targetFeature) {
         mapState.vectorSource.removeFeature(mapState.targetFeature);
@@ -688,8 +692,8 @@ function HistoriskAtlas(mapElement, options) {
   mapState.isSingleOrEditMode = function () {
     return options.mode == 'edit' || options.mode == 'single';
   }
-  mapState.isMultiMode = function () {
-    return options.mode == 'multi' || !options.mode;
+  mapState.isSearchMode = function () {
+    return options.mode == 'search' || !options.mode;
   }
 
   // Event handling - integrate the clients event handlers.
@@ -785,8 +789,8 @@ function HistoriskAtlas(mapElement, options) {
     mapState.feature = feature;
     feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
 
-    var offset = mapElement.getBoundingClientRect();
-    pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
+    //var offset = mapElement.getBoundingClientRect();
+    //pixel = [pixel[0] + offset.left, pixel[1] + offset.top];
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
@@ -798,7 +802,7 @@ function HistoriskAtlas(mapElement, options) {
 
   mapState.hidePopup = function () {
     mapState.mapPopupElement.style.display = 'none';
-    if (mapState.feature && mapState.isMultiMode()) {
+    if (mapState.feature && mapState.isSearchMode()) {
       mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
       mapState.feature = null;
     }
