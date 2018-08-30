@@ -1,20 +1,29 @@
 .jumbo {
   background-color: $jumbo-bg;
-  height: 45vh;
+  height: 35vh;
   min-height: 30rem;
   position: relative;
   align-items: center;
 
   @media (min-width: $small-size) and (orientation: landscape) {
-    height: 55vh;
+    height: 45vh;
   }
 
   @media (min-width: $medium-size) and (orientation: landscape) {
-    height: 60vh;
+    height: 50vh;
   }
 
   @media (min-width: $large-size) and (orientation: landscape) {
-    height: 65vh;
+    height: 75vh;
+  }
+
+  .clear {
+    clear: both;
+    float: none;
+  }
+
+  .container-fluid {
+    height: 80%;
   }
 
   &__flex,
@@ -40,12 +49,12 @@
 
   &__logos {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     padding-top: 1rem;
     z-index: 1;
     flex-direction: row;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: left;
 
     a:hover {
       svg {
@@ -57,13 +66,14 @@
       fill: $white;
       fill-rule: evenodd;
       height: $logo-height * 0.7;
-      margin: 0 5px;
+      margin: 0 15px;
       width: $logo-height * 4 * 0.7;
+      &:first-child {
+        margin-left: 0;
+      }
 
       @media (min-width: $medium-size) {
-        height: $logo-height;
-        margin: 0 15px;
-        width: $logo-height * 4;
+        margin: 0 50px;
       }
     }
   }
@@ -74,6 +84,7 @@
     font-size: 2.2rem;
     letter-spacing: -.01em;
     line-height: 1.2;
+    margin-bottom: 40px;
     text-shadow:
       0 0 1px rgba($jumbo-text-shadow, .6),
       0 0 4px rgba($jumbo-text-shadow, .2);
@@ -100,40 +111,56 @@
   }
 
   &__search {
-    align-items: center;
-    background-image: url('../images/frontpage-triangle.svg');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    // Fix background peeping trough
-    bottom: -1px;
-    display: flex;
-    height: 8rem;
-    height: calc(2rem + 10vw);
-    max-height: 14rem;
-    position: absolute;
-    width: 100%;
-
-    .container-fluid {
-      display: flex;
-      justify-content: flex-end;
-      max-width: $large-size;
-      width: 100%;
-    }
-
     .search-freetext-form {
       flex-grow: 0;
-      margin: 5rem 0 0;
-      max-width: 65%;
-      width: 18rem;
+      margin: 40px 0;
+      width: 100%;
+
+      .sr-only {
+        position: static;
+        margin-right: 5px;
+      }
+
+      .input-group-btn {
+        background: $brand-primary;
+        color: white;
+        border-radius: 3px;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        width: 100px;
+        text-align: center;
+      }
 
       .input-group {
-        float: right;
+        max-width: none;
+        width: 100%;
       }
 
       &__input {
+        font-weight: bold;
         font-family: $font-family-medium;
         padding-bottom: .3rem;
+        border-radius: 2px;
+        background: white;
+        padding: 15px;
+        height: 60px;
       }
     }
+  }
+
+  &__inner {
+    bottom: 8rem;
+    position: absolute;
+  }
+
+  &__triangle {
+    background-image: url('../images/frontpage-triangle.svg');
+    background-repeat: no-repeat;
+    background-size: 100% 155px;
+    background-position: bottom;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
   }
 }
