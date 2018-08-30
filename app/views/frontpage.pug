@@ -3,13 +3,26 @@ include mixins/meta
 include mixins/search-freetext-form
   
 block content-top
+  // Only show the first jumbo item for now.
+  - var jumboItem = jumboItems[0]
+  - var hasJumboItems = jumboItems.length > 0;
+
   .jumbo
-    .jumbo__image
+    if hasJumboItems
+      if jumboItem.image.url
+        .jumbo__image(style="background-image: url('" + jumboItem.image.url + "');")
+      else
+        .jumbo__image
+    else
+      .jumbo__image
     .container-fluid
       .jumbo__inner
         .col-xs-12.col-xs-12.col-sm-8.col-md-8
           .jumbo__teaser
-            include includes/tagline
+            if hasJumboItems
+              p= jumboItem.description1 + ' ' + totalAssets + ' ' + jumboItem.description2
+            else
+              include includes/tagline
         .col-xs-12.col-xs-12.col-sm-8.col-md-8.clear
           .jumbo__search
             +searchFreetextForm('Søg efter billeder', 'jumbo')
