@@ -12,7 +12,7 @@
     "agentkeepalive": "~2.0.3",
     "cip-js": "git+https://github.com/CopenhagenCityArchives/cip.js.git",
     "iconv": "~2.2.0",
-    "lodash": "~4.5.0",
+    "lodash": "~4.17.5",
     "q": "~1.4.1",
     "yargs": "^4.2.0"
   },
