@@ -17,7 +17,13 @@ const geoTagging = {
 
     assert.equal(typeof(metadata.latitude), 'number', 'Missing latitude');
     assert.equal(typeof(metadata.longitude), 'number', 'Missing longitude');
-    assert.equal(typeof(metadata.heading), 'number', 'Missing nummeric heading');
+
+    // Heading is normalized to be either an actual heading or an explicit null
+    // by the geo-tagging controller in collections-online. Only verify the
+    // heading if it is non-null.
+    if (metadata.heading !== null ) {
+      assert.equal(typeof(metadata.heading), 'number', 'Missing nummeric heading');
+    }
 
     const coordinates = [metadata.latitude, metadata.longitude];
     values[config.geoTagging.coordinatesField] = coordinates.join(', ');
