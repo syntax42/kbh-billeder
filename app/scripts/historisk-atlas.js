@@ -82,6 +82,34 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
 
+  if (mode != 'single') {
+    mapState.locationControl = function () {
+      mapState.locationElement = document.createElement('div');
+      mapState.locationElement.id = 'mapLocation';
+      mapState.locationElement.className = 'ol-unselectable ol-control';
+      mapState.locationElement.addEventListener('click', function (event) {
+        mapElement.classList.toggle('location')
+      }, false);
+      ol.control.Control.call(this, {
+        element: mapState.locationElement
+      });
+    };
+    ol.inherits(mapState.locationControl, ol.control.Control);
+
+    mapState.timeWarpToggleControl = function () {
+      mapState.timeWarpToggleElement = document.createElement('div');
+      mapState.timeWarpToggleElement.id = 'timeWarpToggle';
+      mapState.timeWarpToggleElement.className = 'ol-unselectable ol-control';
+      mapState.timeWarpToggleElement.addEventListener('click', function (event) {
+        mapState.timeWarp.toggle();
+      }, false);
+      ol.control.Control.call(this, {
+        element: mapState.timeWarpToggleElement
+      });
+    };
+    ol.inherits(mapState.timeWarpToggleControl, ol.control.Control);
+  }
+
   mapState.getMapUrl = function(id) {
     return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
   }
@@ -154,14 +182,17 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
 
   var minus = document.createElement('span')
   minus.innerHTML = '&minus;'
+  var controls = [new ol.control.Zoom({ zoomOutLabel: minus }), new mapState.mapSelectControl()];
+  if (mapState.locationControl)
+    controls.push(new mapState.locationControl());
+  if (mapState.timeWarpToggleControl)
+    controls.push(new mapState.timeWarpToggleControl());
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [mapState.rasterLayer, mapState.vectorLayer],
     view: mapState.view,
-    controls: [new ol.control.Zoom({
-      zoomOutLabel: minus
-    }), new mapState.mapSelectControl()],
-    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
+    controls: controls,
+    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
@@ -214,7 +245,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     timeWarp.closeElement.id = 'timeWarpClose';
     timeWarp.closeElement.className = 'ol-unselectable ol-control time-warp-button';
     timeWarp.closeElement.addEventListener('click', function (event) {
-      timeWarp.hide();
+      timeWarp.toggle();
       if (onTimeWarpToggle)
         onTimeWarpToggle();
     }, false);
@@ -234,9 +265,9 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       if (timeWarp.mode == timeWarp.modes.SPLIT) {
         timeWarp.rectX = map.getSize()[0] / 2;
         timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
-        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button split'
+        mapElement.classList.add('split')
       } else
-        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button'
+        mapElement.classList.remove('split')
       timeWarp.updateControls();
       map.renderSync();
     }, false);
@@ -285,6 +316,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     }
   }
 
+  timeWarp.toggle = function() {
+    if (mapElement.classList.toggle('time-warp'))
+      timeWarp.show()
+    else
+      timeWarp.hide()
+  }
+
   timeWarp.show = function() {
     timeWarp.mode = timeWarp.modes.CIRCLE;
     var size = map.getSize();
@@ -302,6 +340,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.display = 'block';
     timeWarp.closeElement.style.display = 'block';
     timeWarp.modeElement.style.display = 'block';
+    mapElement.classList.remove('split');
     timeWarp.updateControls();
   }
 
@@ -315,6 +354,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.display = 'none';
     timeWarp.closeElement.style.display = 'none';
     timeWarp.modeElement.style.display = 'none';
+    mapElement.classList.remove('split');
   }
 
   timeWarp.updateControls = function () {

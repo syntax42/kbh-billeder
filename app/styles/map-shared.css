@@ -61,7 +61,7 @@
 }
 
 .ol-zoom {
-    top: 18px;
+    top: 62px; /*18+36+8*/
     left: 18px;
     width: 36px;
     height: 72px;
@@ -84,8 +84,7 @@
 .time-warp-button {
     width: 36px;
     height: 36px;
-    border-radius: 21px !important;
-    cursor: pointer;
+    border-radius: 18px !important;
     display: none;
 }
 #timeWarpClose {
@@ -94,9 +93,63 @@
 #timeWarpMode {
     background: url('/app/images/icons/map/timewarpsplit.png') no-repeat center center;
 }
-#timeWarpMode.split {
+#map.split #timeWarpMode {
     background: url('/app/images/icons/map/timewarpcircle.png') no-repeat center center;
 }
+#mapLocation {
+    background: url('/app/images/icons/map/location.png') no-repeat center center;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px !important;
+    left: 18px;
+}
+#map.location #mapLocation {
+    background-color: #dc0067 !important;
+    background: url('/app/images/icons/map/locationwhite.png') no-repeat center center;
+}
+#timeWarpToggle {
+    background: url('/app/images/icons/map/maptoggle.png') no-repeat center center;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px !important;
+    right: 18px;
+}
+#map.split #timeWarpToggle {
+    display: none;
+}
+#map.time-warp #timeWarpToggle {
+    background-color: #dc0067 !important;
+    background: url('/app/images/icons/map/maptogglewhite.png') no-repeat center center;
+}
+@media (min-width: 785px) {
+    #timeWarpToggle {
+        top: 18px;
+    }
+    #mapLocation {
+        top: 18px;
+    }
+}
+@media (max-width: 786px) {
+    .ol-zoom {
+        display: none;
+    }
+    .time-warp-button {
+        display: none !important;
+    }
+    #timeWarpToggle {
+        bottom: 18px;
+        width: 48px;
+        height: 48px;
+        border-radius: 24px !important;
+    }
+    #mapLocation {
+        bottom: 18px;
+        width: 48px;
+        height: 48px;
+        border-radius: 24px !important;
+    }
+}
+
 
 .ol-control {
     position: absolute;
@@ -104,6 +157,7 @@
     border-radius: 2px;
     padding: 2px;
     box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
+    cursor: pointer;
 }
 .ol-viewport, .ol-unselectable {
     -webkit-touch-callout: none;
