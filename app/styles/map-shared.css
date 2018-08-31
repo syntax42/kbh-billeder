@@ -66,6 +66,9 @@
     width: 36px;
     height: 72px;
 }
+.map.single .ol-zoom {
+    top: 18px;
+}
 #mapSelect {
     height: 36px;
     display: none;
@@ -93,7 +96,7 @@
 #timeWarpMode {
     background: url('/app/images/icons/map/timewarpsplit.png') no-repeat center center;
 }
-#map.split #timeWarpMode {
+.map.split #timeWarpMode {
     background: url('/app/images/icons/map/timewarpcircle.png') no-repeat center center;
 }
 #mapLocation {
@@ -103,7 +106,7 @@
     border-radius: 18px !important;
     left: 18px;
 }
-#map.location #mapLocation {
+.map.location #mapLocation {
     background-color: #dc0067 !important;
     background: url('/app/images/icons/map/locationwhite.png') no-repeat center center;
 }
@@ -114,10 +117,10 @@
     border-radius: 18px !important;
     right: 18px;
 }
-#map.split #timeWarpToggle {
+.map.split #timeWarpToggle {
     display: none;
 }
-#map.time-warp #timeWarpToggle {
+.map.time-warp #timeWarpToggle {
     background-color: #dc0067 !important;
     background: url('/app/images/icons/map/maptogglewhite.png') no-repeat center center;
 }

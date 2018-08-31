@@ -88,7 +88,40 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
       mapState.locationElement.id = 'mapLocation';
       mapState.locationElement.className = 'ol-unselectable ol-control';
       mapState.locationElement.addEventListener('click', function (event) {
-        mapElement.classList.toggle('location')
+        if (mapElement.classList.toggle('location')) {
+          //App.toast.show("Finder din position...");
+          navigator.geolocation.getCurrentPosition((pos) => {
+            //App.toast.show("Din position blev fundet (inden for " + Math.round(pos.coords.accuracy) + " meter).");
+            var coords = ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]);
+            mapState.view.animate({
+              center: coords,
+              duration: 1000
+            });
+
+            var locationFeature = new ol.Feature(mapState.locationPoint = new ol.geom.Point(coords));
+            locationFeature.setStyle(new ol.style.Style({
+              image: new ol.style.Icon({
+                src: icons.pinlocation
+              })
+            }))
+            mapState.locationLayer = new ol.layer.Vector({
+              source: new ol.source.Vector({ features: [locationFeature] }), updateWhileInteracting: true, updateWhileAnimating: true
+            });
+            mapState.map.addLayer(mapState.locationLayer);
+
+            mapState.watchId = navigator.geolocation.watchPosition((pos) => {
+              mapState.locationPoint.setCoordinates(ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]));
+            }, (error) => {
+              navigator.geolocation.clearWatch(mapState.watchId);
+              //App.toast.show("Kunne ikke følge ");
+            })
+          }, (error) => {
+            //App.toast.show("Din position blev IKKE fundet. Har du husket at give tilladelse til, at vi må bruge din position?");
+          });
+        } else {
+          mapState.map.removeLayer(mapState.locationLayer);
+          navigator.geolocation.clearWatch(mapState.watchId);
+        }
       }, false);
       ol.control.Control.call(this, {
         element: mapState.locationElement
@@ -187,6 +220,7 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
     controls.push(new mapState.locationControl());
   if (mapState.timeWarpToggleControl)
     controls.push(new mapState.timeWarpToggleControl());
+
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [mapState.rasterLayer, mapState.vectorLayer],
@@ -202,7 +236,9 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
+  mapElement.classList.add('map');
   if (mode == 'single') {
+    mapElement.classList.add('single');
     mapState.mapSelectDivElement.style.display = 'block';
     mapState.mapSelectDivElement.style.bottom = '18px';
     mapState.mapSelectDivElement.style.right = '18px';
@@ -757,7 +793,7 @@ function HistoriskAtlas(mapElement, options) {
         hoverFeature = feature;
         return true;
       }
-    });
+    }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
   mapState.map.on('pointerdrag', function (event) {
@@ -778,7 +814,7 @@ function HistoriskAtlas(mapElement, options) {
       return;
 
     var clickFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
+    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.hidePopup();
 
     if (!clickFeature)
