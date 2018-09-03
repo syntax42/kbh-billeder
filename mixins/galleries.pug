@@ -16,8 +16,8 @@ mixin carouselGallery(gallery, evenOrOdd)
       h2.gallery__title= gallery.title
       h3.gallery__subtitle= ' — ' + gallery.description
       .gallery--slick
-          each item, index in gallery.items
-            +galleryItem(item, index, 'carousel', true, [270, 264])
+        each item, index in gallery.items
+          +galleryItem(item, index, 'carousel', true, [270, 264])
 
 mixin blockGallery(gallery, evenOrOdd)
   .row.gallery.gallery--block(class="gallery--" + evenOrOdd).gallery--block
