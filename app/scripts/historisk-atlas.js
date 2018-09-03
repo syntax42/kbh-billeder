@@ -50,7 +50,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
+function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -242,6 +242,11 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
     mapState.mapSelectDivElement.style.display = 'block';
     mapState.mapSelectDivElement.style.bottom = '18px';
     mapState.mapSelectDivElement.style.right = '18px';
+
+    if (offset) {
+      var size = mapState.map.getSize();
+      mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
+    }
   } else
     mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
 
@@ -555,7 +560,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
+  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
