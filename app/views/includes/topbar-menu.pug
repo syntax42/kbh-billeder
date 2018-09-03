@@ -4,4 +4,11 @@
 span.hidden-sm.hidden-xs
   if menus && menus.main
     each item in menus.main
-      a(href=item.url).topbar__items-link= item.title
+      if item.children.length > 0
+        .dropdown
+          a.topbar__items-link.dropdown__selected= item.title
+          .dropdown__options
+            each child in item.children
+              a(href=child.link).topbar__items-link.dropdown__option= child.title
+      else
+        a(href=item.url).topbar__items-link= item.title
