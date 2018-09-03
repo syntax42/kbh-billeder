@@ -17,7 +17,7 @@ mixin carouselGallery(gallery, evenOrOdd)
       h3.gallery__subtitle= ' — ' + gallery.description
       .gallery--slick
           each item, index in gallery.items
-            +galleryItem(item, index, 'carousel', true)
+            +galleryItem(item, index, 'carousel', true, [270, 264])
 
 mixin blockGallery(gallery, evenOrOdd)
   .row.gallery.gallery--block(class="gallery--" + evenOrOdd).gallery--block
@@ -29,9 +29,10 @@ mixin blockGallery(gallery, evenOrOdd)
         .col-xs-12.col-sm-6.col-md-3
           +galleryItem(item, index, 'block')
   
-mixin galleryItem(item, index, type, fill)
+mixin galleryItem(item, index, type, fill, imageDimensions)
   - var fill = fill
-  - var itemImageUrl = item._.image.fill(270,200,{gravity: 'center', quality: 75});
+  - var imageDimensions = imageDimensions ? imageDimensions : [270, 200]
+  - var itemImageUrl = item._.image.fill(imageDimensions[0],imageDimensions[1],{gravity: 'center', quality: 75});
   - var className = 'gallery-thumb-' + index + ' gallery-thumb-' + type
     a.gallery-thumb.no-touch-hover(href=item.link, class=className)
       img(src=fill ? itemImageUrl : item.image.url).gallery-thumb__image
