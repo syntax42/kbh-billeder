@@ -11,7 +11,7 @@ function reload() {
     return MenuItem.model.find({
       placement: menu
     })
-    .populate('page')
+    .populate(['page', 'children'])
     .sort('order')
     .exec(function(err, items) {
       menuItems[menu] = items.map((item) => {
