@@ -87,6 +87,8 @@
       text-decoration: none;
       padding: $spacer-sm 7px;
       display: inline-block;
+      height: $topbar-height;
+      line-height: 32px;
 
       &:first-of-type {
         padding-left: $spacer-md;
@@ -100,6 +102,41 @@
 
       &:not(:last-child, .topbar__name) {
         margin-right: 10px;
+      }
+    }
+
+    .dropdown {
+      .topbar__items-link {
+        padding: $spacer-sm 7px;
+      }
+      &__options {
+        top: $topbar-height;
+        left: 0;
+        min-width: 250px;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+        a {
+          &:hover {
+            color: $brand-primary;
+          }
+        }
+      }
+      &--active, &__selected {
+        &::after {
+          border: 0;
+        }
+      }
+      &--active {
+        .topbar__items-link {
+          background: white;
+          color: black;
+          z-index: 10;
+          position: relative;
+          a {
+            color: black;
+          }
+        }
       }
     }
   }
