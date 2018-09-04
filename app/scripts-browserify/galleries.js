@@ -7,6 +7,8 @@ $(function(){
     speed: 600,
     slidesToShow: 4,
     slidesToScroll: 2,
+    prevArrow: '<div class="slick-button-container"><button type="button" class="slick-prev">Previous</button></div>',
+    nextArrow: '<div class="slick-button-container"><button type="button" class="slick-next">Next</button></div>',
     responsive: [
       {
         breakpoint: 768,
