@@ -18,6 +18,7 @@ exports.update = function(filters, aggregations) {
   var filterCount = 0;
   // Do not show geobounds in filterbar.
   delete filters.geobounds;
+  delete filters.map;
   if (document.body.classList.contains('is-map-view')) {
     delete filters.location;
   }

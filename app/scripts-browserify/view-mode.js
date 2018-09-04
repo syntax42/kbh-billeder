@@ -29,34 +29,40 @@ $(window).on('resize load ready', function() {
   }
 });
 
-$('.view-mode').on('click', '[data-action="show-view-list"]', function() {
-  var $viewModes = $(this).parent('.view-mode');
-  $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
-  $('body').removeClass('is-map-view').addClass('is-list-view');
-  $(this).find('.filterbar__tab').addClass('filterbar__tab--active');
-
+// Desktop.
+$('#filterbar .view-mode').on('click', '[data-action="show-view-list"]', function() {
   $('body').trigger('search:viewModeChanged', ['list']);
 });
-
-$('.filterbar--mobile__container').on('click', '[data-action="show-view-list"]', function() {
-  $('body').removeClass('is-map-view').addClass('is-list-view');
-  viewMode = 'list';
-
-  $('body').trigger('search:viewModeChanged', ['list']);
-});
-
-$('.filterbar--mobile__container').on('click', '[data-action="show-view-map"]', function() {
-  $('body').removeClass('is-list-view').addClass('is-map-view');
-  viewMode = 'map';
-
+$('#filterbar .view-mode').on('click', '[data-action="show-view-map"]', function() {
   $('body').trigger('search:viewModeChanged', ['map']);
 });
 
-$('.view-mode').on('click', '[data-action="show-view-map"]', function() {
-  var $viewModes = $(this).parent('.view-mode');
-  $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
-  $('body').removeClass('is-list-view').addClass('is-map-view');
-  $(this).find('.filterbar__tab').addClass('filterbar__tab--active');
 
+// Mobile.
+$('#filterbar--mobile .filterbar--mobile__container').on('click', '[data-action="show-view-list"]', function() {
+  $('body').trigger('search:viewModeChanged', ['list']);
+});
+$('#filterbar--mobile .filterbar--mobile__container').on('click', '[data-action="show-view-map"]', function() {
   $('body').trigger('search:viewModeChanged', ['map']);
 });
+
+$('body').on('search:viewModeChanged', function (e, eventViewMode) {
+  viewMode = eventViewMode;
+  const toggledFrom = (viewMode === 'list') ? 'map' : 'list';
+
+  // Switch view-mode on body element.
+  $('body').removeClass('is-' + toggledFrom + '-view').addClass('is-' + viewMode + '-view');
+
+  // Button is in a container that contains elements we want to react on the
+  // change.
+  var $viewModes = $('#filterbar .view-mode');
+
+  // Deactivate everything.
+  $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
+  // Make view-mode specific elements active.
+  $viewModes.find('.filterbar__tab--' + viewMode).addClass('filterbar__tab--active');
+
+  // mobile
+  $('body').removeClass('is-' + toggledFrom + '-view').addClass('is-' + viewMode + '-view');
+});
+

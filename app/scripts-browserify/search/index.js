@@ -15,7 +15,6 @@ const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
 const sorting = require('./sorting');
 const navigator = require('../document/navigator');
-const geohash = require('./geohash');
 
 const templates = {
   searchResultItem: require('views/includes/search-results-item')
@@ -80,9 +79,8 @@ function initialize() {
     // Update the filter-bar.
     sorting.update(searchParams);
 
-    // Update the freetext search input
-    var queryString = searchParams.filters.q;
-    $searchInput.val(queryString);
+    // Update the freetext search input, q contains the querystring.
+    $searchInput.val(searchParams.filters.q);
 
     // Update the page title
     const title = helpers.generateSearchTitle(searchParams.filters);
@@ -136,10 +134,10 @@ function initialize() {
 
         if (updatedParams.geohash) {
           queryBody.aggregations = {
-            "geohash_grid" : {
-              "geohash_grid" : {
-                "field" : "location",
-                "precision" : config.search.geohashPrecision
+            'geohash_grid' : {
+              'geohash_grid' : {
+                'field' : 'location',
+                'precision' : config.search.geohashPrecision
               }
             }
           };
@@ -151,16 +149,26 @@ function initialize() {
           body: queryBody,
           // We only want the aggregation so we don't care about the hits.
           size: updatedParams.geohash ? 0 : maxAssets,
-          _source: ["location", "longitude", "latitude", "collection", "id", "short_title", "type", "heading"],
+          _source: [
+            'location',
+            'longitude',
+            'latitude',
+            'collection',
+            'id',
+            'short_title',
+            'type',
+            'heading'
+          ],
         };
+
+        // Make sure we persist, but replace state so that we don't end up in
+        // the back/forward history.
+        persistChangedParams(updatedParams, true);
 
         es.search(searchObject).then(function (response) {
           resultsTotal = response.hits.total;
           loadingResults = false;
           mapController.onResults(response, updatedParams);
-
-          // TODO - add navigator code like what we have in updateList to make
-          // history work.
         }, function (error) {
           console.trace(error.message);
         });
@@ -193,7 +201,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ["collection", "id", "short_title", "type", "description"],
+      _source: ['collection', 'id', 'short_title', 'type', 'description'],
       size: resultsDesired - resultsLoaded.length
     };
 
@@ -251,16 +259,31 @@ function initialize() {
     });
   }
 
-  function changeSearchParams(searchParams) {
+  /**
+   * Store changed params into the browser history.
+   *
+   * @param searchParams
+   *   The search params to persist.
+   * @param replaceState
+   *   Whether to replace state or push a new (the latter lets the browser move
+   *   back and forth between states).
+   */
+  function persistChangedParams (searchParams, replaceState = false) {
     // Change the URL
-    if(history) {
-      var qs = generateQuerystring(searchParams);
+    if (history) {
       reset();
-      history.pushState({
-        searchParams: searchParams
-      }, '', location.pathname + qs);
-      update();
-    } else {
+      // Update the browser history and the url with our new parameters.
+
+      var state = {searchParams: searchParams};
+      var url = location.pathname + generateQuerystring(searchParams);
+      if (replaceState) {
+        history.replaceState(state, '', url);
+      }
+      else {
+        history.pushState(state, '', url);
+      }
+    }
+    else {
       throw new Error('History API is required');
     }
   }
@@ -281,6 +304,12 @@ function initialize() {
     }).scroll();
   }
 
+  /**
+   * Check if the user has any relevant history data during init and use it.
+   *
+   * @param state
+   *   The history.state.
+   */
   function inflateHistoryState(state) {
     // Render results from the state
     if(state.resultsLoaded) {
@@ -325,23 +354,19 @@ function initialize() {
     getCurrentSearchParameters: function (){
       return getSearchParams();
     },
-  }
+  };
 
-  // Setup the map with a callback it can use when it needs a new search trigged
-  // and a configuration for when we switch between hash and asset search-
-  // results.
-  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks);
-
-  // Initialize the search results, either use the history state, or do an
-  // update.
-  if(!history.state) {
-    update();
-  } else {
-    update();
-    // TODO - make history work again. KB-354.
-    // Temporarily disabled while we figure out how to store geohashes in the history.
-    // inflateHistoryState(history.state);
+  // Get any initial parameters from the url and pass the relevant part to the
+  // map.
+  var options = {};
+  var searchParams = getSearchParams();
+  if (searchParams.map) {
+    options.mapInitParam = searchParams.map;
   }
+  // Setup the map with a callback it can use when it needs a new search
+  // triggered and a configuration for when we switch between hash and asset
+  // search-results.
+  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks, options);
 
   // *** Register event handlers ***
   $('#sidebar, #sidebarmobile, #filters, #filtersmobile').on('click', '.btn', function() {
@@ -367,7 +392,9 @@ function initialize() {
       } else {
         filters[field] = [value];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     } else if(action === 'remove-filter') {
       if(typeof(filters[field]) === 'object') {
         filters[field] = filters[field].filter(function(v) {
@@ -376,7 +403,9 @@ function initialize() {
       } else {
         delete filters[field];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     }
   });
 
@@ -384,24 +413,15 @@ function initialize() {
     var sorting = $(this).data('value');
     var searchParams = getSearchParams();
     searchParams.sorting = sorting;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
 
   // Enabled the load-more button
   $loadMoreBtn.on('click', function() {
     enableEndlessScrolling();
   });
-
-  // If the location hash is present, the results desired should reflect this
-  // and endless scrolling should be enabled
-  /*
-  if(window.location.hash) {
-    var referencedResult = parseInt(window.location.hash.substr(1), 10);
-    resultsDesired = referencedResult + PAGE_SIZE;
-    enableEndlessScrolling();
-    // TODO: Scroll to the referenced result, when done loading
-  }
-  */
 
   // Toggle filtersection visibility on mobile
   $('#sidebar, #sidebarmobile').on('click', '[data-action="show-filters"]', function() {
@@ -467,8 +487,19 @@ function initialize() {
     var queryString = $searchInput.val() || '';
     var searchParams = getSearchParams();
     searchParams.filters.q = queryString;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
+
+  const currentParams = getSearchParams();
+  if (currentParams.map) {
+    // If the url contains a map parameter, set us in map mode.
+    $('body').trigger('search:viewModeChanged', ['map']);
+  } else {
+    // Default view-mode, so no need to switch, just go ahead and do a search.
+    update();
+  }
 }
 
 // If the path is right - let's initialize
