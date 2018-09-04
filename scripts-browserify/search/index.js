@@ -254,6 +254,7 @@ function initialize() {
   function changeSearchParams(searchParams) {
     // Change the URL
     if(history) {
+      // Get any parameters we want to preserve.
       var qs = generateQuerystring(searchParams);
       reset();
       history.pushState({
@@ -332,17 +333,6 @@ function initialize() {
   // results.
   const mapController = MapController(document.getElementById('map'), searchControllerCallbacks);
 
-  // Initialize the search results, either use the history state, or do an
-  // update.
-  if(!history.state) {
-    update();
-  } else {
-    update();
-    // TODO - make history work again. KB-354.
-    // Temporarily disabled while we figure out how to store geohashes in the history.
-    // inflateHistoryState(history.state);
-  }
-
   // *** Register event handlers ***
   $('#sidebar, #sidebarmobile, #filters, #filtersmobile').on('click', '.btn', function() {
     var action = $(this).data('action');
@@ -391,17 +381,6 @@ function initialize() {
   $loadMoreBtn.on('click', function() {
     enableEndlessScrolling();
   });
-
-  // If the location hash is present, the results desired should reflect this
-  // and endless scrolling should be enabled
-  /*
-  if(window.location.hash) {
-    var referencedResult = parseInt(window.location.hash.substr(1), 10);
-    resultsDesired = referencedResult + PAGE_SIZE;
-    enableEndlessScrolling();
-    // TODO: Scroll to the referenced result, when done loading
-  }
-  */
 
   // Toggle filtersection visibility on mobile
   $('#sidebar, #sidebarmobile').on('click', '[data-action="show-filters"]', function() {
@@ -469,6 +448,15 @@ function initialize() {
     searchParams.filters.q = queryString;
     changeSearchParams(searchParams);
   });
+
+  const currentParams = getSearchParams();
+  if (currentParams.map) {
+    // If the url contains a map parameter, set us in map mode.
+    $('body').trigger('search:viewModeChanged', ['map']);
+  } else {
+    // Default view-mode, so no need to switch, just go ahead and do a search.
+    update();
+  }
 }
 
 // If the path is right - let's initialize
