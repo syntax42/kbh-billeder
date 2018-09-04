@@ -34,6 +34,11 @@ $(function ($) {
       initialCenter: [asset.longitude, asset.latitude]
     };
 
+    // Push the marker a bit to the right if we're on desktop.
+    if (!window.helpers.isMobile($)) {
+      options.initialOffset = [250, 0];
+    }
+
     // We currently don't have any callbacks for a single-mode map, so pass an
     // empty callback object.
     var callBacks = {};
