@@ -161,13 +161,14 @@ function initialize() {
           ],
         };
 
+        // Make sure we persist, but replace state so that we don't end up in
+        // the back/forward history.
+        persistChangedParams(updatedParams, true);
+
         es.search(searchObject).then(function (response) {
           resultsTotal = response.hits.total;
           loadingResults = false;
           mapController.onResults(response, updatedParams);
-
-          // TODO - add navigator code like what we have in updateList to make
-          // history work.
         }, function (error) {
           console.trace(error.message);
         });
@@ -258,17 +259,31 @@ function initialize() {
     });
   }
 
-  function changeSearchParams(searchParams) {
+  /**
+   * Store changed params into the browser history.
+   *
+   * @param searchParams
+   *   The search params to persist.
+   * @param replaceState
+   *   Whether to replace state or push a new (the latter lets the browser move
+   *   back and forth between states).
+   */
+  function persistChangedParams (searchParams, replaceState = false) {
     // Change the URL
-    if(history) {
-      // Get any parameters we want to preserve.
-      var qs = generateQuerystring(searchParams);
+    if (history) {
       reset();
-      history.pushState({
-        searchParams: searchParams
-      }, '', location.pathname + qs);
-      update();
-    } else {
+      // Update the browser history and the url with our new parameters.
+
+      var state = {searchParams: searchParams};
+      var url = location.pathname + generateQuerystring(searchParams);
+      if (replaceState) {
+        history.replaceState(state, '', url);
+      }
+      else {
+        history.pushState(state, '', url);
+      }
+    }
+    else {
       throw new Error('History API is required');
     }
   }
@@ -289,6 +304,12 @@ function initialize() {
     }).scroll();
   }
 
+  /**
+   * Check if the user has any relevant history data during init and use it.
+   *
+   * @param state
+   *   The history.state.
+   */
   function inflateHistoryState(state) {
     // Render results from the state
     if(state.resultsLoaded) {
@@ -335,10 +356,17 @@ function initialize() {
     },
   };
 
-  // Setup the map with a callback it can use when it needs a new search trigged
-  // and a configuration for when we switch between hash and asset search-
-  // results.
-  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks);
+  // Get any initial parameters from the url and pass the relevant part to the
+  // map.
+  var options = {};
+  var searchParams = getSearchParams();
+  if (searchParams.map) {
+    options.mapInitParam = searchParams.map;
+  }
+  // Setup the map with a callback it can use when it needs a new search
+  // triggered and a configuration for when we switch between hash and asset
+  // search-results.
+  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks, options);
 
   // *** Register event handlers ***
   $('#sidebar, #sidebarmobile, #filters, #filtersmobile').on('click', '.btn', function() {
@@ -364,7 +392,9 @@ function initialize() {
       } else {
         filters[field] = [value];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     } else if(action === 'remove-filter') {
       if(typeof(filters[field]) === 'object') {
         filters[field] = filters[field].filter(function(v) {
@@ -373,7 +403,9 @@ function initialize() {
       } else {
         delete filters[field];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     }
   });
 
@@ -381,7 +413,9 @@ function initialize() {
     var sorting = $(this).data('value');
     var searchParams = getSearchParams();
     searchParams.sorting = sorting;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
 
   // Enabled the load-more button
@@ -453,7 +487,9 @@ function initialize() {
     var queryString = $searchInput.val() || '';
     var searchParams = getSearchParams();
     searchParams.filters.q = queryString;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
 
   const currentParams = getSearchParams();
