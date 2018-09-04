@@ -125,7 +125,8 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         assetHeadingEdit: '../images/icons/map/pinheadingedit.png',
         camera: '../images/icons/map/camera.png',
         target: '../images/icons/map/pintarget.png',
-        image: '../images/icons/map/image.png'
+        image: '../images/icons/map/image.png',
+        pinlocation: '../images/icons/map/pinlocation.png'
       };
 
       // If the user has not given us a specific set of icons, switch to a
