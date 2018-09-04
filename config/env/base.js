@@ -122,7 +122,7 @@ let config = {
     watermarks: true,
     // Whether to require users to verify their email before they can contribute.
     requireEmailVerification: false,
-    preferTargetBlank: true,
+    preferTargetBlank: false,
     enableVisionTagSuggestions: false,
   },
   feedback: {
