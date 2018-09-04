@@ -30,7 +30,7 @@ $(function ($) {
     const MapController = require('map-controller');
     const options = {
       mode: 'single',
-      initialZoomLevel: 18,
+      initialZoomLevel: 16,
       initialCenter: [asset.longitude, asset.latitude]
     };
 
