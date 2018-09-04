@@ -19,6 +19,9 @@ module.exports = function() {
 
   var filters = {};
 
+  // Holds the centerpoint and zoom-level of the map. Empty if we're not viewing
+  // the map.
+  var map = '';
   // The rest are filters
   Object.keys(parameters).forEach(function(field) {
     // TODO: Look for the skipSplit config parameter
@@ -29,13 +32,18 @@ module.exports = function() {
         value = value.split(',');
       }
       filters[field] = value;
-    } else {
+    }
+    else if (field === 'map') {
+      map = parameters[field];
+    }
+    else {
       console.warn('Skipping an unexpected search parameter:', field);
     }
   });
 
   return {
     filters: filters,
-    sorting: sorting
+    sorting: sorting,
+    map: map
   };
 };
