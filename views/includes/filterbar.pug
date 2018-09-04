@@ -1,5 +1,5 @@
 if config.features.filterSidebar
-  .filterbar
+  #filterbar.filterbar
     .filterbar__item
       .filterbar__tab.filterbar__tab--filters
         h2.search-filter-sidebar__heading.search-filter-sidebar__tab
@@ -21,7 +21,7 @@ if config.features.filterSidebar
         .filterbar__tab.filterbar__tab--list
           h2.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
           +icon('view-thumb')
-  .filterbar--mobile
+  #filterbar--mobile.filterbar--mobile
     .filterbar--mobile__container
       .filterbar--mobile__button.filterbar--mobile__button--filters(data-action='show-filterbar-menu')
         +icon('toggles')
