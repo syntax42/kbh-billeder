@@ -15,7 +15,6 @@ const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
 const sorting = require('./sorting');
 const navigator = require('../document/navigator');
-const geohash = require('./geohash');
 
 const templates = {
   searchResultItem: require('views/includes/search-results-item')
@@ -80,9 +79,8 @@ function initialize() {
     // Update the filter-bar.
     sorting.update(searchParams);
 
-    // Update the freetext search input
-    var queryString = searchParams.filters.q;
-    $searchInput.val(queryString);
+    // Update the freetext search input, q contains the querystring.
+    $searchInput.val(searchParams.filters.q);
 
     // Update the page title
     const title = helpers.generateSearchTitle(searchParams.filters);
@@ -136,10 +134,10 @@ function initialize() {
 
         if (updatedParams.geohash) {
           queryBody.aggregations = {
-            "geohash_grid" : {
-              "geohash_grid" : {
-                "field" : "location",
-                "precision" : config.search.geohashPrecision
+            'geohash_grid' : {
+              'geohash_grid' : {
+                'field' : 'location',
+                'precision' : config.search.geohashPrecision
               }
             }
           };
@@ -151,7 +149,16 @@ function initialize() {
           body: queryBody,
           // We only want the aggregation so we don't care about the hits.
           size: updatedParams.geohash ? 0 : maxAssets,
-          _source: ["location", "longitude", "latitude", "collection", "id", "short_title", "type", "heading"],
+          _source: [
+            'location',
+            'longitude',
+            'latitude',
+            'collection',
+            'id',
+            'short_title',
+            'type',
+            'heading'
+          ],
         };
 
         es.search(searchObject).then(function (response) {
@@ -193,7 +200,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ["collection", "id", "short_title", "type", "description"],
+      _source: ['collection', 'id', 'short_title', 'type', 'description'],
       size: resultsDesired - resultsLoaded.length
     };
 
@@ -326,7 +333,7 @@ function initialize() {
     getCurrentSearchParameters: function (){
       return getSearchParams();
     },
-  }
+  };
 
   // Setup the map with a callback it can use when it needs a new search trigged
   // and a configuration for when we switch between hash and asset search-
