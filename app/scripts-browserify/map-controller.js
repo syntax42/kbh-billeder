@@ -32,7 +32,7 @@ function _mapEsResultsToAssets(results, searchParameters) {
       var assetResult = {
         id: colid,
         short_title: asset.short_title,
-        description: '',
+        description: asset.description,
         image_url: `${colid}/thumbnail`,
         latitude: asset.location.lat,
         longitude: asset.location.lon,
