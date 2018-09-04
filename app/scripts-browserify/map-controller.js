@@ -32,7 +32,7 @@ function _mapEsResultsToAssets(results, searchParameters) {
       var assetResult = {
         id: colid,
         short_title: asset.short_title,
-        description: '',
+        description: asset.description,
         image_url: `${colid}/thumbnail`,
         latitude: asset.location.lat,
         longitude: asset.location.lon,
@@ -163,15 +163,16 @@ function MapController (mapElement, searchControllerCallbacks, options) {
     }
 
     if (!options.clusterAtZoomLevel) {
-      options.clusterAtZoomLevel = 18;
+      options.clusterAtZoomLevel = 16;
     }
 
     if (!options.initialCenter) {
-      options.initialCenter = [12.8, 55.67];
+      // Copenhagen city square.
+      options.initialCenter = [12.570029708088803, 55.675484678282146];
     }
 
     if (!options.initialZoomLevel) {
-      options.initialZoomLevel = 10;
+      options.initialZoomLevel = 12;
     }
 
     if (!options.mode) {
