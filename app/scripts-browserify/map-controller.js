@@ -85,6 +85,7 @@ function _mapEsResultsToAssets(results, searchParameters) {
  *   - assetMapper: function that maps raw search-results to assets
  *   - initialCenter: [lon, lat] array the map should be centered at
  *   - initialZoomLevel: initial zoom-level for the map
+ *   - initialOffset: [x, y] initial offset in pixels for the map
  *
  * @constructor
  */
@@ -214,6 +215,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         mode: options.mode,
         center: options.initialCenter,
         zoomLevel: options.initialZoomLevel,
+        offset: options.initialOffset,
         clusterAtZoomLevel: options.clusterAtZoomLevel,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
