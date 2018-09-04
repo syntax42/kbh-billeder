@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  * Clean up results from Elastic Search and map them to Asset results
@@ -137,6 +137,25 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     }
 
+    if (options.mapInitParam) {
+      // Map state serialized down into a string.
+      var parts = options.mapInitParam.split(',');
+      // The expected format is nn.nnnnnn,nn.nnnnnn,nnz
+      // Eg. 55.67175956237506,12.766296393235555,11.420000000000002z
+      // Do a simple verification of the parameters, check that we have 3 parts
+      // and that the last part ends on a z.
+      if (parts.length === 3 && parts[2].charAt(parts[2].length - 1) === 'z') {
+        // Parse the individual parts, and add them if we're successful.
+        var parsedCenter = [parseFloat(parts[1]), parseFloat(parts[0])];
+        if (!isNaN(parsedCenter[0]) && !isNaN(parsedCenter[1])) {
+          options.initialCenter = parsedCenter;
+        }
+        var parsedZoom = parseFloat(parts[2].substring(0, parts[2].length - 1));
+        if (!isNaN(parsedZoom)) {
+          options.initialZoomLevel = parsedZoom;
+        }
+      }
+    }
     if (!options.geohashAtZoomLevel) {
       options.geohashAtZoomLevel = 15;
     }
@@ -288,8 +307,13 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         searchParams.filters.geobounds = esBounds;
       }
 
+      // Add centerpoint and zoom-level, this will go into the url.
+      const center = defaultMapHandler.getCenter();
+      const zoomLevel = defaultMapHandler.getZoomLevel();
+      searchParams.map = `${center.latitude},${center.longitude},${zoomLevel}z`;
+
       // If we're zoomed out wide enough, use hash-based results.
-      searchParams.geohash = defaultMapHandler.getZoomLevel() <= options.geohashAtZoomLevel;
+      searchParams.geohash = zoomLevel <= options.geohashAtZoomLevel;
 
       // Hand the parameters back to the search controller and let it do the the
       // search. We'll get control back via onResults().
