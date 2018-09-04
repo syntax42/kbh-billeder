@@ -1,13 +1,7 @@
 'use strict';
 
 const searchController = require('./search');
-
-var mobilecheck = function() {
-  if ($(window).width() < 768) {
-    return true;
-  }
-  return false;
-};
+const helpers = require('../../shared/helpers');
 
 // Set default view mode to list.
 var viewMode = 'list';
@@ -16,7 +10,7 @@ $('body').addClass(`is-${viewMode}-view`);
 
 $(window).on('resize load ready', function() {
   $('body').removeClass('is-mobile is-desktop');
-  if (mobilecheck() === true) {
+  if (helpers.isMobile($) === true) {
     if (viewMode === 'map') {
       $('body').addClass('is-mobile is-map-view').removeClass('is-list-view');
     }
