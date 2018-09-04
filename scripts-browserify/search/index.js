@@ -157,7 +157,8 @@ function initialize() {
             'id',
             'short_title',
             'type',
-            'heading'
+            'heading',
+            'description'
           ],
         };
 
