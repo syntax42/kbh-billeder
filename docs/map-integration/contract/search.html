@@ -75,6 +75,7 @@
               assetHeading: '/app/images/icons/map/pinheading.png',
               assetSelected: '/app/images/icons/map/pinselected.png',
               assetHeadingSelected: '/app/images/icons/map/pinheadingselected.png',
+              pinlocation: '/app/images/icons/map/pinlocation.png'
             },
             // Provide a mock mapper that just passes the results through.
             // In the live setup results would come from ES and require mapping
@@ -82,10 +83,6 @@
             // has already been mapped.
             assetMapper: function(results) {
               return results;
-            },
-            onTimeWarpToggle: function() {
-                var elm = document.getElementById('toggletimewarp');
-                elm.checked = !elm.checked;
             },
             urlBase: "http://kbhbilleder.dk/"
           };
@@ -96,10 +93,6 @@
             mapController.onUpdate({}, function(params){
               _mockedSearchController.refresh(params);
             });
-          };
-
-          document.getElementById('toggletimewarp').onclick = function () {
-            mapController.toggleTimeWarp();
           };
 
           // Trigger an initial refresh to load the map.
@@ -117,7 +110,6 @@
     </div>
 <br>
 <input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
-<label><input type="checkbox" id="toggletimewarp" name="Toggle Time Warp" value="Toggle Time Warp" />Time Warp</label>
 
 </body>
 </html>

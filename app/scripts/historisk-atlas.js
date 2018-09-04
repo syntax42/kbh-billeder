@@ -50,7 +50,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
+function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -81,6 +81,67 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
     });
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
+
+  if (mode != 'single') {
+    mapState.locationControl = function () {
+      mapState.locationElement = document.createElement('div');
+      mapState.locationElement.id = 'mapLocation';
+      mapState.locationElement.className = 'ol-unselectable ol-control';
+      mapState.locationElement.addEventListener('click', function (event) {
+        if (mapElement.classList.toggle('location')) {
+          //App.toast.show("Finder din position...");
+          navigator.geolocation.getCurrentPosition((pos) => {
+            //App.toast.show("Din position blev fundet (inden for " + Math.round(pos.coords.accuracy) + " meter).");
+            var coords = ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]);
+            mapState.view.animate({
+              center: coords,
+              duration: 1000
+            });
+
+            var locationFeature = new ol.Feature(mapState.locationPoint = new ol.geom.Point(coords));
+            locationFeature.setStyle(new ol.style.Style({
+              image: new ol.style.Icon({
+                src: icons.pinlocation
+              })
+            }))
+            mapState.locationLayer = new ol.layer.Vector({
+              source: new ol.source.Vector({ features: [locationFeature] }), updateWhileInteracting: true, updateWhileAnimating: true
+            });
+            mapState.map.addLayer(mapState.locationLayer);
+
+            mapState.watchId = navigator.geolocation.watchPosition((pos) => {
+              mapState.locationPoint.setCoordinates(ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]));
+            }, (error) => {
+              navigator.geolocation.clearWatch(mapState.watchId);
+              //App.toast.show("Kunne ikke følge ");
+            })
+          }, (error) => {
+            //App.toast.show("Din position blev IKKE fundet. Har du husket at give tilladelse til, at vi må bruge din position?");
+          });
+        } else {
+          mapState.map.removeLayer(mapState.locationLayer);
+          navigator.geolocation.clearWatch(mapState.watchId);
+        }
+      }, false);
+      ol.control.Control.call(this, {
+        element: mapState.locationElement
+      });
+    };
+    ol.inherits(mapState.locationControl, ol.control.Control);
+
+    mapState.timeWarpToggleControl = function () {
+      mapState.timeWarpToggleElement = document.createElement('div');
+      mapState.timeWarpToggleElement.id = 'timeWarpToggle';
+      mapState.timeWarpToggleElement.className = 'ol-unselectable ol-control';
+      mapState.timeWarpToggleElement.addEventListener('click', function (event) {
+        mapState.timeWarp.toggle();
+      }, false);
+      ol.control.Control.call(this, {
+        element: mapState.timeWarpToggleElement
+      });
+    };
+    ol.inherits(mapState.timeWarpToggleControl, ol.control.Control);
+  }
 
   mapState.getMapUrl = function(id) {
     return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
@@ -154,14 +215,18 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
 
   var minus = document.createElement('span')
   minus.innerHTML = '&minus;'
+  var controls = [new ol.control.Zoom({ zoomOutLabel: minus }), new mapState.mapSelectControl()];
+  if (mapState.locationControl)
+    controls.push(new mapState.locationControl());
+  if (mapState.timeWarpToggleControl)
+    controls.push(new mapState.timeWarpToggleControl());
+
   mapState.map = new ol.Map({
     target: mapElement,
     layers: [mapState.rasterLayer, mapState.vectorLayer],
     view: mapState.view,
-    controls: [new ol.control.Zoom({
-      zoomOutLabel: minus
-    }), new mapState.mapSelectControl()],
-    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchRotate(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
+    controls: controls,
+    interactions: [new ol.interaction.DragPan(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()],
     loadTilesWhileInteracting: true,
     loadTilesWhileAnimating: true
   });
@@ -171,10 +236,17 @@ function _prepareMap(mapElement, center, zoomLevel, icons, mode, maps, onTimeWar
   mapState.mapPopupElement = document.getElementById('mapPopup');
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
+  mapElement.classList.add('map');
   if (mode == 'single') {
+    mapElement.classList.add('single');
     mapState.mapSelectDivElement.style.display = 'block';
     mapState.mapSelectDivElement.style.bottom = '18px';
     mapState.mapSelectDivElement.style.right = '18px';
+
+    if (offset) {
+      var size = mapState.map.getSize();
+      mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
+    }
   } else
     mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
 
@@ -214,7 +286,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     timeWarp.closeElement.id = 'timeWarpClose';
     timeWarp.closeElement.className = 'ol-unselectable ol-control time-warp-button';
     timeWarp.closeElement.addEventListener('click', function (event) {
-      timeWarp.hide();
+      timeWarp.toggle();
       if (onTimeWarpToggle)
         onTimeWarpToggle();
     }, false);
@@ -234,9 +306,9 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       if (timeWarp.mode == timeWarp.modes.SPLIT) {
         timeWarp.rectX = map.getSize()[0] / 2;
         timeWarp.rectWidth = map.getSize()[0] - timeWarp.rectX + timeWarp.lineWidth / 2.0;
-        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button split'
+        mapElement.classList.add('split')
       } else
-        timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button'
+        mapElement.classList.remove('split')
       timeWarp.updateControls();
       map.renderSync();
     }, false);
@@ -285,6 +357,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     }
   }
 
+  timeWarp.toggle = function() {
+    if (mapElement.classList.toggle('time-warp'))
+      timeWarp.show()
+    else
+      timeWarp.hide()
+  }
+
   timeWarp.show = function() {
     timeWarp.mode = timeWarp.modes.CIRCLE;
     var size = map.getSize();
@@ -302,6 +381,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.display = 'block';
     timeWarp.closeElement.style.display = 'block';
     timeWarp.modeElement.style.display = 'block';
+    mapElement.classList.remove('split');
     timeWarp.updateControls();
   }
 
@@ -315,6 +395,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.display = 'none';
     timeWarp.closeElement.style.display = 'none';
     timeWarp.modeElement.style.display = 'none';
+    mapElement.classList.remove('split');
   }
 
   timeWarp.updateControls = function () {
@@ -479,7 +560,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
+  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -717,7 +798,7 @@ function HistoriskAtlas(mapElement, options) {
         hoverFeature = feature;
         return true;
       }
-    });
+    }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
   mapState.map.on('pointerdrag', function (event) {
@@ -738,7 +819,7 @@ function HistoriskAtlas(mapElement, options) {
       return;
 
     var clickFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; });
+    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.hidePopup();
 
     if (!clickFeature)
