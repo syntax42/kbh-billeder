@@ -107,8 +107,8 @@ let config = {
   },
   facebookAppId: {
     // Found using https://developers.facebook.com/tools/explorer
-    'kbh-arkiv': process.env.FACEBOOK_APP_ID_KBH-ARKIV || 159598384220080,
-    'kbh-museum': process.env.FACEBOOK_APP_ID_KBH-MUSEUM || 116055131754566
+    'kbh-arkiv': process.env.FACEBOOK_APP_ID_KBH_ARKIV || 159598384220080,
+    'kbh-museum': process.env.FACEBOOK_APP_ID_KBH_MUSEUM || 116055131754566
   },
   features: {
     cookieConsent: true,
