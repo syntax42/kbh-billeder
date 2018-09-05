@@ -1,0 +1,53 @@
+.geo-tagging-mini-map {
+  height: 455px;
+}
+
+// Have floated buttons seperate a bit.
+.map-coordinates__map--edit .btn.btn-primary {
+  margin-right: 10px;
+}
+
+.place-overlay {
+  width: 100%;
+  position: relative;
+  max-width: $large-size;
+  margin: 0 auto;
+  top: -455px;
+  .is-mobile & {
+    position: static;
+  }
+  &__inner {
+    .is-mobile & {
+      position: static;
+      @include shadow(0);
+    }
+    display: inline-block;
+    position: absolute;
+    background: white;
+    top: 5rem;
+    left: 15px;
+    width: 400px;
+    padding: 2rem;
+    @include shadow(5);
+    .btn {
+      float: left;
+      width: auto;
+      font-size: 1rem;
+    }
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  table {
+    th {
+      width: 120px;
+    }
+    td {
+      width: auto;
+    }
+    .btn {
+      margin-top: 1.5rem;
+    }
+  }
+}

@@ -1,0 +1,83 @@
+# Builds and deploys a revision of KBH Billeder
+version: 2
+jobs:
+  build-and-deploy-job:
+    # Base the build off of an image that will give us easy access to gcp.
+    # The actual build is done via a docker build, so we don't really have any
+    # eg. node dependencies at this point.
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      # Connect us to a Circle CI remote docker instance. It being remote means
+      # we can't do eg. volumes, but it should suffice for what we need.
+      - setup_remote_docker
+      # Get our access to GCP up and running. We won't need it before the end of
+      # the build but it is nice make sure we have access before building.
+      - run:
+          name: Store Service Account
+          command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
+      - run: |
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+          gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+          gcloud --quiet auth configure-docker
+
+      # Trigger the checkout in current dir and cd to it. As of writing this
+      # the checkout is made into a "project" folder.
+      - checkout
+      # Prepare a .env file with and configurations secrets shared between
+      # environments.
+      - run: |
+          cat << EOF > .env
+          CIP_USERNAME="${CIP_USERNAME}"
+          CIP_PASSWORD="${CIP_PASSWORD}"
+          KEYSTONE_ADMIN_EMAIL="${KEYSTONE_ADMIN_EMAIL}"
+          KEYSTONE_ADMIN_PASSWORD="${KEYSTONE_ADMIN_PASSWORD}"
+          COOKIE_SECRET="${COOKIE_SECRET}"
+          CLOUDINARY_URL="${CLOUDINARY_URL}"
+          GOOGLE_UNRESTRICTED_API_KEY="${GOOGLE_UNRESTRICTED_API_KEY}"
+          MAILGUN_API_KEY="${MAILGUN_API_KEY}"
+          DISABLE_NOTIFIER="true"
+          EOF
+      # Append environment-specific secrets and configurations.
+      - run: |
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+            echo "NODE_ENV=beta" >> .env
+            echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_BETA}" >> .env
+          elif [ "$CIRCLE_BRANCH" = "production" ]; then
+            echo "NODE_ENV=production" >> .env
+            echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_PRODUCTION}" >> .env
+          else
+            echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
+          fi
+      # Prepare a config-file for our google vision integration.
+      - run: echo $GOOGLE_KEY | base64 --decode > ./google-key.json
+
+      # Do the build and tag and push the image.
+      - run: |
+          docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
+      - run:
+          no_output_timeout: 15m
+          command: |
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest
+
+      # Update the kube frontend deploymen to use our new image.
+      - run: |
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 NAMESPACE=beta deployment/set-deployment-image.sh
+          elif [ "$CIRCLE_BRANCH" = "production" ]; then
+            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 NAMESPACE=production deployment/set-deployment-image.sh
+          fi
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build-and-deploy-job:
+          filters:
+            branches:
+              only:
+                - staging
+                - production

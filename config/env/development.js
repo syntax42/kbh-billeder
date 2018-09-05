@@ -25,7 +25,6 @@ const development = _.merge({}, base, {
     feedback: true,
     motifTagging: true,
     requireEmailVerification: true,
-    geoTagging: true,
     users: true
   }
 });

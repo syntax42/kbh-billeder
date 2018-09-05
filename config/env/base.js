@@ -115,14 +115,16 @@ let config = {
     feedback: false,
     motifTagging: true,
     filterSidebar: true,
-    geoTagging: true,
+    geoTagging: 'override',
     keystone: true,
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true,
     // Whether to require users to verify their email before they can contribute.
     requireEmailVerification: false,
-    preferTargetBlank: true,
+    preferTargetBlank: false,
+    enableVisionTagSuggestions: false,
+    enableGoogleTranslate: false,
   },
   feedback: {
     maxLength: 600,
@@ -131,13 +133,6 @@ let config = {
   },
   generatedDir: generatedDir,
   geoTagging: {
-    default: {
-      position: {
-        latitude: 55.672064,
-        longitude: 12.553359
-      },
-      zoom: 16
-    },
     approximateCoordinatesField: '{7a1f29a3-e389-4fef-a092-67de7837a181}',
     coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
     headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}'

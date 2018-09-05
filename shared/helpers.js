@@ -1,6 +1,8 @@
 /* global config */
 const config = require('collections-online/lib/config');
 const helpers = require('collections-online/shared/helpers');
+// Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
+const backsideAssetCumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
 
 helpers.documentTitle = (metadata, fallback) => {
   let title = metadata.short_title || fallback || 'Billede uden titel';
@@ -21,6 +23,13 @@ helpers.documentLicense = (metadata) => {
   return metadata.license && metadata.license.id;
 };
 
+helpers.getBacksideAssets = (metadata) => {
+  if (metadata.related && metadata.related.assets) {
+    return metadata.related.assets.filter(asset => asset.id).filter(asset => asset.relation === backsideAssetCumulusKey);
+  }
+  return [];
+};
+
 // TODO: Delete this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
   let path = [metadata.collection || metadata.catalog];
@@ -32,11 +41,25 @@ helpers.getDocumentURL = (metadata) => {
 };
 
 helpers.determinePlayers = metadata => {
-  return [{
-    type: 'image',
-    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-    title: helpers.documentTitle(metadata)
-  }];
+  const players = [];
+
+  if (helpers.hasBacksideAsset(metadata)) {
+    players.push({
+      type: 'backside',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      backsides: helpers.getBacksideAssets(metadata)
+    });
+  }
+
+  else {
+    players.push({
+      type: 'image',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      title: helpers.documentTitle(metadata)
+    });
+  }
+
+  return players;
 };
 
 helpers.generateSitemapElements = (metadata) => {
@@ -127,6 +150,19 @@ if(config.downloadOptions) {
 
 helpers.isDownloadable = (metadata) => {
   return !metadata.license || metadata.license.id !== 7;
+};
+
+helpers.hasBacksideAsset = (metadata) => {
+  let backsideAssets = helpers.getBacksideAssets(metadata);
+  return backsideAssets.length > 0;
+};
+
+helpers.hasRelations = metadata => {
+  // Filter out backside assets.
+  if (metadata.related.assets) {
+    return metadata.related.assets.filter(asset => asset.relation !== backsideAssetCumulusKey).length > 0;
+  }
+  return false;
 };
 
 helpers.isWatermarkRequired = (metadata) => {

@@ -1,3 +1,9 @@
+.skiptranslate {
+  .is-mobile & {
+    display: none;
+  }
+}
+
 .topbar {
   -webkit-font-smoothing: subpixel-antialiased;
   background-color: $brand-primary;

@@ -4,7 +4,11 @@ block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
   - const documentDescription = helpers.documentDescription(metadata);
   - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
-  .document__section-1-metadata.col-xs-12.col-md-5
+  .document__section-1-metadata.col-xs-12.col-md-5.col-md-pull-7
+    div.document__back-link
+      a(onclick='window.history.back()')
+        +icon('arrow-thin-left')
+        | Tilbage til søgningen
     if(documentTitle)
       h1.document__title= documentTitle
     if(documentDescription)
@@ -13,7 +17,31 @@ block document__section-1-metadata
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
-    != assetSection('place', metadata)
+
+    if config.features.motifTagging
+      .motif-tagging
+        include ./includes/motif-tagging
+
+block document__section-2
+  - const location = helpers.geoTagging.getLocation(metadata);
+
+  if !location.longitude && !location.latitude
+    .document__section-2
+      .container-fluid
+        .row
+          .col-sm-12
+            != assetSection('place', metadata)
+  else
+    .document__section-2--map
+      .geo-tagging-mini-map(
+        data-latitude=location.latitude,
+        data-longitude=location.longitude,
+        data-heading=location.heading,
+        data-approximate=location.isApproximate ? 'true' : 'false'
+      )
+      .place-overlay
+        .place-overlay__inner
+          != assetSection('place', metadata)
 
 block document__section-3
   .document__section-3
