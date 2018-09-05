@@ -1,4 +1,5 @@
-//- Needs to be before main.js
-include ./translate
+if config.features.enableGoogleTranslate
+  //- Needs to be before main.js
+  include ./translate
 
 script(src='/scripts/main.js')
