@@ -1,11 +1,16 @@
+$topbar-dropdown-width: 250px;
+$topbar-auth-tab-width: 170px;
+
 .topbar {
   background-color: $topbar-color;
   color: $white;
   line-height: 1.5;
   position: relative;
   padding: 0 $spacer-layout;
+  padding-right: 0;
   @media (min-width: $extra-large-size) {
     padding: 0 20px;
+    padding-right: 0;
   }
 
   .is-mobile & {
@@ -112,8 +117,8 @@
       &__options {
         top: $topbar-height;
         left: 0;
-        min-width: 250px;
-        z-index: 2;
+        min-width: $topbar-dropdown-width;
+        z-index: 5;
         margin: 0;
         padding: 0;
         a {
@@ -179,18 +184,39 @@
     a {
       padding: 0;
     }
+    .icon {
+      svg {
+        width: 14px;
+        height: 14px;
+        fill: black;
+        float: right;
+        margin-top: 8px;
+        margin-right: 10px;
+        transform: rotate(180deg);
+      }
+    }
   }
 
   &__auth {
-    width: 110px;
+    width: $topbar-auth-tab-width;
+    height: $topbar-height;
+    line-height: $topbar-height;
     .dropdown {
       width: 100%;
+      &--active {
+        svg {
+          transform: rotate(0deg);
+        }
+      }
       &__options {
-        z-index: 15;
+        z-index: 9;
         position: relative;
-        top: 15px;
+        top: -1px;
+        left: -($topbar-dropdown-width - $topbar-auth-tab-width);
       }
       &__selected {
+        width: 100%;
+        margin-top: 0;
         position: static;
         padding: 0;
       }
