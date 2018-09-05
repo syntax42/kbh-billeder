@@ -5,6 +5,8 @@ include ../mixins/icon
     .dropdown
       a.dropdown__selected.topbar__items-link.topbar__name
         = (user.name.givenName || user.nickname)
+        span.icon
+          +icon('chevron-up')
       .dropdown__options
         a.dropdown__option(href='/min-side') Min side
         a.dropdown__option(href='/logout') Log ud
