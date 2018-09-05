@@ -32,16 +32,20 @@ function _prepareMapOptions (options) {
     options.onPopupClick = function (id) { };
   }
 
-  options.maps = options.maps || [
-    { id: 161, title: 'Standard', year: '2018' },
-    { id: 85, title: 'Luftfoto', year: '2016' },
-    { id: 39, title: '4 cm kort', year: '1977-85' },
-    { id: 38, title: '4 cm kort', year: '1953-76' },
-    { id: 105, title: 'K\u00F8benhavn', year: '1939' },
-    { id: 54, title: 'Lavkantkort', year: '1901-1945' },
-    { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
-    { id: 154, title: 'Geddes kort', year: '1761' }
-  ];
+  if (!options.maps) {
+    options.maps = [
+      { id: 85, title: 'Luftfoto', year: '2016' },
+      { id: 39, title: '4 cm kort', year: '1977-85' },
+      { id: 38, title: '4 cm kort', year: '1953-76' },
+      { id: 105, title: 'K\u00F8benhavn', year: '1939' },
+      { id: 54, title: 'Lavkantkort', year: '1901-1945' },
+      { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
+      { id: 154, title: 'Geddes kort', year: '1761' }
+    ];
+
+    if (options.mode == 'single')
+      options.maps.unshift({ id: 161, title: 'Standard', year: '2018' });
+  }
 
   return options;
 }
@@ -248,16 +252,16 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
     }
   } else
-    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps);
 
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: getMapUrl(55)
+      url: getMapUrl(maps[0].id)
     })
   });
 
