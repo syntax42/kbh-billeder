@@ -124,6 +124,7 @@ let config = {
     requireEmailVerification: false,
     preferTargetBlank: false,
     enableVisionTagSuggestions: false,
+    enableGoogleTranslate: false,
   },
   feedback: {
     maxLength: 600,
