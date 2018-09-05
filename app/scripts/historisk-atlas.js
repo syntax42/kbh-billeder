@@ -376,11 +376,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     timeWarp._show();
   }
   timeWarp._show = function() {
-    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event.originalEvent) });
-    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event.originalEvent) });
+    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event) });
+    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event) });
     mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
     window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
-    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
+    mapElement.addEventListener('touchmove', timeWarp.touchMoveEventHandle = function (event) { timeWarp.touchMove(event); });
+    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function (event) { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
     mapSelectDivElement.style.display = 'block';
     timeWarp.closeElement.style.display = 'block';
@@ -394,6 +395,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     window.removeEventListener('touchend', timeWarp.touchUpEventHandle);
     mapElement.removeEventListener('mousedown', timeWarp.downEventHandle);
     window.removeEventListener('mouseup', timeWarp.upEventHandle);
+    mapElement.removeEventListener('touchmove', timeWarp.touchMoveEventHandle);
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
     timeWarp.setVisible(false);
     mapSelectDivElement.style.display = 'none';
@@ -420,11 +422,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   timeWarp.touchDown = function(event) {
     timeWarp.lastTouchDist = 0;
     timeWarp.lastTouchDist = timeWarp.touchDistFromTouches(event.touches);
-    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches));
+    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches, true), false, true);
   }
-  timeWarp.down = function(coord, forceMove) {
-    var offset = mapElement.getBoundingClientRect();
-    coord = [coord[0] - offset.left, coord[1] - offset.top];
+  timeWarp.down = function(coord, forceMove, relative) {
+    if (!relative) {
+      var offset = mapElement.getBoundingClientRect();
+      coord = [coord[0] - offset.left, coord[1] - offset.top];
+    }
     var dist = Math.sqrt(Math.pow(timeWarp.position[0] - coord[0], 2) + Math.pow(timeWarp.position[1] - coord[1], 2));
     if (timeWarp.position && timeWarp.mode == timeWarp.modes.CIRCLE) {
       if (dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8) && !forceMove) {
@@ -449,7 +453,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   }
 
   timeWarp.pointerDrag = function(event) {
-    var newposition = event.originalEvent.type == 'touchmove' ? timeWarp.centerCoordFromTouches(event.originalEvent.touches, true) : (event.pixel ? event.pixel : [event.offsetX, event.offsetY]);
+    var newposition = event.pixel ? event.pixel : [event.offsetX, event.offsetY];
     switch (timeWarp.dragMode) {
       case timeWarp.dragModes.CIRCLE_RADIUS:
         var dist = Math.sqrt(Math.pow(timeWarp.position[0] - newposition[0], 2) + Math.pow(timeWarp.position[1] - newposition[1], 2));
@@ -458,13 +462,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
         event.preventDefault();
         break;
       case timeWarp.dragModes.CIRCLE_MOVE:
-        timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
-        if (event.originalEvent.type == 'touchmove') {
-          var touchDist = timeWarp.touchDistFromTouches(event.originalEvent.touches);
-          timeWarp.radius += touchDist - timeWarp.lastTouchDist;
-          timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
-          timeWarp.lastTouchDist = touchDist;
-        }
+        if (event.originalEvent.pointerType != 'touch')
+          timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
         event.preventDefault();
         break;
       case timeWarp.dragModes.SPLIT:
@@ -473,6 +472,21 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
         event.preventDefault();
         break;
     }
+    map.renderSync();
+    timeWarp.updateControls();
+  }
+
+  timeWarp.touchMove = function (event) {
+    if (timeWarp.dragMode != timeWarp.dragModes.CIRCLE_MOVE)
+      return;
+
+    var newposition = timeWarp.centerCoordFromTouches(event.touches, true)
+    timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
+
+    var touchDist = timeWarp.touchDistFromTouches(event.touches);
+    timeWarp.radius += touchDist - timeWarp.lastTouchDist;
+    timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
+    timeWarp.lastTouchDist = touchDist;
     map.renderSync();
     timeWarp.updateControls();
   }
