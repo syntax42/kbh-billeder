@@ -697,6 +697,11 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
   };
+  mapHandler.addDirection = function () {
+    mapState.feature.asset.heading = 90;
+    mapHandler.toggleEditMode();
+    mapHandler.toggleEditMode();
+  }
   mapHandler.toggleEditMode = function (editOn) {
     // If the user specifically requested a mode, use it.
     if (editOn !== undefined){
@@ -751,6 +756,7 @@ function HistoriskAtlas(mapElement, options) {
       if (mapState.targetFeature) {
         mapState.vectorSource.removeFeature(mapState.targetFeature);
         mapState.vectorSource.removeFeature(mapState.lineFeature);
+        mapState.targetFeature = null;
       }
       mapState.map.removeInteraction(mapHandler.translate);
       mapState.map.removeInteraction(mapHandler.translateTarget);
@@ -817,6 +823,15 @@ function HistoriskAtlas(mapElement, options) {
         return true;
       }
     }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+
+    if (hoverFeature == mapState.targetFeature && hoverFeature) {
+      var pixelFeature = mapState.map.getPixelFromCoordinate(hoverFeature.getGeometry().getCoordinates());
+      if (pixel[0] - pixelFeature[0] > 13 && pixelFeature[1] - pixel[1] > 10) {
+        mapState.mapElement.style.cursor = 'pointer';
+        return;
+      }
+    }
+
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
   mapState.map.on('pointerdrag', function (event) {
@@ -833,12 +848,28 @@ function HistoriskAtlas(mapElement, options) {
   });
 
   mapState.map.on('click', function (event) {
-    if (mapState.isSingleMode() || mapState.isEditMode())
+    if (mapState.isSingleMode())
       return;
 
     var clickFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+    var pixel = mapState.map.getEventPixel(event.originalEvent);
+    mapState.map.forEachFeatureAtPixel(pixel, function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.hidePopup();
+
+    if (mapState.isEditMode()) {
+      if (clickFeature != mapState.targetFeature)
+        return;
+
+      if (mapState.mapElement.style.cursor == 'pointer') {
+        mapState.feature.asset.heading = undefined;
+        mapHandler.toggleEditMode();
+        mapHandler.toggleEditMode();
+        if (options.onDirectionRemoved)
+          options.onDirectionRemoved();
+      }
+
+      return;
+    }
 
     if (!clickFeature)
       return;

@@ -202,6 +202,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         onMoveEnd: onMoveEnd,
         onPopupClick: onPopupClick,
         onTimeWarpToggle: options.onTimeWarpToggle,
+        onDirectionRemoved: searchControllerCallbacks.onDirectionRemoved,
         icons: options.icons
       }
     );
@@ -309,6 +310,9 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       defaultMapHandler.toggleTimeWarp();
     },
 
+    addDirection: function () {
+      defaultMapHandler.addDirection();
+    },
   };
 
   // Hand the callbacks back to the Search Controller.
