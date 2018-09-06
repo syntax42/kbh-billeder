@@ -1,11 +1,15 @@
+include ../mixins/icon
+
 nav
   ul(aria-labelledby='heading-categories-menu', role='menu').nav.sidebar-menu
     if menus && menus.main
       block before
       each item in menus.main
         if item.children.length > 0
-          li
+          li.sidebar-menu__children.sidebar-menu__children--inactive
             a(data-action='toggle-sidebar-submenu-item')= item.title
+              .icon
+                +icon('chevron-up')
             ul.children.hidden
               each child in item.children
                 li
