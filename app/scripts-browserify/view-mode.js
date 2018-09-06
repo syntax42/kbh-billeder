@@ -53,8 +53,6 @@ $('body').on('search:viewModeChanged', function (e, eventViewMode) {
 
   // Deactivate everything.
   $viewModes.find('.filterbar__tab').removeClass('filterbar__tab--active');
-  // Make view-mode specific elements active.
-  $viewModes.find('.filterbar__tab--' + viewMode).addClass('filterbar__tab--active');
 
   // mobile
   $('body').removeClass('is-' + toggledFrom + '-view').addClass('is-' + viewMode + '-view');
