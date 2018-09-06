@@ -1,6 +1,6 @@
 .jumbo {
   background-color: $jumbo-bg;
-  height: 35vh;
+  height: 75vh;
   min-height: 30rem;
   position: relative;
   align-items: center;
@@ -162,6 +162,9 @@
     width: 100%;
     position: absolute;
     bottom: 0;
+    .is-mobile & {
+      background-size: 100% 45px;
+    }
   }
 }
 
