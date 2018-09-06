@@ -1,7 +1,7 @@
 # Builds and deploys a revision of KBH Billeder
 version: 2
 jobs:
-  build-and-deploy-job:
+  build:
     # Base the build off of an image that will give us easy access to gcp.
     # The actual build is done via a docker build, so we don't really have any
     # eg. node dependencies at this point.
@@ -73,9 +73,9 @@ jobs:
 
 workflows:
   version: 2
-  build-and-deploy:
+  build:
     jobs:
-      - build-and-deploy-job:
+      - build:
           filters:
             branches:
               only:
