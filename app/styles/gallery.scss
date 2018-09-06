@@ -10,10 +10,15 @@
     a {
       text-align: center;
       padding: 50px 15px;
-      &:hover {
-        background: white;
-        text-decoration: none;
-        @include shadow(5);
+      .is-mobile & {
+        padding: 20px 0;
+      }
+      .is-desktop & {
+        &:hover {
+          background: white;
+          text-decoration: none;
+          @include shadow(5);
+        }
       }
     }
     .gallery {
