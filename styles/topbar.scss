@@ -16,12 +16,6 @@
     opacity: 0.95;
   }
 
-  &--frontpage {
-    .is-mobile & {
-      position: static;
-    }
-  }
-
   &__logo {
     align-items: center;
     cursor: default; // TODO: Check why?
@@ -155,6 +149,10 @@
     padding-left: 10px;
     padding-right: 2px;
     text-decoration: none;
+
+    .is-mobile & {
+      padding: 0 20px;
+    }
 
     svg {
       height: 20px;
