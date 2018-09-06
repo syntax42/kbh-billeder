@@ -55,10 +55,10 @@ jobs:
       - run: echo $GOOGLE_KEY | base64 --decode > ./google-key.json
 
       # Do the build and tag and push the image.
-      - run: |
-          docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
       - run:
-          no_output_timeout: 15m
+          no_output_timeout: 20m
+          command: docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
+      - run:
           command: |
             docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1
             docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest
