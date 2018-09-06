@@ -16,6 +16,12 @@
     opacity: 0.95;
   }
 
+  &--frontpage {
+    .is-mobile & {
+      position: static;
+    }
+  }
+
   &__logo {
     align-items: center;
     cursor: default; // TODO: Check why?
