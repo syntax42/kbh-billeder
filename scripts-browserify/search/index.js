@@ -451,13 +451,13 @@ function initialize() {
 
   // When the view-mode is changed by the view-mode selector (view-mode.js),
   // store the new value and trigger a search update.
-  $('body').on('search:viewModeChanged', function(e, eventViewMode) {
+  $('.let-it-grow').on('search:viewModeChanged', function(e, eventViewMode) {
     viewMode = eventViewMode;
-    $('body').trigger('search:update');
+    $('.let-it-grow').trigger('search:update');
   });
 
-  // Let anyone with access to the body element trigger search-updates.
-  $('body').on('search:update', function() {
+  // Let anyone with access to the element with class 'let-it-grow' trigger search-updates.
+  $('.let-it-grow').on('search:update', function() {
     update(true, true);
   });
 
@@ -496,7 +496,7 @@ function initialize() {
   const currentParams = getSearchParams();
   if (currentParams.map) {
     // If the url contains a map parameter, set us in map mode.
-    $('body').trigger('search:viewModeChanged', ['map']);
+    $('.let-it-grow').trigger('search:viewModeChanged', ['map']);
   } else {
     // Default view-mode, so no need to switch, just go ahead and do a search.
     update();
