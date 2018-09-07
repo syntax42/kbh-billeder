@@ -190,7 +190,7 @@ $topbar-auth-tab-width: 170px;
       svg {
         width: 14px;
         height: 14px;
-        fill: black;
+        fill: white;
         float: right;
         margin-top: 8px;
         margin-right: 10px;
@@ -208,6 +208,7 @@ $topbar-auth-tab-width: 170px;
       &--active {
         svg {
           transform: rotate(0deg);
+          fill: black;
         }
       }
       &__options {
