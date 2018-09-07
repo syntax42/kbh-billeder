@@ -89,9 +89,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       mapState.locationElement.className = 'ol-unselectable ol-control';
       mapState.locationElement.addEventListener('click', function (event) {
         if (mapElement.classList.toggle('location')) {
-          //App.toast.show("Finder din position...");
-          navigator.geolocation.getCurrentPosition((pos) => {
-            //App.toast.show("Din position blev fundet (inden for " + Math.round(pos.coords.accuracy) + " meter).");
+          navigator.geolocation.getCurrentPosition(function(pos) {
             var coords = ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]);
             mapState.view.animate({
               center: coords,
@@ -109,14 +107,12 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
             });
             mapState.map.addLayer(mapState.locationLayer);
 
-            mapState.watchId = navigator.geolocation.watchPosition((pos) => {
+            mapState.watchId = navigator.geolocation.watchPosition(function(pos) {
               mapState.locationPoint.setCoordinates(ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]));
-            }, (error) => {
+            }, function (error) {
               navigator.geolocation.clearWatch(mapState.watchId);
-              //App.toast.show("Kunne ikke følge ");
-            })
-          }, (error) => {
-            //App.toast.show("Din position blev IKKE fundet. Har du husket at give tilladelse til, at vi må bruge din position?");
+            });
+          }, function (error) {
           });
         } else {
           mapState.map.removeLayer(mapState.locationLayer);
@@ -375,8 +371,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event.originalEvent) });
     window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event.originalEvent) });
     mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
-    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
-    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', (event) => { timeWarp.pointerDrag(event); });
+    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up(); });
+    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function(event) { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
     mapSelectDivElement.style.display = 'block';
     timeWarp.closeElement.style.display = 'block';
@@ -944,6 +940,3 @@ function HistoriskAtlas(mapElement, options) {
 
   return mapHandler;
 };
-
-// TODO - integrate into the site.
-// module.exports = Map;
