@@ -118,6 +118,8 @@ $topbar-auth-tab-width: 170px;
         top: $topbar-height;
         left: 0;
         min-width: $topbar-dropdown-width;
+        // Make sure the dropdown options are above the button
+        // in order to make the shadow look correct.
         z-index: 5;
         margin: 0;
         padding: 0;
