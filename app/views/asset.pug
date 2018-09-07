@@ -30,18 +30,36 @@ block document__section-2
       .container-fluid
         .row
           .col-sm-12
+            div.document__section-2__no-placement.col-sm-5
+              b Ved du hvor billedet er taget?
+              p Eller hvilket sted billedets motiv viser? Så tilføj lokationen på et kort.
+              button.btn.btn-primary(data-action='geo-tagging:init')
+                | Placer billede på kort
+                +icon('pencil')
             != assetSection('place', metadata)
-  else
-    .document__section-2--map
-      .geo-tagging-mini-map(
-        data-latitude=location.latitude,
-        data-longitude=location.longitude,
-        data-heading=location.heading,
-        data-approximate=location.isApproximate ? 'true' : 'false'
-      )
-      .place-overlay
-        .place-overlay__inner
-          != assetSection('place', metadata)
+
+  .document__section-2--map
+    .geo-tagging-mini-map(
+      data-latitude=location.latitude,
+      data-longitude=location.longitude,
+      data-heading=location.heading,
+      data-approximate=location.isApproximate ? 'true' : 'false'
+    )
+    .place-overlay
+      .place-overlay__inner
+        != assetSection('place', metadata)
+        table
+          tbody
+            tr
+              td(colspan=2, class='map-coordinates__map--edit')
+                button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
+                  | Rediger
+                  +icon('pencil')
+                button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
+                  | Annuller
+                button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
+                  | Gem placering
+
 
 block document__section-3
   .document__section-3

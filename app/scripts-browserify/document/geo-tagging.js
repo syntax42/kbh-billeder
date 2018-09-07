@@ -7,6 +7,8 @@ $(function ($) {
   const START_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:start"]';
   const STOP_GEOTAGGING_SELECTOR = '[data-action="geo-tagging:stop"]';
   const SAVE_GEO_TAG_SELECTOR = '[data-action="save-geo-tag"]';
+  const INIT_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:init"]';
+
   const controllerState = {
     assetBackup: undefined,
     saving: false
@@ -15,6 +17,7 @@ $(function ($) {
   function _initializeMap (mapElement) {
     // Extract asset meta-data from the div.
     const $mapElement = $(mapElement);
+    // TODO: support a map without coordinates.
     const asset = {
       latitude: $mapElement.data('latitude'),
       longitude: $mapElement.data('longitude'),
@@ -45,7 +48,7 @@ $(function ($) {
     var mapController = MapController(mapElement, callBacks, options);
 
     // Have the map display the asset.
-    mapController.onSingleResult(asset);
+    // TODO - only init if we have coordinates.
     mapController.onSingleResult(asset);
     return mapController;
   }
@@ -65,6 +68,20 @@ $(function ($) {
   }
 
   function _registerListeners (mapController) {
+    // The user clicked "edit".
+    $(document).on('click', INIT_GEO_TAGGING_SELECTOR, () => {
+      // Hide "no location" document info pane
+      // Show map pane
+
+      // If the user has not previously inited the map:
+      // - Make a fake asset with a default location and feed it to the map
+      // - mapController.onSingleResult(asset);
+
+      // TODO Extract the logic from "edit" out into a function and call it.
+      // Or just do a click event on it.
+
+    });
+
     // The user clicked "edit".
     $(document).on('click', START_GEO_TAGGING_SELECTOR, () => {
       // Toggle edit mode and get the live asset
@@ -88,6 +105,8 @@ $(function ($) {
 
       // Set button state.
       _setStateView();
+
+      // TODO: If we're in "no location" mode, toggle us back to hidden.
     });
 
     // The user clicked "save".
