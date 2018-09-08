@@ -94,7 +94,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       mapState.locationElement.addEventListener('click', function (event) {
         if (mapElement.classList.toggle('location')) {
           //App.toast.show("Finder din position...");
-          navigator.geolocation.getCurrentPosition((pos) => {
+          navigator.geolocation.getCurrentPosition(function(pos) {
             //App.toast.show("Din position blev fundet (inden for " + Math.round(pos.coords.accuracy) + " meter).");
             var coords = ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]);
             mapState.view.animate({
@@ -113,13 +113,13 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
             });
             mapState.map.addLayer(mapState.locationLayer);
 
-            mapState.watchId = navigator.geolocation.watchPosition((pos) => {
+            mapState.watchId = navigator.geolocation.watchPosition(function(pos) {
               mapState.locationPoint.setCoordinates(ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]));
-            }, (error) => {
+            }, function(error) {
               navigator.geolocation.clearWatch(mapState.watchId);
               //App.toast.show("Kunne ikke følge ");
             })
-          }, (error) => {
+          }, function(error) {
             //App.toast.show("Din position blev IKKE fundet. Har du husket at give tilladelse til, at vi må bruge din position?");
           });
         } else {
@@ -925,7 +925,7 @@ function HistoriskAtlas(mapElement, options) {
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
-    document.getElementById('mapPopupDescription').innerText = feature.asset.description;
+    document.getElementById('mapPopupDescription').innerText = feature.asset.description ? feature.asset.description : '';
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = feature.asset.id;
   }

@@ -27,13 +27,13 @@ function _mapEsResultsToAssets(results, searchParameters) {
     results.hits.hits.forEach(function(hit) {
 
       var asset = hit._source;
-      var colid = `${asset.collection}/${asset.id}`;
+      var colid = '${asset.collection}/${asset.id}';
 
       var assetResult = {
         id: colid,
         short_title: asset.short_title,
         description: '',
-        image_url: `${colid}/thumbnail`,
+        image_url: '${colid}/thumbnail',
         latitude: asset.location.lat,
         longitude: asset.location.lon,
         clustered: false,
