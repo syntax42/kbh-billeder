@@ -92,27 +92,18 @@ $topbar-auth-tab-width: 170px;
       text-decoration: none;
       padding: $spacer-sm 7px;
       display: inline-block;
-      height: $topbar-height;
       line-height: 32px;
-
-      &:first-of-type {
-        padding-left: $spacer-md;
-      }
 
       &:focus,
       &:hover {
         color: $white;
         text-decoration: none;
       }
-
-      &:not(:last-child, .topbar__name) {
-        margin-right: 10px;
-      }
     }
 
     .dropdown {
       &__option {
-        padding: 0 $spacer-md;
+        padding: $spacer-sm 7px;
       }
       &__options {
         top: $topbar-height;
@@ -135,6 +126,7 @@ $topbar-auth-tab-width: 170px;
         }
       }
       &--active {
+        background: white;
         .topbar__items-link {
           background: white;
           color: black;
@@ -210,9 +202,13 @@ $topbar-auth-tab-width: 170px;
           transform: rotate(0deg);
           fill: black;
         }
+        .topbar__items {
+          &-link {
+            padding-bottom: 10px;
+          }
+        }
       }
       &__options {
-        z-index: 9;
         position: relative;
         top: -1px;
         left: -($topbar-dropdown-width - $topbar-auth-tab-width);
