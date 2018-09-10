@@ -111,8 +111,8 @@ $topbar-auth-tab-width: 170px;
     }
 
     .dropdown {
-      .topbar__items-link {
-        padding: $spacer-sm 7px;
+      &__option {
+        padding: 0 $spacer-md;
       }
       &__options {
         top: $topbar-height;
