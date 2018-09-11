@@ -5,6 +5,7 @@
 $(function ($) {
   const _ = require('lodash');
   const START_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:start"]';
+  const ADD_HEADING_SELECTOR = '[data-action="geo-tagging:add-direction"]';
   const STOP_GEOTAGGING_SELECTOR = '[data-action="geo-tagging:stop"]';
   const SAVE_GEO_TAG_SELECTOR = '[data-action="save-geo-tag"]';
   const INIT_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:init"]';
@@ -17,7 +18,8 @@ $(function ($) {
     assetBackup: undefined,
     assetData: undefined,
     saving: false,
-    noLocation: false
+    noLocation: false,
+    hasHeading: false
   };
 
   /**
@@ -48,6 +50,7 @@ $(function ($) {
     // Only add heading to the asset object if we actually have one.
     if ($(mapElement).data('heading') && $(mapElement).data('heading') !== 'null') {
       asset.heading = $(mapElement).data('heading');
+      controllerState.hasHeading = true;
     }
     return asset;
   }
@@ -75,9 +78,15 @@ $(function ($) {
       options.initialOffset = [250, 0];
     }
 
-    // We currently don't have any callbacks for a single-mode map, so pass an
-    // empty callback object.
-    var callBacks = {};
+    // Setup callbacks for the controller.
+    var callBacks = {
+      onDirectionRemoved: function () {
+        // If the user removes heading from the place-marker, display a
+        // button for adding a heading back.
+        $(ADD_HEADING_SELECTOR).show();
+      }
+    };
+
     var mapController = MapController(mapElement, callBacks, options);
 
     // Have the map display the asset if we have a location.
@@ -92,6 +101,9 @@ $(function ($) {
     $(START_GEO_TAGGING_SELECTOR).hide();
     $(STOP_GEOTAGGING_SELECTOR).show();
     $(SAVE_GEO_TAG_SELECTOR).show();
+    if (!controllerState.hasHeading) {
+      $(ADD_HEADING_SELECTOR).show();
+    }
   }
 
   // Hide the save/cancel button and show edit.
@@ -147,6 +159,13 @@ $(function ($) {
       if (!controllerState.hasLocation) {
         _setStateNoLocationEndEdit();
       }
+    });
+
+    // The user clicked "add heading".
+    $(document).on('click', ADD_HEADING_SELECTOR, () => {
+      // Add direction to the place-marker.
+      mapController.addDirection();
+      $(ADD_HEADING_SELECTOR).hide();
     });
 
     // The user clicked "save".

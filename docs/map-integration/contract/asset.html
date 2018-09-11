@@ -62,6 +62,11 @@
               console.log("updated heading: " + asset.heading);
             };
 
+            document.getElementById('adddirection').onclick = function () {
+                document.getElementById('adddirection').style.display = 'none';
+                mapController.addDirection();
+            }
+
           };
           xhr.send(null);
 
@@ -87,9 +92,12 @@
 
         function _initMap(element, asset) {
 
-          // Callbacks required by the map controller. For mode = single none
-          // are currently required.
-            var mapCallbacks = {};
+          // Callbacks required by the map controller. 
+            var mapCallbacks = {
+                onDirectionRemoved: function () {
+                    document.getElementById('adddirection').style.display = 'inline';
+                }
+            };
 
             var options = {
               mode: 'single',
@@ -126,7 +134,7 @@
 <body>
 
     <h1>Precise</h1>
-    <input type="button" id="toggleedit1" value="Toggle edit mode" />
+    <input type="button" id="toggleedit1" value="Toggle edit mode" /><input type="button" id="adddirection" value="Add direction" style="display:none"/>
     <br>
     <div class="map" id="map1"></div>
     <hr>

@@ -32,16 +32,20 @@ function _prepareMapOptions (options) {
     options.onPopupClick = function (id) { };
   }
 
-  options.maps = options.maps || [
-    { id: 161, title: 'Standard', year: '2018' },
-    { id: 85, title: 'Luftfoto', year: '2016' },
-    { id: 39, title: '4 cm kort', year: '1977-85' },
-    { id: 38, title: '4 cm kort', year: '1953-76' },
-    { id: 105, title: 'K\u00F8benhavn', year: '1939' },
-    { id: 54, title: 'Lavkantkort', year: '1901-1945' },
-    { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
-    { id: 154, title: 'Geddes kort', year: '1761' }
-  ];
+  if (!options.maps) {
+    options.maps = [
+      { id: 85, title: 'Luftfoto', year: '2016' },
+      { id: 39, title: '4 cm kort', year: '1977-85' },
+      { id: 38, title: '4 cm kort', year: '1953-76' },
+      { id: 105, title: 'K\u00F8benhavn', year: '1939' },
+      { id: 54, title: 'Lavkantkort', year: '1901-1945' },
+      { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
+      { id: 154, title: 'Geddes kort', year: '1761' }
+    ];
+
+    if (options.mode == 'single')
+      options.maps.unshift({ id: 161, title: 'Standard', year: '2018' });
+  }
 
   return options;
 }
@@ -82,7 +86,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
 
-  if (mode != 'single') {
+  if (mode !== 'single') {
     mapState.locationControl = function () {
       mapState.locationElement = document.createElement('div');
       mapState.locationElement.id = 'mapLocation';
@@ -101,7 +105,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
               image: new ol.style.Icon({
                 src: icons.pinlocation
               })
-            }))
+            }));
             mapState.locationLayer = new ol.layer.Vector({
               source: new ol.source.Vector({ features: [locationFeature] }), updateWhileInteracting: true, updateWhileAnimating: true
             });
@@ -112,8 +116,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
             }, function (error) {
               navigator.geolocation.clearWatch(mapState.watchId);
             });
-          }, function (error) {
-          });
+          }, function (error) {});
         } else {
           mapState.map.removeLayer(mapState.locationLayer);
           navigator.geolocation.clearWatch(mapState.watchId);
@@ -244,16 +247,16 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
     }
   } else
-    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle);
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps);
 
   return mapState;
 }
 
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps) {
 
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: getMapUrl(55)
+      url: getMapUrl(maps[0].id)
     })
   });
 
@@ -368,11 +371,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     timeWarp._show();
   }
   timeWarp._show = function() {
-    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event.originalEvent) });
-    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event.originalEvent) });
+    mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event) });
+    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event) });
     mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
     window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up(); });
-    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function(event) { timeWarp.pointerDrag(event); });
+    mapElement.addEventListener('touchmove', timeWarp.touchMoveEventHandle = function (event) { timeWarp.touchMove(event); });
+    timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function (event) { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
     mapSelectDivElement.style.display = 'block';
     timeWarp.closeElement.style.display = 'block';
@@ -386,6 +390,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     window.removeEventListener('touchend', timeWarp.touchUpEventHandle);
     mapElement.removeEventListener('mousedown', timeWarp.downEventHandle);
     window.removeEventListener('mouseup', timeWarp.upEventHandle);
+    mapElement.removeEventListener('touchmove', timeWarp.touchMoveEventHandle);
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
     timeWarp.setVisible(false);
     mapSelectDivElement.style.display = 'none';
@@ -400,8 +405,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
     mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
 
-    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18)
-    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62)
+    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18);
+    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62);
   }
   timeWarp.updateButton = function (element, circle, radians) {
     element.style.left = circle ? (timeWarp.position[0] + Math.cos(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : null;
@@ -412,11 +417,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   timeWarp.touchDown = function(event) {
     timeWarp.lastTouchDist = 0;
     timeWarp.lastTouchDist = timeWarp.touchDistFromTouches(event.touches);
-    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches));
+    timeWarp.down(timeWarp.centerCoordFromTouches(event.touches, true), false, true);
   }
-  timeWarp.down = function(coord, forceMove) {
-    var offset = mapElement.getBoundingClientRect();
-    coord = [coord[0] - offset.left, coord[1] - offset.top];
+  timeWarp.down = function(coord, forceMove, relative) {
+    if (!relative) {
+      var offset = mapElement.getBoundingClientRect();
+      coord = [coord[0] - offset.left, coord[1] - offset.top];
+    }
     var dist = Math.sqrt(Math.pow(timeWarp.position[0] - coord[0], 2) + Math.pow(timeWarp.position[1] - coord[1], 2));
     if (timeWarp.position && timeWarp.mode == timeWarp.modes.CIRCLE) {
       if (dist < (timeWarp.radius + 8) && dist > (timeWarp.radius - 8) && !forceMove) {
@@ -441,7 +448,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   }
 
   timeWarp.pointerDrag = function(event) {
-    var newposition = event.originalEvent.type == 'touchmove' ? timeWarp.centerCoordFromTouches(event.originalEvent.touches, true) : (event.pixel ? event.pixel : [event.offsetX, event.offsetY]);
+    var newposition = event.pixel ? event.pixel : [event.offsetX, event.offsetY];
     switch (timeWarp.dragMode) {
       case timeWarp.dragModes.CIRCLE_RADIUS:
         var dist = Math.sqrt(Math.pow(timeWarp.position[0] - newposition[0], 2) + Math.pow(timeWarp.position[1] - newposition[1], 2));
@@ -450,13 +457,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
         event.preventDefault();
         break;
       case timeWarp.dragModes.CIRCLE_MOVE:
-        timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
-        if (event.originalEvent.type == 'touchmove') {
-          var touchDist = timeWarp.touchDistFromTouches(event.originalEvent.touches);
-          timeWarp.radius += touchDist - timeWarp.lastTouchDist;
-          timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
-          timeWarp.lastTouchDist = touchDist;
-        }
+        if (event.originalEvent.pointerType != 'touch')
+          timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
         event.preventDefault();
         break;
       case timeWarp.dragModes.SPLIT:
@@ -465,6 +467,21 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
         event.preventDefault();
         break;
     }
+    map.renderSync();
+    timeWarp.updateControls();
+  }
+
+  timeWarp.touchMove = function (event) {
+    if (timeWarp.dragMode != timeWarp.dragModes.CIRCLE_MOVE)
+      return;
+
+    var newposition = timeWarp.centerCoordFromTouches(event.touches, true)
+    timeWarp.position = [newposition[0] + timeWarp.mouseDisplace[0], newposition[1] + timeWarp.mouseDisplace[1]];
+
+    var touchDist = timeWarp.touchDistFromTouches(event.touches);
+    timeWarp.radius += touchDist - timeWarp.lastTouchDist;
+    timeWarp.radius = timeWarp.radius < timeWarp.minRadius ? timeWarp.minRadius : timeWarp.radius;
+    timeWarp.lastTouchDist = touchDist;
     map.renderSync();
     timeWarp.updateControls();
   }
@@ -675,6 +692,11 @@ function HistoriskAtlas(mapElement, options) {
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
   };
+  mapHandler.addDirection = function () {
+    mapState.feature.asset.heading = 90;
+    mapHandler.toggleEditMode();
+    mapHandler.toggleEditMode();
+  }
   mapHandler.toggleEditMode = function (editOn) {
     // If the user specifically requested a mode, use it.
     if (editOn !== undefined){
@@ -729,6 +751,7 @@ function HistoriskAtlas(mapElement, options) {
       if (mapState.targetFeature) {
         mapState.vectorSource.removeFeature(mapState.targetFeature);
         mapState.vectorSource.removeFeature(mapState.lineFeature);
+        mapState.targetFeature = null;
       }
       mapState.map.removeInteraction(mapHandler.translate);
       mapState.map.removeInteraction(mapHandler.translateTarget);
@@ -795,6 +818,15 @@ function HistoriskAtlas(mapElement, options) {
         return true;
       }
     }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+
+    if (hoverFeature == mapState.targetFeature && hoverFeature) {
+      var pixelFeature = mapState.map.getPixelFromCoordinate(hoverFeature.getGeometry().getCoordinates());
+      if (pixel[0] - pixelFeature[0] > 13 && pixelFeature[1] - pixel[1] > 10) {
+        mapState.mapElement.style.cursor = 'pointer';
+        return;
+      }
+    }
+
     mapState.mapElement.style.cursor = hoverFeature ? (mapState.isEditMode() ? 'move' : 'pointer') : (mapState.timeWarp ? mapState.timeWarp.getHoverInterface(pixel) : '');
   })
   mapState.map.on('pointerdrag', function (event) {
@@ -811,12 +843,28 @@ function HistoriskAtlas(mapElement, options) {
   });
 
   mapState.map.on('click', function (event) {
-    if (mapState.isSingleMode() || mapState.isEditMode())
+    if (mapState.isSingleMode())
       return;
 
     var clickFeature;
-    mapState.map.forEachFeatureAtPixel(mapState.map.getEventPixel(event.originalEvent), function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+    var pixel = mapState.map.getEventPixel(event.originalEvent);
+    mapState.map.forEachFeatureAtPixel(pixel, function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
     mapState.hidePopup();
+
+    if (mapState.isEditMode()) {
+      if (clickFeature != mapState.targetFeature)
+        return;
+
+      if (mapState.mapElement.style.cursor == 'pointer') {
+        mapState.feature.asset.heading = undefined;
+        mapHandler.toggleEditMode();
+        mapHandler.toggleEditMode();
+        if (options.onDirectionRemoved)
+          options.onDirectionRemoved();
+      }
+
+      return;
+    }
 
     if (!clickFeature)
       return;
@@ -872,7 +920,7 @@ function HistoriskAtlas(mapElement, options) {
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
-    document.getElementById('mapPopupDescription').innerText = feature.asset.description;
+    document.getElementById('mapPopupDescription').innerText = feature.asset.description ? feature.asset.description : '';
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = feature.asset.id;
   }
