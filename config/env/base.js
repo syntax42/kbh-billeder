@@ -135,7 +135,12 @@ let config = {
   geoTagging: {
     approximateCoordinatesField: '{7a1f29a3-e389-4fef-a092-67de7837a181}',
     coordinatesField: '{1af283a9-bcc7-44a1-bdd8-b65557017a52}',
-    headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}'
+    headingField: '{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}',
+    // Initial centerpoint for the search map and assets without locations.
+    initialCenter: {
+      lat: 55.675484678282146,
+      lon: 12.570029708088803
+    }
   },
   google: {
     analyticsPropertyID: null,
