@@ -1,13 +1,13 @@
 .document {
   &__section-2 {
-    table {
-      width: 50%;
-    }
     &__no-placement {
       float: right;
     }
     &--map {
       background: none;
+      &.no-location {
+        display: none;
+      }
     }
   }
   &__expandable--expanded {
@@ -88,6 +88,11 @@
       position: relative;
       top: 6px;
       margin-right: 5px;
+    }
+  }
+  .no-location--text {
+    &__header {
+      font-size: 15px;
     }
   }
 }

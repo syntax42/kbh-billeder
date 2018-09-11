@@ -167,11 +167,6 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       options.clusterAtZoomLevel = 16;
     }
 
-    if (!options.initialCenter) {
-      // Copenhagen city square.
-      options.initialCenter = [12.570029708088803, 55.675484678282146];
-    }
-
     if (!options.initialZoomLevel) {
       options.initialZoomLevel = 12;
     }
