@@ -8,33 +8,66 @@ $(function ($) {
   const STOP_GEOTAGGING_SELECTOR = '[data-action="geo-tagging:stop"]';
   const SAVE_GEO_TAG_SELECTOR = '[data-action="save-geo-tag"]';
   const INIT_GEO_TAGGING_SELECTOR = '[data-action="geo-tagging:init"]';
+  const DATA_SECTION_NO_LOCATION = '.document__section-2--no-location';
+  const MAP_SECTION_SELECTOR = '.document__section-2--map';
+  const MAP_ELEMENT_SELECTOR = '.geo-tagging-mini-map';
+  const config = require('collections-online/shared/config');
 
   const controllerState = {
     assetBackup: undefined,
-    saving: false
+    assetData: undefined,
+    saving: false,
+    noLocation: false
+  };
+
+  /**
+   * Determines whether the map on the asset-page has been loaded with a location.
+   */
+  function _map_has_location (mapElement) {
+    // We have a location if has-location is not explicitly not true. This allows
+    // us to have missing has-location attribute and still have a location.
+    return $(mapElement).data('has-location');
   }
 
-  function _initializeMap (mapElement) {
-    // Extract asset meta-data from the div.
-    const $mapElement = $(mapElement);
-    // TODO: support a map without coordinates.
-    const asset = {
-      latitude: $mapElement.data('latitude'),
-      longitude: $mapElement.data('longitude'),
-      approximate: $mapElement.data('approximate')
-    };
+  /**
+   * Extract information about an asset from the mapelement on an asset page.
+   */
+  function _extractAsset (mapElement) {
+    let asset = {};
+    // Extract asset differently depending on whether we have a location.
+    if (controllerState.hasLocation) {
+      asset.latitude = $(mapElement).data('latitude');
+      asset.longitude = $(mapElement).data('longitude');
+      asset.approximate = $(mapElement).data('approximate');
+    }
+    else {
+      asset.latitude = config.geoTagging.initialCenter['lat'];
+      asset.longitude = config.geoTagging.initialCenter['lon'];
+    }
 
     // Only add heading to the asset object if we actually have one.
-    if ($mapElement.data('heading') &&$mapElement.data('heading') !== 'null') {
-      asset.heading = $mapElement.data('heading');
+    if ($(mapElement).data('heading') && $(mapElement).data('heading') !== 'null') {
+      asset.heading = $(mapElement).data('heading');
     }
+    return asset;
+  }
+
+  /**
+   * Given a map element, configures a map-controller and initializes the map.
+   *
+   * The initialization is postponed if a location cannot be found.
+   */
+  function _initializeMap (mapElement) {
+    // Extract asset meta-data from the div.
+    controllerState.hasLocation = _map_has_location($(mapElement));
+    controllerState.assetData = _extractAsset(mapElement);
 
     // Instantiate a map controller and load it up
     const MapController = require('map-controller');
     const options = {
       mode: 'single',
       initialZoomLevel: 16,
-      initialCenter: [asset.longitude, asset.latitude]
+      initialCenter: [controllerState.assetData.longitude, controllerState.assetData.latitude]
     };
 
     // Push the marker a bit to the right if we're on desktop.
@@ -47,9 +80,10 @@ $(function ($) {
     var callBacks = {};
     var mapController = MapController(mapElement, callBacks, options);
 
-    // Have the map display the asset.
-    // TODO - only init if we have coordinates.
-    mapController.onSingleResult(asset);
+    // Have the map display the asset if we have a location.
+    if (controllerState.hasLocation) {
+      mapController.onSingleResult(controllerState.assetData);
+    }
     return mapController;
   }
 
@@ -67,23 +101,20 @@ $(function ($) {
     $(SAVE_GEO_TAG_SELECTOR).hide();
   }
 
+  // Show the map pane and hide the data pane.
+  function _setStateNoLocationStartEdit () {
+    $(MAP_SECTION_SELECTOR).show();
+    $(DATA_SECTION_NO_LOCATION).hide();
+  }
+
+  // Show the data pane and hide the map pane.
+  function _setStateNoLocationEndEdit () {
+    $(MAP_SECTION_SELECTOR).hide();
+    $(DATA_SECTION_NO_LOCATION).show();
+  }
+
   function _registerListeners (mapController) {
-    // The user clicked "edit".
-    $(document).on('click', INIT_GEO_TAGGING_SELECTOR, () => {
-      // Hide "no location" document info pane
-      // Show map pane
-
-      // If the user has not previously inited the map:
-      // - Make a fake asset with a default location and feed it to the map
-      // - mapController.onSingleResult(asset);
-
-      // TODO Extract the logic from "edit" out into a function and call it.
-      // Or just do a click event on it.
-
-    });
-
-    // The user clicked "edit".
-    $(document).on('click', START_GEO_TAGGING_SELECTOR, () => {
+    function _start_edit_mode () {
       // Toggle edit mode and get the live asset
       var liveAsset = mapController.toggleEditMode(true);
 
@@ -93,6 +124,11 @@ $(function ($) {
 
       // Set button state.
       _setStateEdit();
+    }
+
+    // The user clicked "edit".
+    $(document).on('click', START_GEO_TAGGING_SELECTOR, () => {
+      _start_edit_mode();
     });
 
     // The user clicked "cancel".
@@ -106,7 +142,11 @@ $(function ($) {
       // Set button state.
       _setStateView();
 
-      // TODO: If we're in "no location" mode, toggle us back to hidden.
+      // If the user bailed out and started out in "no location" mode, revert
+      // back to not showing the map.
+      if (!controllerState.hasLocation) {
+        _setStateNoLocationEndEdit();
+      }
     });
 
     // The user clicked "save".
@@ -148,9 +188,24 @@ $(function ($) {
 
       _setStateView();
     });
+
+    // The user clicked "edit" on an asset without a location.
+    $(document).on('click', INIT_GEO_TAGGING_SELECTOR, () => {
+      // Hide "no location" document info pane
+      // Show map pane
+      _setStateNoLocationStartEdit();
+
+      // If the user has not previously inited the map:
+      if (!$(MAP_ELEMENT_SELECTOR).data('initialized')) {
+        // The asset data has already been loaded from the dom on init, pass it
+        // the MapController which will trigger an init.
+        mapController.onSingleResult(controllerState.assetData);
+        $(MAP_ELEMENT_SELECTOR).data('initialized', true);
+      }
+    });
   }
 
-  $('.geo-tagging-mini-map').each(function (index, mapElement) {
+  $(MAP_ELEMENT_SELECTOR).each(function (index, mapElement) {
     var mapController = _initializeMap(mapElement);
     _registerListeners(mapController);
   });
