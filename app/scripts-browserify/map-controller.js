@@ -40,7 +40,6 @@ function _mapEsResultsToAssets(results, searchParameters) {
         // We keep the count property to make upstream handling easier.
         count: 1
       };
-      console.log({assetResult});
 
       // Heading is optional, so only add it if we have one.
       if (asset.heading) {
