@@ -86,16 +86,14 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
   };
   ol.inherits(mapState.mapSelectControl, ol.control.Control);
 
-  if (mode != 'single') {
+  if (mode !== 'single') {
     mapState.locationControl = function () {
       mapState.locationElement = document.createElement('div');
       mapState.locationElement.id = 'mapLocation';
       mapState.locationElement.className = 'ol-unselectable ol-control';
       mapState.locationElement.addEventListener('click', function (event) {
         if (mapElement.classList.toggle('location')) {
-          //App.toast.show("Finder din position...");
           navigator.geolocation.getCurrentPosition(function(pos) {
-            //App.toast.show("Din position blev fundet (inden for " + Math.round(pos.coords.accuracy) + " meter).");
             var coords = ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]);
             mapState.view.animate({
               center: coords,
@@ -107,7 +105,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
               image: new ol.style.Icon({
                 src: icons.pinlocation
               })
-            }))
+            }));
             mapState.locationLayer = new ol.layer.Vector({
               source: new ol.source.Vector({ features: [locationFeature] }), updateWhileInteracting: true, updateWhileAnimating: true
             });
@@ -115,13 +113,10 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 
             mapState.watchId = navigator.geolocation.watchPosition(function(pos) {
               mapState.locationPoint.setCoordinates(ol.proj.fromLonLat([pos.coords.longitude, pos.coords.latitude]));
-            }, function(error) {
+            }, function (error) {
               navigator.geolocation.clearWatch(mapState.watchId);
-              //App.toast.show("Kunne ikke følge ");
-            })
-          }, function(error) {
-            //App.toast.show("Din position blev IKKE fundet. Har du husket at give tilladelse til, at vi må bruge din position?");
-          });
+            });
+          }, function (error) {});
         } else {
           mapState.map.removeLayer(mapState.locationLayer);
           navigator.geolocation.clearWatch(mapState.watchId);
@@ -379,7 +374,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event) });
     window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event) });
     mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
-    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up() });
+    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up(); });
     mapElement.addEventListener('touchmove', timeWarp.touchMoveEventHandle = function (event) { timeWarp.touchMove(event); });
     timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function (event) { timeWarp.pointerDrag(event); });
     timeWarp.setVisible(true);
@@ -410,8 +405,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
     mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
 
-    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18)
-    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62)
+    timeWarp.updateButton(timeWarp.closeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 - 22 / timeWarp.radius : 18);
+    timeWarp.updateButton(timeWarp.modeElement, timeWarp.mode == timeWarp.modes.CIRCLE, timeWarp.mode == timeWarp.modes.CIRCLE ? -Math.PI / 4 + 22 / timeWarp.radius : 62);
   }
   timeWarp.updateButton = function (element, circle, radians) {
     element.style.left = circle ? (timeWarp.position[0] + Math.cos(radians) * timeWarp.radius - element.clientWidth / 2) + 'px' : null;
@@ -993,6 +988,3 @@ function HistoriskAtlas(mapElement, options) {
 
   return mapHandler;
 };
-
-// TODO - integrate into the site.
-// module.exports = Map;

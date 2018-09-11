@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  * Clean up results from Elastic Search and map them to Asset results
@@ -27,19 +27,20 @@ function _mapEsResultsToAssets(results, searchParameters) {
     results.hits.hits.forEach(function(hit) {
 
       var asset = hit._source;
-      var colid = '${asset.collection}/${asset.id}';
+      var colid = `${asset.collection}/${asset.id}`;
 
       var assetResult = {
         id: colid,
         short_title: asset.short_title,
-        description: '',
-        image_url: '${colid}/thumbnail',
+        description: asset.description,
+        image_url: `${colid}/thumbnail`,
         latitude: asset.location.lat,
         longitude: asset.location.lon,
         clustered: false,
         // We keep the count property to make upstream handling easier.
         count: 1
       };
+      console.log({assetResult});
 
       // Heading is optional, so only add it if we have one.
       if (asset.heading) {
@@ -125,7 +126,8 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         assetHeadingEdit: '../images/icons/map/pinheadingedit.png',
         camera: '../images/icons/map/camera.png',
         target: '../images/icons/map/pintarget.png',
-        image: '../images/icons/map/image.png'
+        image: '../images/icons/map/image.png',
+        pinlocation: '../images/icons/map/pinlocation.png'
       };
 
       // If the user has not given us a specific set of icons, switch to a
@@ -138,20 +140,40 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     }
 
+    if (options.mapInitParam) {
+      // Map state serialized down into a string.
+      var parts = options.mapInitParam.split(',');
+      // The expected format is nn.nnnnnn,nn.nnnnnn,nnz
+      // Eg. 55.67175956237506,12.766296393235555,11.420000000000002z
+      // Do a simple verification of the parameters, check that we have 3 parts
+      // and that the last part ends on a z.
+      if (parts.length === 3 && parts[2].charAt(parts[2].length - 1) === 'z') {
+        // Parse the individual parts, and add them if we're successful.
+        var parsedCenter = [parseFloat(parts[1]), parseFloat(parts[0])];
+        if (!isNaN(parsedCenter[0]) && !isNaN(parsedCenter[1])) {
+          options.initialCenter = parsedCenter;
+        }
+        var parsedZoom = parseFloat(parts[2].substring(0, parts[2].length - 1));
+        if (!isNaN(parsedZoom)) {
+          options.initialZoomLevel = parsedZoom;
+        }
+      }
+    }
     if (!options.geohashAtZoomLevel) {
       options.geohashAtZoomLevel = 15;
     }
 
     if (!options.clusterAtZoomLevel) {
-      options.clusterAtZoomLevel = 18;
+      options.clusterAtZoomLevel = 16;
     }
 
     if (!options.initialCenter) {
-      options.initialCenter = [12.8, 55.67];
+      // Copenhagen city square.
+      options.initialCenter = [12.570029708088803, 55.675484678282146];
     }
 
     if (!options.initialZoomLevel) {
-      options.initialZoomLevel = 10;
+      options.initialZoomLevel = 12;
     }
 
     if (!options.mode) {
@@ -291,8 +313,13 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         searchParams.filters.geobounds = esBounds;
       }
 
+      // Add centerpoint and zoom-level, this will go into the url.
+      const center = defaultMapHandler.getCenter();
+      const zoomLevel = defaultMapHandler.getZoomLevel();
+      searchParams.map = `${center.latitude},${center.longitude},${zoomLevel}z`;
+
       // If we're zoomed out wide enough, use hash-based results.
-      searchParams.geohash = defaultMapHandler.getZoomLevel() <= options.geohashAtZoomLevel;
+      searchParams.geohash = zoomLevel <= options.geohashAtZoomLevel;
 
       // Hand the parameters back to the search controller and let it do the the
       // search. We'll get control back via onResults().

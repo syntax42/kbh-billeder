@@ -1,0 +1,15 @@
+.search-freetext-form {
+  margin: 0;
+  &--jumbo {
+    .search-freetext-form {
+      &__btn {
+        &:hover {
+          color: white;
+        }
+      }
+      &__input {
+        background: white;
+      }
+    }
+  }
+}

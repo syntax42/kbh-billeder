@@ -30,9 +30,14 @@ $(function ($) {
     const MapController = require('map-controller');
     const options = {
       mode: 'single',
-      initialZoomLevel: 18,
+      initialZoomLevel: 16,
       initialCenter: [asset.longitude, asset.latitude]
     };
+
+    // Push the marker a bit to the right if we're on desktop.
+    if (!window.helpers.isMobile($)) {
+      options.initialOffset = [250, 0];
+    }
 
     // We currently don't have any callbacks for a single-mode map, so pass an
     // empty callback object.
