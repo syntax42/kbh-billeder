@@ -360,6 +360,15 @@ function initialize() {
   // Get any initial parameters from the url and pass the relevant part to the
   // map.
   var options = {};
+
+  // Set initial center if specified via config.
+  if (config.geoTagging && config.geoTagging.initialCenter && config.geoTagging.initialCenter['lon'] && config.geoTagging.initialCenter['lat']) {
+    options.initialCenter = [
+      config.geoTagging.initialCenter['lon'],
+      config.geoTagging.initialCenter['lat']
+    ];
+  }
+
   var searchParams = getSearchParams();
   if (searchParams.map) {
     options.mapInitParam = searchParams.map;
