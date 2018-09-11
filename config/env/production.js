@@ -34,4 +34,9 @@ const production = _.merge({}, base, {
   socketPath: '/tmp/kbh-billeder.sock'
 });
 
+// Temporary unset of all magasin related keys.
+delete production.watermarks['magasin-museum'];
+delete production.cip.catalogs['magasin-museum'];
+delete production.cip.client.catalogAliases['Magasin du Nord Museum'];
+
 module.exports = production;
