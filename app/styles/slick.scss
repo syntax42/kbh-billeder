@@ -1,4 +1,14 @@
 .slick {
+  &-button-container {
+    position: absolute;
+    width: 100%;
+    .is-desktop & {
+      top: 105px;
+    }
+    .is-mobile & {
+      bottom: 35px;
+    }
+  }
   &-slider {
     position: relative;
   }
@@ -7,7 +17,12 @@
     display: inline-block;
   }
   &-prev {
-    left: -100px;
+    .is-desktop & {
+      left: -120px;
+    }
+    .is-mobile & {
+      left: 0;
+    }
     background: url(../images/icons/arrow-thin-left.png) no-repeat center;
     &:focus {
       background: url(../images/icons/arrow-thin-left.png) no-repeat center;
@@ -18,8 +33,13 @@
     }
   }
   &-next {
+    .is-desktop & {
+      right: -80px;
+    }
+    .is-mobile & {
+      right: 30px;
+    }
     background: url(../images/icons/arrow-thin-right.png) no-repeat center;
-    right: -100px;
     &:focus {
       background: url(../images/icons/arrow-thin-right.png) no-repeat center;
       background-size: 16px;
@@ -29,8 +49,6 @@
     }
   }
   &-next, &-prev {
-    position: absolute;
-    top: 165px;
     height: 48px;
     width: 48px;
     border-radius: 48px;
@@ -47,8 +65,8 @@
     }
   }
   &-dots {
-    margin-top: 20px;
     position: static;
+    margin-top: 40px;
     li button::before {
       font-size: 45px;
       opacity: 1;
