@@ -8,10 +8,13 @@
       &__title {
         float: left;
         margin-right: 6px;
+        .is-mobile & {
+          font-size: 1.4rem;
+        }
       }
       &__subtitle {
         .is-mobile & {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
           margin-top: 25px;
         }
       }
