@@ -1,6 +1,9 @@
 .gallery {
   &__container {
     margin-bottom: $spacer-lg;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   &--carousel {
     position: relative;
