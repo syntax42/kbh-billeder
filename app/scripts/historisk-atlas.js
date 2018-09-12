@@ -806,22 +806,39 @@ function HistoriskAtlas(mapElement, options) {
     options.onMoveEnd(mapHandler);
   });
 
+  /**
+   * Checks whether the users hovers over the close icon of the target feature.
+   *
+   * @param hoverPixel
+   *   Pixel the user currently hovers at.
+   *
+   * @param targetFeature
+   *   Coordinate of the target feature.
+   */
+  function _cursorHoversCloseIcon (hoverPixel, targetFeature) {
+    return hoverPixel[0] - targetFeature[0] > 13 && targetFeature[1] - hoverPixel[1] > 10;
+  }
+
   mapState.map.on('pointermove', function (event) {
     if (mapState.isSingleMode())
       return;
 
     var hoverFeature;
     var pixel = mapState.map.getEventPixel(event.originalEvent);
-    mapState.map.forEachFeatureAtPixel(pixel, function (feature) {
-      if (feature != mapState.lineFeature) {
-        hoverFeature = feature;
-        return true;
-      }
-    }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+    mapState.map.forEachFeatureAtPixel(pixel,
+      function (feature) {
+        if (feature !== mapState.lineFeature) {
+          hoverFeature = feature;
+          return true;
+        } else {
+          return false;
+        }
+      }, {layerFilter: _doNotShowLocationLayerFilter}
+    );
 
     if (hoverFeature == mapState.targetFeature && hoverFeature) {
       var pixelFeature = mapState.map.getPixelFromCoordinate(hoverFeature.getGeometry().getCoordinates());
-      if (pixel[0] - pixelFeature[0] > 13 && pixelFeature[1] - pixel[1] > 10) {
+      if (_cursorHoversCloseIcon(pixel, pixelFeature)) {
         mapState.mapElement.style.cursor = 'pointer';
         return;
       }
@@ -842,25 +859,48 @@ function HistoriskAtlas(mapElement, options) {
     mapState.hidePopup();
   });
 
+  /**
+   * Checks whether the specified layer is the user-location layer.
+   */
+  function _doNotShowLocationLayerFilter (layer) {
+    return layer !== mapState.locationLayer;
+  }
+
   mapState.map.on('click', function (event) {
     if (mapState.isSingleMode())
       return;
 
     var clickFeature;
-    var pixel = mapState.map.getEventPixel(event.originalEvent);
-    mapState.map.forEachFeatureAtPixel(pixel, function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+    var eventPixel = mapState.map.getEventPixel(event.originalEvent);
+    // Figure out if the click hit a feature.
+    mapState.map.forEachFeatureAtPixel(eventPixel,
+      function (feature) {
+        // Stop (return true) at the first feature that is not the line-feature.
+        if (feature !== mapState.lineFeature) {
+          clickFeature = feature;
+          return true;
+        } else {
+          return false;
+        }
+      },
+      {layerFilter: _doNotShowLocationLayerFilter}
+    );
+
     mapState.hidePopup();
 
     if (mapState.isEditMode()) {
       if (clickFeature != mapState.targetFeature)
         return;
 
-      if (mapState.mapElement.style.cursor == 'pointer') {
-        mapState.feature.asset.heading = undefined;
-        mapHandler.toggleEditMode();
-        mapHandler.toggleEditMode();
-        if (options.onDirectionRemoved)
-          options.onDirectionRemoved();
+      if (clickFeature && clickFeature === mapState.targetFeature) {
+        var featurePixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
+        if (_cursorHoversCloseIcon(eventPixel, featurePixel)) {
+          mapState.feature.asset.heading = undefined;
+          mapHandler.toggleEditMode();
+          mapHandler.toggleEditMode();
+          if (options.onDirectionRemoved)
+            options.onDirectionRemoved();
+        }
       }
 
       return;
