@@ -343,13 +343,8 @@ function initialize() {
 
   const searchControllerCallbacks = {
     // Allow the caller to refresh the current search-results.
-    refresh: function(searchParameters) {
-      // Allow the caller to provide initial search parameteres. If none are
-      // given use our own defaults.
-      if (!searchParameters) {
-        searchParameters = getSearchParams();
-      }
-      update(true, false, searchParameters);
+    refresh: function() {
+      update(true, false);
     },
 
     getCurrentSearchParameters: function (){
