@@ -806,22 +806,40 @@ function HistoriskAtlas(mapElement, options) {
     options.onMoveEnd(mapHandler);
   });
 
+  /**
+   * Checks whether the users hovers over the close icon of the target feature.
+   *
+   * @param hoverPixel
+   *   Pixel the user currently hovers at.
+   *
+   * @param targetFeature
+   *   Coordinate of the target feature.
+   */
+  function _cursorHoversCloseIcon (hoverPixel, targetFeature) {
+    return hoverPixel[0] - targetFeature[0] > 13 && targetFeature[1] - hoverPixel[1] > 10;
+  }
+
   mapState.map.on('pointermove', function (event) {
-    if (mapState.isSingleMode())
+    if (mapState.isSingleMode()) {
       return;
+    }
 
-    var hoverFeature;
+    var hoverFeature = undefined;
     var pixel = mapState.map.getEventPixel(event.originalEvent);
-    mapState.map.forEachFeatureAtPixel(pixel, function (feature) {
-      if (feature != mapState.lineFeature) {
-        hoverFeature = feature;
-        return true;
-      }
-    }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+    mapState.map.forEachFeatureAtPixel(pixel,
+      function (feature) {
+        if (feature !== mapState.lineFeature) {
+          hoverFeature = feature;
+          return true;
+        } else {
+          return false;
+        }
+      }, {layerFilter: _doNotShowLocationLayerFilter}
+    );
 
-    if (hoverFeature == mapState.targetFeature && hoverFeature) {
+    if (hoverFeature === mapState.targetFeature && hoverFeature) {
       var pixelFeature = mapState.map.getPixelFromCoordinate(hoverFeature.getGeometry().getCoordinates());
-      if (pixel[0] - pixelFeature[0] > 13 && pixelFeature[1] - pixel[1] > 10) {
+      if (_cursorHoversCloseIcon(pixel, pixelFeature)) {
         mapState.mapElement.style.cursor = 'pointer';
         return;
       }
@@ -831,36 +849,64 @@ function HistoriskAtlas(mapElement, options) {
   })
   mapState.map.on('pointerdrag', function (event) {
     mapState.hidePopup();
-    //  if (mapState.isSingleMode())
-  //    return;
-
-  //  var pixel = mapState.map.getEventPixel(event.originalEvent);
-  //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
   })
 
   mapState.map.getView().on('change:resolution', function () {
     mapState.hidePopup();
   });
 
-  mapState.map.on('click', function (event) {
-    if (mapState.isSingleMode())
-      return;
+  /**
+   * Checks whether the specified layer is the user-location layer.
+   */
+  function _doNotShowLocationLayerFilter (layer) {
+    return layer !== mapState.locationLayer;
+  }
 
-    var clickFeature;
-    var pixel = mapState.map.getEventPixel(event.originalEvent);
-    mapState.map.forEachFeatureAtPixel(pixel, function (feature) { clickFeature = feature; return true; }, { layerFilter: function (layer) { return layer != mapState.locationLayer } });
+  // Handle any click-events on the map.
+  mapState.map.on('click', function (event) {
+    // We're displaying a single asset, we have no custom functionality on
+    // click.
+    if (mapState.isSingleMode()) {
+      return;
+    }
+
+    // Get the pixel the user clicked.
+    var eventPixel = mapState.map.getEventPixel(event.originalEvent);
+    // Figure out if the click hit a feature.
+    var clickFeature = undefined;
+    mapState.map.forEachFeatureAtPixel(eventPixel,
+      function (feature) {
+        // Stop (return true) at the first feature that is not the line-feature.
+        if (feature !== mapState.lineFeature) {
+          clickFeature = feature;
+          return true;
+        } else {
+          return false;
+        }
+      },
+      {layerFilter: _doNotShowLocationLayerFilter}
+    );
+
     mapState.hidePopup();
 
     if (mapState.isEditMode()) {
-      if (clickFeature != mapState.targetFeature)
+      if (clickFeature !== mapState.targetFeature)
         return;
 
-      if (mapState.mapElement.style.cursor == 'pointer') {
-        mapState.feature.asset.heading = undefined;
-        mapHandler.toggleEditMode();
-        mapHandler.toggleEditMode();
-        if (options.onDirectionRemoved)
-          options.onDirectionRemoved();
+      if (clickFeature && clickFeature === mapState.targetFeature) {
+        // Find the pixels of the event and the feature, and use it to determine
+        // whether the user is hovering over the "close" icon.
+        var featurePixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
+        if (_cursorHoversCloseIcon(eventPixel, featurePixel)) {
+
+          // Clear out the heading, redraw the feature, issue a callback to
+          // announce the removal.
+          mapState.feature.asset.heading = undefined;
+          mapHandler.toggleEditMode();
+          mapHandler.toggleEditMode();
+          if (options.onDirectionRemoved)
+            options.onDirectionRemoved();
+        }
       }
 
       return;
