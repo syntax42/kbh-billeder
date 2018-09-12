@@ -820,10 +820,11 @@ function HistoriskAtlas(mapElement, options) {
   }
 
   mapState.map.on('pointermove', function (event) {
-    if (mapState.isSingleMode())
+    if (mapState.isSingleMode()) {
       return;
+    }
 
-    var hoverFeature;
+    var hoverFeature = undefined;
     var pixel = mapState.map.getEventPixel(event.originalEvent);
     mapState.map.forEachFeatureAtPixel(pixel,
       function (feature) {
@@ -836,7 +837,7 @@ function HistoriskAtlas(mapElement, options) {
       }, {layerFilter: _doNotShowLocationLayerFilter}
     );
 
-    if (hoverFeature == mapState.targetFeature && hoverFeature) {
+    if (hoverFeature === mapState.targetFeature && hoverFeature) {
       var pixelFeature = mapState.map.getPixelFromCoordinate(hoverFeature.getGeometry().getCoordinates());
       if (_cursorHoversCloseIcon(pixel, pixelFeature)) {
         mapState.mapElement.style.cursor = 'pointer';
@@ -848,11 +849,6 @@ function HistoriskAtlas(mapElement, options) {
   })
   mapState.map.on('pointerdrag', function (event) {
     mapState.hidePopup();
-    //  if (mapState.isSingleMode())
-  //    return;
-
-  //  var pixel = mapState.map.getEventPixel(event.originalEvent);
-  //  mapState.mapElement.style.cursor = mapState.timeWarp.getHoverInterface(pixel);
   })
 
   mapState.map.getView().on('change:resolution', function () {
@@ -866,13 +862,18 @@ function HistoriskAtlas(mapElement, options) {
     return layer !== mapState.locationLayer;
   }
 
+  // Handle any click-events on the map.
   mapState.map.on('click', function (event) {
-    if (mapState.isSingleMode())
+    // We're displaying a single asset, we have no custom functionality on
+    // click.
+    if (mapState.isSingleMode()) {
       return;
+    }
 
-    var clickFeature;
+    // Get the pixel the user clicked.
     var eventPixel = mapState.map.getEventPixel(event.originalEvent);
     // Figure out if the click hit a feature.
+    var clickFeature = undefined;
     mapState.map.forEachFeatureAtPixel(eventPixel,
       function (feature) {
         // Stop (return true) at the first feature that is not the line-feature.
@@ -889,12 +890,17 @@ function HistoriskAtlas(mapElement, options) {
     mapState.hidePopup();
 
     if (mapState.isEditMode()) {
-      if (clickFeature != mapState.targetFeature)
+      if (clickFeature !== mapState.targetFeature)
         return;
 
       if (clickFeature && clickFeature === mapState.targetFeature) {
+        // Find the pixels of the event and the feature, and use it to determine
+        // whether the user is hovering over the "close" icon.
         var featurePixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
         if (_cursorHoversCloseIcon(eventPixel, featurePixel)) {
+
+          // Clear out the heading, redraw the feature, issue a callback to
+          // announce the removal.
           mapState.feature.asset.heading = undefined;
           mapHandler.toggleEditMode();
           mapHandler.toggleEditMode();
