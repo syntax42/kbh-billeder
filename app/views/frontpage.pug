@@ -28,12 +28,15 @@ block content-top
             +searchFreetextForm('Søg efter billeder', 'jumbo')
         .col-xs-12
           .jumbo__logos
-            a(href="/søg?institution=Københavns+Museum")
+            a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
               +icon('kbh-museum')
-            a(href="/søg?institution=Københavns+Stadsarkiv")
+            a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
               +icon('kbh-arkiv')
-            a(href="/søg?institution=Frederiksberg+Stadsarkiv")
+            a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
               +icon('frb-arkiv')
+            if config.features.magasinMuseum
+              a.magasin-logo(href="/søg?institution=Magasin+Museum")
+                +icon('magasin-museum')
     .jumbo__triangle
 
 block content-bottom

@@ -22,7 +22,8 @@ const beta = _.merge({}, base, {
     motifTagging: true,
     requireEmailVerification: true,
     sitewidePassword: true,
-    users: true
+    users: true,
+    magasinMuseum: true,
   },
   host: 'beta.kbhbilleder.dk',
   enforceHttps: true,

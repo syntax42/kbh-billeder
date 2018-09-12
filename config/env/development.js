@@ -25,7 +25,8 @@ const development = _.merge({}, base, {
     feedback: true,
     motifTagging: true,
     requireEmailVerification: true,
-    users: true
+    users: true,
+    magasinMuseum: true
   }
 });
 
