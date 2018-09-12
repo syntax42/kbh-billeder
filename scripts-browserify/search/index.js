@@ -71,12 +71,25 @@ function initialize() {
       indicateLoading = true;
     }
 
-    // Get search parameters if they have not been provided.
+    // If we've not explicitly been passed searchParameters (which right now
+    // only happens when the map calls us back after adding a geo bounding-
+    // box), get it from the url, and see if we should have the mapcontroller
+    // update it.
     if (!searchParams) {
+      // Get search parameters from the url.
       searchParams = getSearchParams();
+
+      // Let the map alter our search-parameters if they have not been
+      // overridden and have it call us back with the update parameters.
+      if (viewMode === 'map') {
+        mapController.onUpdate(searchParams, function(updatedParams){
+          update(updateWidgets, indicateLoading, updatedParams);
+        });
+        return;
+      }
     }
 
-    // Update the filter-bar.
+    // Update the sort-menu in the filter-bar.
     sorting.update(searchParams);
 
     // Update the freetext search input, q contains the querystring.
@@ -96,14 +109,14 @@ function initialize() {
         const sidebar = require('./filter-sidebar');
         // Update the sidebar right away, as we're going of doing async work
         // with searchParams, work on a clone.
-        const clonedParams = JSON.parse(JSON.stringify(searchParams));
-        sidebar.update(clonedParams.filters, null);
+        const clonedSearchParams = JSON.parse(JSON.stringify(searchParams));
+        sidebar.update(clonedSearchParams.filters, null);
         // Get aggragations for the sidebar
         es.search({
-          body: elasticsearchAggregationsBody(clonedParams),
+          body: elasticsearchAggregationsBody(clonedSearchParams),
           size: 0
         }).then(function (response) {
-          sidebar.update(clonedParams.filters, response.aggregations);
+          sidebar.update(clonedSearchParams.filters, response.aggregations);
         }, function (error) {
           console.trace(error.message);
         });
@@ -123,58 +136,56 @@ function initialize() {
 
     // Do search depending on current viewmode.
     if (viewMode === 'map') {
-      mapController.onUpdate(searchParams, function(updatedParams){
-        // Generate the query body, this will inject a bounds filter if we added
-        // one above.
-        let queryBody = elasticsearchQueryBody(updatedParams);
+      // Generate the query body, this will inject a bounds filter if we added
+      // one above.
+      let queryBody = elasticsearchQueryBody(searchParams);
 
-        // Let plugins modify the search body.
-        if(typeof(helpers.modifySearchQueryBody) === 'function') {
-          // If a modifySearchQueryBody helper is defined, call it
-          queryBody = helpers.modifySearchQueryBody(queryBody, updatedParams);
-        }
+      // Let plugins modify the search body.
+      if(typeof(helpers.modifySearchQueryBody) === 'function') {
+        // If a modifySearchQueryBody helper is defined, call it
+        queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
+      }
 
-        if (updatedParams.geohash) {
-          queryBody.aggregations = {
+      if (searchParams.geohash) {
+        queryBody.aggregations = {
+          'geohash_grid' : {
             'geohash_grid' : {
-              'geohash_grid' : {
-                'field' : 'location',
-                'precision' : config.search.geohashPrecision
-              }
+              'field' : 'location',
+              'precision' : config.search.geohashPrecision
             }
-          };
-        }
-
-        const maxAssets = config.search.maxAssetMarkers;
-        // We've configured our search, now setup the query and execute it.
-        const searchObject = {
-          body: queryBody,
-          // We only want the aggregation so we don't care about the hits.
-          size: updatedParams.geohash ? 0 : maxAssets,
-          _source: [
-            'location',
-            'longitude',
-            'latitude',
-            'collection',
-            'id',
-            'short_title',
-            'type',
-            'heading',
-            'description'
-          ],
+          }
         };
+      }
 
-        // Make sure we persist, but replace state so that we don't end up in
-        // the back/forward history.
-        persistChangedParams(updatedParams, true);
+      const maxAssets = config.search.maxAssetMarkers;
+      // We've configured our search, now setup the query and execute it.
+      const searchObject = {
+        body: queryBody,
+        // We only want the aggregation so we don't care about the hits.
+        size: searchParams.geohash ? 0 : maxAssets,
+        _source: [
+          'location',
+          'longitude',
+          'latitude',
+          'collection',
+          'id',
+          'short_title',
+          'type',
+          'heading',
+          'description'
+        ],
+      };
 
-        es.search(searchObject).then(function (response) {
-          resultsTotal = response.hits.total;
-          loadingResults = false;
-          mapController.onResults(response, updatedParams);
-        }, function (error) {
-          console.trace(error.message);
-        });
+      // Make sure we persist, but replace state so that we don't end up in
+      // the back/forward history.
+      persistChangedParams(searchParams, true);
+
+      es.search(searchObject).then(function (response) {
+        resultsTotal = response.hits.total;
+        loadingResults = false;
+        mapController.onResults(response, searchParams);
+      }, function (error) {
+        console.trace(error.message);
       });
     } else if (viewMode === 'list') {
       if (updateWidgets) {
