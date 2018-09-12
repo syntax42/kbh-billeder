@@ -2,6 +2,8 @@
 
 const helpers = require('../../shared/helpers');
 
+// General function to add 'is-mobile' and 'is-desktop' class to body.
+// Used to adjust styling for mobile/desktop and called on multiple events.
 function adjustClasses() {
   if (helpers.isMobile($) === true) {
     $('body').addClass('is-mobile').removeClass('is-desktop');
