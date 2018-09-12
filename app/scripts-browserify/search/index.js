@@ -94,14 +94,16 @@ function initialize() {
     if(updateWidgets) {
       if(config.features.filterSidebar) {
         const sidebar = require('./filter-sidebar');
-        // Update the sidebar right away
-        sidebar.update(searchParams.filters, null);
+        // Update the sidebar right away, as we're going of doing async work
+        // with searchParams, work on a clone.
+        const clonedParams = JSON.parse(JSON.stringify(searchParams));
+        sidebar.update(clonedParams.filters, null);
         // Get aggragations for the sidebar
         es.search({
-          body: elasticsearchAggregationsBody(searchParams),
+          body: elasticsearchAggregationsBody(clonedParams),
           size: 0
         }).then(function (response) {
-          sidebar.update(searchParams.filters, response.aggregations);
+          sidebar.update(clonedParams.filters, response.aggregations);
         }, function (error) {
           console.trace(error.message);
         });
