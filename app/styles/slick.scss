@@ -1,4 +1,11 @@
 .slick {
+  &-list {
+    width: 100%;
+    margin: 0;
+  }
+  &-slide {
+    padding-left: 0;
+  }
   &-button-container {
     position: absolute;
     width: 100%;
