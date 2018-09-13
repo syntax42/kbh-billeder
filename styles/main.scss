@@ -21,7 +21,7 @@ body {
   > .let-it-grow {
     flex-grow: 1;
     .is-mobile & {
-      margin-top: 10px;
+      margin-top: $topbar-height;
     }
   }
 }
