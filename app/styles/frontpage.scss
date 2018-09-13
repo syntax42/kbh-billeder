@@ -60,12 +60,18 @@
       a {
         float: left;
         width: 160px;
+        margin-bottom: 20px;
       }
     }
 
     .magasin-logo {
       // The SVG has some extra space.
-      margin-left: -52px;
+      .is-desktop & {
+        margin-left: -52px;
+      }
+      .is-mobile & {
+        margin-left: -22px;
+      }
     }
 
     a:hover {
