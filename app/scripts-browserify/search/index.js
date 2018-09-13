@@ -469,6 +469,14 @@ function initialize() {
   // When the view-mode is changed by the view-mode selector (view-mode.js),
   // store the new value and trigger a search update.
   $('.let-it-grow').on('search:viewModeChanged', function(e, eventViewMode) {
+    // If we're switching away from the map view-mode, strip the coordiate from
+    // the url. The presence of the parameter will cause a returning user to
+    // switch to the map view-mode, so it is important we get rid of it.
+    const searchParams = getSearchParams();
+    if (eventViewMode !== 'map' && searchParams.map) {
+      delete searchParams.map;
+      persistChangedParams(searchParams, true);
+    }
     viewMode = eventViewMode;
     $('.let-it-grow').trigger('search:update');
   });
@@ -510,13 +518,24 @@ function initialize() {
     update();
   });
 
+  // Everything is ready, prepare to show results.
   const currentParams = getSearchParams();
+  // If the URL has "map" in it which means we're returning to a step in the
+  // history where the view mode was map. Trigger a view-mode change which
+  // in turn will cause use to show the map an update the search-results.
   if (currentParams.map) {
     // If the url contains a map parameter, set us in map mode.
     $('.let-it-grow').trigger('search:viewModeChanged', ['map']);
-  } else {
-    // Default view-mode, so no need to switch, just go ahead and do a search.
-    update();
+  }
+  else {
+    // Examine the history - if we have a state, load results from it.
+    if (history.state) {
+      inflateHistoryState(history.state);
+    }
+    else {
+      // No relevant url-parameter and no relevant state, just do a cold update.
+      update();
+    }
   }
 }
 
