@@ -1,6 +1,6 @@
 .jumbo {
   background-color: $jumbo-bg;
-  height: 35vh;
+  height: 85vh;
   min-height: 30rem;
   position: relative;
   align-items: center;
@@ -55,6 +55,13 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: left;
+
+    .is-mobile & {
+      a {
+        float: left;
+        width: 160px;
+      }
+    }
 
     a:hover {
       svg {
@@ -162,6 +169,9 @@
     width: 100%;
     position: absolute;
     bottom: 0;
+    .is-mobile & {
+      background-size: 100% 45px;
+    }
   }
 }
 
