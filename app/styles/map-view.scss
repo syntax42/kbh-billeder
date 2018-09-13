@@ -3,7 +3,7 @@
   // container.
   position: relative;
   padding: 0;
-  height: calc(100vh - 82px);
+  height: 100vh;
   margin-left: 0;
   float: left;
   width: 100%;
@@ -14,12 +14,8 @@
   .is-list-view & {
     display: none;
   }
-  .is-mobile.is-map-view & {
-    width: 100%;
-    height: 100%;
-
+  .is-mobile & {
     #timeWarpToggle, #mapLocation {
-      bottom: 20px;
       position: fixed;
     }
   }

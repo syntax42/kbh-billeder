@@ -5,6 +5,7 @@ require('babel-polyfill');
 module.exports = options => {
   const config = require('collections-online/shared/config');
 
+  require('./mobile')
   require('./search');
   if(config.features.cookieConsent) {
     require('./cookie-consent');
