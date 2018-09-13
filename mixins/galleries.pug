@@ -18,17 +18,21 @@ mixin carouselGallery(gallery, evenOrOdd)
       .gallery--slick
         each item, index in gallery.items
           +galleryItem(item, index, 'carousel', true, [270, 264])
+      .slick-button-container
+        li.slick-prev
+        li.slick-next
 
 mixin blockGallery(gallery, evenOrOdd)
-  .row.gallery.gallery--block(class="gallery--" + evenOrOdd).gallery--block
+  .row.gallery.gallery--block(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-4
       h2.gallery__title= gallery.title
       h3.gallery__text= gallery.description
     .gallery__items
-      each item, index in gallery.items
-        .col-xs-12.col-sm-6.col-md-3
-          +galleryItem(item, index, 'block')
-  
+      .flex
+        each item, index in gallery.items
+          .col-xs-6.col-sm-6.col-md-3
+            +galleryItem(item, index, 'block')
+
 mixin galleryItem(item, index, type, fill, imageDimensions)
   - var fill = fill
   - var imageDimensions = imageDimensions ? imageDimensions : [270, 200]
