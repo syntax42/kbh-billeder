@@ -125,6 +125,7 @@ let config = {
     preferTargetBlank: false,
     enableVisionTagSuggestions: false,
     enableGoogleTranslate: false,
+    magasinMuseum: true
   },
   feedback: {
     maxLength: 600,
