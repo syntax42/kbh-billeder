@@ -9,7 +9,8 @@
   width: 100%;
   // Don't display map on list view.
   .has-filter-open & {
-    display: none;
+    // We can't hide the map because it breaks the map update.
+    margin-top: -9999px;
   }
   .is-list-view & {
     display: none;
