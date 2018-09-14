@@ -1,4 +1,5 @@
 $profile-photo-dimensions: 170px;
+$circle-size: 48px;
 
 .my-page {
   &__profile-photo {
@@ -8,7 +9,7 @@ $profile-photo-dimensions: 170px;
     border-radius: $profile-photo-dimensions;
   }
   &__profile-stats {
-    svg {
+    > svg {
       width: $icon-size;
       height: $icon-size;
     }
@@ -20,9 +21,9 @@ $profile-photo-dimensions: 170px;
     float: left;
     margin-right: 15px;
     padding: 24px;
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
+    width: $circle-size;
+    height: $circle-size;
+    border-radius: $circle-size;
     border: 1px solid $gray-light;
 
     > svg {
