@@ -1,40 +1,20 @@
 extends frontpage
 include mixins/meta
 include mixins/search-freetext-form
-include mixins/icon
 
 append header
   +meta()
 
 block content
-  .let-it-grow.page-wrap.my-page
+  .let-it-grow.page-wrap
     .container-fluid
-      .col-xs-12.col-md-4
-        img.img-responsive.my-page__profile-photo(src=user.picture)
-      .col-xs-12.col-md-8.my-page__profile-stats
-          h1(data-user-id=user.id)= user.nickname
-          .my-page__circle-wrapper
-            .my-page__circle
-              +icon('tag')
-            .my-page__counter= stats.tags.tags
-            .my-page__counter-description Emneord
-          .my-page__circle-wrapper
-            .my-page__circle
-              +icon('location')
-            .my-page__counter= stats.geolocations.geolocations
-            .my-page__counter-description Lokationer
-          .my-page__circle-wrapper
-            .my-page__circle
-              +icon('trophy')
-            .my-page__counter= points
-            .my-page__counter-description Point
-
-      .col-xs-12.col-md-4.my-page__user-info
-        h2 Mine oplysninger
-        table
-          tr
-            td.my-page__table-bold Brugernavn
-            td= user.nickname ? user.nickname : user.username
-          tr
-            td.my-page__table-bold Email
-            td= user.emails[0].value
+      img.img-responsive(src=user.picture)
+      h3(data-user-id=user.id)
+        = 'Hej ' + user.nickname
+      p= 'Email: ' + user.emails[0].value
+      p= `Du har placeret ${stats.geolocations.geolocations} billeder på kort og tilføjet ${stats.tags.tags} emneord på ${stats.tags.assets} billeder.`
+      p= `Du har ${points} point.`
+      - if(user.provider === 'auth0')
+        a(data-action='reset-password'
+          data-email=user.emails[0].value
+          data-connection=user.identities[0].connection) Skift min adgangskode
