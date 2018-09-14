@@ -1,0 +1,65 @@
+$profile-photo-dimensions: 170px;
+
+.my-page {
+  &__profile-photo {
+    margin: 24px auto;
+    height: $profile-photo-dimensions;
+    width: $profile-photo-dimensions;
+    border-radius: $profile-photo-dimensions;
+  }
+  &__profile-stats {
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+    }
+  }
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    margin-right: 15px;
+    padding: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
+    border: 1px solid $gray-light;
+
+    > svg {
+      position: absolute;
+      fill: $brand-primary;
+    }
+  }
+  &__circle-wrapper {
+    float: left;
+    margin-right: 80px;
+    margin-top: 10px;
+  }
+  &__counter {
+    float: left;
+    font-weight: bold;
+    font-size: 24px;
+  }
+  &__counter-description {
+    float: left;
+    position: relative;
+    left: 66px;
+    top: -20px;
+    clear: both;
+    font-size: 1rem;
+  }
+  &__user-info {
+    margin-top: 50px;
+  }
+  &__table-bold {
+    font-weight: bold;
+    padding-right: 40px;
+  }
+  table  {
+    margin-top: 40px;
+    font-size: 1rem;
+    td {
+      padding-bottom: 20px;
+    }
+  }
+}
