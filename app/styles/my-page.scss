@@ -9,7 +9,7 @@ $circle-size: 48px;
     border-radius: $profile-photo-dimensions;
   }
   &__profile-stats {
-    > svg {
+    svg {
       width: $icon-size;
       height: $icon-size;
     }
@@ -26,7 +26,7 @@ $circle-size: 48px;
     border-radius: $circle-size;
     border: 1px solid $gray-light;
 
-    > svg {
+    svg {
       position: absolute;
       fill: $brand-primary;
     }
