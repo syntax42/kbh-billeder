@@ -1,0 +1,41 @@
+extends frontpage
+include mixins/meta
+include mixins/search-freetext-form
+include mixins/icon
+
+append header
+  +meta()
+
+block content
+  .let-it-grow.page-wrap.my-page
+    .container-fluid
+      .col-xs-12.col-md-4
+        - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
+        img.img-responsive.my-page__profile-photo(src=profileImage)
+      .col-xs-12.col-md-8.my-page__profile-stats
+          h1(data-user-id=user.id)= user.nickname
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('tag')
+            .my-page__counter= stats.tags.tags
+            .my-page__counter-description Emneord
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('location')
+            .my-page__counter= stats.geolocations.geolocations
+            .my-page__counter-description Lokationer
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('trophy')
+            .my-page__counter= points
+            .my-page__counter-description Point
+
+      .col-xs-12.col-md-4.my-page__user-info
+        h2 Mine oplysninger
+        table
+          tr
+            td.my-page__table-bold Brugernavn
+            td= user.nickname ? user.nickname : user.username
+          tr
+            td.my-page__table-bold Email
+            td= user.emails[0].value
