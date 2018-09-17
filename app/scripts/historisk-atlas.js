@@ -924,6 +924,28 @@ function HistoriskAtlas(mapElement, options) {
   var mapHandler = {};
 
   /**
+   * "Freeze" the map by removing all interactions from the map.
+   */
+  mapHandler.freeze = function() {
+    if (!mapState.map) {
+      return;
+    }
+
+    mapState.map.getInteractions().clear();
+  };
+
+  /**
+   * "Unfreeze" the map by adding interactions back to the map.
+   */
+  mapHandler.unfreeze = function () {
+    if (!mapState.map) {
+      return;
+    }
+
+    mapState.map.getInteractions().extend([new ol.interaction.DragPan(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()]);
+  };
+
+  /**
   * Toggle the TW display state
   */
   mapHandler.toggleTimeWarp = function () {
