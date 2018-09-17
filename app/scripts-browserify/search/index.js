@@ -459,10 +459,15 @@ function initialize() {
 
   // Toggle filterbar menus
   $('.filterbar--mobile__button--filters').on('click', function() {
+    // Freeze the coordinate and bounding box of the map while the filters are
+    // open. This is only needed on mobile where we hide the entire map which
+    // causes it's bounding box used for search-queries to go wanky.
+    mapController.freeze();
     $('body').addClass('has-filter-open');
   });
 
   $('.filterbar--mobile__button--close').on('click', function() {
+    mapController.unfreeze();
     $('body').removeClass('has-filter-open');
   });
 
