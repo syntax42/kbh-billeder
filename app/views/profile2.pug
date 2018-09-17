@@ -9,11 +9,13 @@ append header
 block content
   .let-it-grow.page-wrap.my-page
     .container-fluid
-      .col-xs-12.col-md-4
+      .col-xs-12
+        h1.my-page__username-mobile(data-user-id=user.id)= user.nickname
+      .col-xs-6.col-md-4
         - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
         img.img-responsive.my-page__profile-photo(src=profileImage)
-      .col-xs-12.col-md-8.my-page__profile-stats
-          h1(data-user-id=user.id)= user.nickname
+      .col-xs-6.col-md-8.my-page__profile-stats
+          h1.my-page__username-desktop(data-user-id=user.id)= user.nickname
           .my-page__circle-wrapper
             .my-page__circle
               +icon('tag')

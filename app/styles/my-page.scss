@@ -1,12 +1,36 @@
 $profile-photo-dimensions: 170px;
+$profile-photo-dimensions-mobile: 160px;
+
 $circle-size: 48px;
+$circle-size-mobile: 24px;
 
 .my-page {
   &__profile-photo {
     margin: 24px auto;
-    height: $profile-photo-dimensions;
-    width: $profile-photo-dimensions;
-    border-radius: $profile-photo-dimensions;
+    .is-desktop & {
+      height: $profile-photo-dimensions;
+      width: $profile-photo-dimensions;
+      border-radius: $profile-photo-dimensions;
+    }
+    .is-mobile & {
+      float: left;
+      margin: 0 auto;
+      height: $profile-photo-dimensions-mobile;
+      width: $profile-photo-dimensions-mobile;
+      border-radius: $profile-photo-dimensions-mobile;
+    }
+  }
+  &__username {
+    &-desktop {
+      .is-mobile & {
+        display: none;
+      }
+    }
+    &-mobile {
+      .is-desktop & {
+        display: none;
+      }
+    }
   }
   &__profile-stats {
     svg {
@@ -20,11 +44,20 @@ $circle-size: 48px;
     justify-content: center;
     float: left;
     margin-right: 15px;
-    padding: 24px;
-    width: $circle-size;
-    height: $circle-size;
-    border-radius: $circle-size;
     border: 1px solid $gray-light;
+
+    .is-desktop & {
+      width: $circle-size;
+      height: $circle-size;
+      border-radius: $circle-size;
+      padding: 24px;
+    }
+    .is-mobile & {
+      width: $circle-size-mobile;
+      height: $circle-size-mobile;
+      border-radius: $circle-size-mobile;
+      padding: 18px;
+    }
 
     svg {
       position: absolute;
@@ -35,6 +68,10 @@ $circle-size: 48px;
     float: left;
     margin-right: 80px;
     margin-top: 10px;
+    .is-mobile & {
+      width: 100%;
+      margin: 20px 0;
+    }
   }
   &__counter {
     float: left;
@@ -44,10 +81,18 @@ $circle-size: 48px;
   &__counter-description {
     float: left;
     position: relative;
-    left: 66px;
-    top: -20px;
     clear: both;
     font-size: 1rem;
+    .is-desktop & {
+      left: 66px;
+      top: -20px;
+    }
+    .is-mobile & {
+      position: static;
+      clear: none;
+      margin-left: 10px;
+      margin-top: 6px;
+    }
   }
   &__user-info {
     margin-top: 50px;
