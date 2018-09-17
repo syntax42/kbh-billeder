@@ -93,6 +93,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
   var initialized = false;
   var defaultMapHandler;
   var assetMapper;
+  var frozenState = {frozen: false};
 
   /**
    * Initialize the Map
@@ -291,7 +292,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       searchParams.filters.location = ['Har placering'];
 
       // Get the current bounding box from the map and add it as a filter.
-      let bounds = defaultMapHandler.getBoundingBox();
+      let bounds = frozenState.frozen ? frozenState.bounds : defaultMapHandler.getBoundingBox();
       if (bounds) {
         let esBounds = {
           'top_left': {
@@ -308,8 +309,8 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
 
       // Add centerpoint and zoom-level, this will go into the url.
-      const center = defaultMapHandler.getCenter();
-      const zoomLevel = defaultMapHandler.getZoomLevel();
+      const center =  frozenState.frozen ? frozenState.center : defaultMapHandler.getCenter();
+      const zoomLevel =  frozenState.frozen ? frozenState.zoomLevel : defaultMapHandler.getZoomLevel();
       searchParams.map = `${center.latitude},${center.longitude},${zoomLevel}z`;
 
       // If we're zoomed out wide enough, use hash-based results.
@@ -319,6 +320,24 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
     },
+    
+    /**
+     * Freeze values that might change while the map is being manipulated.
+     */
+    freeze: function() {
+      frozenState.center = defaultMapHandler.getCenter();
+      frozenState.zoomLevel = defaultMapHandler.getZoomLevel();
+      frozenState.bounds = defaultMapHandler.getBoundingBox();
+      frozenState.frozen = true;
+    },
+
+    /**
+     * Thaw values that might change while the map is being manipulated.
+     */
+    unfreeze: function() {
+      frozenState.frozen = false;
+    },
+
     toggleEditMode: function(editOn) {
       if (options.mode !== 'single') {
         return false;
