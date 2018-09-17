@@ -21,7 +21,7 @@ nav
       span.sidebar-menu__link-seperator
       if user
         li
-          a= (user.name.givenName || user.nickname)
+          a(href='/min-side')= (user.name.givenName || user.nickname)
         li
           a(href='/logout') Log ud
       else
