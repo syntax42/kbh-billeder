@@ -57,18 +57,18 @@ jobs:
       # Do the build and tag and push the image.
       - run:
           no_output_timeout: 20m
-          command: docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
+          command: docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM .
       - run:
           command: |
-            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM
             docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest
 
       # Update the kube frontend deploymen to use our new image.
       - run: |
           if [ "$CIRCLE_BRANCH" = "master" ]; then
-            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 NAMESPACE=beta deployment/set-deployment-image.sh
+            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM NAMESPACE=beta deployment/set-deployment-image.sh
           elif [ "$CIRCLE_BRANCH" = "production" ]; then
-            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1 NAMESPACE=production deployment/set-deployment-image.sh
+            IMAGE_PATH=eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM NAMESPACE=production deployment/set-deployment-image.sh
           fi
 
 workflows:
