@@ -329,6 +329,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       frozenState.zoomLevel = defaultMapHandler.getZoomLevel();
       frozenState.bounds = defaultMapHandler.getBoundingBox();
       frozenState.frozen = true;
+      defaultMapHandler.freeze();
     },
 
     /**
@@ -336,6 +337,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
      */
     unfreeze: function() {
       frozenState.frozen = false;
+      defaultMapHandler.unfreeze();
     },
 
     toggleEditMode: function(editOn) {

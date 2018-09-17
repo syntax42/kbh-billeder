@@ -579,6 +579,28 @@ function HistoriskAtlas(mapElement, options) {
   // we never expose the mapState to the user, only handler functions.
   var mapHandler = {};
 
+  /**
+   * "Freeze" the map by removing all interactions from the map.
+   */
+  mapHandler.freeze = function() {
+    if (!mapState.map) {
+      return;
+    }
+
+    mapState.map.getInteractions().clear();
+  };
+
+  /**
+   * "Unfreeze" the map by adding interactions back to the map.
+   */
+  mapHandler.unfreeze = function () {
+    if (!mapState.map) {
+      return;
+    }
+
+    mapState.map.getInteractions().extend([new ol.interaction.DragPan(), new ol.interaction.PinchZoom(), new ol.interaction.MouseWheelZoom()]);
+  };
+
   // TODO: Document handler functions, and deside whether "handler" is the
   // best name.
   mapHandler.toggleTimeWarp = function () {
