@@ -43,19 +43,19 @@ helpers.getDocumentURL = (metadata) => {
 helpers.determinePlayers = metadata => {
   const players = [];
 
+  // We always have an image.
+  players.push({
+    type: 'image',
+    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+    title: helpers.documentTitle(metadata)
+  });
+
+  // Add backside if we have one
   if (helpers.hasBacksideAsset(metadata)) {
     players.push({
       type: 'backside',
       thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
       backsides: helpers.getBacksideAssets(metadata)
-    });
-  }
-
-  else {
-    players.push({
-      type: 'image',
-      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-      title: helpers.documentTitle(metadata)
     });
   }
 
