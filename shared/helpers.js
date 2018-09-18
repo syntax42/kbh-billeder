@@ -62,8 +62,69 @@ helpers.determinePlayers = metadata => {
   return players;
 };
 
-helpers.generateSitemapElements = (metadata) => {
-  throw new Exception('Not yet implemented');
+/**
+ * Generate a site-map entry for single asset.
+ *
+ * @param req
+ *   Express request
+ *
+ * @param metadata
+ *   ES asset data
+ */
+helpers.generateSitemapElements = (req, metadata) => {
+  // Pull out the data we need for the _image_.
+  const documentTitle = helpers.documentTitle(metadata);
+  const documentDescription = helpers.documentDescription(metadata);
+  const relativeThumbnailUrl = helpers.getThumbnailURL(metadata, 2000, 'bottom-right');
+  const thumbnailUrl = helpers.getAbsoluteURL(req, relativeThumbnailUrl);
+  const license = helpers.licenseMapped(metadata);
+  const licenseUrl = license ? license.url : null;
+
+  // Get the available players for the asset and go trough them to produce image
+  // sections for the sitemap.
+  // See https://www.google.com/schemas/sitemap-image/1.1/
+  const players = helpers.determinePlayers(metadata);
+
+  const elements = [];
+  players.forEach(player => {
+
+    if (player.type === 'image') {
+      elements.push({
+        type: 'image',
+        location: thumbnailUrl,
+        title: documentTitle,
+        documentDescription,
+        licenseUrl
+      });
+    }
+
+    // Backsides are related assets, so if we have one we have to go trough
+    // a couple of additional steps to get a hold of the thumbnails.
+    if (player.type === 'backside') {
+      // See https://www.google.com/schemas/sitemap-image/1.1/
+      player.backsides.forEach((backside) => {
+        // To speed things up we avoid loading the related assets via ES,
+        // instead we syntizice whatever we need from the "parent" asset.
+        // Inherit the collection.
+        backside.collection = metadata.collection;
+        // Remove the collection from the asset id, eg we go from
+        // kbh-museum-49054 to 49054.
+        backside.id = backside.id.substring(backside.collection.length+1);
+
+        const backsideRelativeThumbnailUrl = helpers.getThumbnailURL(backside, 2000, 'bottom-right');
+        const backsideThumbnailUrl = helpers.getAbsoluteURL(req, backsideRelativeThumbnailUrl);
+        elements.push({
+          type: 'image',
+          location: backsideThumbnailUrl,
+          title: player.title || `Bagsiden af billedet "${documentTitle}"`,
+          description: false,
+          licenseUrl
+        });
+      });
+    }
+
+  });
+  return elements;
 };
 
 function getFileDimensionsString(metadata, size) {
