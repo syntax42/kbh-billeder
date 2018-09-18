@@ -10,9 +10,12 @@ urlset(xmlns='http://www.sitemaps.org/schemas/sitemap/0.9',
       each element in url.elements
         if element.type === 'image'
           image:image
-            image:loc= element.location
-            image:title= '<![CDATA[' + element.title + ']]>'
-            image:caption= '<![CDATA[' + element.description + ']]>'
+            if element.location
+              image:loc= element.location
+            if element.title
+              image:title= '<![CDATA[' + element.title + ']]>'
+            if element.description
+              image:caption= '<![CDATA[' + element.description + ']]>'
             if element.licenseUrl
               image:license= element.licenseUrl
         else if element.type === 'video'
