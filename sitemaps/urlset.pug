@@ -8,6 +8,9 @@ urlset(xmlns='http://www.sitemaps.org/schemas/sitemap/0.9',
       lastmod= url.lastmod
       image:image
         image:loc= url.location + '/thumbnail'
-        image:title= '<![CDATA[' + url.title + ']]>'
-        image:caption= '<![CDATA[' + url.description + ']]>'
-        image:license= url.license_url
+        if url.title
+          image:title= '<![CDATA[' + url.title + ']]>'
+        if url.description
+          image:caption= '<![CDATA[' + url.description + ']]>'
+        if url.license_url
+          image:license= url.license_url
