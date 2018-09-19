@@ -1,9 +1,13 @@
 extends player
 
 block document__player
+  - let hasBackside = helpers.hasBacksideAsset(metadata);
   - let players = helpers.determinePlayers(metadata);
-  each player in players
-    if (player.type === 'backside')
-      include ./players/backside
+    if (hasBackside)
+      each player in players
+        if (player.type === 'backside')
+          include ./players/backside
     else
-      include ./players/image
+      each player in players
+        if (player.type === 'image')
+          include ./players/image
