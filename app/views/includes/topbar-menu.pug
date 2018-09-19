@@ -3,12 +3,12 @@
   .topbar__hamburger-text Menu
 span.topbar__menu.hidden-sm.hidden-xs
   if menus && menus.main
-    each item in menus.main
-      if item.children.length > 0
+    each parent in menus.main
+      if parent.children.length > 0
         .dropdown
-          a.topbar__items-link.dropdown__selected= item.title
+          a.topbar__items-link.dropdown__selected= parent.title
           .dropdown__options
-            each child in item.children
-              a(href=child.link).topbar__items-link.dropdown__option= child.title
+            each childPage in parent.children
+              a(href=childPage.url).topbar__items-link.dropdown__option= childPage.title
       else
-        a(href=item.url).topbar__items-link= item.title
+        a(href=parent.url).topbar__items-link= parent.title
