@@ -4,6 +4,13 @@ $circle-size: 48px;
 $circle-size-mobile: 24px;
 
 .my-page {
+  &__delete-user {
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+      fill: $brand-primary;
+    }
+  }
   &__profile-photo {
     margin: 24px auto;
     width: 100%;
