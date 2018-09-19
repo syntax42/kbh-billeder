@@ -13,7 +13,7 @@ MenuItem.add({
     placement: { type: Types.Select, options: MENUS.join(', '), default: MENUS[0] },
     order: { type: Types.Number, format: false },
     page: { type: Types.Relationship, ref: 'Page' },
-    children: { type: Types.Relationship, ref: 'Menu item', many: true },
+    parent: { type: Types.Relationship, ref: 'Menu item', many: false },
     link: { type: Types.Url }
 });
 
