@@ -65,6 +65,18 @@ module.exports = {
       res.status(status).json({});
     });
 
+    app.get('/delete-account', async (req, res) => {
+      try {
+        await auth0.getManagementService().users.delete({ id: req.user.user_id });
+        status = 200;
+        res.redirect('/logout');
+      }
+      catch (err) {
+        console.log(err.message);
+        status = 500;
+      }
+    });
+
     app.get('/auth/callback', passport.authenticate('auth0', {
       failureRedirect: '/'
     }), function(req, res) {
