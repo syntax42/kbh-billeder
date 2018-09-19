@@ -6,7 +6,7 @@ const helpers = require('../../shared/helpers');
 const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';
 const RESET_PASSWORD_SUCCESS_ELEMENT = '<p>Check din mail for videre instruktioner.</p>';
 const RESET_PASSWORD_FAILURE_ELEMENT = '<p>Der skete en fejl, prøv igen senere.</p>';
-
+const DELETE_ACCOUNT_SELECTOR = '[data-content="delete-account-verification"]';
 /* global Auth0Lock */
 
 $(function() {
@@ -17,29 +17,36 @@ $(function() {
     'feedback:start': 'verified',
   }, verify());
 
-  function verify() {
+  function verify(showOverlay) {
     // Define a function that can be used to show and hide the overlay.
-    const overlayHandler = function(show = true) {
+    const overlayHandler = function(show = showOverlay) {
       var OVERLAY_ACTIVE_CLASS = 'overlay__container--active';
       var OVERLAY_ANIM_IN_CLASS = 'overlay__container--anim-in';
-      var $el = $('[data-content="auth-verification"]');
-      if (show === true) {
-        $el.addClass(OVERLAY_ACTIVE_CLASS);
-        $el.addClass(OVERLAY_ANIM_IN_CLASS);
-      }
-      else if (show === false) {
-        $el.removeClass(OVERLAY_ANIM_IN_CLASS);
-        // Animate the removal.
-        setTimeout(function () {
-          $el.removeClass(OVERLAY_ACTIVE_CLASS);
-        }, 300);
-      }
+      var $els = $('[data-content="auth-verification"], ' + DELETE_ACCOUNT_SELECTOR);
+      $els.each(function () {
+        if (show === true) {
+          $el.addClass(OVERLAY_ACTIVE_CLASS);
+          $el.addClass(OVERLAY_ANIM_IN_CLASS);
+        }
+        else if (show === false) {
+          $el.removeClass(OVERLAY_ANIM_IN_CLASS);
+          // Animate the removal.
+          setTimeout(function () {
+            $el.removeClass(OVERLAY_ACTIVE_CLASS);
+          }, 300);
+        }
+      });
     };
 
     // When requested we assume that the handler will be used right away so we
     // bind the hide-call to the now visible overlay.
     $('[data-content="auth-verification"]')
       .on('click', overlayHandler.bind({}, false));
+
+    $(DELETE_ACCOUNT_SELECTOR)
+      .on('click', overlayHandler.bind({}, false));
+
+    overlayHandler(showOverlay);
 
     return overlayHandler;
   }
@@ -82,5 +89,9 @@ $(function() {
     .get(url, {email, connection})
     .done(response => element.replaceWith(RESET_PASSWORD_SUCCESS_ELEMENT))
     .fail(err => element.replaceWith(RESET_PASSWORD_FAILURE_ELEMENT));
+  });
+
+  $(DELETE_ACCOUNT_SELECTOR).on('click', e => {
+    verify(true);
   });
 });
