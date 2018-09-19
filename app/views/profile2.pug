@@ -8,7 +8,7 @@ append header
 
 block content
   .let-it-grow.page-wrap.my-page
-    .overlay__container(data-content="delete-account-verification")
+    .overlay__container(data-content="auth-verification")
       .overlay__content
         h2 Er du sikker på at du vil slette din konto?
         p Dette kan ikke fortrydes.
@@ -50,7 +50,9 @@ block content
           tr
             td.my-page__table-bold Email
             td= user.emails[0].value
-          tr
-            a.my-page__delete-user(data-content='delete-account-verification')
-              +icon('trash')
-              | Slet profil
+      .col-xs-12.col-md-4.my-page__user-actions
+        h2 &nbsp;
+        .my-page__delete-user
+          a(data-action='delete-account-verification')
+            +icon('trash')
+            | Slet profil
