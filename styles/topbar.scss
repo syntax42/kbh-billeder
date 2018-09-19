@@ -90,7 +90,7 @@ $topbar-auth-tab-width: 170px;
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
-      padding: $spacer-sm 7px;
+      padding: 12px;
       display: inline-block;
       line-height: 32px;
 
@@ -103,7 +103,7 @@ $topbar-auth-tab-width: 170px;
 
     .dropdown {
       &__option {
-        padding: $spacer-sm 7px;
+        padding: 12px;
       }
       &__options {
         top: $topbar-height;
