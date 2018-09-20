@@ -8,6 +8,15 @@ append header
 
 block content
   .let-it-grow.page-wrap.my-page
+    .overlay__container(data-content="auth-verification")
+      .overlay__content
+        h2 Er du sikker på at du vil slette din konto?
+        p Dette kan ikke fortrydes.
+        p Vi sletter dit brugernavn, din email og dit password, samt oplysninger om, hvor mange point du har optjent.
+        p Vi sletter ikke de konkrete emneord og kortplaceringer, som du har tilføjet.
+        .my-page__overlay-buttons
+          a(href='/delete-account').btn.btn-primary Ja, slet min konto
+          .btn.btn-dark Annuller
     .container-fluid
       .col-xs-12
         h1.my-page__username-mobile(data-user-id=user.id)= user.nickname
@@ -41,3 +50,9 @@ block content
           tr
             td.my-page__table-bold Email
             td= user.emails[0].value
+      .col-xs-12.col-md-4.my-page__user-actions
+        h2 &nbsp;
+        .my-page__delete-user
+          a(data-action='delete-account-verification')
+            +icon('trash')
+            | Slet profil
