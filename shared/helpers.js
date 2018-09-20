@@ -1,6 +1,8 @@
 /* global config */
 const config = require('collections-online/lib/config');
 const helpers = require('collections-online/shared/helpers');
+// Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
+const backsideAssetCumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
 
 helpers.documentTitle = (metadata, fallback) => {
   let title = metadata.short_title || fallback || 'Billede uden titel';
@@ -21,6 +23,13 @@ helpers.documentLicense = (metadata) => {
   return metadata.license && metadata.license.id;
 };
 
+helpers.getBacksideAssets = (metadata) => {
+  if (metadata.related && metadata.related.assets) {
+    return metadata.related.assets.filter(asset => asset.id).filter(asset => asset.relation === backsideAssetCumulusKey);
+  }
+  return [];
+};
+
 // TODO: Delete this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
   let path = [metadata.collection || metadata.catalog];
@@ -32,15 +41,90 @@ helpers.getDocumentURL = (metadata) => {
 };
 
 helpers.determinePlayers = metadata => {
-  return [{
+  const players = [];
+
+  // We always have an image.
+  players.push({
     type: 'image',
     thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
     title: helpers.documentTitle(metadata)
-  }];
+  });
+
+  // Add backside if we have one
+  if (helpers.hasBacksideAsset(metadata)) {
+    players.push({
+      type: 'backside',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      backsides: helpers.getBacksideAssets(metadata)
+    });
+  }
+
+  return players;
 };
 
-helpers.generateSitemapElements = (metadata) => {
-  throw new Exception('Not yet implemented');
+/**
+ * Generate a site-map entry for single asset.
+ *
+ * @param req
+ *   Express request
+ *
+ * @param metadata
+ *   ES asset data
+ */
+helpers.generateSitemapElements = (req, metadata) => {
+  // Pull out the data we need for the _image_.
+  const documentTitle = helpers.documentTitle(metadata);
+  const documentDescription = helpers.documentDescription(metadata);
+  const relativeThumbnailUrl = helpers.getThumbnailURL(metadata, 2000, 'bottom-right');
+  const thumbnailUrl = helpers.getAbsoluteURL(req, relativeThumbnailUrl);
+  const license = helpers.licenseMapped(metadata);
+  const licenseUrl = license ? license.url : null;
+
+  // Get the available players for the asset and go trough them to produce image
+  // sections for the sitemap.
+  // See https://www.google.com/schemas/sitemap-image/1.1/
+  const players = helpers.determinePlayers(metadata);
+
+  const elements = [];
+  players.forEach(player => {
+
+    if (player.type === 'image') {
+      elements.push({
+        type: 'image',
+        location: thumbnailUrl,
+        title: documentTitle,
+        documentDescription,
+        licenseUrl
+      });
+    }
+
+    // Backsides are related assets, so if we have one we have to go trough
+    // a couple of additional steps to get a hold of the thumbnails.
+    if (player.type === 'backside') {
+      // See https://www.google.com/schemas/sitemap-image/1.1/
+      player.backsides.forEach((backside) => {
+        // To speed things up we avoid loading the related assets via ES,
+        // instead we syntizice whatever we need from the "parent" asset.
+        // Inherit the collection.
+        backside.collection = metadata.collection;
+        // Remove the collection from the asset id, eg we go from
+        // kbh-museum-49054 to 49054.
+        backside.id = backside.id.substring(backside.collection.length+1);
+
+        const backsideRelativeThumbnailUrl = helpers.getThumbnailURL(backside, 2000, 'bottom-right');
+        const backsideThumbnailUrl = helpers.getAbsoluteURL(req, backsideRelativeThumbnailUrl);
+        elements.push({
+          type: 'image',
+          location: backsideThumbnailUrl,
+          title: player.title || `Bagsiden af billedet "${documentTitle}"`,
+          description: false,
+          licenseUrl
+        });
+      });
+    }
+
+  });
+  return elements;
 };
 
 function getFileDimensionsString(metadata, size) {
@@ -127,6 +211,19 @@ if(config.downloadOptions) {
 
 helpers.isDownloadable = (metadata) => {
   return !metadata.license || metadata.license.id !== 7;
+};
+
+helpers.hasBacksideAsset = (metadata) => {
+  let backsideAssets = helpers.getBacksideAssets(metadata);
+  return backsideAssets.length > 0;
+};
+
+helpers.hasRelations = metadata => {
+  // Filter out backside assets.
+  if (metadata.related.assets) {
+    return metadata.related.assets.filter(asset => asset.relation !== backsideAssetCumulusKey).length > 0;
+  }
+  return false;
 };
 
 helpers.isWatermarkRequired = (metadata) => {

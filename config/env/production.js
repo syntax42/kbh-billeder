@@ -19,11 +19,12 @@ const production = _.merge({}, base, {
   env: 'production',
   features: {
     feedback: true,
-    geoTagging: true,
     motifTagging: true,
     requireEmailVerification: true,
     sitewidePassword: false,
-    users: true
+    users: true,
+    magasinMuseum: false,
+    oldProfilePage: true
   },
   google: {
     analyticsPropertyID: 'UA-78446616-1'
@@ -34,5 +35,10 @@ const production = _.merge({}, base, {
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
 });
+
+// Temporary unset of all magasin related keys.
+delete production.watermarks['magasin-museum'];
+delete production.cip.catalogs['magasin-museum'];
+delete production.cip.client.catalogAliases['Magasin du Nord Museum'];
 
 module.exports = production;

@@ -4,7 +4,11 @@ block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
   - const documentDescription = helpers.documentDescription(metadata);
   - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
-  .document__section-1-metadata.col-xs-12.col-md-5
+  .document__section-1-metadata.col-xs-12.col-md-5.col-md-pull-7
+    div.document__back-link
+      a(onclick='window.history.back()')
+        +icon('arrow-thin-left')
+        | Tilbage til søgningen
     if(documentTitle)
       h1.document__title= documentTitle
     if(documentDescription)
@@ -13,7 +17,54 @@ block document__section-1-metadata
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
-    != assetSection('place', metadata)
+
+    if config.features.motifTagging
+      .motif-tagging
+        include ./includes/motif-tagging
+
+block document__section-2
+  - const location = helpers.geoTagging.getLocation(metadata);
+  - const hasLocation = location.longitude && location.latitude
+
+    if !hasLocation
+      .document__section-2.document__section-2--no-location
+        .container-fluid
+          .row
+            .col-sm-7
+              != assetSection('place', metadata)
+            .col-sm-5
+              .no-location--text
+                h2.no-location--text__header Ved du hvor billedet er taget?
+                p Eller hvilket sted billedets motiv viser? Så tilføj lokationen på et kort.
+                button.btn.btn-primary(data-action='geo-tagging:init')
+                  | Placer billede på kort
+                  +icon('pencil')
+
+    .document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
+      .geo-tagging-mini-map(
+        data-has-location=(hasLocation) ? 'true' : 'false'
+        data-latitude=location.latitude,
+        data-longitude=location.longitude,
+        data-heading=location.heading,
+        data-approximate=location.isApproximate ? 'true' : 'false'
+      )
+      .place-overlay
+        .place-overlay__inner
+          != assetSection('place', metadata)
+          table
+            tbody
+              tr
+                td(colspan=2, class='map-coordinates__map--edit')
+                  button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
+                    | Rediger
+                    +icon('pencil')
+                  button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
+                    | Annuller
+                  button.btn.btn-primary(data-action='geo-tagging:add-direction', style="display:none")
+                    | Tilføj retning
+                  button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
+                    | Gem placering
+
 
 block document__section-3
   .document__section-3

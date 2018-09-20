@@ -1,0 +1,95 @@
+.slick {
+  &-list {
+    width: 100%;
+    margin: 0;
+  }
+  &-slide {
+    padding-left: 0;
+  }
+  &-button-container {
+    position: absolute;
+    width: 100%;
+    .is-desktop & {
+      top: 105px;
+    }
+    .is-mobile & {
+      bottom: 35px;
+    }
+  }
+  &-slider {
+    position: relative;
+  }
+  &-arrow {
+    width: 100%;
+    display: inline-block;
+  }
+  &-prev {
+    .is-desktop & {
+      left: -120px;
+    }
+    .is-mobile & {
+      left: 0;
+    }
+    background: url(../images/icons/arrow-thin-left.png) no-repeat center;
+    &:focus {
+      background: url(../images/icons/arrow-thin-left.png) no-repeat center;
+      background-size: 16px;
+    }
+    &:hover {
+      background: url(../images/icons/arrow-thin-left-hover.png) no-repeat center;
+    }
+  }
+  &-next {
+    .is-desktop & {
+      right: -80px;
+    }
+    .is-mobile & {
+      right: 30px;
+    }
+    background: url(../images/icons/arrow-thin-right.png) no-repeat center;
+    &:focus {
+      background: url(../images/icons/arrow-thin-right.png) no-repeat center;
+      background-size: 16px;
+    }
+    &:hover {
+      background: url(../images/icons/arrow-thin-right-hover.png) no-repeat center;
+    }
+  }
+  &-next, &-prev {
+    height: 48px;
+    width: 48px;
+    border-radius: 48px;
+    opacity: 1;
+    background-size: 16px;
+    content: '';
+    @include shadow(3);
+    &::before {
+      content: '';
+    }
+    &:hover {
+      background-color: $brand-primary;
+      background-size: 16px;
+    }
+  }
+  &-dots {
+    position: static;
+    margin-top: 40px;
+    li button::before {
+      font-size: 45px;
+      opacity: 1;
+    }
+    li.slick-active {
+      button:before {
+        color: white;
+      }
+      button::before {
+        color: white;
+        opacity: 1;
+        border: 2px solid black;
+        border-radius: 10px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

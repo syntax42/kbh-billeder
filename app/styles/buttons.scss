@@ -1,3 +1,16 @@
+.btn {
+  &-dark {
+    background-color: $gray-dark;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: darken($gray-dark, 10%);
+      color: $white;
+    }
+  }
+}
+
 .btn-close {
   padding-right: $spacer-xs;
   position: relative;

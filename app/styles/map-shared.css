@@ -1,0 +1,217 @@
+/* Map styling shared between the live site and the map documentation. */
+#mapPopup {
+  color: black;
+  position: absolute;
+  display: none;
+  width: 220px;
+  cursor: pointer;
+  background-color: #fff;
+  border-top: 4px solid #e61a64;
+  box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
+}
+
+#mapPopup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  border-top: solid 10px #fff;
+  border-left: solid 10px transparent;
+  border-right: solid 10px transparent;
+}
+
+#mapPopupImage {
+  height: 220px;
+  width: 220px;
+  background-size: cover;
+}
+
+#mapPopupClose {
+  background: url('/app/images/icons/map/close.png') center center no-repeat;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 40px;
+  height: 40px;  
+}
+
+#mapPopupHeading {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  margin-top: 8px;
+  padding: 0 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: none;
+}
+
+#mapPopupDescription {
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 5px;
+  padding: 0 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: none;
+}
+
+.ol-zoom {
+    top: 62px; /*18+36+8*/
+    left: 18px;
+    width: 36px;
+    height: 72px;
+}
+.map.single .ol-zoom {
+    top: 18px;
+}
+#mapSelect {
+    height: 36px;
+    display: none;
+}
+#mapSelect::after {
+    font-family: FFUnitWebMedium;
+    color: black;
+    font-size: 14px;
+    content: 'Kort';
+    position: absolute;
+    top: 0px;
+    padding-top: 7px;
+    padding-left: 15px;
+    pointer-events: none;
+}
+.time-warp-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px !important;
+    display: none;
+}
+#timeWarpClose {
+    background: url('/app/images/icons/map/timewarpclose.png') no-repeat center center;
+}
+#timeWarpMode {
+    background: url('/app/images/icons/map/timewarpsplit.png') no-repeat center center;
+}
+.map.split #timeWarpMode {
+    background: url('/app/images/icons/map/timewarpcircle.png') no-repeat center center;
+}
+#mapLocation {
+    background: url('/app/images/icons/map/location.png') no-repeat center center;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px !important;
+    left: 18px;
+}
+.map.location #mapLocation {
+    background-color: #dc0067 !important;
+    background: url('/app/images/icons/map/locationwhite.png') no-repeat center center;
+}
+#timeWarpToggle {
+    background: url('/app/images/icons/map/maptoggle.png') no-repeat center center;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px !important;
+    right: 18px;
+}
+.map.split #timeWarpToggle {
+    display: none;
+}
+.map.time-warp #timeWarpToggle {
+    background-color: #dc0067 !important;
+    background: url('/app/images/icons/map/maptogglewhite.png') no-repeat center center;
+}
+@media (min-width: 785px) {
+    #timeWarpToggle {
+        top: 18px;
+    }
+    #mapLocation {
+        top: 18px;
+    }
+}
+@media (max-width: 786px) {
+    .ol-zoom {
+        display: none;
+    }
+    .time-warp-button {
+        display: none !important;
+    }
+    #timeWarpToggle {
+        bottom: 18px;
+        width: 48px;
+        height: 48px;
+        border-radius: 24px !important;
+    }
+    #mapLocation {
+        bottom: 18px;
+        width: 48px;
+        height: 48px;
+        border-radius: 24px !important;
+    }
+}
+
+
+.ol-control {
+    position: absolute;
+    background-color: white !important;
+    border-radius: 2px;
+    padding: 2px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
+    cursor: pointer;
+}
+.ol-viewport, .ol-unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/*.ol-touch .ol-control button, .ol-touch .ol-control select {
+    font-size: 1.5em;
+}*/
+.ol-zoom-out {
+    border-top: 1px solid rgba(0,0,0,.1) !important;
+}
+.ol-control button, .ol-attribution, .ol-scale-line-inner {
+    font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
+}
+.ol-control button {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    height: 34px;
+    padding-bottom: 3px !important
+}
+.ol-control select {
+    font-family: FFUnitWebLight;
+    font-size: 14px;
+    height: 100%;
+    padding: 0px 35px 0px 55px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('/app/images/icons/map/downarrow.png') no-repeat;
+    background-position: right 10px center;
+}
+.ol-control select::-ms-expand {
+    display: none;
+}
+.ol-control button, .ol-control select {
+    display: block;
+    background-color: white;
+    padding: 0;
+    color: black;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+.ol-control button:focus, .ol-control select:focus {
+    outline: 0;
+}

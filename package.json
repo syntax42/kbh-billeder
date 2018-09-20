@@ -11,7 +11,8 @@
     "start:dev:es": "concurrently \"docker-compose up -d mongo\" \"npm run gulp\" \"npm run start:nodemon\" \"kubectl port-forward -n beta elasticsearch-czmt9 9200:9200\"",
     "start:dev": "concurrently \"docker-compose up -d\" \"npm run gulp\" \"npm run start:nodemon\"",
     "start:nodemon": "NODE_ENV=development nodemon -L -P 5000 --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:map-integration-docs": "concurrently \"http-server -a localhost -p 8090\" \"opener http://localhost:8090/docs/map-integration/contract/\""
   },
   "repository": {
     "type": "git",
@@ -29,12 +30,13 @@
     "collections-online-cumulus": "git+https://github.com/CopenhagenCityArchives/collections-online-cumulus.git",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
-    "lodash": "^4.12.0",
+    "lodash": "~4.17.5",
     "q": "^1.4.1"
   },
   "devDependencies": {
-    "concurrently": "^3.1.0",
+    "concurrently": "^3.6.1",
     "gulp": "^3.9.1",
+    "http-server": "^0.11.1",
     "nodemon": "^1.11.0",
     "run-sequence": "^1.1.5"
   }

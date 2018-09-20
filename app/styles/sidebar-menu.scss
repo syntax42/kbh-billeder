@@ -1,0 +1,65 @@
+$sidebar-menu-border-color: $gray-light;
+$sidebar-bottom-border: 1px solid $sidebar-menu-border-color;
+
+.sidebar-menu {
+  padding-top: 70px;
+  background: white;
+  font-weight: bold;
+  font-size: 1.3rem;
+
+  li {
+    list-style: none;
+    border-bottom: $sidebar-bottom-border;
+    a {
+      color: $black;
+    }
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .sidebar-menu-open & {
+    @include shadow(1);
+    width: 70%;
+  }
+
+  // Menu item with children.
+  &__children {
+    // Menu item link.
+    a { border-bottom: $sidebar-bottom-border; }
+
+    ul {
+      padding: 0;
+      li {
+        border: 0;
+        a {
+          border: 0;
+        }
+      }
+    }
+
+    .icon {
+      float: right;
+      height: $icon-size;
+      svg {
+        width: $icon-size / 1.5;
+        height: $icon-size / 1.5;
+      }
+    }
+
+    // Inactive menu item with children.
+    &--inactive {
+      a {
+        border-bottom: 0;
+      }
+      .icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+// Very specific to avoid !important.
+.sidebar-menu .sidebar-menu__link-seperator {
+  display: none;
+}
