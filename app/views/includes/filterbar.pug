@@ -1,5 +1,5 @@
 if config.features.filterSidebar
-  .filterbar
+  #filterbar.filterbar
     .filterbar__item
       .filterbar__tab.filterbar__tab--filters
         h2.search-filter-sidebar__heading.search-filter-sidebar__tab
@@ -15,13 +15,13 @@ if config.features.filterSidebar
     .view-mode
       .filterbar__item(data-action='show-view-map')
         .filterbar__tab--map
-          h2.search-filter-sidebar__heading.search-filter-sidebar__tab Kort (BETA)
+          h2.search-filter-sidebar__heading.search-filter-sidebar__tab Kort
           +icon('location')
       .filterbar__item(data-action='show-view-list')
         .filterbar__tab.filterbar__tab--list
           h2.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
           +icon('view-thumb')
-  .filterbar--mobile
+  #filterbar--mobile.filterbar--mobile
     .filterbar--mobile__container
       .filterbar--mobile__button.filterbar--mobile__button--filters(data-action='show-filterbar-menu')
         +icon('toggles')
@@ -37,7 +37,3 @@ if config.features.filterSidebar
         +icon('cross')
   #sidebarmobile.filterbar__menu.filterbar__menu--filters.search-filter-sidebar
     block sidebar
-
-.container.filters-mobile
-  #filtersmobile
-    include search-filter-chosen-filters

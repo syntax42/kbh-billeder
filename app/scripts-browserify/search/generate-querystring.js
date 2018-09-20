@@ -31,7 +31,13 @@ module.exports = function(searchParameters) {
       delete parameters[field];
     }
   });
+
+  // Add map arguments of we have any.
+  if (searchParameters.map) {
+    parameters.map = searchParameters.map;
+  }
   var result = querystring.stringify(parameters);
+
   result = result.replace(/%20/g,'+').replace(/%2C/g,',');
   return result ? '?' + result : '';
 };

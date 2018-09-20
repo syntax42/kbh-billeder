@@ -266,4 +266,15 @@ helpers.decodeReturnState = function(encodedUrl) {
   return Buffer.from(encodedUrl, 'base64').toString('ascii');
 };
 
+/**
+ * Determines whether we're within the mobile breakpoint.
+ *
+ * @param $
+ *   Jquery instance
+ * @returns {boolean}
+ */
+helpers.isMobile = function($) {
+  return $(window).width() < config.styling.mobileWidthBreakpoint;
+};
+
 module.exports = helpers;

@@ -1,15 +1,20 @@
+$topbar-dropdown-width: 250px;
+$topbar-auth-tab-width: 170px;
+
 .topbar {
   background-color: $topbar-color;
   color: $white;
   line-height: 1.5;
   position: relative;
-  z-index: 10;
   padding: 0 $spacer-layout;
+  padding-right: 0;
   @media (min-width: $extra-large-size) {
-    padding: 0 $spacer-layout-large;
+    padding: 0 20px;
+    padding-right: 0;
   }
 
   .is-mobile & {
+    z-index: 10;
     position: fixed;
     top: 0;
     width: 100%;
@@ -85,20 +90,52 @@
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
-      padding: $spacer-sm;
-
-      &:first-of-type {
-        padding-left: $spacer-md;
-      }
+      padding: $spacer-sm 7px;
+      display: inline-block;
+      line-height: 32px;
 
       &:focus,
       &:hover {
         color: $white;
         text-decoration: none;
       }
+    }
 
-      &:not(:last-child, .topbar__name) {
-        margin-right: 1rem;
+    .dropdown {
+      &__option {
+        padding: $spacer-sm 7px;
+      }
+      &__options {
+        top: $topbar-height;
+        left: 0;
+        min-width: $topbar-dropdown-width;
+        // Make sure the dropdown options are above the button
+        // in order to make the shadow look correct.
+        z-index: 5;
+        margin: 0;
+        padding: 0;
+        a {
+          &:hover {
+            color: $brand-primary;
+          }
+        }
+      }
+      &--active, &__selected {
+        &::after {
+          border: 0;
+        }
+      }
+      &--active {
+        background: white;
+        .topbar__items-link {
+          background: white;
+          color: black;
+          z-index: 10;
+          position: relative;
+          a {
+            color: black;
+          }
+        }
       }
     }
   }
@@ -111,6 +148,10 @@
     padding-left: 10px;
     padding-right: 2px;
     text-decoration: none;
+
+    .is-mobile & {
+      padding: 0 20px;
+    }
 
     svg {
       height: 20px;
@@ -136,9 +177,56 @@
     }
   }
 
+  &__name {
+    margin-top: 90px;
+    a {
+      padding: 0;
+    }
+    .icon {
+      svg {
+        width: 14px;
+        height: 14px;
+        fill: white;
+        float: right;
+        margin-top: 8px;
+        margin-right: 10px;
+        transform: rotate(180deg);
+      }
+    }
+  }
+
   &__auth {
+    width: $topbar-auth-tab-width;
+    height: $topbar-height;
+    line-height: $topbar-height;
+    .dropdown {
+      width: 100%;
+      &--active {
+        svg {
+          transform: rotate(0deg);
+          fill: black;
+        }
+        .topbar__items {
+          &-link {
+            padding-bottom: 10px;
+          }
+        }
+      }
+      &__options {
+        position: relative;
+        top: -1px;
+        left: -($topbar-dropdown-width - $topbar-auth-tab-width);
+      }
+      &__selected {
+        width: 100%;
+        margin-top: 0;
+        position: static;
+        padding: 0;
+      }
+    }
     .dropdown__selected::after {
       border-top-color: $white;
+      right: -20px;
     }
   }
 }

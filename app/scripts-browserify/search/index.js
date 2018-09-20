@@ -5,7 +5,7 @@
 const config = require('collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
-const Map = require('../map');
+const MapController = require('map-controller');
 require('./search-freetext-form');
 
 const getSearchParams = require('./get-parameters');
@@ -15,7 +15,6 @@ const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
 const sorting = require('./sorting');
 const navigator = require('../document/navigator');
-const geohash = require('./geohash');
 
 const templates = {
   searchResultItem: require('views/includes/search-results-item')
@@ -62,21 +61,39 @@ function initialize() {
    *
    * @param indicateLoading
    *   Whether to show a overlay as the results are loading.
+   *
+   * @param searchParams
+   *   Optional override search parameters.
    */
-  function update(updateWidgets, indicateLoading) {
+  function update(updateWidgets, indicateLoading, searchParams) {
     // If the indicateLoading is not set - default to true
     if(typeof(indicateLoading) === 'undefined') {
       indicateLoading = true;
     }
 
-    // Initialize search parameters from the url.
-    var searchParams = getSearchParams();
-    // Update the filter-bar.
+    // If we've not explicitly been passed searchParameters (which right now
+    // only happens when the map calls us back after adding a geo bounding-
+    // box), get it from the url, and see if we should have the mapcontroller
+    // update it.
+    if (!searchParams) {
+      // Get search parameters from the url.
+      searchParams = getSearchParams();
+
+      // Let the map alter our search-parameters if they have not been
+      // overridden and have it call us back with the update parameters.
+      if (viewMode === 'map') {
+        mapController.onUpdate(searchParams, function(updatedParams){
+          update(updateWidgets, indicateLoading, updatedParams);
+        });
+        return;
+      }
+    }
+
+    // Update the sort-menu in the filter-bar.
     sorting.update(searchParams);
 
-    // Update the freetext search input
-    var queryString = searchParams.filters.q;
-    $searchInput.val(queryString);
+    // Update the freetext search input, q contains the querystring.
+    $searchInput.val(searchParams.filters.q);
 
     // Update the page title
     const title = helpers.generateSearchTitle(searchParams.filters);
@@ -90,14 +107,16 @@ function initialize() {
     if(updateWidgets) {
       if(config.features.filterSidebar) {
         const sidebar = require('./filter-sidebar');
-        // Update the sidebar right away
-        sidebar.update(searchParams.filters, null);
+        // Update the sidebar right away, as we're going of doing async work
+        // with searchParams, work on a clone.
+        const clonedSearchParams = JSON.parse(JSON.stringify(searchParams));
+        sidebar.update(clonedSearchParams.filters, null);
         // Get aggragations for the sidebar
         es.search({
-          body: elasticsearchAggregationsBody(searchParams),
+          body: elasticsearchAggregationsBody(clonedSearchParams),
           size: 0
         }).then(function (response) {
-          sidebar.update(searchParams.filters, response.aggregations);
+          sidebar.update(clonedSearchParams.filters, response.aggregations);
         }, function (error) {
           console.trace(error.message);
         });
@@ -117,10 +136,58 @@ function initialize() {
 
     // Do search depending on current viewmode.
     if (viewMode === 'map') {
-      resultsTotal = updateMap(searchParams);
-    }
+      // Generate the query body, this will inject a bounds filter if we added
+      // one above.
+      let queryBody = elasticsearchQueryBody(searchParams);
 
-    if (viewMode === 'list') {
+      // Let plugins modify the search body.
+      if(typeof(helpers.modifySearchQueryBody) === 'function') {
+        // If a modifySearchQueryBody helper is defined, call it
+        queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
+      }
+
+      if (searchParams.geohash) {
+        queryBody.aggregations = {
+          'geohash_grid' : {
+            'geohash_grid' : {
+              'field' : 'location',
+              'precision' : config.search.geohashPrecision
+            }
+          }
+        };
+      }
+
+      const maxAssets = config.search.maxAssetMarkers;
+      // We've configured our search, now setup the query and execute it.
+      const searchObject = {
+        body: queryBody,
+        // We only want the aggregation so we don't care about the hits.
+        size: searchParams.geohash ? 0 : maxAssets,
+        _source: [
+          'location',
+          'longitude',
+          'latitude',
+          'collection',
+          'id',
+          'short_title',
+          'type',
+          'heading',
+          'description'
+        ],
+      };
+
+      // Make sure we persist, but replace state so that we don't end up in
+      // the back/forward history.
+      persistChangedParams(searchParams, true);
+
+      es.search(searchObject).then(function (response) {
+        resultsTotal = response.hits.total;
+        loadingResults = false;
+        mapController.onResults(response, searchParams);
+      }, function (error) {
+        console.trace(error.message);
+      });
+    } else if (viewMode === 'list') {
       if (updateWidgets) {
         // Start updating the results header
         resultsHeader.update(searchParams, resultsTotal);
@@ -148,7 +215,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ["collection", "id", "short_title", "type", "description"],
+      _source: ['collection', 'id', 'short_title', 'type', 'description'],
       size: resultsDesired - resultsLoaded.length
     };
 
@@ -207,100 +274,30 @@ function initialize() {
   }
 
   /**
-   * Update the google map with search results.
+   * Store changed params into the browser history.
+   *
+   * @param searchParams
+   *   The search params to persist.
+   * @param replaceState
+   *   Whether to replace state or push a new (the latter lets the browser move
+   *   back and forth between states).
    */
-  function updateMap(searchParams) {
-    // Only show results with location on map.
-    searchParams.filters.location = ['Har placering'];
-    // Get bounds from map and use it.
-    let bounds = Map.getEsBounds();
-    if (bounds) {
-      searchParams.filters.geobounds = bounds;
-    }
-
-    // Generate the query body, this will inject a bounds filter if we added
-    // one above.
-    let queryBody = elasticsearchQueryBody(searchParams);
-
-    // Let plugins modify the search body.
-    if(typeof(helpers.modifySearchQueryBody) === 'function') {
-      // If a modifySearchQueryBody helper is defined, call it
-      queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
-    }
-
-    let belowAssetZoomLevel = Map.zoomLevel >= config.search.assetZoomLevel;
-    const maxAssets = config.search.maxAssetMarkers;
-
-    // If we're zoomed in wide enough, use hash-based results.
-    if (!belowAssetZoomLevel) {
-      queryBody.aggregations = {
-        "geohash_grid" : {
-          "geohash_grid" : {
-            "field" : "location",
-            "precision" : config.search.geohashPrecision
-          }
-        }
-      };
-    }
-
-    // We've configured our search, now setup the query and execute it.
-    const searchObject = {
-      body: queryBody,
-      // We only want the aggregation so we don't care about the hits.
-      size: belowAssetZoomLevel ? maxAssets : 0,
-      _source: ["location", "longitude", "latitude", "collection", "id", "short_title", "type"],
-    };
-
-    es.search(searchObject).then(function (response) {
-      resultsTotal = response.hits.total;
-      loadingResults = false;
-
-      let coordinates = [];
-      // Convert the hits to items of different types depending on our zoom-
-      // level.
-      if (belowAssetZoomLevel) {
-        // Asset hits contains a coordinate and metadata.
-        response.hits.hits.forEach(function(hit) {
-          coordinates.push({
-            type: 'asset',
-            // Pull lat/lon out into it's own property to allow us to share
-            // code between hash and asset code.
-            location: hit._source.location,
-            assetData: hit._source,
-          });
-        });
-      } else {
-        response.aggregations.geohash_grid.buckets.forEach(function(hashBucket) {
-          // Geohash hits contains a geocode we need to decode and a count.
-          // No actual data about the assets.
-          // Decode to {lat, lon}.
-          let coordinate = geohash.decode(hashBucket.key);
-          let count = hashBucket.doc_count;
-          coordinates.push({
-            type: 'hash',
-            count: count,
-            location: coordinate
-          });
-        });
-      }
-      Map.update(coordinates);
-      // TODO - add navigator code like what we have in updateList to make
-      // history work.
-    }, function (error) {
-      console.trace(error.message);
-    });
-  }
-
-  function changeSearchParams(searchParams) {
+  function persistChangedParams (searchParams, replaceState = false) {
     // Change the URL
-    if(history) {
-      var qs = generateQuerystring(searchParams);
+    if (history) {
       reset();
-      history.pushState({
-        searchParams: searchParams
-      }, '', location.pathname + qs);
-      update();
-    } else {
+      // Update the browser history and the url with our new parameters.
+
+      var state = {searchParams: searchParams};
+      var url = location.pathname + generateQuerystring(searchParams);
+      if (replaceState) {
+        history.replaceState(state, '', url);
+      }
+      else {
+        history.pushState(state, '', url);
+      }
+    }
+    else {
       throw new Error('History API is required');
     }
   }
@@ -314,7 +311,6 @@ function initialize() {
         var scrollTop = $(window).scrollTop();
         var scrollBottom = scrollTop + $(window).height();
         if(scrollBottom > lastResultOffset.top && !loadingResults) {
-          console.log('Loading more results');
           resultsDesired += PAGE_SIZE;
           update();
         }
@@ -322,6 +318,12 @@ function initialize() {
     }).scroll();
   }
 
+  /**
+   * Check if the user has any relevant history data during init and use it.
+   *
+   * @param state
+   *   The history.state.
+   */
   function inflateHistoryState(state) {
     // Render results from the state
     if(state.resultsLoaded) {
@@ -351,25 +353,38 @@ function initialize() {
     inflateHistoryState(event.state);
   }, false);
 
-  // Setup the map with a callback it can use when it needs a new search trigged
-  // and a configuration for when we switch between hash and asset search-
-  // results.
-  Map.init({
-    updateCallback: update,
-    assetZoomLevel: config.search.assetZoomLevel,
-    clusterMaxZoom: config.search.clusterMaxZoom
-  });
 
-  // Initialize the search results, either use the history state, or do an
-  // update.
-  if(!history.state) {
-    update();
-  } else {
-    update();
-    // TODO - make history work again. KB-354.
-    // Temporarily disabled while we figure out how to store geohashes in the history.
-    // inflateHistoryState(history.state);
+  const searchControllerCallbacks = {
+    // Allow the caller to refresh the current search-results.
+    refresh: function() {
+      update(true, false);
+    },
+
+    getCurrentSearchParameters: function (){
+      return getSearchParams();
+    },
+  };
+
+  // Get any initial parameters from the url and pass the relevant part to the
+  // map.
+  var options = {};
+
+  // Set initial center if specified via config.
+  if (config.geoTagging && config.geoTagging.initialCenter && config.geoTagging.initialCenter['lon'] && config.geoTagging.initialCenter['lat']) {
+    options.initialCenter = [
+      config.geoTagging.initialCenter['lon'],
+      config.geoTagging.initialCenter['lat']
+    ];
   }
+
+  var searchParams = getSearchParams();
+  if (searchParams.map) {
+    options.mapInitParam = searchParams.map;
+  }
+  // Setup the map with a callback it can use when it needs a new search
+  // triggered and a configuration for when we switch between hash and asset
+  // search-results.
+  const mapController = MapController(document.getElementById('map'), searchControllerCallbacks, options);
 
   // *** Register event handlers ***
   $('#sidebar, #sidebarmobile, #filters, #filtersmobile').on('click', '.btn', function() {
@@ -395,7 +410,9 @@ function initialize() {
       } else {
         filters[field] = [value];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     } else if(action === 'remove-filter') {
       if(typeof(filters[field]) === 'object') {
         filters[field] = filters[field].filter(function(v) {
@@ -404,7 +421,9 @@ function initialize() {
       } else {
         delete filters[field];
       }
-      changeSearchParams(searchParams);
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update();
     }
   });
 
@@ -412,24 +431,15 @@ function initialize() {
     var sorting = $(this).data('value');
     var searchParams = getSearchParams();
     searchParams.sorting = sorting;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
 
   // Enabled the load-more button
   $loadMoreBtn.on('click', function() {
     enableEndlessScrolling();
   });
-
-  // If the location hash is present, the results desired should reflect this
-  // and endless scrolling should be enabled
-  /*
-  if(window.location.hash) {
-    var referencedResult = parseInt(window.location.hash.substr(1), 10);
-    resultsDesired = referencedResult + PAGE_SIZE;
-    enableEndlessScrolling();
-    // TODO: Scroll to the referenced result, when done loading
-  }
-  */
 
   // Toggle filtersection visibility on mobile
   $('#sidebar, #sidebarmobile').on('click', '[data-action="show-filters"]', function() {
@@ -449,22 +459,39 @@ function initialize() {
 
   // Toggle filterbar menus
   $('.filterbar--mobile__button--filters').on('click', function() {
+    if (viewMode === 'map' && mapController) {
+      // Freeze the coordinate and bounding box of the map while the filters are
+      // open. This is only needed on mobile where we hide the entire map which
+      // causes it's bounding box used for search-queries to go wanky.
+      mapController.freeze();
+    }
     $('body').addClass('has-filter-open');
   });
 
   $('.filterbar--mobile__button--close').on('click', function() {
+    if (viewMode === 'map' && mapController) {
+      mapController.unfreeze();
+    }
     $('body').removeClass('has-filter-open');
   });
 
   // When the view-mode is changed by the view-mode selector (view-mode.js),
   // store the new value and trigger a search update.
-  $('body').on('search:viewModeChanged', function(e, eventViewMode) {
+  $('.let-it-grow').on('search:viewModeChanged', function(e, eventViewMode) {
+    // If we're switching away from the map view-mode, strip the coordiate from
+    // the url. The presence of the parameter will cause a returning user to
+    // switch to the map view-mode, so it is important we get rid of it.
+    const searchParams = getSearchParams();
+    if (eventViewMode !== 'map' && searchParams.map) {
+      delete searchParams.map;
+      persistChangedParams(searchParams, true);
+    }
     viewMode = eventViewMode;
-    $('body').trigger('search:update');
+    $('.let-it-grow').trigger('search:update');
   });
 
-  // Let anyone with access to the body element trigger search-updates.
-  $('body').on('search:update', function() {
+  // Let anyone with access to the element with class 'let-it-grow' trigger search-updates.
+  $('.let-it-grow').on('search:update', function() {
     update(true, true);
   });
 
@@ -495,8 +522,30 @@ function initialize() {
     var queryString = $searchInput.val() || '';
     var searchParams = getSearchParams();
     searchParams.filters.q = queryString;
-    changeSearchParams(searchParams);
+    // Store changed parameters and trigger a search.
+    persistChangedParams(searchParams);
+    update();
   });
+
+  // Everything is ready, prepare to show results.
+  const currentParams = getSearchParams();
+  // If the URL has "map" in it which means we're returning to a step in the
+  // history where the view mode was map. Trigger a view-mode change which
+  // in turn will cause use to show the map an update the search-results.
+  if (currentParams.map) {
+    // If the url contains a map parameter, set us in map mode.
+    $('.let-it-grow').trigger('search:viewModeChanged', ['map']);
+  }
+  else {
+    // Examine the history - if we have a state, load results from it.
+    if (history.state) {
+      inflateHistoryState(history.state);
+    }
+    else {
+      // No relevant url-parameter and no relevant state, just do a cold update.
+      update();
+    }
+  }
 }
 
 // If the path is right - let's initialize

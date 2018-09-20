@@ -7,7 +7,8 @@ each docs, type in metadata.related
           +icon('chevron-right')
         .related-assets__prev-arrow
           +icon('chevron-right')
-        .slider
-          each doc in docs
-            a(href=helpers.getDocumentURL(doc))
-              img(data-lazy=helpers.getThumbnailURL(doc))
+        block relatedassets
+          .slider
+            each doc in docs
+              a(href=helpers.getDocumentURL(doc))
+                img(data-lazy=helpers.getThumbnailURL(doc))

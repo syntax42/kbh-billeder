@@ -7,8 +7,10 @@ $heading-adjustment: 2px;
   float: right;
   width: 100%;
   padding: 0 $spacer-layout;
+  position: relative;
+  z-index: 1;
   @media (min-width: $extra-large-size) {
-    padding: 0 $spacer-layout-large;
+    padding: 0 20px;
   }
   .is-mobile & {
     display: none;
@@ -308,8 +310,9 @@ $heading-adjustment: 2px;
     background-color: rgba(white, .5);
     padding: $spacer-sm;
 
-    p {
+    .search-filter-sidebar__heading {
       margin-left: $spacer-xs;
+      padding-left: 0;
       .has-filter-open & {
         margin-left: 0;
       }

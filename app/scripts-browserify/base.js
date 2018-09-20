@@ -5,6 +5,7 @@ require('babel-polyfill');
 module.exports = options => {
   const config = require('collections-online/shared/config');
 
+  require('./mobile')
   require('./search');
   if(config.features.cookieConsent) {
     require('./cookie-consent');
@@ -27,7 +28,7 @@ module.exports = options => {
   if(config.features.geoTagging || config.features.motifTagging) {
     require('./document/contribution-counter');
   }
-  if(config.features.geoTagging) {
+  if(config.features.geoTagging && config.features.geoTagging !== 'override') {
     require('./document/geo-tagging');
   }
   if(config.features.motifTagging) {

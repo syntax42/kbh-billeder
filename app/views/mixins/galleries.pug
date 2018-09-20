@@ -1,5 +1,5 @@
 mixin gridGallery(gallery, i, evenOrOdd)
-  .row.gallery(class="gallery--" + evenOrOdd)
+  .row.gallery.gallery--grid(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-5
       h2.gallery__title= gallery.title
       p.gallery__text= gallery.description
@@ -8,21 +8,38 @@ mixin gridGallery(gallery, i, evenOrOdd)
       .row
         each item, index in gallery.items
           .col-xs-6
-            +galleryItem(item, index, 'grid')
+            +galleryItem(item, index, 'grid', true)
                 
-mixin carouselGallery(gallery)
-  .row.gallery
+mixin carouselGallery(gallery, evenOrOdd)
+  .row.gallery.gallery--carousel(class="gallery--" + evenOrOdd)
     .col-xs-12
       h2.gallery__title= gallery.title
+      h3.gallery__subtitle= ' — ' + gallery.description
       .gallery--slick
-          each item, index in gallery.items
-              +galleryItem(item, index, 'carousel')
-  
-mixin galleryItem(item, index, type)
-  - var itemImageUrl = item._.image.fill(400,400,{gravity: 'center', quality: 60});
+        each item, index in gallery.items
+          +galleryItem(item, index, 'carousel', true, [270, 264])
+      .slick-button-container
+        li.slick-prev
+        li.slick-next
+
+mixin blockGallery(gallery, evenOrOdd)
+  .row.gallery.gallery--block(class="gallery--" + evenOrOdd)
+    .col-xs-12.col-sm-4
+      h2.gallery__title= gallery.title
+      h3.gallery__text= gallery.description
+    .gallery__items
+      .flex
+        each item, index in gallery.items
+          .col-xs-6.col-sm-6.col-md-3
+            +galleryItem(item, index, 'block')
+
+mixin galleryItem(item, index, type, fill, imageDimensions)
+  - var fill = fill
+  - var imageDimensions = imageDimensions ? imageDimensions : [270, 200]
+  - var itemImageUrl = item._.image.fill(imageDimensions[0],imageDimensions[1],{gravity: 'center', quality: 75});
   - var className = 'gallery-thumb-' + index + ' gallery-thumb-' + type
     a.gallery-thumb.no-touch-hover(href=item.link, class=className)
-      img(src=itemImageUrl).gallery-thumb__image
+      img(src=fill ? itemImageUrl : item.image.url).gallery-thumb__image
       .gallery-thumb__overlay
         h3.gallery-thumb__title= item.title
         p.gallery-thumb__text= item.description

@@ -21,7 +21,7 @@ body {
   > .let-it-grow {
     flex-grow: 1;
     .is-mobile & {
-      margin-top: 40px;
+      margin-top: $topbar-height;
     }
   }
 }
@@ -37,6 +37,12 @@ body {
 @media (min-width: $large-size) {
   .container-fluid {
     width: $large-size;
+  }
+}
+
+@media (min-width: $extra-large-size) {
+  .container-fluid {
+    width: $extra-large-size;
   }
 }
 
