@@ -23,9 +23,7 @@
 
 .search-results-header {
   align-items: baseline;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: inline-block;
   margin-bottom: $spacer-md;
   margin-top: $spacer-lg + $spacer-md;
 
