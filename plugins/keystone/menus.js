@@ -32,7 +32,7 @@ async function BuildMenu() {
       placement: menuName,
       parent: null
     })
-    // Instansiate references to pages.
+      // Instantiate references to pages.
       .populate(['page'])
       .sort('order')
       // Find the url for each item (resolve either page-references or use the
@@ -69,6 +69,7 @@ async function BuildMenu() {
         parent: parent._id
       })
         .populate(['page'])
+        .sort('order')
         .exec(function (err, childItems) {
           // Prepare each child and add it to the menu.
           childItems.forEach(child => {

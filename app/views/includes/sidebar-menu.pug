@@ -4,19 +4,19 @@ nav
   ul(aria-labelledby='heading-categories-menu', role='menu').nav.sidebar-menu
     if menus && menus.main
       block before
-      each item in menus.main
-        if item.children.length > 0
+      each parent in menus.main
+        if parent.children.length > 0
           li.sidebar-menu__children.sidebar-menu__children--inactive
-            a(data-action='toggle-sidebar-submenu-item')= item.title
+            a(data-action='toggle-sidebar-submenu-item')= parent.title
               .icon
                 +icon('chevron-up')
             ul.children.hidden
-              each child in item.children
+              each childPage in parent.children
                 li
-                  a(href=child.link)= child.title
+                  a(href=childPage.url)= childPage.title
         else
           li
-            a(href=item.url)= item.title
+            a(href=parent.url)= parent.title
     if config.features.users
       span.sidebar-menu__link-seperator
       if user
