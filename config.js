@@ -7,7 +7,6 @@ require('dotenv').config({
   silent: true,
   path: path.join(__dirname, '.env')
 });
-
 // If no NODE_ENV was specified, we are in development
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';

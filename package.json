@@ -11,10 +11,10 @@
     "prepublish": "gulp build",
 
     "start:dev": "concurrently \"npm run gulp\" \"npm run start:nodemon\"",
-    "start:nodemon": "NODE_ENV=development nodemon -L -P 5000 --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
+    "start:nodemon": "nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
 
     "start:inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 server.js",
-    "start:nodemon-inspect": "NODE_ENV=development nodemon --delay 80ms -L -P 5000 --watch . --watch ../collections-online --watch ../collections-online-cumulus --exec 'npm run start:inspect'"
+    "start:nodemon-inspect": "nodemon --delay 80ms --watch . --watch ../collections-online --watch ../collections-online-cumulus --exec 'npm run start:inspect'"
   },
   "repository": {
     "type": "git",
