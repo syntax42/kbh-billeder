@@ -98,6 +98,14 @@ This command will start the server, boot up your dependencies, start a gulp watc
 
 Note: quitting the process doesn't shut down the docker containers. For that you must run `docker-compose down`.
 
+### Debugging
+Starts up in remote-debugging mode listening to remote debug connections on any
+interface via port 9229.
+```
+npm run start:inspect
+
+```
+
 ### Run the indexing routines in all-mode
 If you're running elasticsearch locally, it will be of course be empty when you first start it. To fill it up with some assets you can run.
 
