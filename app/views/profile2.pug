@@ -1,0 +1,58 @@
+extends frontpage
+include mixins/meta
+include mixins/search-freetext-form
+include mixins/icon
+
+append header
+  +meta()
+
+block content
+  .let-it-grow.page-wrap.my-page
+    .overlay__container(data-content="auth-verification")
+      .overlay__content
+        h2 Er du sikker på at du vil slette din konto?
+        p Dette kan ikke fortrydes.
+        p Vi sletter dit brugernavn, din email og dit password, samt oplysninger om, hvor mange point du har optjent.
+        p Vi sletter ikke de konkrete emneord og kortplaceringer, som du har tilføjet.
+        .my-page__overlay-buttons
+          a(href='/delete-account').btn.btn-primary Ja, slet min konto
+          .btn.btn-dark Annuller
+    .container-fluid
+      .col-xs-12
+        h1.my-page__username-mobile(data-user-id=user.id)= user.nickname
+      .col-xs-6.col-md-4
+        - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
+        img.img-responsive.my-page__profile-photo(src=profileImage)
+      .col-xs-6.col-md-8.my-page__profile-stats
+          h1.my-page__username-desktop(data-user-id=user.id)= user.nickname
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('tag')
+            .my-page__counter= stats.tags.tags
+            .my-page__counter-description Emneord
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('location')
+            .my-page__counter= stats.geolocations.geolocations
+            .my-page__counter-description Lokationer
+          .my-page__circle-wrapper
+            .my-page__circle
+              +icon('trophy')
+            .my-page__counter= points
+            .my-page__counter-description Point
+
+      .col-xs-12.col-md-4.my-page__user-info
+        h2 Mine oplysninger
+        table
+          tr
+            td.my-page__table-bold Brugernavn
+            td= user.nickname ? user.nickname : user.username
+          tr
+            td.my-page__table-bold Email
+            td= user.emails[0].value
+      .col-xs-12.col-md-4.my-page__user-actions
+        h2 &nbsp;
+        .my-page__delete-user
+          a(data-action='delete-account-verification')
+            +icon('trash')
+            | Slet profil

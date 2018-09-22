@@ -1,0 +1,118 @@
+$profile-photo-dimensions: 170px;
+
+$circle-size: 48px;
+$circle-size-mobile: 24px;
+
+.my-page {
+  &__delete-user {
+    svg {
+      position: relative;
+      top: 5px;
+      right: 7px;
+      width: $icon-size;
+      height: $icon-size;
+      fill: $brand-primary;
+    }
+  }
+  &__profile-photo {
+    margin: 24px auto;
+    width: 100%;
+    height: 100%;
+    max-height: $profile-photo-dimensions;
+    max-width: $profile-photo-dimensions !important; // Needed because of very specific img styling in page-wrap.
+    border-radius: $profile-photo-dimensions;
+    .is-mobile & {
+      float: left;
+      margin: 0 auto;
+      border-radius: $profile-photo-dimensions;
+    }
+  }
+  &__username {
+    &-desktop {
+      .is-mobile & {
+        display: none;
+      }
+    }
+    &-mobile {
+      .is-desktop & {
+        display: none;
+      }
+    }
+  }
+  &__profile-stats {
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+    }
+  }
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    margin-right: 15px;
+    border: 1px solid $gray-light;
+
+    .is-desktop & {
+      width: $circle-size;
+      height: $circle-size;
+      border-radius: $circle-size;
+      padding: 24px;
+    }
+    .is-mobile & {
+      width: $circle-size-mobile;
+      height: $circle-size-mobile;
+      border-radius: $circle-size-mobile;
+      padding: 18px;
+    }
+
+    svg {
+      position: absolute;
+      fill: $brand-primary;
+    }
+  }
+  &__circle-wrapper {
+    float: left;
+    margin-right: 80px;
+    margin-top: 10px;
+    .is-mobile & {
+      width: 100%;
+      margin: 6px 0;
+    }
+  }
+  &__counter {
+    float: left;
+    font-weight: bold;
+    font-size: 24px;
+  }
+  &__counter-description {
+    float: left;
+    position: relative;
+    clear: both;
+    font-size: 1rem;
+    .is-desktop & {
+      left: 66px;
+      top: -20px;
+    }
+    .is-mobile & {
+      position: static;
+      clear: none;
+      margin-left: 6px;
+      margin-top: 9px;
+    }
+  }
+  &__user-info, &__user-actions {
+    margin-top: 50px;
+  }
+  &__table-bold {
+    font-weight: bold;
+    padding-right: 40px;
+  }
+  table  {
+    margin-top: 40px;
+    font-size: 1rem;
+    td {
+      padding-bottom: 20px;
+    }
+  }
+}

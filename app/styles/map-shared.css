@@ -30,11 +30,12 @@
 }
 
 #mapPopupClose {
-  content: url('/app/images/icons/map/close.png');
+  background: url('/app/images/icons/map/close.png') center center no-repeat;
   position: absolute;
   right: 0px;
   top: 0px;
-  padding: 10px;
+  width: 40px;
+  height: 40px;  
 }
 
 #mapPopupHeading {
@@ -197,6 +198,9 @@
     appearance: none;
     background: url('/app/images/icons/map/downarrow.png') no-repeat;
     background-position: right 10px center;
+}
+.ol-control select::-ms-expand {
+    display: none;
 }
 .ol-control button, .ol-control select {
     display: block;
