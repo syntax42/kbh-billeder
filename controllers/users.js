@@ -3,20 +3,23 @@ const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const auth0 = require('collections-online/lib/services/auth0');
 const config = require('collections-online/shared/config');
 
-const Service = auth0.Service
+const Service = auth0.Service;
 
 users.renderProfile = async (req, res) => {
-  const { user } = req;
+  if (!req.user) {
+    res.redirect('/');
+    return;
+  }
 
-  console.log(await Service)
+  const {user} = req;
 
   let points = kbhStatsApi.userPoints(user.id);
   let stats = kbhStatsApi.userStats(user.id);
 
   try {
-    [points, stats] = [await points, await stats]
+    [points, stats] = [await points, await stats];
   } catch(err) {
-    console.log(err)
+    console.log(err);
   }
 
   res.render('profile' + (config.features.oldProfilePage ? '' : '2'), {points , stats, user});
