@@ -2,20 +2,21 @@ include ../../mixins/icon
 include ../../mixins/loader
 
 // Template for the entire user contribution section.
-#user-contributions.row.user-contributions
-    .user-contributions__header
-        h2 Mine tilføjelser
+#user-contributions.user-contributions
+    .user-contributions__header.col-xs-12
+        h2.user-contributions__header-title Mine tilføjelser
         // The data attributes must be in sync with their section counterparts.
         // See profile/index.js
-        div(data-section='tag').user-contributions__header-tab
-            h2.user-contributions__header-tab-title Emneord
-            +icon('tag')
-        div(data-section='location').user-contributions__header-tab
+        .user-contributions__header-tabs
+          .user-contributions__header-tab(data-section='tag')
+              h2.user-contributions__header-tab-title Emneord
+              +icon('tag')
+          .user-contributions__header-tab(data-section='location')
             h2.user-contributions__header-tab-title Lokationer
             +icon('location')
-    div(data-section='tag').user-contributions__section.user-contributions__section-tag
+    .user-contributions__section.user-contributions__section-tag(data-section='tag')
         .loader-wrapper
             +loader()
-    div(data-section='location').user-contributions__section.user-contributions__section-location
+    .user-contributions__section.user-contributions__section-location(data-section='location')
         .loader-wrapper
             +loader()
