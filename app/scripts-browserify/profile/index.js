@@ -38,7 +38,13 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
     const currentSectionIndex = sections.length - 1;
     // Append to current section if it as the same date as the current item.
     if (sections.length > 0 && sections[currentSectionIndex].date === item.contribution_date) {
-      sections[currentSectionIndex].items.push(item);
+      // But only if the asset is not already in the section - this should only
+      // happen if we're appending to an old section after a new fetch so we
+      // explicitly check the last element.
+      const length = sections[currentSectionIndex].items.length;
+      if (length === 0 || sections[currentSectionIndex].items[length-1].id !== item.id) {
+        sections[currentSectionIndex].items.push(item);
+      }
     } else {
       // Create a new section with the current item in it.
       sections.push(
