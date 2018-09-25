@@ -69,7 +69,6 @@ const renderer = {
           let loadedUser = _.find(loadedUsers, {'user_id': scoreEntry.user_id});
           if (loadedUser) {
             if (loadedUser.name) {
-              console.log(`Name ${loadedUser.name} id ${scoreEntry.user_id}`);
               // We have a name, so far so good.
               // In situations where Auth0 don't really have the name they fall
               // back to the email.  In that situation the "nickname" field might

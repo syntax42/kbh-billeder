@@ -44,7 +44,7 @@ users.fetchUserContributions = async (req, res, next) => {
 
   // Get all parameters we'll need and validate them.
   const {user} = req;
-  // The API uses gelocation and not location, but the UI users "location", sow
+  // The API uses gelocation and not location, but the UI users "location", so
   // we translate before going to the API.
   const assetType = req.params.assetType === 'location' ? 'geolocation' : 'tag';
   const pageNo = req.params.pageNo;
