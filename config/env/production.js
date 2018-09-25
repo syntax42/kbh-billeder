@@ -24,7 +24,7 @@ const production = _.merge({}, base, {
     sitewidePassword: false,
     users: true,
     magasinMuseum: false,
-    oldProfilePage: true
+    oldProfilePage: false
   },
   google: {
     analyticsPropertyID: 'UA-78446616-1'
