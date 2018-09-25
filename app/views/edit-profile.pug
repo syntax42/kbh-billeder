@@ -1,0 +1,32 @@
+extends profile2
+
+//- Do not render stats, username and user info and actions.
+block stats
+block username
+block user-info
+block user-actions
+
+block inner-content
+  - let placeholderDisabled = 'Ikke muligt';
+  .col-xs-12.col-md-8.my-page__edit-profile
+    .col-xs-12.my-page__edit-profile__page-header--desktop
+      h1 Redigér profil
+    form(action='/update-user', method='POST')
+      .col-xs-12.col-md-6
+        .my-page__edit-profile__form-element
+          .my-page__edit-profile__header
+            b Nyt password
+          input(type='password', name='password', disabled=!userCanChangePassword, placeholder=!userCanChangePassword ? placeholderDisabled : '')
+      .col-xs-12.col-md-6
+          .my-page__edit-profile__form-element
+            .my-page__edit-profile__header
+              b Gentag password
+            input(type='password', name='passwordConfirmation', disabled=!userCanChangePassword, placeholder=!userCanChangePassword ? placeholderDisabled : '')
+      .col-xs-12.my-page__edit-profile__buttons
+        a(href='/min-side').btn
+          | Annuller
+        input(type='submit', value='Gem ændringer').btn.btn-primary
+
+prepend photo
+  .my-page__edit-profile__page-header--mobile
+    h1 Redigér profil

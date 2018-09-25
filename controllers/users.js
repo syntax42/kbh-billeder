@@ -19,7 +19,13 @@ users.renderProfile = async (req, res) => {
     console.log(err)
   }
 
-  res.render('profile' + (config.features.oldProfilePage ? '' : '2'), {points , stats, user});
-}
+  res.render('profile' + (config.features.oldProfilePage ? '' : '2'), { points , stats, user });
+};
+
+users.renderEditProfile = async (req, res) => {
+  const { user } = req;
+  let userCanChangePassword = user.provider === 'auth0';
+  res.render('edit-profile', { user, userCanChangePassword });
+};
 
 module.exports = users;

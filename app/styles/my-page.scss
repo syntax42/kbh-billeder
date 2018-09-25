@@ -116,3 +116,53 @@ $circle-size-mobile: 24px;
     }
   }
 }
+
+// Edit page
+.my-page__edit-profile {
+  input[type="password"] {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid $gray;
+    outline: none;
+    padding: 10px;
+
+    &:focus {
+      border: 1px solid $black;
+    }
+    &:disabled {
+      background: $gray-light;
+      cursor: not-allowed;
+    }
+  }
+  .is-mobile & {
+    div[class*='col-'] {
+      padding: 0;
+    }
+  }
+  &__page-header {
+    &--mobile {
+      .is-desktop & {
+        display: none;
+      }
+    }
+    &--desktop {
+      .is-mobile & {
+        display: none;
+      }
+    }
+  }
+  &__header {
+    margin-bottom: $spacer-sm;
+  }
+  &__form-element {
+    margin-bottom: $spacer-lg;
+  }
+  &__buttons {
+    .is-desktop & {
+      text-align: right;
+    }
+    .is-mobile & {
+      margin-top: $spacer-lg;
+    }
+  }
+}
