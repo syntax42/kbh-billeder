@@ -65,11 +65,6 @@ users.fetchUserContributions = async (req, res, next) => {
       return;
     }
 
-    // The API will give us repeat results for assets if the user has made
-    // multiple contributions to it. We only want to display a single result pr
-    // asset so we reduce it down to a uniqe list.
-    contributions = _.uniqBy(contributions, 'asset_id');
-
     // Extract the ids of the assets and fetch the data we need from ES.
     const ids = contributions.map(contribution => contribution.asset_id);
     const queryObject = {

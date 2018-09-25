@@ -2,6 +2,10 @@
  * This module handles all clientside searching
  */
 
+const request = require('request');
+const config = require('collections-online/shared/config');
+const _ = require('lodash');
+
 const SELECTOR_USER_CONTRIBUTIONS_SECTIONS = '#user-contributions .user-contributions__section[data-section]';
 const SELECTOR_USER_CONTRIBUTIONS_TABS = '#user-contributions .user-contributions__header-tab[data-section]';
 const SELECTOR_DEFAULT_USER_CONTRIBUTIONS_TAB = '#user-contributions .user-contributions__header-tab[data-section=tag]';
@@ -97,57 +101,57 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   /**
    * Fetch data from the backend.
    */
+  const _responseCallback = (error, response, body) => {
+    if (error) {
+      console.warn('Error while fetching contributions');
+      console.warn(error);
+      $sectionElement.removeClass('is-loading');
+      return;
+    }
+
+    const jsonData = JSON.parse(body);
+    // Process data if it is available.
+    if (jsonData.length > 0) {
+      // The API will give us repeat results for assets if the user has made
+      // multiple contributions to it. We only want to display a single result pr
+      // asset so we reduce it down to a uniqe list.
+      load(_.uniqBy(jsonData, 'id'));
+    } else if (!firstFetchAttempted) {
+      // We where never able to fetch any data for this section, add a class
+      // saying so.
+      $sectionElement.addClass('is-empty');
+    }
+
+    // If it seems like we have more contributions, get ready for the next
+    // page.
+    if (jsonData.length >= config.search.contributionsPageSize) {
+      nextPage++;
+      hasMore = true;
+    } else {
+      hasMore = false;
+      // Hide the load more button if its where visible.
+      $loadMoreButton.hide();
+    }
+
+    // We've successfully initialized.
+    if (!firstFetchAttempted) {
+      firstFetchAttempted = true;
+    }
+
+    $sectionElement.removeClass('is-loading');
+  };
+
   const doFetch = () => {
     if (!hasMore) {
       return;
     }
 
     $sectionElement.addClass('is-loading');
-    fetch(`${fetchEndpoint}/${nextPage}`)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (jsonData) {
-        // Process data if it is available.
-        if (jsonData.length > 0) {
-          load(jsonData);
-        } else if (!firstFetchAttempted) {
-          // We where never able to fetch any data for this section, add a class
-          // saying so.
-          $sectionElement.addClass('is-empty');
-        }
-
-        // If it seems like we have more contributions, get ready for the next
-        // page.
-        if (jsonData.length > 0) {
-          nextPage++;
-          hasMore = true;
-        } else {
-          hasMore = false;
-          // Hide the load more button if its where visible.
-          $loadMoreButton.hide();
-        }
-
-        // We've successfully initialized.
-        if (!firstFetchAttempted) {
-          firstFetchAttempted = true;
-        }
-
-      })
-      .catch(error => {
-        console.warn('Error while fetching contributions');
-        console.warn(error);
-      })
-      .finally(() => {
-        // Remove any loaders.
-        $sectionElement.removeClass('is-loading');
-      });
-
+    request({'url': `${fetchEndpoint}/${nextPage}`}, _responseCallback);
   };
 
   // Function for loading contributions into an element.
   const load = (items) => {
-
     // See if we should start off with the last section.
     let initialList = [];
     if (lastSection && lastSection.date === getContributionDate(items[0].contribution_time)) {
