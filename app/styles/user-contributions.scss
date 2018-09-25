@@ -1,0 +1,106 @@
+// Style the user-contribution section. It consists of a header with two
+// tabs that reveals separate section for geo-tags and motif tags.
+// The assets in the tab-sections are styled much like search-results.
+// The content of the sections are lazy-loaded, and each tab-section is only
+// visible when the tab is active. Ie, we have "active", and "loading" states.
+.user-contributions {
+  // The default is to hide the sections unless their explicitly made active.
+  &__section-tag,
+  &__section-location {
+    display: none;
+    &.is-active {
+      display: block;
+    }
+  }
+  &__section {
+    &-no-contributions {
+      display: none;
+    }
+    & .is-empty &-no-contributions {
+      display: block;
+    }
+    a {
+      &:focus, &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  &__item {
+    margin-bottom: 40px;
+    padding-top: $spacer-md;
+    padding-bottom: $spacer-md;
+    &:focus, &:hover {
+      background: white;
+      @include shadow(3);
+    }
+  }
+  &__header {
+    // The header consist of a heading and two tabs with icons.
+    margin-bottom: 30px;
+    &-title {
+      float: left;
+    }
+    &-tabs {
+      float: left;
+      margin-left: 50px;
+      margin-top: 20px;
+    }
+    &-tab {
+      display: inline-block;
+      cursor: pointer;
+      padding: 8px 10px;
+      margin-right: 10px;
+      &-title {
+        float: left;
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+      &.is-active {
+        padding: 5px 10px;
+        border-bottom: 3px solid $brand-primary;
+      }
+      svg {
+        margin-top: -6px;
+        margin-left: 6px;
+      }
+    }
+
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+      float: left;
+    }
+  }
+
+  // We have a wrapper around the loader to be able to select it.
+  .loader-wrapper {
+    display: none;
+  }
+
+  &__section {
+    &-title {
+      margin: 15px 0;
+      font-weight: bolder;
+      font-size: 1.25rem;
+    }
+    .is-loading {
+      .loader-wrapper {
+        display: block;
+      }
+    }
+  }
+
+  .search-results-item {
+    &__title {
+      color: $gray-darker;
+      font-weight: bold;
+      font-family: $font-family-light;
+      font-size: 1.25rem;
+      margin: 10px 0;
+    }
+    &__description {
+      color: $gray-darker;
+      height: auto;
+    }
+  }
+}
