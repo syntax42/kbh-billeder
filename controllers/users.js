@@ -4,6 +4,7 @@ const config = require('collections-online/shared/config');
 
 
 users.renderProfile = async (req, res) => {
+  // Redirect to front-page if the user is not authorized.
   if (!req.user) {
     res.redirect('/');
     return;
@@ -20,7 +21,10 @@ users.renderProfile = async (req, res) => {
     console.log(err);
   }
 
-  res.render('profile' + (config.features.oldProfilePage ? '' : '2'), {points , stats, user});
-}
+  res.render(
+    'profile' + (config.features.oldProfilePage ? '' : '2'),
+    {points , stats, user}
+  );
+};
 
 module.exports = users;
