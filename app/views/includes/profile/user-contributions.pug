@@ -1,0 +1,21 @@
+include ../../mixins/icon
+include ../../mixins/loader
+
+// Template for the entire user contribution section.
+#user-contributions.row.user-contributions
+    .user-contributions__header
+        h2 Mine tilføjelser
+        // The data attributes must be in sync with their section counterparts.
+        // See profile/index.js
+        div(data-section='tag').user-contributions__header-tab
+            h2.user-contributions__header-tab-title Emneord
+            +icon('tag')
+        div(data-section='location').user-contributions__header-tab
+            h2.user-contributions__header-tab-title Lokationer
+            +icon('location')
+    div(data-section='tag').user-contributions__section.user-contributions__section-tag
+        .loader-wrapper
+            +loader()
+    div(data-section='location').user-contributions__section.user-contributions__section-location
+        .loader-wrapper
+            +loader()

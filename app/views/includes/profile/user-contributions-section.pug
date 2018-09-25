@@ -1,0 +1,8 @@
+- const title = helpers.formatDate(section.time);
+div(id=section.id).user-contributions--section.col-xs-12
+    .user-contributions--section-title=title
+    .user-contributions--section-items
+        each item in section.items
+            include user-contributions-item
+
+

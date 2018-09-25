@@ -115,4 +115,54 @@ $circle-size-mobile: 24px;
       padding-bottom: 20px;
     }
   }
+
+  // Ensure we get the darker background for our section 2.
+  &__section2 {
+    @include document-section(2);
+  }
+
+  // Style the user-contribution section. It consists of a header with two
+  // tabs that reveals seperate section for geotags and motif tags.
+  // The assets in the tab-sections are styled much like search-results.
+  // The content of the sections are lazy-loaded, and each tab-section is only
+  // visible when the tab is active. Ie, we have "active", and "loading" states.
+  .user-contributions {
+    // The default is to hide the sections unless their explicitly made active.
+    .user-contributions__section-tag,
+    .user-contributions__section-location {
+      display: none;
+      &.is-active {
+        display: block;
+      }
+    }
+
+    &__header {
+      // The header consist of a heading and two tabs with icons.
+      &-tab {
+        display: inline-block;
+        cursor: pointer;
+        &-title {
+          float: left;
+          font-size: 1rem;
+        }
+      }
+
+      svg {
+        width: 24px;
+        height: 24px;
+        float: left;
+        margin: 12px;
+      }
+
+    }
+    // We have a wrapper around the loader to be able to select it.
+    .loader-wrapper {
+      display:none;
+    }
+    .user-contributions__section.is-loading {
+      .loader-wrapper {
+        display: block;
+      }
+    }
+  }
 }
