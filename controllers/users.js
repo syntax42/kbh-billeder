@@ -1,7 +1,7 @@
 const users = require('collections-online/lib/controllers/users');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const config = require('collections-online/shared/config');
-
+const _ = require('lodash');
 
 users.renderProfile = async (req, res) => {
   // Redirect to front-page if the user is not authorized.
@@ -25,6 +25,81 @@ users.renderProfile = async (req, res) => {
     'profile' + (config.features.oldProfilePage ? '' : '2'),
     {points , stats, user}
   );
+};
+
+/**
+ * Callback for fetching user contributions.
+ */
+users.fetchUserContributions = async (req, res, next) => {
+  // We have to require the document service late as it is loaded later than
+  // the controller.
+  const ds = require('collections-online/lib/services/documents');
+
+  // Only process requests from logged in users.
+  if (!req.user) {
+    res.sendStatus(401);
+    return;
+  }
+
+  // Get all parameters we'll need and validate them.
+  const {user} = req;
+  // The API uses gelocation and not location, but the UI users "location", sow
+  // we translate before going to the API.
+  const assetType = req.params.assetType === 'location' ? 'geolocation' : 'tag';
+  const pageNo = req.params.pageNo;
+
+  if (['geolocation', 'tag'].indexOf(assetType) === -1) {
+    next(new Error('Invalid asset-type'));
+    return;
+  }
+
+  try {
+    // Fetch the list of user-contributions.
+    let contributions = await kbhStatsApi.userContributions(
+      user.id, assetType, pageNo
+    );
+    // Return an empty list if we could not find any contributions.
+    if (contributions.length === 0) {
+      res.json([]);
+      next();
+    }
+
+    // The API will give us repeat results for assets if the user has made
+    // multiple contributions to it. We only want to display a single result pr
+    // asset so we reduce it down to a uniqe list.
+    contributions = _.uniqBy(contributions, 'asset_id');
+
+    // Extract the ids of the assets and fetch the data we need from ES.
+    const ids = contributions.map(contribution => contribution.asset_id);
+    const queryObject = {
+      type: 'asset',
+      _source: ['collection', 'id', 'short_title', 'type', 'description'],
+      body: {
+        ids: ids
+      }
+    };
+    const loadedContributions = await ds.mget(queryObject).then(response => {
+      // Extract the metadata for all related docs that was found
+      return response.docs
+      // Only show documents we could actually look up.
+        .filter(doc => doc.found)
+        .map(doc => {
+          const contribution = doc._source;
+          // Add in the contribution time from our original fetch of
+          // contributions.
+          contribution.contribution_time = _.find(contributions,
+            contribution => {
+              return contribution.asset_id === doc._id;
+            }).updated;
+          return contribution;
+        });
+    });
+    res.json(loadedContributions);
+  }
+  catch(err) {
+    console.log(err);
+    next(new Error('Error occured while fetching contributions'));
+  }
 };
 
 module.exports = users;
