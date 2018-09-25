@@ -204,20 +204,27 @@ module.exports = (gulp, customizationPath) => {
         compileDebug: isDevelopment,
         pug: customPug
       }))
+      .on('error', function (err) {
+        console.log('Error while compiling pug');
+        console.log(err.toString());
+        // This will thrown an error since we're going to write to files after
+        // we've emitted an "end" - but this is the best we can do for now.
+        this.emit('end');
+      })
       .pipe(gulp.dest(PUG_DEST));
   });
 
   gulp.task('watch', function() {
-    gulp.watch(STYLES_ALL, { interval: 5000 }, ['css']);
-    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 5000 }, ['svg']);
-    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 5000 }, ['js']);
+    gulp.watch(STYLES_ALL, { interval: 500 }, ['css']);
+    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 500 }, ['svg']);
+    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 500 }, ['js']);
     gulp.watch([
       SCRIPTS_ALL,
       SCRIPTS_BROWSERIFY_DIR_CO + '/**/*.js',
       SCRIPTS_BROWSERIFY_DIR + '/**/*.js',
       customizationPath + '/config/**/*',
       customizationPath + '/shared/*.js'
-    ], { interval: 5000 }, ['reload-config', 'js']);
+    ], { interval: 500 }, ['reload-config', 'js']);
   });
 
   gulp.task('clean', function() {
