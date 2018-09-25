@@ -13,6 +13,12 @@
     }
   }
   &__section {
+    &-no-contributions {
+      display: none;
+    }
+    & .is-empty &-no-contributions {
+      display: block;
+    }
     a {
       &:focus, &:hover {
         text-decoration: none;

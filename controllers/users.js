@@ -61,7 +61,7 @@ users.fetchUserContributions = async (req, res, next) => {
     // Return an empty list if we could not find any contributions.
     if (contributions.length === 0) {
       res.json([]);
-      next();
+      return;
     }
 
     // The API will give us repeat results for assets if the user has made
