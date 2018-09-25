@@ -20,7 +20,8 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   // Notice: The endpoint is 1-indexed, and the page-size is determined on the
   // backend.
   let nextPage = 1;
-  let hasData = false;
+  let firstFetchAttempted = false;
+  let hasMore = true;
 
   let lastSection = undefined;
   const templates = {
@@ -60,16 +61,31 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
    * Fetch data from the backend.
    */
   const doFetch = () => {
+    if (!hasMore) {
+      return;
+    }
+
     $sectionElement.addClass('is-loading');
     fetch(`${fetchEndpoint}/${nextPage}`)
       .then(function (response) {
         return response.json();
       })
       .then(function (jsonData) {
-        nextPage++;
-        load(jsonData);
-        if (!hasData) {
-          hasData = true;
+        // Process data if it is available.
+        if (jsonData.length > 0) {
+          nextPage++;
+          load(jsonData);
+          if (!firstFetchAttempted) {
+            firstFetchAttempted = true;
+          }
+        } else if (firstFetchAttempted) {
+          // We saw at least one page before we ran out.
+          hasMore = false;
+        } else {
+          // We where never able to fetch any data for this section, add a class
+          // saying so.
+          hasMore = false;
+          $sectionElement.addClass('is-empty');
         }
       })
       .catch(error => {
@@ -108,7 +124,11 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   // Return a handler object the caller can use to load more elments.
   return {
     doFetch,
-    hasData: () => {return hasData;}
+    // Returns true if we either have not attempted to fetch any data, or
+    // we've yet to hit the last page.
+    hasMore: () => { return !firstFetchAttempted || hasMore; },
+    firstFetchAttempted: () =>  {return firstFetchAttempted; },
+
   };
 }
 
@@ -128,7 +148,7 @@ function initialize($) {
     $tabElement.addClass('is-active');
 
     // Populate it if this is our first hit.
-    if (!sectionController.hasData()) {
+    if (!sectionController.firstFetchAttempted()) {
       sectionController.doFetch();
     }
   };
