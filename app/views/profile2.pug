@@ -12,7 +12,7 @@ block content
       .overlay__content
         h2 Er du sikker på at du vil slette din konto?
         p Dette kan ikke fortrydes.
-        p Vi sletter dit brugernavn, din email og dit password, samt oplysninger om, hvor mange point du har optjent.
+        p Vi sletter dit brugernavn, din email og dit password.
         p Vi sletter ikke de konkrete emneord og kortplaceringer, som du har tilføjet.
         .my-page__overlay-buttons
           a(href='/delete-account').btn.btn-primary Ja, slet min konto
@@ -56,3 +56,8 @@ block content
           a(data-action='delete-account-verification')
             +icon('trash')
             | Slet profil
+    .my-page__section2
+      .container-fluid
+        include includes/profile/user-contributions.pug
+
+
