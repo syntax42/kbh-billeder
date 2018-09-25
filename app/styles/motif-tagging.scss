@@ -1,4 +1,7 @@
 .motif-tagging {
+  &__tags {
+    margin-top: $spacer-md;
+  }
   &__edit-btn {
     svg {
       width: 12px;

@@ -1,5 +1,7 @@
+$map-height: 455px;
+
 .geo-tagging-mini-map {
-  height: 455px;
+  height: $map-height;
 }
 
 // Have floated buttons seperate a bit.
@@ -9,10 +11,12 @@
 
 .place-overlay {
   width: 100%;
-  position: relative;
-  max-width: $large-size;
   margin: 0 auto;
-  top: -455px;
+  margin-top: -$map-height;
+  height: $map-height;
+  position: relative;
+  max-width: $extra-large-size;
+  padding: 0 $spacer-md;
   .is-mobile & {
     position: static;
   }
@@ -22,12 +26,11 @@
       @include shadow(0);
     }
     display: inline-block;
-    position: absolute;
     background: white;
-    top: 5rem;
-    left: 15px;
+    margin-top: 75px;
     width: 400px;
-    padding: 2rem;
+    height: 300px;
+    padding: $spacer-lg;
     @include shadow(5);
     .btn {
       float: left;
