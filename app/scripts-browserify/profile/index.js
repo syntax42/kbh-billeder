@@ -2,9 +2,6 @@
  * This module handles all clientside searching
  */
 
-const config = require('collections-online/shared/config');
-const helpers = require('../../../shared/helpers');
-
 const SELECTOR_USER_CONTRIBUTIONS_SECTIONS = '#user-contributions .user-contributions__section[data-section]';
 const SELECTOR_USER_CONTRIBUTIONS_TABS = '#user-contributions .user-contributions__header-tab[data-section]';
 const SELECTOR_DEFAULT_USER_CONTRIBUTIONS_TAB = '#user-contributions .user-contributions__header-tab[data-section=tag]';
@@ -23,6 +20,8 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   let firstFetchAttempted = false;
   let hasMore = true;
 
+  const $loadMoreButton = $sectionElement.find('.load-more-btn').first();
+
   let lastSection = undefined;
   const templates = {
     contributionSection: require('views/includes/profile/user-contributions-section')
@@ -34,8 +33,6 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   }
 
   const _sectionBuilder = (sections, item) => {
-    // Breakers in image proxy and points loader
-
     item.contribution_date = getContributionDate(item.contribution_time);
 
     const currentSectionIndex = sections.length - 1;
@@ -48,6 +45,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
         {
           time: item.contribution_time,
           date: item.contribution_date,
+          formatted_date: item.formatted_date,
           id: item.contribution_date,
           items: [item]
         }
@@ -57,6 +55,39 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
     return sections;
   };
 
+  const _enableEndlessScrolling = () => {
+    $loadMoreButton.hide();
+    // Kick off the first fetch.
+    doFetch();
+
+    $(window).on('scroll', function(e) {
+      if (!hasMore) {
+        return;
+      }
+
+      var $lastItem = $('.user-contributions__section:last-child .user-contributions__item:last-child', $sectionElement);
+      if (!$lastItem.length > 0) {
+        return;
+      }
+
+      var lastItemOffset = $lastItem.offset();
+      var scrollTop = $(window).scrollTop();
+      var scrollBottom = scrollTop + $(window).height();
+      if(scrollBottom > lastItemOffset.top && !$sectionElement.hasClass('is-loading') && hasMore) {
+        // TODO - after we've fetched we might still end up with few enough
+        // results to confuse the user (we de-duplicate results).
+        // We should either fetch more results, or have the api-endpoint changed
+        // so that we dont have to do the de-duplication.
+        doFetch();
+      }
+
+    }).scroll();
+  };
+
+  // Setup listeners
+  $loadMoreButton.click(_enableEndlessScrolling);
+
+  // Controller handles.
   /**
    * Fetch data from the backend.
    */
@@ -73,20 +104,29 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
       .then(function (jsonData) {
         // Process data if it is available.
         if (jsonData.length > 0) {
-          nextPage++;
           load(jsonData);
-          if (!firstFetchAttempted) {
-            firstFetchAttempted = true;
-          }
-        } else if (firstFetchAttempted) {
-          // We saw at least one page before we ran out.
-          hasMore = false;
-        } else {
+        } else if (!firstFetchAttempted) {
           // We where never able to fetch any data for this section, add a class
           // saying so.
-          hasMore = false;
           $sectionElement.addClass('is-empty');
         }
+
+        // If it seems like we have more contributions, get ready for the next
+        // page.
+        if (jsonData.length > 0) {
+          nextPage++;
+          hasMore = true;
+        } else {
+          hasMore = false;
+          // Hide the load more button if its where visible.
+          $loadMoreButton.hide();
+        }
+
+        // We've successfully initialized.
+        if (!firstFetchAttempted) {
+          firstFetchAttempted = true;
+        }
+
       })
       .catch(error => {
         console.warn('Error while fetching contributions');
@@ -105,7 +145,9 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
     // See if we should start off with the last section.
     let initialList = [];
     if (lastSection && lastSection.date === getContributionDate(items[0].contribution_time)) {
-      initialList = lastSection;
+      initialList = [lastSection];
+      // Remove last section.
+      $sectionElement.find('#' + lastSection.id).remove();
     }
     // Convert list of items to list of sections with items
     const sections = items.reduce(_sectionBuilder, initialList);
@@ -115,7 +157,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
     // Render each section and add it to the region.
     sections.forEach(
       (section) => {
-        $sectionElement.append(templates.contributionSection({section}));
+        $sectionElement.children('.user-contributions__section-contributions').first().append(templates.contributionSection({section}));
         lastSection = section;
       }
     );
@@ -142,7 +184,6 @@ function initialize($) {
     $(SELECTOR_USER_CONTRIBUTIONS_SECTIONS).removeClass('is-active');
     $(SELECTOR_USER_CONTRIBUTIONS_TABS).removeClass('is-active');
 
-
     // Enable the new section and tab.
     $(sectionNameSelector).addClass('is-active');
     $tabElement.addClass('is-active');
@@ -166,10 +207,6 @@ function initialize($) {
       $sectionElement, fetchEndpoint
     });
     $sectionElement.data('controller', controller);
-    // TODO - trigger click on default section.
-
-    // TODO - only do fetch on active element
-    // - wire up on-scroll.
   });
 
   $(SELECTOR_DEFAULT_USER_CONTRIBUTIONS_TAB).click();

@@ -18,7 +18,16 @@ include ../../mixins/loader
         .loader-wrapper
             +loader()
         .user-contributions__section-no-contributions Du har ingen bidrag i denne kategori.
+        .user-contributions__section-contributions
+        .col-xs-12
+            button.btn.btn-primary.btn-lg.load-more.load-more-btn
+                +loader('Vis flere...')
+
     .user-contributions__section.user-contributions__section-location(data-section='location')
         .loader-wrapper
             +loader()
         .user-contributions__section-no-contributions Du har ingen bidrag i denne kategori.
+        .user-contributions__section-contributions
+        .col-xs-12
+            button.btn.btn-primary.btn-lg.load-more.load-more-btn
+                +loader('Vis flere...')

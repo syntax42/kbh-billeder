@@ -5,4 +5,4 @@ a(href=documentURL target=target).user-contributions__item.col-xs-6.col-sm-6.col
     .search-results-item__squared-container
         img(src=thumbnailURL).search-results-item__squared-image.object-fit
     h2.search-results-item__title= helpers.documentTitle(item)
-    p.search-results-item__description= helpers.documentDescription(item)
+    p.search-results-item__description= helpers.documentDescription(item) || "\u00A0"

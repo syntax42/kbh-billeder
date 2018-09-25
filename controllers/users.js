@@ -2,6 +2,7 @@ const users = require('collections-online/lib/controllers/users');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const config = require('collections-online/shared/config');
 const _ = require('lodash');
+const helpers = require('../shared/helpers')
 
 users.renderProfile = async (req, res) => {
   // Redirect to front-page if the user is not authorized.
@@ -91,6 +92,7 @@ users.fetchUserContributions = async (req, res, next) => {
             contribution => {
               return contribution.asset_id === doc._id;
             }).updated;
+          contribution.formatted_date = helpers.formatDate(contribution.contribution_time);
           return contribution;
         });
     });

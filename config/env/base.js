@@ -173,7 +173,8 @@ let config = {
       }
     },
     filters: require('../filters.json'),
-    path: 'søg'
+    path: 'søg',
+    contributionsPageSize: 50
   },
   siteTitle: 'kbhbilleder.dk',
   siteSubTitle: 'Københavns billedbårne kulturarv',

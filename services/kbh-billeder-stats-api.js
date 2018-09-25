@@ -52,7 +52,7 @@ const kbhStatsApi = {
    * @param pageSize
    *   Size of the page to fetch.
    */
-  userContributions: function(id, type, page = 1, pageSize = 50) {
+  userContributions: function(id, type, page = 1, pageSize = config.search.contributionsPageSize) {
     const parameters = {
       type: type,
       page: page,
