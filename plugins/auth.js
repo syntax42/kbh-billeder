@@ -5,6 +5,8 @@ const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
 const plugins = require('../plugins');
 const users = plugins.getFirst('users-controller');
+const { check, validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
 module.exports = {
   type: 'authentication',
@@ -48,6 +50,30 @@ module.exports = {
 
     // Most user facing routes are danish, so let's keep it that way.
     app.get('/min-side', users.renderProfile);
+    app.get('/rediger-min-side', users.renderEditProfile);
+
+    app.post('/update-user', [
+      check('password').exists(),
+      check('passwordConfirmation', 'passwordConfirmation field must have the same value as the password field')
+        .exists()
+        .custom((value, { req }) => value === req.body.password)
+    ], async (req, res) => {
+      let status;
+
+      try {
+        await auth0.getManagementService().users.update(
+          { id: req.user.user_id }, { password: req.body.password }
+        );
+        status = 200;
+        res.redirect('/rediger-min-side');
+      }
+      catch(err) {
+        console.log(err.message);
+        status = 500;
+      }
+
+      res.redirect('/rediger-min-side');
+    });
 
     app.get('/reset-password', async (req, res) => {
       const {email, connection} = req.query;
