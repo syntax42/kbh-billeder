@@ -10,6 +10,7 @@ $map-height: 455px;
 }
 
 .place-overlay {
+  pointer-events: none;
   width: 100%;
   margin: 0 auto;
   margin-top: -$map-height;
@@ -21,6 +22,7 @@ $map-height: 455px;
     position: static;
   }
   &__inner {
+    pointer-events: auto;
     .is-mobile & {
       position: static;
       @include shadow(0);
