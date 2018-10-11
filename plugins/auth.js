@@ -52,28 +52,34 @@ module.exports = {
     app.get('/min-side', users.renderProfile);
     app.get('/rediger-min-side', users.renderEditProfile);
 
-    app.post('/update-user', [
-      check('password').exists(),
-      check('passwordConfirmation', 'passwordConfirmation field must have the same value as the password field')
-        .exists()
-        .custom((value, { req }) => value === req.body.password)
-    ], async (req, res) => {
-      let status;
+    app.post('/update-user',
+      [
+        // Check validity
+        check('passwordConfirmation', 'Værdien i "Nyt password" og "Gentag password" er ikke den samme')
+          .exists()
+          .custom((value, { req }) => value === req.body.password)
+      ],
+      async(req, res, next) => {
+        // return validation results
+        const errors = validationResult(req);
 
-      try {
-        await auth0.getManagementService().users.update(
-          { id: req.user.user_id }, { password: req.body.password }
-        );
-        status = 200;
+        if (!errors.isEmpty()) {
+          console.log(errors.array());
+          req.session.error = errors.array()[0].msg;
+        }
+        else {
+          try {
+            await auth0.getManagementService().users.update(
+              { id: req.user.user_id }, { password: req.body.password }
+            );
+          }
+          catch(err) {
+            console.log(err.message);
+          }
+        }
+
         res.redirect('/rediger-min-side');
-      }
-      catch(err) {
-        console.log(err.message);
-        status = 500;
-      }
-
-      res.redirect('/rediger-min-side');
-    });
+      });
 
     app.get('/reset-password', async (req, res) => {
       const {email, connection} = req.query;
