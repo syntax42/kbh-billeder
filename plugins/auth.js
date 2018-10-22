@@ -5,8 +5,8 @@ const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
 const plugins = require('../plugins');
 const users = plugins.getFirst('users-controller');
-const { check, validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
+const { check, validationResult, body } = require('express-validator/check');
+let currentUser;
 
 module.exports = {
   type: 'authentication',
@@ -27,6 +27,7 @@ module.exports = {
 
     app.use(function(req, res, next) {
       res.locals.user = req.user;
+      currentUser = req.user;
       next();
     });
   },
@@ -54,27 +55,76 @@ module.exports = {
 
     app.post('/update-user',
       [
-        // Check validity
-        check('passwordConfirmation', 'Værdien i "Nyt password" og "Gentag password" er ikke den samme')
-          .exists()
-          .custom((value, { req }) => value === req.body.password)
+        // Email validation.
+        check('email').custom(value => {
+          // If email is not specified, don't validate it.
+          if (value === '') {
+            return true;
+          }
+          // Check if email is already used.
+          return auth0.getManagementService().getUsers({q: 'email: ' + value}).then(user => {
+            if (user.length > 0) {
+              return Promise.reject('Indtastet email er allerede i brug');
+            }
+          });
+        }),
+        check('email', 'Værdien i "Email" og "Gentag email" er ikke den samme')
+          .optional({checkFalsy: true})
+          .custom((value, { req }) => {
+            if (value !== req.body.emailConfirmation) {
+              return false;
+            }
+            return value;
+          }),
+        check('password', 'Værdien i "Nyt password" og "Gentag password" er ikke den samme')
+          .optional({checkFalsy: true})
+          .custom((value, { req }) => {
+            if (value !== req.body.passwordConfirmation) {
+              return false;
+            }
+            return value;
+          })
       ],
       async(req, res, next) => {
         // return validation results
-        const errors = validationResult(req);
+        let errors = validationResult(req);
 
         if (!errors.isEmpty()) {
           console.log(errors.array());
           req.session.error = errors.array()[0].msg;
         }
         else {
+          let usernameUpdated = false;
           try {
+            let updateObject = {};
+
+            if (req.body.username !== '') {
+              updateObject.username = req.body.username;
+              usernameUpdated = true;
+            }
+
+            if (req.body.password !== '') {
+              updateObject.password = req.body.password;
+            }
+
+            if (req.body.email !== '') {
+              updateObject.email = req.body.email;
+            }
+
             await auth0.getManagementService().users.update(
-              { id: req.user.user_id }, { password: req.body.password }
+              { id: req.user.user_id }, updateObject
             );
+
+            if (usernameUpdated) {
+              req.session.error = 'Dit brugernavn er nu ændret til "' + req.body.username + '". Log ud og log ind igen for at gennemføre ændringen.';
+            }
           }
           catch(err) {
-            console.log(err.message);
+            // The API trows an invalid_body error code, if we submit an empty form.
+            // We do not want to show that error message, because it's very technical and long.
+            if (JSON.parse(err.originalError.response.text).errorCode !== 'invalid_body') {
+              req.session.error = helpers.translate(err.message);
+            }
           }
         }
 
