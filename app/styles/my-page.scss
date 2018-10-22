@@ -119,7 +119,10 @@ $circle-size-mobile: 24px;
 
 // Edit page
 .my-page__edit-profile {
-  input[type="password"] {
+  input[type="password"],
+  input[type="text"],
+  input[type="email"]
+  {
     width: 100%;
     border-radius: 5px;
     border: 1px solid $gray;
@@ -132,11 +135,6 @@ $circle-size-mobile: 24px;
     &:disabled {
       background: $gray-light;
       cursor: not-allowed;
-    }
-  }
-  .is-mobile & {
-    div[class*='col-'] {
-      padding: 0;
     }
   }
   &__page-header {
@@ -155,12 +153,18 @@ $circle-size-mobile: 24px;
     margin-bottom: $spacer-sm;
   }
   &__form-element {
+    width: 100%;
     margin-bottom: $spacer-lg;
   }
   &__buttons {
     .is-desktop & {
       text-align: right;
     }
+    .is-mobile & {
+      margin-top: $spacer-lg;
+    }
+  }
+  &__form {
     .is-mobile & {
       margin-top: $spacer-lg;
     }

@@ -19,11 +19,11 @@ block content
             a(href='/delete-account').btn.btn-primary Ja, slet min konto
             .btn.btn-dark Annuller
     .container-fluid
-      .col-xs-12
-        block username
+      block username
+        .col-xs-12
           h1.my-page__username-mobile(data-user-id=user.id)= user.nickname
-      .col-xs-6.col-md-4
-        block photo
+      block photo
+        .col-xs-6.col-md-4
           - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
           img.img-responsive.my-page__profile-photo(src=profileImage)
       block inner-content
