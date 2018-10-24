@@ -94,30 +94,27 @@ module.exports = {
           req.session.error = errors.array()[0].msg;
         }
         else {
-          let usernameUpdated = false;
           try {
             let updateObject = {};
 
             if (req.body.username !== '') {
               updateObject.username = req.body.username;
-              usernameUpdated = true;
+              req.session.status = 'Dit brugernavn er nu ændret til "' + req.body.username + '". Log ud og log ind igen for at gennemføre ændringen.';
             }
 
             if (req.body.password !== '') {
               updateObject.password = req.body.password;
+              req.session.status = 'Dit password er blevet ændret.';
             }
 
             if (req.body.email !== '') {
               updateObject.email = req.body.email;
+              req.session.status = 'Din email er nu ændret til "' + req.body.email + '". Log ud og log ind igen for at gennemføre ændringen.';
             }
 
             await auth0.getManagementService().users.update(
               { id: req.user.user_id }, updateObject
             );
-
-            if (usernameUpdated) {
-              req.session.error = 'Dit brugernavn er nu ændret til "' + req.body.username + '". Log ud og log ind igen for at gennemføre ændringen.';
-            }
           }
           catch(err) {
             // The API trows an invalid_body error code, if we submit an empty form.
