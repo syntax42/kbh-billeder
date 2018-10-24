@@ -17,42 +17,44 @@ block inner-content
       .my-page__edit-profile__page-header--mobile
         h1 Redigér profil
         img.img-responsive.my-page__profile-photo(src=profileImage)
-        p(style='color: red;')= !userCanChangePassword ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        p(style='color: green;')= status
   .col-xs-12.col-md-8.my-page__edit-profile
     .row
       .my-page__edit-profile__page-header--desktop
         h1 Redigér profil
-        p(style='color: red;')= !userCanChangePassword ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        p(style='color: green;')= status
       form(action='/update-user', method='POST').my-page__edit-profile__form
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
                 b Brugernavn
-              input(type='text', name='username', disabled=!userCanChangePassword, placeholder=user._json.username)
+              input(type='text', name='username', disabled=!auth0User, placeholder=user._json.username)
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
                 b Email
-              input(type='email', name='email', disabled=!userCanChangePassword, placeholder=user._json.email)
+              input(type='email', name='email', disabled=!auth0User, placeholder=user._json.email)
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
                 b Gentag email
-              input(type='email', name='emailConfirmation', disabled=!userCanChangePassword, placeholder=user._json.email)
+              input(type='email', name='emailConfirmation', disabled=!auth0User, placeholder=user._json.email)
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
                 b Password
-              input(type='password', name='password', disabled=!userCanChangePassword, placeholder=!userCanChangePassword ? placeholderDisabled : '')
+              input(type='password', name='password', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '')
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
                 b Gentag password
-              input(type='password', name='passwordConfirmation', disabled=!userCanChangePassword, placeholder=!userCanChangePassword ? placeholderDisabled : '')
+              input(type='password', name='passwordConfirmation', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '')
         .col-xs-12.my-page__edit-profile__buttons
           a(href='/min-side').btn
             | Annuller
-          input(type='submit', value='Gem ændringer').btn.btn-primary
+          input(type='submit', value='Gem ændringer', disabled=!auth0User).btn.btn-primary

@@ -24,9 +24,11 @@ users.renderProfile = async (req, res) => {
 
 users.renderEditProfile = async (req, res) => {
   const { user } = req;
-  let userCanChangePassword = user.provider === 'auth0';
-  res.render('edit-profile', { user, userCanChangePassword, error: req.session.error });
+  let auth0User = user.provider === 'auth0';
+  console.log(user);
+  res.render('edit-profile', { user, auth0User, error: req.session.error, status: req.session.status });
   delete req.session.error;
+  delete req.session.status;
 };
 
 module.exports = users;
