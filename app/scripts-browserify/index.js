@@ -11,6 +11,10 @@ require('analytics');
 
 require('document/geo-tagging');
 
+if (!config.features.oldProfilePage ) {
+  require('profile/index');
+}
+
 if(config.features.sitewidePassword) {
   require('./sitewide-password');
 }

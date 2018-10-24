@@ -299,6 +299,42 @@ helpers.motifTagging = {
   }
 };
 
+const MONTHS = [
+  'januar', 'februar', 'marts', 'april', 'maj', 'juni',
+  'juli', 'august', 'september', 'oktober', 'november', 'december'
+];
+
+helpers.formatDate = function(date) {
+  var points = [];
+  if(typeof(date) === 'number' || typeof(date) === 'string') {
+    date = new Date(date);
+    if(isNaN(date)) {
+      throw Error("Could not parse date " + date);
+    }
+
+    date = {
+      day: date.getDate(),
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    };
+  }
+  if(date.day && date.month) {
+    points.push(date.day + '.');
+  }
+  if(date.month) {
+    var month = MONTHS[date.month-1];
+    if(!date.day) {
+      // Capitalize if the month is displayed first
+      month = helpers.capitalizeFirstLetter(month);
+    }
+    points.push(month);
+  }
+  if(date.year) {
+    points.push(date.year);
+  }
+  return points.join(' ');
+};
+
 helpers.geoTagging = {
   getLocation: metadata => {
     return {

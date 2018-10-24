@@ -23,13 +23,54 @@ const URL_GEOLOCATIONS = baseUrl + '/geolocations';
 const URL_USERS_POINTS = baseUrl + '/users/points';
 const URL_USERS = baseUrl + '/users';
 
-// The API integration.
+/**
+ * User stat api integration.
+ *
+ * See https://app.swaggerhub.com/apis/stumpdk/kbhbilleder-stats/1.1.0 for
+ * documentation
+ */
 const kbhStatsApi = {
   // Current score for the user.
   userPoints: function(id) {
     return this._doGet(`${URL_USERS}/${id}/points`).then(result => {
       return result.points;
     });
+  },
+
+  /**
+   * Fetches a list of assets the user has contributed to.
+   *
+   * @param id
+   *   ID of the user.
+   *
+   * @param type
+   *   geolocation or tag
+   *
+   * @param page
+   *   Which page to fetch, 1-indexed.
+   *
+   * @param pageSize
+   *   Size of the page to fetch.
+   */
+  userContributions: function(id, type, page = 1, pageSize = config.search.contributionsPageSize) {
+    const parameters = {
+      type: type,
+      page: page,
+      limit: pageSize
+    };
+
+    // Url syntax.
+    // users/{id}/assets?type=<tag|geolocation>&page=<1...>&limit=<page size>
+    return this
+      ._doGet(`${URL_USERS}/${id}/assets`, parameters)
+      .then(
+        function (result) {
+          return result;
+        }
+        , err => {
+          return [];
+        }
+      );
   },
 
   // Number of tags on assets.
