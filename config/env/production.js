@@ -23,7 +23,7 @@ const production = _.merge({}, base, {
     requireEmailVerification: true,
     sitewidePassword: false,
     users: true,
-    magasinMuseum: false,
+    magasinMuseum: true,
     oldProfilePage: false
   },
   google: {
