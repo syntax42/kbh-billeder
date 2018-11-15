@@ -22,9 +22,18 @@ users.renderProfile = async (req, res) => {
     console.log(err);
   }
 
+  res.render('profile' + (config.features.oldProfilePage ? '' : '2'), { points , stats, user });
+};
+
+users.renderEditProfile = async (req, res) => {
+  const { user } = req;
+  let auth0User = user.provider === 'auth0';
+  res.render('edit-profile', { user, auth0User, error: req.session.error, status: req.session.status });
+  delete req.session.error;
+  delete req.session.status;
   res.render(
     'profile' + (config.features.oldProfilePage ? '' : '2'),
-    {points , stats, user}
+    { points , stats, user }
   );
 };
 

@@ -29,6 +29,7 @@
     "collections-online-cumulus": "git+https://github.com/CopenhagenCityArchives/collections-online-cumulus.git",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
+    "express-validator": "^5.3.0",
     "lodash": "~4.17.5",
     "q": "^1.4.1"
   },
