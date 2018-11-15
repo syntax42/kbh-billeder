@@ -68,7 +68,7 @@ module.exports = {
             }
           });
         }),
-        check('email', 'Værdien i "Email" og "Gentag email" er ikke den samme')
+          check('email', 'Den email adresse du har indtastet og den gentagede email adresse er ikke den samme')
           .optional({checkFalsy: true})
           .custom((value, { req }) => {
             if (value !== req.body.emailConfirmation) {
@@ -76,7 +76,7 @@ module.exports = {
             }
             return value;
           }),
-        check('password', 'Værdien i "Nyt password" og "Gentag password" er ikke den samme')
+        check('password', 'Det password, du har indtastet, er ikke det samme, som det gentagede password')
           .optional({checkFalsy: true})
           .custom((value, { req }) => {
             if (value !== req.body.passwordConfirmation) {
