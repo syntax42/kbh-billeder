@@ -15,27 +15,14 @@ require('collections-online/build/gulp')(gulp, __dirname);
 // Combining tasks
 // ------------------------------------------
 
-gulp.task('build', gulp.series(function (callback) {
-  return new Promise(function(resolve) {
-    gulp.series('clean', 'bower', 'css', 'js', 'svg', callback);
-    resolve();
-  });
-}));
+gulp.task('build', gulp.series('clean', 'css', 'js', 'svg'));
 
 // ------------------------------------------
 // Default task
 // ------------------------------------------
-
-gulp.task('default', gulp.series(function (callback) {
-  if (process.env.NODE_ENV === 'development') {
-    return new Promise(function(resolve) {
-      gulp.series('build', 'watch', callback);
-      resolve();
-    });
-  } else {
-    return new Promise(function(resolve) {
-      gulp.series('build', callback);
-      resolve();
-    });
-  }
-}));
+if (process.env.NODE_ENV === 'development') {
+  gulp.task('default', gulp.series('build', 'watch'));
+}
+else {
+  gulp.task('default', gulp.series('build'));
+}
