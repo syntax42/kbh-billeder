@@ -5,6 +5,7 @@ $circle-size-mobile: 24px;
 
 .my-page {
   &__delete-user {
+    margin-top: 20px;
     svg {
       position: relative;
       top: 5px;
@@ -121,5 +122,59 @@ $circle-size-mobile: 24px;
     @include document-section(2);
     padding-top: 30px;
     padding-bottom: 60px;
+  }
+}
+
+// Edit page
+.my-page__edit-profile {
+  input[type="password"],
+  input[type="text"],
+  input[type="email"]
+  {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid $gray;
+    outline: none;
+    padding: 10px;
+
+    &:focus {
+      border: 1px solid $black;
+    }
+    &:disabled {
+      background: $gray-light;
+      cursor: not-allowed;
+    }
+  }
+  &__page-header {
+    &--mobile {
+      .is-desktop & {
+        display: none;
+      }
+    }
+    &--desktop {
+      .is-mobile & {
+        display: none;
+      }
+    }
+  }
+  &__header {
+    margin-bottom: $spacer-sm;
+  }
+  &__form-element {
+    width: 100%;
+    margin-bottom: $spacer-lg;
+  }
+  &__buttons {
+    .is-desktop & {
+      text-align: right;
+    }
+    .is-mobile & {
+      margin-top: $spacer-lg;
+    }
+  }
+  &__form {
+    .is-mobile & {
+      margin-top: $spacer-lg;
+    }
   }
 }

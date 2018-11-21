@@ -25,6 +25,7 @@ block document__section-1-metadata
 block document__section-2
   - const location = helpers.geoTagging.getLocation(metadata);
   - const hasLocation = location.longitude && location.latitude
+  - const geotagable = helpers.geoTagging.enabled(metadata);
 
     if !hasLocation
       .document__section-2.document__section-2--no-location
@@ -51,19 +52,20 @@ block document__section-2
       .place-overlay
         .place-overlay__inner
           != assetSection('place', metadata)
-          table
-            tbody
-              tr
-                td(colspan=2, class='map-coordinates__map--edit')
-                  button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
-                    | Rediger
-                    +icon('pencil')
-                  button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
-                    | Annuller
-                  button.btn.btn-primary(data-action='geo-tagging:add-direction', style="display:none")
-                    | Tilføj retning
-                  button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
-                    | Gem placering
+          if geotagable
+            table
+              tbody
+                tr
+                  td(colspan=2, class='map-coordinates__map--edit')
+                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
+                      | Rediger
+                      +icon('pencil')
+                    button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
+                      | Annuller
+                    button.btn.btn-primary(data-action='geo-tagging:add-direction', style="display:none")
+                      | Tilføj retning
+                    button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
+                      | Gem placering
 
 
 block document__section-3
