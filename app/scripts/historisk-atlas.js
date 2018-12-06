@@ -37,6 +37,7 @@ function _prepareMapOptions (options) {
       { id: 85, title: 'Luftfoto', year: '2016' },
       { id: 39, title: '4 cm kort', year: '1977-85' },
       { id: 38, title: '4 cm kort', year: '1953-76' },
+      { id: 228, title: 'K\u00F8benhavn', year: '1860' },
       { id: 105, title: 'K\u00F8benhavn', year: '1939' },
       { id: 54, title: 'Lavkantkort', year: '1901-1945' },
       { id: 55, title: 'H\u00F8jkantkort', year: '1840-1899' },
