@@ -20,11 +20,17 @@ $map-height: 455px;
   padding: 0 $spacer-md;
   .is-mobile & {
     position: static;
+    // The box is now placed underneath the map, so we can allow it to auto-fit
+    // to the column it is in.
+    margin-top: 0;
+    min-height: auto;
+    height: auto;
   }
   &__inner {
     pointer-events: auto;
     .is-mobile & {
       position: static;
+      margin-top: 0;
       @include shadow(0);
     }
     display: inline-block;
