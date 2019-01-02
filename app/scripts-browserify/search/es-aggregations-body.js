@@ -125,8 +125,6 @@ function generateRangeRanges (fromField, toField) {
 
 /**
  * Post-process a range-filter field.
- *
- * @param field
  */
 function postProcessRangeField (field, aggregationResult) {
   // We've identified that field is of type date-range. Date-range filters can
@@ -193,9 +191,9 @@ module.exports.postProcess = function (aggregationResult) {
     const filter = config.search.filters[field];
     if (
       filter.type === 'date-range' &&
-      filter.range &&
-      filter.range.from &&
-      filter.range.to) {
+      filter.multifield &&
+      filter.multifield.from &&
+      filter.multifield.to) {
       postProcessRangeField(field, aggregationResult);
     }
 
@@ -237,10 +235,10 @@ module.exports.generateBody = function(parameters, body) {
           ranges: generateDateRanges()
         }
       };
-      if (filter.range && filter.range.from &&filter.range.to) {
+      if (filter.multifield && filter.multifield.from &&filter.multifield.to) {
         aggs[field + '_range'] = {
           filters: {
-            filters: generateRangeRanges(filter.range.from, filter.range.to)
+            filters: generateRangeRanges(filter.multifield.from, filter.multifield.to)
           }
         };
       }
