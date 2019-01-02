@@ -58,7 +58,147 @@ function generateDateRanges() {
   return result;
 }
 
-module.exports = function(parameters, body) {
+// Generate a series of filter-buckets for multi-field dateranges.
+function generateRangeRanges () {
+  var result = {};
+
+  function getEntry (from, to) {
+    let entry = {
+      'bool': {
+        'must': []
+      }
+    };
+
+    if (from) {
+      entry.bool.must.push({
+        'range': {
+          'creation_time_from.year': {
+            'gte': from
+          }
+        }
+      });
+    }
+
+    if (to) {
+      entry.bool.must.push({
+        'range': {
+          'creation_time_from.year': {
+            'lt': to
+          }
+        }
+      });
+    }
+
+    return entry;
+  }
+
+  // Start of with a openended range for <= CREATION_INTERVAL_FROM.
+  result['0'] = getEntry(false, CREATION_INTERVAL_FROM);
+
+  // Then setup a interval every 100 years up until 1900.
+  for(var y = CREATION_INTERVAL_FROM; y < 1900; y+= 100) {
+    let from = y;
+    let to = y + 100;
+
+    result[y] = getEntry(from, to);
+  }
+
+  // Then every ten years
+  var lastYear;
+  for(let y = 1900; y < CREATION_INTERVAL_TO; y+= 10) {
+    let from = y;
+    let to = y + 10;
+    lastYear = to;
+    result[from] = getEntry(from, to);
+  }
+
+  // Finish off with another openended range.
+  result[lastYear] = getEntry(lastYear, false);
+  return result;
+}
+
+/**
+ * Post-process a range-filter field.
+ *
+ * @param field
+ */
+function postProcessRangeField (field, aggregationResult) {
+  // We've identified that field is of type date-range. Date-range filters can
+  // work with a single date-field (default) and a "multi" date fields
+  // (to/from)
+  // The Aggregation Result will have a
+  // aggregations.<fieldname>_independent.<fieldname> entry pr. single-field
+  // date-range field.
+  // If the filter is also setup with a multi-field range its result can be
+  // found under
+  // aggregations.<fieldname>_independent.<fieldname>_range
+  // We now go and find any multi-field results, and then augment the
+  // corresponding single-field results.
+
+  // Ensure we have all the data we need.
+  if (
+    !aggregationResult['aggregations']
+    || !aggregationResult['aggregations'][field + '_independent']
+    || !aggregationResult['aggregations'][field + '_independent'][field]
+    || !aggregationResult['aggregations'][field + '_independent'][field]['buckets']
+    || !aggregationResult['aggregations'][field + '_independent'][field]['buckets'].length
+    || !aggregationResult['aggregations'][field + '_independent'][`${field}_range`]
+    || !aggregationResult['aggregations'][field + '_independent'][`${field}_range`]['buckets']) {
+    return;
+  }
+
+  // We've verified we have results for the main date-range aggregation and
+  // the multi-field range, now go trough each single-field range and look up
+  // any multi-field range results and augment.
+  const singleFieldRanges = aggregationResult['aggregations'][field + '_independent'][field].buckets;
+  const multiFieldRanges = aggregationResult['aggregations'][field + '_independent'][`${field}_range`].buckets;
+
+  singleFieldRanges.forEach(function(rangeBucket, index) {
+    // Pick out the year for the range.
+    let fromYear;
+    if (rangeBucket['from_as_string']) {
+      fromYear = rangeBucket['from_as_string'];
+    }
+    else {
+      // Allow the initial (open-ended range bucket) not to have a from.
+      if (index === 0) {
+        fromYear = 0;
+      }
+      else {
+        return;
+      }
+    }
+
+    // Add the multi-field counts to the singlefield if found.
+    if (!multiFieldRanges[fromYear]
+      || !multiFieldRanges[fromYear]['doc_count']) {
+      return;
+    }
+    rangeBucket['doc_count'] += multiFieldRanges[fromYear]['doc_count'];
+  });
+}
+
+
+// The post-processing step lets us modify the various filter results.
+module.exports.postProcess = function (aggregationResult) {
+
+  // Go trough the filteres and identify date-ranges.
+  Object.keys(config.search.filters).forEach(function(field) {
+    const filter = config.search.filters[field];
+    if (
+      filter.type === 'date-range' &&
+      filter.range &&
+      filter.range.from &&
+      filter.range.to) {
+      postProcessRangeField(field, aggregationResult);
+    }
+
+  });
+
+  return aggregationResult;
+};
+
+module.exports.generateBody = function(parameters, body) {
   var result = {
     aggs: {}
   };
@@ -91,6 +231,14 @@ module.exports = function(parameters, body) {
           ranges: generateDateRanges()
         }
       };
+      if (filter.range && filter.range.from &&filter.range.to) {
+        aggs[field + '_range'] = {
+          filters: {
+            filters: generateRangeRanges()
+          }
+        };
+      }
+
     } else if (filter.type === 'filters') {
       if(!filter.filters) {
         throw new Error('Expected "filters" option on filter field: ' + field);
