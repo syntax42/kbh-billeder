@@ -51,7 +51,7 @@ function generateDateRanges() {
       to: to.toString() + '||-1s'
     });
   }
-  // And beyound
+  // And beyond.
   result.push({
     from: lastYear.toString()
   });
@@ -59,34 +59,40 @@ function generateDateRanges() {
 }
 
 // Generate a series of filter-buckets for multi-field dateranges.
-function generateRangeRanges () {
+function generateRangeRanges (fromField, toField) {
   var result = {};
 
-  function getEntry (from, to) {
+  function getFilterEntry(fieldName, fieldValue, operator) {
+    let filter = {
+      'range': { }
+    };
+    filter.range[fieldName] =  {};
+    filter.range[fieldName][operator] = fieldValue;
+
+    // Should give us something like.
+    // {
+    //   'range': {
+    //     'creation_time_from.year': {
+    //       'gte': '1940'
+    //     }
+    //   }
+    // }
+    return filter;
+  }
+
+  function getEntry (fromValue, toValue) {
     let entry = {
       'bool': {
         'must': []
       }
     };
 
-    if (from) {
-      entry.bool.must.push({
-        'range': {
-          'creation_time_from.year': {
-            'gte': from
-          }
-        }
-      });
+    if (fromValue) {
+      entry.bool.must.push(getFilterEntry(fromField, fromValue, 'gte'));
     }
 
-    if (to) {
-      entry.bool.must.push({
-        'range': {
-          'creation_time_from.year': {
-            'lt': to
-          }
-        }
-      });
+    if (toValue) {
+      entry.bool.must.push(getFilterEntry(toField, toValue, 'lt'));
     }
 
     return entry;
@@ -234,7 +240,7 @@ module.exports.generateBody = function(parameters, body) {
       if (filter.range && filter.range.from &&filter.range.to) {
         aggs[field + '_range'] = {
           filters: {
-            filters: generateRangeRanges()
+            filters: generateRangeRanges(filter.range.from, filter.range.to)
           }
         };
       }
