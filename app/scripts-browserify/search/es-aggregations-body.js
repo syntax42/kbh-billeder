@@ -88,10 +88,12 @@ function generateRangeRanges (fromField, toField) {
     };
 
     if (fromValue) {
+      // Greater than or equal to the specified value.
       entry.bool.must.push(getFilterEntry(fromField, fromValue, 'gte'));
     }
 
     if (toValue) {
+      // Less than specified value.
       entry.bool.must.push(getFilterEntry(toField, toValue, 'lt'));
     }
 
@@ -235,7 +237,7 @@ module.exports.generateBody = function(parameters, body) {
           ranges: generateDateRanges()
         }
       };
-      if (filter.multifield && filter.multifield.from &&filter.multifield.to) {
+      if (filter.multifield && filter.multifield.from && filter.multifield.to) {
         aggs[field + '_range'] = {
           filters: {
             filters: generateRangeRanges(filter.multifield.from, filter.multifield.to)
