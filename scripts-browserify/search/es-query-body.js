@@ -46,11 +46,70 @@ module.exports = function(parameters) {
           }
           // Construct the query object
           if(filter.type === 'date-range') {
-            var query = {
+            var singlefieldRange = {
               range: {}
             };
-            query.range[filter.field] = range;
-            return query;
+            singlefieldRange.range[filter.field] = range;
+
+            if (filter.range && filter.range.to && filter.range.from) {
+              // Prepare an additional filter for the multifield range.
+              var multifieldRange = {
+                bool: {
+                  must: [
+                    {
+                      range: {}
+                    },
+                    {
+                      range: {}
+                    }
+                  ]
+                }
+              };
+
+              // Fill in the field names.
+              multifieldRange.bool.must[0].range[filter.range.from] = {
+                gte: range.gte
+              };
+              multifieldRange.bool.must[1].range[filter.range.to] = {
+                lt: range.lt
+              };
+
+              // Should give us something like.
+              // {
+              //   bool: {
+              //     must: [
+              //       {
+              //         range: {
+              //           'creation_time_from.year': {
+              //             gte: 1940
+              //           }
+              //         }
+              //       },
+              //       {
+              //         range: {
+              //           'creation_time_to.year': {
+              //             lt: 1950
+              //           }
+              //         }
+              //       }
+              //     ]
+              //   }
+              // };
+
+              // Then combine the single-field singlefieldRange with the multifield, and
+              // return that instead.
+              var combinedQuery = {
+                bool: {
+                  should: [singlefieldRange, multifieldRange]
+                }
+              };
+
+              return combinedQuery;
+            } else {
+              // Just return the single-field singlefieldRange.
+              return singlefieldRange;
+            }
+
           } else if(filter.type === 'date-interval-range') {
 
             if(!filter.fields || !filter.fields.from || !filter.fields.to) {
