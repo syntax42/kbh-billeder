@@ -113,16 +113,16 @@ function initialize() {
         sidebar.update(clonedSearchParams.filters, null);
         // Get aggragations for the sidebar
         es.search({
-          body: elasticsearchAggregationsBody(clonedSearchParams),
+          body: elasticsearchAggregationsBody.generateBody(clonedSearchParams),
           size: 0
         }).then(function (response) {
+          response = elasticsearchAggregationsBody.postProcess(response);
           sidebar.update(clonedSearchParams.filters, response.aggregations);
         }, function (error) {
           console.trace(error.message);
         });
       }
     }
-
 
     let resultCallback = function (resultsTotal) {
       // Update the results header with the result
