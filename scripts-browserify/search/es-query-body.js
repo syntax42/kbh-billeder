@@ -67,9 +67,12 @@ module.exports = function(parameters) {
               };
 
               // Fill in the field names.
+              // Year should be greater than or equal to our from.
               multifieldRange.bool.must[0].range[filter.multifield.from] = {
                 gte: range.gte
               };
+              
+              // Year should be less than our to.
               multifieldRange.bool.must[1].range[filter.multifield.to] = {
                 lt: range.lt
               };
