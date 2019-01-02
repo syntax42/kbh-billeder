@@ -51,7 +51,7 @@ module.exports = function(parameters) {
             };
             singlefieldRange.range[filter.field] = range;
 
-            if (filter.range && filter.range.to && filter.range.from) {
+            if (filter.multifield && filter.multifield.to && filter.multifield.from) {
               // Prepare an additional filter for the multifield range.
               var multifieldRange = {
                 bool: {
@@ -67,10 +67,10 @@ module.exports = function(parameters) {
               };
 
               // Fill in the field names.
-              multifieldRange.bool.must[0].range[filter.range.from] = {
+              multifieldRange.bool.must[0].range[filter.multifield.from] = {
                 gte: range.gte
               };
-              multifieldRange.bool.must[1].range[filter.range.to] = {
+              multifieldRange.bool.must[1].range[filter.multifield.to] = {
                 lt: range.lt
               };
 
