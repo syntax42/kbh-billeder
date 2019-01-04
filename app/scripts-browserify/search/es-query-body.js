@@ -51,59 +51,120 @@ module.exports = function(parameters) {
             };
             singlefieldRange.range[filter.field] = range;
 
-            if (filter.multifield && filter.multifield.to && filter.multifield.from) {
-              // Prepare an additional filter for the multifield range.
-              var multifieldRange = {
+            // If we're using a period-filter as well, we have to go with a
+            // combined filter allowing assets to match either the date.
+            if (filter.period && filter.period.to && filter.period.from) {
+              // To match the assets period must overlap with the date range.
+              // That is, either the start of the range should be within the
+              // period, or the end must. (Both is also ok, but that is covered)
+              // by the previous.
+              // That gives us the following bool structure that we then have
+              // to fill with the actual field names and range values.
+
+              var periodFilter = {
                 bool: {
-                  must: [
+                  should: [
                     {
-                      range: {}
+                      bool: {
+                        must: [
+                          {
+                            range: {}
+                          },
+                          {
+                            range: {}
+                          }
+                        ]
+                      }
                     },
                     {
-                      range: {}
+                      bool: {
+                        must: [
+                          {
+                            range: {}
+                          },
+                          {
+                            range: {}
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
               };
 
-              // Fill in the field names.
-              // Year should be greater than or equal to our from.
-              multifieldRange.bool.must[0].range[filter.multifield.from] = {
+              // Either the end of the range (range.gte) must fall between the
+              // start and end of the period.
+              periodFilter.bool.should[0].bool.must[0].range[filter.period.from] = {
+                lte: range.gte
+              };
+              // and after its end.
+              periodFilter.bool.should[0].bool.must[1].range[filter.period.to] = {
                 gte: range.gte
               };
-              
+
+              // Or the end of the range must.
+              periodFilter.bool.should[1].bool.must[0].range[filter.period.from] = {
+                lte: range.lt
+              };
+
               // Year should be less than our to.
-              multifieldRange.bool.must[1].range[filter.multifield.to] = {
-                lt: range.lt
+              periodFilter.bool.should[1].bool.must[1].range[filter.period.to] = {
+                gte: range.lt
               };
 
               // Should give us something like.
-              // {
               //   bool: {
-              //     must: [
+              //     should: [
               //       {
-              //         range: {
-              //           'creation_time_from.year': {
-              //             gte: 1940
-              //           }
+              //         bool: {
+              //           must: [
+              //             {
+              //               range: {
+              //                 'creation_time_from.year': {
+              //                   lt: 1950
+              //                 }
+              //               }
+              //             },
+              //             {
+              //               range: {
+              //                 'creation_time_to.year': {
+              //                   gte: 1940
+              //                 }
+              //               }
+              //             }
+              //           ]
               //         }
               //       },
               //       {
-              //         range: {
-              //           'creation_time_to.year': {
-              //             lt: 1950
-              //           }
+              //         bool: {
+              //           must: [
+              //             {
+              //               range: {
+              //                 'creation_time_from.year': {
+              //                   lt: 1950
+              //                 }
+              //               }
+              //             },
+              //             {
+              //               range: {
+              //                 'creation_time_to.year': {
+              //                   gte: 1940
+              //                 }
+              //               }
+              //             }
+              //           ]
               //         }
               //       }
               //     ]
               //   }
-              // };
+              // }
+              //
 
-              // Then combine the single-field singlefieldRange with the multifield, and
-              // return that instead.
+              // Setup a new combined filter that allows the asset to match
+              // either a specific creation date or a period.
               var combinedQuery = {
                 bool: {
-                  should: [singlefieldRange, multifieldRange]
+                  should: [singlefieldRange, periodFilter]
                 }
               };
 
