@@ -26,38 +26,6 @@ function buildFilter(parameters, field) {
   return body.query || {};
 }
 
-function generateDateRanges() {
-  // Let's have a bucket for all things before the intervals
-  var result = [
-    {to: CREATION_INTERVAL_FROM.toString()}
-  ];
-  // Every houndred years
-  for(var y = CREATION_INTERVAL_FROM; y < 1900; y+= 100) {
-    var from = y;
-    var to = y + 100;
-    result.push({
-      from: from.toString(),
-      to: to.toString() + '||-1s'
-    });
-  }
-  // Every ten years
-  var lastYear;
-  for(var y = 1900; y < CREATION_INTERVAL_TO; y+= 10) {
-    var from = y;
-    var to = y + 10;
-    lastYear = to;
-    result.push({
-      from: from.toString(),
-      to: to.toString() + '||-1s'
-    });
-  }
-  // And beyond.
-  result.push({
-    from: lastYear.toString()
-  });
-  return result;
-}
-
 function getFilterEntry(fieldName, fieldValue, operator) {
   let filter = {
     'range': { }
@@ -76,6 +44,9 @@ function getFilterEntry(fieldName, fieldValue, operator) {
   return filter;
 }
 
+/**
+ * Create a bool filter entry for a period bucket.
+ */
 function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
   let entry = {
     'bool': {
@@ -83,11 +54,21 @@ function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
     }
   };
 
+
+  // Period falls in to the bucket if it overlaps. That is.
+  // Period: 1000-1100
+  // Should eg. fall in to these buckets
+  // 900-1010, 1090-1200, 1010-1090
+  // But not: 1100-1200 (as our periods share start/end and we only want it
+  // to fall in to one of the two).
   if (bucketTo) {
+    // We have a bucket with an end, it should match periods that.
     entry.bool.should.push({
       'bool': {
         'must' : [
+          // Starts before the end of the bucket
           getFilterEntry(periodFrom, bucketTo, 'lte'),
+          // And ends after the bucket.
           getFilterEntry(periodTo, bucketTo, 'gte')
         ]
       }
@@ -96,9 +77,12 @@ function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
 
   if (bucketFrom) {
     entry.bool.should.push({
+      // We have a bucket with an start, it should match periods that.
       'bool': {
         'must' : [
+          // Starts after the beginning of the bucket.
           getFilterEntry(periodTo, bucketFrom, 'gte'),
+          // And ends before the bucket ends.
           getFilterEntry(periodFrom, bucketFrom, 'lte')
         ]
       }
@@ -108,36 +92,41 @@ function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
   return entry;
 }
 
-function getSingleFilterEntry (creation, bucketFrom, bucketTo) {
+/**
+ * Create a bool filter entry for a single creation-date bucket.
+ */
+function getSingleFilterEntry (creationYear, bucketFrom, bucketTo) {
   let entry = {
     'bool': {
       'must': []
     }
   };
 
+  // We allow to and from to be false to support open ranges.
   if (bucketTo) {
-    entry.bool.must.push(getFilterEntry(creation, bucketTo, 'lte'));
+    entry.bool.must.push(getFilterEntry(creationYear, bucketTo, 'lte'));
   }
 
   if (bucketFrom) {
-    entry.bool.must.push(getFilterEntry(creation, bucketFrom, 'gte'));
+    entry.bool.must.push(getFilterEntry(creationYear, bucketFrom, 'gte'));
   }
 
   return entry;
 }
 
-// Generate a series of filter-buckets for multi-field dateranges.
-function generateFilters (filter) {
+/**
+ * Generate ES date range filters for a collections-online date-range filter.
+ */
+function generateDateRangeFilters (filter) {
   // We work under the assumption that a filter will always have singlefield
   // (a single field that holds the date the asset was created), and might have
-  // a multi-field (a to and from field describing the period the asset was
+  // a period-field (a to and from field describing the period the asset was
   // created in).
   let singleField = filter.field;
   let periodFromField = (filter.period && filter.period.from) ? filter.period.from : false;
   let periodToField = (filter.period && filter.period.to) ? filter.period.to : false;
 
-  const hasMulti =  periodFromField && periodToField;
-
+  const hasPeriod =  periodFromField && periodToField;
 
   // Build up the "filters" aggregation. We aggregate up into a number of
   // buckets. For each bucket we setup a filter for the single-filed, and an
@@ -152,25 +141,28 @@ function generateFilters (filter) {
       'should': []
     }
   };
-  result['*-0'].bool.should.push(getSingleFilterEntry(singleField,false, CREATION_INTERVAL_FROM));
-  if (hasMulti) {
-    result['*-0'].bool.should.push(getPeriodFilterEntry(multiFromField,false, multiToField, CREATION_INTERVAL_FROM));
-  }
 
+  // We make the filter open-ended by not specifying the from-value.
+  result['*-0'].bool.should.push(getSingleFilterEntry(singleField,false, CREATION_INTERVAL_FROM));
+  if (hasPeriod) {
+    result['*-0'].bool.should.push(getPeriodFilterEntry(periodFromField,false, periodToField, CREATION_INTERVAL_FROM));
+  }
 
   // Then setup a interval every 100 years up until 1900.
   for(var year = CREATION_INTERVAL_FROM; year < 1900; year+= 100) {
     let fromYear = year;
-    let toYear = year + 100;
+    let toYear = year + 99;
+
     const key = `${fromYear}-${toYear}`;
     result[key] = {
       'bool': {
         'should': []
       }
     };
+
     result[key].bool.should.push(getSingleFilterEntry(singleField, fromYear, toYear));
-    if (hasMulti) {
-      result[key].bool.should.push(getPeriodFilterEntry(multiFromField, fromYear, multiToField, toYear));
+    if (hasPeriod) {
+      result[key].bool.should.push(getPeriodFilterEntry(periodFromField, fromYear, periodToField, toYear));
     }
   }
 
@@ -178,7 +170,7 @@ function generateFilters (filter) {
   var lastYear;
   for(let year = 1900; year < CREATION_INTERVAL_TO; year+= 10) {
     let fromYear = year;
-    let toYear = year + 10;
+    let toYear = year + 9;
     lastYear = toYear;
 
     const key = `${fromYear}-${toYear}`;
@@ -189,20 +181,21 @@ function generateFilters (filter) {
     };
 
     result[key].bool.should.push(getSingleFilterEntry(singleField, fromYear, toYear));
-    if (hasMulti) {
-      result[key].bool.should.push(getPeriodFilterEntry(multiFromField, fromYear, multiToField, toYear));
+    if (hasPeriod) {
+      result[key].bool.should.push(getPeriodFilterEntry(periodFromField, fromYear, periodToField, toYear));
     }
   }
 
-  // Finish off with another openended range.
+  // Finish off with another open-ended range.
   result[`${lastYear}-*`] = {
     'bool': {
       'should': []
     }
   };
+
   result[`${lastYear}-*`].bool.should.push(getSingleFilterEntry(singleField, lastYear, false));
-  if (hasMulti) {
-    result[`${lastYear}-*`].bool.should.push(getPeriodFilterEntry(multiFromField, lastYear, multiToField, false));
+  if (hasPeriod) {
+    result[`${lastYear}-*`].bool.should.push(getPeriodFilterEntry(periodFromField, lastYear, periodToField, false));
   }
 
   return result;
@@ -235,7 +228,7 @@ module.exports.generateBody = function(parameters, body) {
 
       aggs[field] = {
         filters: {
-          filters: generateFilters(filter)
+          filters: generateDateRangeFilters(filter)
         }
       };
 
