@@ -26,183 +26,180 @@ function buildFilter(parameters, field) {
   return body.query || {};
 }
 
-function generateDateRanges() {
-  // Let's have a bucket for all things before the intervals
-  var result = [
-    {to: CREATION_INTERVAL_FROM.toString()}
-  ];
-  // Every houndred years
-  for(var y = CREATION_INTERVAL_FROM; y < 1900; y+= 100) {
-    var from = y;
-    var to = y + 100;
-    result.push({
-      from: from.toString(),
-      to: to.toString() + '||-1s'
-    });
-  }
-  // Every ten years
-  var lastYear;
-  for(var y = 1900; y < CREATION_INTERVAL_TO; y+= 10) {
-    var from = y;
-    var to = y + 10;
-    lastYear = to;
-    result.push({
-      from: from.toString(),
-      to: to.toString() + '||-1s'
-    });
-  }
-  // And beyond.
-  result.push({
-    from: lastYear.toString()
-  });
-  return result;
+function getFilterEntry(fieldName, fieldValue, operator) {
+  let filter = {
+    'range': { }
+  };
+  filter.range[fieldName] =  {};
+  filter.range[fieldName][operator] = fieldValue;
+
+  // Should give us something like.
+  // {
+  //   'range': {
+  //     'creation_time_from.year': {
+  //       'gte': '1940'
+  //     }
+  //   }
+  // }
+  return filter;
 }
 
-// Generate a series of filter-buckets for multi-field dateranges.
-function generateRangeRanges (fromField, toField) {
-  var result = {};
+/**
+ * Create a bool filter entry for a period bucket.
+ */
+function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
+  let entry = {
+    'bool': {
+      'should': []
+    }
+  };
 
-  function getFilterEntry(fieldName, fieldValue, operator) {
-    let filter = {
-      'range': { }
-    };
-    filter.range[fieldName] =  {};
-    filter.range[fieldName][operator] = fieldValue;
 
-    // Should give us something like.
-    // {
-    //   'range': {
-    //     'creation_time_from.year': {
-    //       'gte': '1940'
-    //     }
-    //   }
-    // }
-    return filter;
+  // Period falls in to the bucket if it overlaps. That is.
+  // Period: 1000-1100
+  // Should eg. fall in to these buckets
+  // 900-1010, 1090-1200, 1010-1090
+  // But not: 1100-1200 (as our periods share start/end and we only want it
+  // to fall in to one of the two).
+  if (bucketTo) {
+    // We have a bucket with an end, it should match periods that.
+    entry.bool.should.push({
+      'bool': {
+        'must' : [
+          // Starts before the end of the bucket
+          getFilterEntry(periodFrom, bucketTo, 'lte'),
+          // And ends after the bucket.
+          getFilterEntry(periodTo, bucketTo, 'gte')
+        ]
+      }
+    });
   }
 
-  function getEntry (fromValue, toValue) {
-    let entry = {
+  if (bucketFrom) {
+    entry.bool.should.push({
+      // We have a bucket with an start, it should match periods that.
       'bool': {
-        'must': []
+        'must' : [
+          // Starts after the beginning of the bucket.
+          getFilterEntry(periodTo, bucketFrom, 'gte'),
+          // And ends before the bucket ends.
+          getFilterEntry(periodFrom, bucketFrom, 'lte')
+        ]
+      }
+    });
+  }
+
+  return entry;
+}
+
+/**
+ * Create a bool filter entry for a single creation-date bucket.
+ */
+function getSingleFilterEntry (creationYear, bucketFrom, bucketTo) {
+  let entry = {
+    'bool': {
+      'must': []
+    }
+  };
+
+  // We allow to and from to be false to support open ranges.
+  if (bucketTo) {
+    entry.bool.must.push(getFilterEntry(creationYear, bucketTo, 'lte'));
+  }
+
+  if (bucketFrom) {
+    entry.bool.must.push(getFilterEntry(creationYear, bucketFrom, 'gte'));
+  }
+
+  return entry;
+}
+
+/**
+ * Generate ES date range filters for a collections-online date-range filter.
+ */
+function generateDateRangeFilters (filter) {
+  // We work under the assumption that a filter will always have singlefield
+  // (a single field that holds the date the asset was created), and might have
+  // a period-field (a to and from field describing the period the asset was
+  // created in).
+  let singleField = filter.field;
+  let periodFromField = (filter.period && filter.period.from) ? filter.period.from : false;
+  let periodToField = (filter.period && filter.period.to) ? filter.period.to : false;
+
+  const hasPeriod =  periodFromField && periodToField;
+
+  // Build up the "filters" aggregation. We aggregate up into a number of
+  // buckets. For each bucket we setup a filter for the single-filed, and an
+  // optional filter for the period. These two filters are combined via a
+  // bool "should" filter allowing any asset that matches any of the two (or
+  // both) of the filters to fall into the bucket.
+  var result = {};
+
+  // Start of with a openended range for <= CREATION_INTERVAL_FROM.
+  result['*-0'] = {
+    'bool': {
+      'should': []
+    }
+  };
+
+  // We make the filter open-ended by not specifying the from-value.
+  result['*-0'].bool.should.push(getSingleFilterEntry(singleField,false, CREATION_INTERVAL_FROM));
+  if (hasPeriod) {
+    result['*-0'].bool.should.push(getPeriodFilterEntry(periodFromField,false, periodToField, CREATION_INTERVAL_FROM));
+  }
+
+  // Then setup a interval every 100 years up until 1900.
+  for(var year = CREATION_INTERVAL_FROM; year < 1900; year+= 100) {
+    let fromYear = year;
+    let toYear = year + 99;
+
+    const key = `${fromYear}-${toYear}`;
+    result[key] = {
+      'bool': {
+        'should': []
       }
     };
 
-    if (fromValue) {
-      // Greater than or equal to the specified value.
-      entry.bool.must.push(getFilterEntry(fromField, fromValue, 'gte'));
+    result[key].bool.should.push(getSingleFilterEntry(singleField, fromYear, toYear));
+    if (hasPeriod) {
+      result[key].bool.should.push(getPeriodFilterEntry(periodFromField, fromYear, periodToField, toYear));
     }
-
-    if (toValue) {
-      // Less than specified value.
-      entry.bool.must.push(getFilterEntry(toField, toValue, 'lt'));
-    }
-
-    return entry;
-  }
-
-  // Start of with a openended range for <= CREATION_INTERVAL_FROM.
-  result['0'] = getEntry(false, CREATION_INTERVAL_FROM);
-
-  // Then setup a interval every 100 years up until 1900.
-  for(var y = CREATION_INTERVAL_FROM; y < 1900; y+= 100) {
-    let from = y;
-    let to = y + 100;
-
-    result[y] = getEntry(from, to);
   }
 
   // Then every ten years
   var lastYear;
-  for(let y = 1900; y < CREATION_INTERVAL_TO; y+= 10) {
-    let from = y;
-    let to = y + 10;
-    lastYear = to;
-    result[from] = getEntry(from, to);
+  for(let year = 1900; year < CREATION_INTERVAL_TO; year+= 10) {
+    let fromYear = year;
+    let toYear = year + 9;
+    lastYear = toYear;
+
+    const key = `${fromYear}-${toYear}`;
+    result[key] = {
+      'bool': {
+        'should': []
+      }
+    };
+
+    result[key].bool.should.push(getSingleFilterEntry(singleField, fromYear, toYear));
+    if (hasPeriod) {
+      result[key].bool.should.push(getPeriodFilterEntry(periodFromField, fromYear, periodToField, toYear));
+    }
   }
 
-  // Finish off with another openended range.
-  result[lastYear] = getEntry(lastYear, false);
+  // Finish off with another open-ended range.
+  result[`${lastYear}-*`] = {
+    'bool': {
+      'should': []
+    }
+  };
+
+  result[`${lastYear}-*`].bool.should.push(getSingleFilterEntry(singleField, lastYear, false));
+  if (hasPeriod) {
+    result[`${lastYear}-*`].bool.should.push(getPeriodFilterEntry(periodFromField, lastYear, periodToField, false));
+  }
+
   return result;
 }
-
-/**
- * Post-process a range-filter field.
- */
-function postProcessRangeField (field, aggregationResult) {
-  // We've identified that field is of type date-range. Date-range filters can
-  // work with a single date-field (default) and a "multi" date fields
-  // (to/from)
-  // The Aggregation Result will have a
-  // aggregations.<fieldname>_independent.<fieldname> entry pr. single-field
-  // date-range field.
-  // If the filter is also setup with a multi-field range its result can be
-  // found under
-  // aggregations.<fieldname>_independent.<fieldname>_range
-  // We now go and find any multi-field results, and then augment the
-  // corresponding single-field results.
-
-  // Ensure we have all the data we need.
-  if (
-    !aggregationResult['aggregations']
-    || !aggregationResult['aggregations'][field + '_independent']
-    || !aggregationResult['aggregations'][field + '_independent'][field]
-    || !aggregationResult['aggregations'][field + '_independent'][field]['buckets']
-    || !aggregationResult['aggregations'][field + '_independent'][field]['buckets'].length
-    || !aggregationResult['aggregations'][field + '_independent'][`${field}_range`]
-    || !aggregationResult['aggregations'][field + '_independent'][`${field}_range`]['buckets']) {
-    return;
-  }
-
-  // We've verified we have results for the main date-range aggregation and
-  // the multi-field range, now go trough each single-field range and look up
-  // any multi-field range results and augment.
-  const singleFieldRanges = aggregationResult['aggregations'][field + '_independent'][field].buckets;
-  const multiFieldRanges = aggregationResult['aggregations'][field + '_independent'][`${field}_range`].buckets;
-
-  singleFieldRanges.forEach(function(rangeBucket, index) {
-    // Pick out the year for the range.
-    let fromYear;
-    if (rangeBucket['from_as_string']) {
-      fromYear = rangeBucket['from_as_string'];
-    }
-    else {
-      // Allow the initial (open-ended range bucket) not to have a from.
-      if (index === 0) {
-        fromYear = 0;
-      }
-      else {
-        return;
-      }
-    }
-
-    // Add the multi-field counts to the singlefield if found.
-    if (!multiFieldRanges[fromYear]
-      || !multiFieldRanges[fromYear]['doc_count']) {
-      return;
-    }
-    rangeBucket['doc_count'] += multiFieldRanges[fromYear]['doc_count'];
-  });
-}
-
-
-// The post-processing step lets us modify the various filter results.
-module.exports.postProcess = function (aggregationResult) {
-
-  // Go trough the filteres and identify date-ranges.
-  Object.keys(config.search.filters).forEach(function(field) {
-    const filter = config.search.filters[field];
-    if (
-      filter.type === 'date-range' &&
-      filter.multifield &&
-      filter.multifield.from &&
-      filter.multifield.to) {
-      postProcessRangeField(field, aggregationResult);
-    }
-
-  });
-
-  return aggregationResult;
-};
 
 module.exports.generateBody = function(parameters, body) {
   var result = {
@@ -228,22 +225,12 @@ module.exports.generateBody = function(parameters, body) {
       if(!filter.field) {
         throw new Error('Expected "field" option on filter field: ' + field);
       }
-      // Tried the date histogram /w interval: '3650d' // Not really 10 years
-      // See https://github.com/elastic/elasticsearch/issues/8939
+
       aggs[field] = {
-        date_range: {
-          field: filter.field,
-          format: 'yyy',
-          ranges: generateDateRanges()
+        filters: {
+          filters: generateDateRangeFilters(filter)
         }
       };
-      if (filter.multifield && filter.multifield.from && filter.multifield.to) {
-        aggs[field + '_range'] = {
-          filters: {
-            filters: generateRangeRanges(filter.multifield.from, filter.multifield.to)
-          }
-        };
-      }
 
     } else if (filter.type === 'filters') {
       if(!filter.filters) {
