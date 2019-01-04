@@ -116,7 +116,6 @@ function initialize() {
           body: elasticsearchAggregationsBody.generateBody(clonedSearchParams),
           size: 0
         }).then(function (response) {
-          response = elasticsearchAggregationsBody.postProcess(response);
           sidebar.update(clonedSearchParams.filters, response.aggregations);
         }, function (error) {
           console.trace(error.message);
