@@ -15,7 +15,7 @@
   "creation": {
     "type": "date-range",
     "field": "creation_time.timestamp",
-    "multifield": {
+    "period": {
       "from": "creation_time_from.year",
       "to": "creation_time_to.year"
     },
