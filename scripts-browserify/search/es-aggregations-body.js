@@ -58,84 +58,93 @@ function generateDateRanges() {
   return result;
 }
 
-// Generate a series of filter-buckets for multi-field dateranges.
-function generateRanges (singleField, multiFromField, multiToField) {
-  const hasMulti =  multiFromField && multiToField;
-  var result = {};
+function getFilterEntry(fieldName, fieldValue, operator) {
+  let filter = {
+    'range': { }
+  };
+  filter.range[fieldName] =  {};
+  filter.range[fieldName][operator] = fieldValue;
 
-  function getFilterEntry(fieldName, fieldValue, operator) {
-    let filter = {
-      'range': { }
-    };
-    filter.range[fieldName] =  {};
-    filter.range[fieldName][operator] = fieldValue;
+  // Should give us something like.
+  // {
+  //   'range': {
+  //     'creation_time_from.year': {
+  //       'gte': '1940'
+  //     }
+  //   }
+  // }
+  return filter;
+}
 
-    // Should give us something like.
-    // {
-    //   'range': {
-    //     'creation_time_from.year': {
-    //       'gte': '1940'
-    //     }
-    //   }
-    // }
-    return filter;
-  }
-
-  function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
-    let entry = {
-      'bool': {
-        'should': []
-      }
-    };
-
-    if (bucketTo) {
-      entry.bool.should.push({
-        'bool': {
-          'must' : [
-            getFilterEntry(periodFrom, bucketTo, 'lte'),
-            getFilterEntry(periodTo, bucketTo, 'gte')
-          ]
-        }
-      });
-    }
-
-    if (bucketFrom) {
-      entry.bool.should.push({
-        'bool': {
-          'must' : [
-            getFilterEntry(periodTo, bucketFrom, 'gte'),
-            getFilterEntry(periodFrom, bucketFrom, 'lte')
-          ]
-        }
-      });
-    }
-
-    return entry;
-  }
-
-  function getSingleFilterEntry (creation, bucketFrom, bucketTo) {
-    let entry = {
-      'bool': {
-        'must': []
-      }
-    };
-
-    if (bucketTo) {
-      entry.bool.must.push(getFilterEntry(creation, bucketTo, 'lte'));
-    }
-
-    if (bucketFrom) {
-      entry.bool.must.push(getFilterEntry(creation, bucketFrom, 'gte'));
-    }
-
-    return entry;
-  }
-
-  let entryTemplate = {
+function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
+  let entry = {
     'bool': {
       'should': []
     }
   };
+
+  if (bucketTo) {
+    entry.bool.should.push({
+      'bool': {
+        'must' : [
+          getFilterEntry(periodFrom, bucketTo, 'lte'),
+          getFilterEntry(periodTo, bucketTo, 'gte')
+        ]
+      }
+    });
+  }
+
+  if (bucketFrom) {
+    entry.bool.should.push({
+      'bool': {
+        'must' : [
+          getFilterEntry(periodTo, bucketFrom, 'gte'),
+          getFilterEntry(periodFrom, bucketFrom, 'lte')
+        ]
+      }
+    });
+  }
+
+  return entry;
+}
+
+function getSingleFilterEntry (creation, bucketFrom, bucketTo) {
+  let entry = {
+    'bool': {
+      'must': []
+    }
+  };
+
+  if (bucketTo) {
+    entry.bool.must.push(getFilterEntry(creation, bucketTo, 'lte'));
+  }
+
+  if (bucketFrom) {
+    entry.bool.must.push(getFilterEntry(creation, bucketFrom, 'gte'));
+  }
+
+  return entry;
+}
+
+// Generate a series of filter-buckets for multi-field dateranges.
+function generateFilters (filter) {
+  // We work under the assumption that a filter will always have singlefield
+  // (a single field that holds the date the asset was created), and might have
+  // a multi-field (a to and from field describing the period the asset was
+  // created in).
+  let singleField = filter.field;
+  let periodFromField = (filter.period && filter.period.from) ? filter.period.from : false;
+  let periodToField = (filter.period && filter.period.to) ? filter.period.to : false;
+
+  const hasMulti =  periodFromField && periodToField;
+
+
+  // Build up the "filters" aggregation. We aggregate up into a number of
+  // buckets. For each bucket we setup a filter for the single-filed, and an
+  // optional filter for the period. These two filters are combined via a
+  // bool "should" filter allowing any asset that matches any of the two (or
+  // both) of the filters to fall into the bucket.
+  var result = {};
 
   // Start of with a openended range for <= CREATION_INTERVAL_FROM.
   result['*-0'] = {
@@ -224,13 +233,11 @@ module.exports.generateBody = function(parameters, body) {
         throw new Error('Expected "field" option on filter field: ' + field);
       }
 
-      if (filter.multifield && filter.multifield.from && filter.multifield.to) {
-        aggs[field] = {
-          filters: {
-            filters: generateRanges(filter.field, filter.multifield.from, filter.multifield.to)
-          }
-        };
-      }
+      aggs[field] = {
+        filters: {
+          filters: generateFilters(filter)
+        }
+      };
 
     } else if (filter.type === 'filters') {
       if(!filter.filters) {
