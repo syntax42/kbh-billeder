@@ -15,6 +15,10 @@
   "creation": {
     "type": "date-range",
     "field": "creation_time.timestamp",
+    "period": {
+      "from": "creation_time_from.year",
+      "to": "creation_time_to.year"
+    },
     "singular": "periode",
     "plural": "perioder"
   },
