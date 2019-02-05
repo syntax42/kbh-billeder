@@ -216,5 +216,8 @@
   }, {
     "cumulusKey": "{9ed0887f-40e8-4091-a91c-de356c869251}",
     "short": "backside"
+  }, {
+    "cumulusKey": "{0e31f299-49e8-4baa-a69c-a6a4f2054ce5}",
+    "short": "zoom_tile_id"
   }
 ]
