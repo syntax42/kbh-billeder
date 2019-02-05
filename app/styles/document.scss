@@ -100,4 +100,12 @@
       font-size: 15px;
     }
   }
+  
+  // Have any controls on the asset-page that allows the user to toggle zoom
+  // show a zoom cursor.
+  &__expandable {
+    [data-action='toggle-tiled-zoom'] {
+      cursor: zoom-in;
+    }
+  }
 }

@@ -1,0 +1,8 @@
+- const hasZoomTiles = helpers.hasZoomTiles(metadata);
+
+if hasZoomTiles
+    .tiled-zoom-container
+        button.btn.btn-primary.btn-block.tiled-zoom__button.tiled-zoom__button--close(data-action='toggle-tiled-zoom')
+            +icon('cross', 'close-tiled')
+        #tiled-zoom
+
