@@ -3,12 +3,20 @@ extends ./player-controls
 block document__player-controls
   - const isDownloadable = helpers.isDownloadable(metadata);
   - const hasBacksideAsset = helpers.hasBacksideAsset(metadata);
+  - const hasZoomTiles = helpers.hasZoomTiles(metadata);
 
-  a(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn
-    +icon('zoom-in', 'zoom-in')
-    +icon('zoom-out', 'zoom-out')
-    span.zoom-in Forstør
-    span.zoom-out Formindsk
+  if hasZoomTiles
+    a(data-action='toggle-tiled-zoom').hidden-xs.hidden-sm.zoom-btn
+      +icon('zoom-in', 'zoom-in')
+      span.zoom-in Zoom
+
+  else
+    a(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn
+      +icon('zoom-in', 'zoom-in')
+      +icon('zoom-out', 'zoom-out')
+      span.zoom-in Forstør
+      span.zoom-out Formindsk
+
   a(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed' class='document__player-controls__actions')
     +icon('download')
     span Download

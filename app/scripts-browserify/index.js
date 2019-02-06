@@ -10,6 +10,7 @@ require('../../node_modules/collections-online/app/scripts-browserify/base')({
 require('analytics');
 
 require('document/geo-tagging');
+require('document/tiled-zoomer');
 
 if (!config.features.oldProfilePage ) {
   require('profile/index');
