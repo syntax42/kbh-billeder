@@ -12,7 +12,7 @@
   margin-left: 0;
 
   // This lands us with a too high container (we want 100% of the container
-  // we're in, not 100% of the entire viewport) but it will do for now.s
+  // we're in, not 100% of the entire viewport) but it will do for now.
   height: 95vh;
   width: 100%;
 
@@ -29,7 +29,7 @@
     // Style the button as a circle with an svg inside it.
     width: 52px;
     height: 52px;
-    border-radius: 26px!important;
+    border-radius: 26px;
 
     background-color: white;
     // Color gets inherited by the svg.
