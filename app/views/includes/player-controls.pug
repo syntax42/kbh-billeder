@@ -3,9 +3,9 @@ extends ./player-controls
 block document__player-controls
   - const isDownloadable = helpers.isDownloadable(metadata);
   - const hasBacksideAsset = helpers.hasBacksideAsset(metadata);
-  - const hasZoomTiles = helpers.hasZoomTiles(metadata);
+  - const getZoomTilesId = helpers.getZoomTilesId(metadata);
 
-  if hasZoomTiles
+  if getZoomTilesId
     a(data-action='toggle-tiled-zoom').hidden-xs.hidden-sm.zoom-btn
       +icon('zoom-in', 'zoom-in')
       span.zoom-in Zoom
