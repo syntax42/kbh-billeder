@@ -1,0 +1,118 @@
+@import "leaflet";
+
+// Outer edge of the tiled zoom "canvas"
+.tiled-zoom-container {
+  // Default to hidden, will be visible via .toggle() from tiled-zoomer.js.
+  display: none;
+
+  // Ensure markup nested under the view can position relative to the map-view
+  // container.
+  position: relative;
+
+  // Go all the way to the edge.
+  padding: 0;
+  margin-left: 0;
+
+  // This lands us with a too high container (we want 100% of the container
+  // we're in, not 100% of the entire viewport) but it will do for now.
+  height: 95vh;
+  width: 100%;
+
+  // The control used to get us out of the visible mode again.
+  .tiled-zoom__button--close {
+    // Position the button top right on desktop.
+    position: absolute;
+    right: 55px;
+    top: 35px;
+
+    // Style the button as a circle with an svg inside it.
+    width: 52px;
+    height: 52px;
+    border-radius: 26px;
+
+    background-color: white;
+    // Color gets inherited by the svg.
+    color: black;
+
+    // Position the button center-bottom on mobile.
+    .is-mobile & {
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      top: auto;
+      bottom: 20px;
+    }
+
+    svg {
+      // Position the svg inside the circle.
+      position: absolute;
+      left: 17px;
+      top: 17px;
+      margin: 0;
+
+      // Beef up the strokes a bit.
+      stroke: black;
+      stroke-width: 40;
+    }
+  }
+
+  .tiled-zoom__button--zoom-buttons {
+    // Position the button top right on desktop.
+    position: absolute;
+    left: 100px;
+    bottom: 30px;
+
+    a {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:last-child {
+        margin-left: 30px;
+      }
+    }
+
+    svg {
+      // Beef up the strokes a bit.
+      fill: white;
+      height: 25px;
+      width: 25px;
+      position: relative;
+      top: 6px;
+      margin-right: 5px;
+    }
+
+    .is-mobile & {
+      display: none;
+    }
+  }
+}
+
+// The place-holder that the zoom canvas will be injected into.
+#tiled-zoom {
+  height: 100%;
+  width: 100%;
+}
+
+
+// We need a dark background behind the zoom-buttons, so we add this vignette
+// overlay.
+.tiled-zoom__vignette {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+
+  // We're on top of the leaflet canvas that needs its mouse-events.
+  pointer-events:none;
+
+  box-shadow: 0 -200px 200px -200px rgba(0,0,0,0.9) inset;
+
+  .is-mobile & {
+    display: none;
+  }
+}

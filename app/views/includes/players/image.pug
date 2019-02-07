@@ -1,3 +1,10 @@
-img(src=player.thumbnailUrl,
-    alt=player.title,
-    data-action='toggle-expandable').asset__image
+- const getZoomTilesId = helpers.getZoomTilesId(metadata);
+
+if getZoomTilesId
+    img(src=player.thumbnailUrl,
+        alt=player.title,
+        data-action='toggle-tiled-zoom').asset__image
+else
+    img(src=player.thumbnailUrl,
+        alt=player.title,
+        data-action='toggle-expandable').asset__image

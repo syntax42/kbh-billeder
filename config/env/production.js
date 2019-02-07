@@ -3,6 +3,11 @@
 var _ = require('lodash');
 var base = require('./base');
 
+// Feature "flag" - don't enabled zoom tiles in prod.
+base.types.asset.fields = base.types.asset.fields.filter(function( field ) {
+  return field.short !== 'zoom_tile_id';
+});
+
 const production = _.merge({}, base, {
   allowRobots: true,
   auth0: {

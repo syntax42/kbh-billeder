@@ -1,0 +1,18 @@
+- const getZoomTilesId = helpers.getZoomTilesId(metadata);
+
+if getZoomTilesId
+    .tiled-zoom-container
+        #tiled-zoom(data-tile-id=getZoomTilesId)
+        button.btn.btn-block.tiled-zoom__button.tiled-zoom__button--close(data-action='toggle-tiled-zoom')
+            +icon('cross', 'close-tiled')
+
+        .tiled-zoom__vignette
+        .tiled-zoom__button--zoom-buttons
+            a(data-action='tiled-zoom-in').zoom-btn
+                +icon('zoom-in', 'zoom-in')
+                span.zoom-in Zoom ind
+            a(data-action='tiled-zoom-out').zoom-btn
+                +icon('zoom-out', 'zoom-out')
+                span.zoom-in Zoom ud
+
+
