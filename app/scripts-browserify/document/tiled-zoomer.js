@@ -99,7 +99,6 @@ function getTileFetchCallback(tileId) {
     let height = data[0]['metadata']['height'];
     let width = data[0]['metadata']['width'];
     let imageSrc = data[0]['images'].pop();
-    console.log({height, width, imageSrc});
 
     let map = L.map(TILED_ZOOM_ELEMENT_ID, {
       // We have our own zoom controllers.
@@ -142,6 +141,9 @@ const tiledZoomer = {
 
     // We just enabled the zoom overlay.
     if ($('#tiled-zoom').is(':visible')) {
+      // Let styling react on us being enabled.
+      $('body').addClass('is-tiled-zoom');
+
       const tileFetchId = $('#tiled-zoom').attr(TILE_ID_DATA_ATTRIBUTE);
 
       // Fetch data about the zoom-layer using jsonp.
@@ -156,6 +158,8 @@ const tiledZoomer = {
       // Let handles unregister.
       $('#tiled-zoom').trigger('disable');
       removeLeaflet(tileId);
+
+      $('body').removeClass('is-tiled-zoom');
     }
   }
 };
