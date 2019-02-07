@@ -4,7 +4,116 @@
 // Register click listener that acts on the 'toggle-expandable' action
 const DOCUMENT_SELECTOR = '.document';
 const TOGGLE_TILED_ZOOM = '[data-action="toggle-tiled-zoom"]';
+const TOGGLE_TILED_ZOOM_IN = '[data-action="tiled-zoom-in"]';
+const TOGGLE_TILED_ZOOM_OUT = '[data-action="tiled-zoom-out"]';
+const TILED_ZOOM_ELEMENT_SELECTOR = '#tiled-zoom';
+const TILED_ZOOM_ELEMENT_ID = 'tiled-zoom';
+const LEAFLET_INNER_SELECTOR = '.leaflet-image-layer.leaflet-zoom-animated';
+const ZOOM_API_DATA_ENDPOINT = 'https://www.kbhkilder.dk/1508/stable/api/data/';
+const TILE_ID_DATA_ATTRIBUTE = 'data-tile-id';
 
+/**
+ * Clear out any elements added by leaflet.
+ */
+function removeLeaflet (tileId) {
+  const img = $(LEAFLET_INNER_SELECTOR);
+  if (img[0]) {
+    img[0].src = '';
+  }
+
+  const parent = $(TILED_ZOOM_ELEMENT_SELECTOR).parent();
+  $(TILED_ZOOM_ELEMENT_SELECTOR).remove();
+
+  // Add as the first child so that the button comes after and can be displayed
+  // on top.
+  parent.prepend('<div id="tiled-zoom" '+ TILE_ID_DATA_ATTRIBUTE + '="' + tileId + ' "></div>');
+}
+
+/**
+ * Register click-listeners for the zoom buttons.
+ */
+function registerZoomHandles (map) {
+  $(TOGGLE_TILED_ZOOM_IN).unbind('click').click(function(){
+    map.setZoom(map.getZoom() + 1);
+  });
+
+  $(TOGGLE_TILED_ZOOM_OUT).unbind('click').click(function(){
+    map.setZoom(map.getZoom() - 1);
+  });
+}
+
+/**
+ * Register a handler that can resize the zoom container on resize.
+ */
+function registerResizeHandler (map) {
+  const resizeHandler = () => {
+    $(TILED_ZOOM_ELEMENT_SELECTOR).height($('.tiled-zoom-container').height());
+    map.invalidateSize();
+  };
+
+  $(window).on('resize', resizeHandler).trigger('resize');
+
+  // De-register when the zoom-layer is disabled.
+  $(TILED_ZOOM_ELEMENT_SELECTOR).on('disable', () => {
+    $(window).off('resize', resizeHandler);
+  });
+}
+
+/**
+ * Return callback that can process tiling metadata and initialize leaflet.
+ * @param tileId
+ *   The tileid attached to the element that leaflet will attach to.
+ */
+function getTileFetchCallback(tileId) {
+  return (data) => {
+    // Make sure what we got back seems ok.
+    if (
+      !data
+      || !Array.isArray(data)
+      || !data[0]
+      || !data[0]['images']
+      || !Array.isArray(data[0]['images'])
+      || data[0]['images'].length === 0
+      || !data[0]['metadata']
+      || !data[0]['metadata']['height']
+      || !data[0]['metadata']['width']
+    ) {
+      return;
+    }
+
+    removeLeaflet(tileId);
+    window.scrollTo(0,0);
+
+    let height = data[0]['metadata']['height'];
+    let width = data[0]['metadata']['width'];
+    let imageSrc = data[0]['images'].pop();
+    console.log({height, width, imageSrc});
+
+    let map = L.map(TILED_ZOOM_ELEMENT_ID, {
+      // We have our own zoom controllers.
+      zoomControl: false,
+      // Hide the "leaflet" watermark.
+      attributionControl: false
+    }).setView(new L.LatLng(0, 0), 3);
+
+    // Configure the leaflet plugin that integrates to the tiled zoom.
+    L.tileLayer.deepzoom(imageSrc, {
+      width: width,
+      height: height,
+      // Zoom in tight from the start
+      tolerance: 0.6,
+      imageFormat: 'jpeg',
+      minZoom: 9
+    }).addTo(map);
+    registerResizeHandler(map);
+
+    registerZoomHandles(map);
+  };
+}
+
+/**
+ * Handled tiled zoom
+ */
 const tiledZoomer = {
   /**
    * @param element
@@ -12,14 +121,34 @@ const tiledZoomer = {
    *   asset .document parent.
    */
   toggle: (element) => {
-    // Drill up to the first parent, and then toggle all childrens visibility-
+    // Drill up to the first parent, and then toggle all children visibility-
     // state. This assumes that we start in a state where the the main asset-
     // page is visible, and the zoom overlay is hidden (or vice-versa).
     $(element).parents('.document').first().children().toggle();
-  },
+
+    let tileId = $('#tiled-zoom').attr(TILE_ID_DATA_ATTRIBUTE);
+
+    // We just enabled the zoom overlay.
+    if ($('#tiled-zoom').is(':visible')) {
+      const tileFetchId = $('#tiled-zoom').attr(TILE_ID_DATA_ATTRIBUTE);
+
+      // Fetch data about the zoom-layer using jsonp.
+      $.ajax({
+        url: ZOOM_API_DATA_ENDPOINT + tileFetchId,
+        jsonp: 'callback',
+        dataType: 'jsonp',
+        success: getTileFetchCallback(tileId),
+      });
+
+    } else {
+      // Let handles unregister.
+      $('#tiled-zoom').trigger('disable');
+      removeLeaflet(tileId);
+    }
+  }
 };
 
-// Register a click-listener on any tiled zoom button.s
+// Register a click-listener on any tiled zoom button.
 $(DOCUMENT_SELECTOR).on('click', TOGGLE_TILED_ZOOM, (element) => {
   tiledZoomer.toggle(element.target);
 });

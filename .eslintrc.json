@@ -25,7 +25,8 @@
     "Bloodhound": false,
     "$": false,
     "jQuery": false,
-    "HistoriskAtlas": true
+    "HistoriskAtlas": true,
+    "L": true
   },
 
   "plugins": [

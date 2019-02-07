@@ -218,7 +218,7 @@ helpers.hasBacksideAsset = (metadata) => {
   return backsideAssets.length > 0;
 };
 
-helpers.hasZoomTiles = (metadata) => {
+helpers.getZoomTilesId = (metadata) => {
   return metadata.zoom_tile_id;
 };
 
