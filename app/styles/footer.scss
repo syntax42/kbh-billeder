@@ -38,4 +38,7 @@
       padding-bottom: 2rem;
     }
   }
+  .is-tiled-zoom & {
+    display: none;
+  }
 }
