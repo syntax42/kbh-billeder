@@ -3,14 +3,16 @@
  */
 // Register click listener that acts on the 'toggle-expandable' action
 const DOCUMENT_SELECTOR = '.document';
+const FOOTER_SELECTOR = 'footer.footer';
+const HEADER_SELECTOR = 'header.topbar';
+const LEAFLET_INNER_SELECTOR = '.leaflet-image-layer.leaflet-zoom-animated';
+const TILE_ID_DATA_ATTRIBUTE = 'data-tile-id';
+const TILED_ZOOM_ELEMENT_ID = 'tiled-zoom';
+const TILED_ZOOM_ELEMENT_SELECTOR = '#tiled-zoom';
 const TOGGLE_TILED_ZOOM = '[data-action="toggle-tiled-zoom"]';
 const TOGGLE_TILED_ZOOM_IN = '[data-action="tiled-zoom-in"]';
 const TOGGLE_TILED_ZOOM_OUT = '[data-action="tiled-zoom-out"]';
-const TILED_ZOOM_ELEMENT_SELECTOR = '#tiled-zoom';
-const TILED_ZOOM_ELEMENT_ID = 'tiled-zoom';
-const LEAFLET_INNER_SELECTOR = '.leaflet-image-layer.leaflet-zoom-animated';
 const ZOOM_API_DATA_ENDPOINT = 'https://www.kbhkilder.dk/1508/stable/api/data/';
-const TILE_ID_DATA_ATTRIBUTE = 'data-tile-id';
 
 /**
  * Clear out any elements added by leaflet.
@@ -47,7 +49,17 @@ function registerZoomHandles (map) {
  */
 function registerResizeHandler (map) {
   const resizeHandler = () => {
-    $(TILED_ZOOM_ELEMENT_SELECTOR).height($('.tiled-zoom-container').height());
+    // Recalculate the canvas size by getting the inner (thanks ios)
+    // windowheight, and then subtracting the header and footer (if visible).
+    const $header = $(HEADER_SELECTOR);
+    const $footer = $(FOOTER_SELECTOR);
+    const windowHeight = window.innerHeight;
+    const headerHeight = $header.is(':visible') ? $header.height() : 0;
+    const footerHeight = $footer.is(':visible') ? $footer.height() : 0;
+    const canvasSize = windowHeight - (headerHeight + footerHeight);
+
+    $('.tiled-zoom-container').height(canvasSize);
+    $(TILED_ZOOM_ELEMENT_SELECTOR).height(canvasSize);
     map.invalidateSize();
   };
 
