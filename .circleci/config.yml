@@ -57,7 +57,7 @@ jobs:
       # Do the build and tag and push the image.
       - run:
           no_output_timeout: 20m
-          command: docker build --pull -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM .
+          command: docker build -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-latest -t eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM .
       - run:
           command: |
             docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/frontend:$CIRCLE_BRANCH-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM
