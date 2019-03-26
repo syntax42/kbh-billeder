@@ -74,6 +74,16 @@
       }
     }
 
+    .kbh-museum-logo {
+      // Align logo with search field.
+      .is-desktop & {
+        margin-left: -42px;
+      }
+      svg {
+        margin-left: -22px;
+      }
+    }
+
     a:hover {
       svg {
         filter: drop-shadow( -2.5px -2.5px 2.5px #000 );
@@ -83,11 +93,13 @@
     svg {
       fill: $white;
       fill-rule: evenodd;
-      height: $logo-height * 0.7;
+      height: $logo-height * 0.8;
       margin: 0 15px;
-      width: $logo-height * 4 * 0.7;
+      width: $logo-height * 4 * 0.8;
       &:first-child {
-        margin-left: 0;
+        .is-desktop & {
+          margin-left: 0;
+        }
       }
 
       @media (min-width: $medium-size) {
