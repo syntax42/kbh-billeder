@@ -116,7 +116,8 @@ function parseBinaryValue(buf, type) {
     }
     return buf.readUInt32BE(0);
   } else {
-    throw new Error('binary_value: Unimplemented type ' + type);
+    // Temporary measure to be able to index.
+    // throw new Error('binary_value: Unimplemented type ' + type);
   }
 }
 
