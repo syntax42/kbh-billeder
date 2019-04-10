@@ -11,7 +11,7 @@ function relatedFilenameComparison(assetA, assetB) {
 module.exports = metadata => {
   metadata.related = {};
   // Transforms the binary representations of each relation.
-  const masterAssets = cip.parseBinaryRelations(metadata.related_master_assets);
+  const masterAssets = metadata.related_master_assets;
   const subAssets = cip.parseBinaryRelations(metadata.related_sub_assets);
   delete metadata.related_master_assets;
   delete metadata.related_sub_assets;
