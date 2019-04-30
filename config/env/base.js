@@ -198,7 +198,8 @@ let config = {
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
     'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png'),
     'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png')
-  }
+  },
+  thumbnailSize: 500
 };
 
 module.exports = config;
