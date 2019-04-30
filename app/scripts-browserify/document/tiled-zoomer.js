@@ -137,14 +137,14 @@ const tiledZoomer = {
     // page is visible, and the zoom overlay is hidden (or vice-versa).
     $(element).parents('.document').first().children().toggle();
 
-    let tileId = $('#tiled-zoom').attr(TILE_ID_DATA_ATTRIBUTE);
+    let tileId = $(TILED_ZOOM_ELEMENT_SELECTOR).attr(TILE_ID_DATA_ATTRIBUTE);
 
     // We just enabled the zoom overlay.
-    if ($('#tiled-zoom').is(':visible')) {
+    if ($(TILED_ZOOM_ELEMENT_SELECTOR).is(':visible')) {
       // Let styling react on us being enabled.
       $('body').addClass('is-tiled-zoom');
 
-      const tileFetchId = $('#tiled-zoom').attr(TILE_ID_DATA_ATTRIBUTE);
+      const tileFetchId = $(TILED_ZOOM_ELEMENT_SELECTOR).attr(TILE_ID_DATA_ATTRIBUTE);
 
       // Fetch data about the zoom-layer using jsonp.
       $.ajax({
@@ -156,7 +156,7 @@ const tiledZoomer = {
 
     } else {
       // Let handles unregister.
-      $('#tiled-zoom').trigger('disable');
+      $(TILED_ZOOM_ELEMENT_SELECTOR).trigger('disable');
       removeLeaflet(tileId);
 
       $('body').removeClass('is-tiled-zoom');
@@ -168,5 +168,14 @@ const tiledZoomer = {
 $(DOCUMENT_SELECTOR).on('click', TOGGLE_TILED_ZOOM, (element) => {
   tiledZoomer.toggle(element.target);
 });
+
+// Toggle the overlay if escape is pressed while it is visible.
+$(document).keyup(function(e) {
+  if (e.keyCode === 27 && $(TILED_ZOOM_ELEMENT_SELECTOR).is(':visible')) {
+    tiledZoomer.toggle($(TILED_ZOOM_ELEMENT_SELECTOR).first().get());
+  }
+});
+
+
 
 module.exports = tiledZoomer;
