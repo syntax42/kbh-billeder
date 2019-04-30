@@ -8,7 +8,7 @@ var CONFIG_DIR = path.join(__dirname, '..');
 var TAGS_BLACKLIST_PATH = path.join(CONFIG_DIR, 'tags-blacklist.txt');
 var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH);
 // Get the content, replace windows new-lines and split on new-lines.
-tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm,'\n').split('\n');
+tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm, '\n').split('\n');
 
 var cipCatalogs = require('../cip-catalogs.json');
 var generatedDir = path.join(__dirname, '..', '..', 'generated');
@@ -37,7 +37,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL:  process.env.CUMULUSAPI_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder',
+    baseURL: process.env.CUMULUSAPI_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder',
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxy: {
@@ -59,13 +59,13 @@ let config = {
       password: process.env.CIP_PASSWORD,
       logRequests: false,
       constants: {
-          catchAllAlias: "alle",
-          layoutAlias: "stadsarkivet"
+        catchAllAlias: "alle",
+        layoutAlias: "stadsarkivet"
       },
       catalogAliases: _.invert(cipCatalogs),
       trustSelfSigned: true
     },
-    sessionRenewalRate: 30*60*1000, // Once every 30 minutes
+    sessionRenewalRate: 30 * 60 * 1000, // Once every 30 minutes
     timeout: 55000
   },
   email: {
@@ -198,7 +198,8 @@ let config = {
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
     'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png'),
     'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png')
-  }
+  },
+  thumbnailSize: 500
 };
 
 module.exports = config;
