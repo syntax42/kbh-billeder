@@ -123,7 +123,7 @@ let config = {
     // Whether to require users to verify their email before they can contribute.
     requireEmailVerification: false,
     preferTargetBlank: false,
-    enableVisionTagSuggestions: false,
+    enableVisionTagSuggestions: true,
     enableGoogleTranslate: false,
     magasinMuseum: true
   },
