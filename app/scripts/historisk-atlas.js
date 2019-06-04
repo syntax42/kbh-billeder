@@ -16,6 +16,22 @@ function _prepareMapOptions (options) {
     options.zoomLevel = 12;
   }
 
+  if (!options.timeWarpShown) {
+    options.timeWarpShown = false;
+  }
+  
+  if (!options.timeWarpCenter) {
+    options.timeWarpCenter = options.center;
+  }
+
+  if (!options.timeWarpRadius) {
+    options.timeWarpRadius = 200;
+  }  
+
+  if (!options.timeWarpMapId) {
+    options.timeWarpMapId = 85;
+  }  
+
   if (!options.clusterAtZoomLevel) {
     options.clusterAtZoomLevel = 11;
   }
@@ -55,12 +71,23 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
+function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId, icons, mode, maps, onTimeWarpToggle) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
 
   mapState.mapElement = mapElement;
+
+
+
+
+
+  //TODO: validate and correct values: timeWarpCenter, timeWarpRadius and timeWarpMapId........................................................
+
+
+
+
+
 
   // Dropdown select control for the map. In single mode used to select the 
   // background map, otherwise used to select the time warp map.
@@ -78,6 +105,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       var elementOption = document.createElement('option');
       elementOption.value = maps[i].id;
       elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      elementOption.selected = maps[i].id == timeWarpMapId;
       mapState.mapSelectElement.appendChild(elementOption);
     }
 
@@ -352,7 +380,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
   } else
 
     // If mode is not "single" we should create and prepare the time warp
-    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps);
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
 
   return mapState;
 }
@@ -381,19 +409,19 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 * @return {ol.layer.Tile}
 *   The tile layer representing the time warp
 */
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps, shown, center, radius, mapId) {
 
   // Create the tile layer and init it with the
   // first map in the map array
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: getMapUrl(maps[0].id)
+      url: getMapUrl(mapId)
     })
   });
 
   // The time warp starts hidden
   timeWarp.setVisible(false);
-
+  
   // Insert it after the background map, but before
   // the feature (asset) layer.
   map.getLayers().insertAt(1, timeWarp);
@@ -418,7 +446,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   timeWarp.position = [300, 300];
 
   // Default radius. Not used, as it is set on show
-  timeWarp.radius = 200;
+  timeWarp.radius = radius;
 
   // The minimum radius in pixels
   timeWarp.minRadius = 100;
@@ -558,9 +586,9 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   /**
   * Toggles the time warp visibility
   */
-  timeWarp.toggle = function() {
+  timeWarp.toggle = function(center, radius) {
     if (mapElement.classList.toggle('time-warp'))
-      timeWarp.show()
+      timeWarp.show(center, radius)
     else
       timeWarp.hide()
   }
@@ -568,7 +596,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   /**
   * Shows the TW
   */
-  timeWarp.show = function () {
+  timeWarp.show = function (center, radius) {
 
     // Always start as a CIRCLE
     timeWarp.mode = timeWarp.modes.CIRCLE;
@@ -576,10 +604,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     var size = map.getSize();
 
     // Set position at middle of map
-    timeWarp.position = [size[0] / 2, size[1] / 2];
+    if (center) {
+      timeWarp.position = map.getPixelFromCoordinate(ol.proj.fromLonLat(center));
+      var test2 = false;
+    } else
+      timeWarp.position = [size[0] / 2, size[1] / 2];
 
     // Set radius af the TW to approx 1/3 of smallest dimension of map
-    timeWarp.radius = Math.min(size[0], size[1]) * 0.3;
+    timeWarp.radius = radius ? radius : Math.min(size[0], size[1]) * 0.3;
     timeWarp._show();
   }
   timeWarp._show = function () {
@@ -897,6 +929,12 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     return '';
   }
 
+  // Toggles on if shown is true
+  if (shown)
+    map.once('postrender', function () {
+      timeWarp.toggle(center, radius)
+    });    
+
   return timeWarp;
 }
 
@@ -918,7 +956,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
+  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.timeWarpShown, options.timeWarpCenter, options.timeWarpRadius, options.timeWarpMapId, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.

@@ -84,7 +84,14 @@
             assetMapper: function(results) {
               return results;
             },
-            urlBase: "http://kbhbilleder.dk/"
+            urlBase: "http://kbhbilleder.dk/",
+            //Initial map values. Get from url for deep linking to map
+            initialCenter: [12.6117, 55.6485],
+            initialZoomLevel: 16,
+            initialTimeWarpShown: true,
+            initialTimeWarpCenter: [12.6167, 55.6455],
+            initialTimeWarpRadius: 300,
+            initialTimeWarpMapId: 55
           };
 
           mapController = MapController(document.getElementById('map'), _mockedSearchController, options);
