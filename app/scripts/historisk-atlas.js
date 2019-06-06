@@ -78,16 +78,12 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
   mapState.mapElement = mapElement;
 
-
-
-
-
-  //TODO: validate and correct values: timeWarpCenter, timeWarpRadius and timeWarpMapId........................................................
-
-
-
-
-
+  //check that timeWarpMapId reference an existing map
+  var newTimeWarpMapId = 85;
+  for (var i = 0; i < maps.length; i++)
+    if (maps[i].id == timeWarpMapId)
+      newTimeWarpMapId = timeWarpMapId;
+  timeWarpMapId = newTimeWarpMapId;
 
   // Dropdown select control for the map. In single mode used to select the 
   // background map, otherwise used to select the time warp map.
@@ -442,14 +438,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   timeWarp.dragMode = timeWarp.dragModes.NONE;
 
   // Default time warp position. Not used, as it
-  // becomes centered on show
+  // becomes centered or set on show
   timeWarp.position = [300, 300];
-
-  // Default radius. Not used, as it is set on show
-  timeWarp.radius = radius;
 
   // The minimum radius in pixels
   timeWarp.minRadius = 100;
+
+  // Default radius. Not used, as it is set on show
+  timeWarp.radius = radius < timeWarp.minRadius ? timeWarp.minRadius : radius;
 
   timeWarp.rectWidth = 2;
 
@@ -606,7 +602,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     // Set position at middle of map
     if (center) {
       timeWarp.position = map.getPixelFromCoordinate(ol.proj.fromLonLat(center));
-      var test2 = false;
+      if (timeWarp.position[0] < 0)
+        timeWarp.position[0] = 0;
+      if (timeWarp.position[1] < 0)
+        timeWarp.position[1] = 0;
+      if (timeWarp.position[0] > size[0])
+        timeWarp.position[0] = size[0];
+      if (timeWarp.position[1] > size[1])
+        timeWarp.position[1] = size[1];
     } else
       timeWarp.position = [size[0] / 2, size[1] / 2];
 
@@ -932,7 +935,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   // Toggles on if shown is true
   if (shown)
     map.once('postrender', function () {
-      timeWarp.toggle(center, radius)
+      timeWarp.toggle(center, timeWarp.radius)
     });    
 
   return timeWarp;
