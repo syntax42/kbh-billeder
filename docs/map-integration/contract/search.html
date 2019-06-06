@@ -86,19 +86,15 @@
             },
             urlBase: "http://kbhbilleder.dk/",
             //Initial map values. Get from url for deep linking to map
-            initialCenter: [12.6117, 55.6485],
-            initialZoomLevel: 16,
-            initialTimeWarpShown: true,
-            initialTimeWarpCenter: [12.6167, 55.6105],
-            initialTimeWarpRadius: 300,
-            initialTimeWarpMapId: 55
+            mapInitParam: '55.64850000000001,12.6117,16z',
+            sMapInitParam: '55.64588460943139,12.616592349243167,189r,55id'
           };
 
           mapController = MapController(document.getElementById('map'), _mockedSearchController, options);
 
           document.getElementById('fakeupdate').onclick = function () {
-            mapController.onUpdate({}, function(params){
-              _mockedSearchController.refresh(params);
+              mapController.onUpdate({}, function (params) {
+                  document.getElementById('mapParams').innerText = 'map=' + params.map + (params.smap ? ('&smap=' + params.smap) : '');
             });
           };
 
@@ -117,6 +113,7 @@
     </div>
 <br>
 <input type="button" id="fakeupdate" name="Trigger search update"  value="Simulate search updated"/>
+<div id="mapParams"></div>
 
 </body>
 </html>

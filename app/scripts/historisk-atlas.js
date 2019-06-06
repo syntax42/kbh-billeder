@@ -84,6 +84,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
     if (maps[i].id == timeWarpMapId)
       newTimeWarpMapId = timeWarpMapId;
   timeWarpMapId = newTimeWarpMapId;
+  mapState.id = timeWarpMapId;
 
   // Dropdown select control for the map. In single mode used to select the 
   // background map, otherwise used to select the time warp map.
@@ -93,7 +94,8 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
     // When select is changes update the source of the appropriate source.
     mapState.mapSelectElement.addEventListener('change', function (event) {
       var source = mapState.isSearchMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
-      source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
+      mapState.id = mapState.mapSelectElement.value;
+      source.setUrl(mapState.getMapUrl(mapState.id));
     }, false);
 
     // Read in the maps passed in "maps" and crates options for them
@@ -587,6 +589,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       timeWarp.show(center, radius)
     else
       timeWarp.hide()
+  }
+
+  /**
+  * Returns the toggel state of the TW
+  */
+  timeWarp.shown = function () {
+    return (mapElement.classList.contains('time-warp'))
   }
 
   /**
@@ -1163,6 +1172,54 @@ function HistoriskAtlas(mapElement, options) {
   */
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
+  };
+
+  /**
+  * Returns the center of the time warp
+  *
+  * @return {Object}
+  *   The center of where the time warp is placed on the map of the format:
+  *   {longitude, latitude}
+  */
+  mapHandler.getTimeWarpCenter = function () {
+    var center = ol.proj.toLonLat(mapState.map.getCoordinateFromPixel(mapState.timeWarp.position));
+    return {
+      longitude: center[0],
+      latitude: center[1]
+    };
+  };
+
+  /**
+  * Returns the radius of the time warp
+  *
+  * @return {number}
+  *   The radius of the of the time warp in pixels
+  *   
+  */
+  mapHandler.getTimeWarpRadius = function () {
+    return Math.round(mapState.timeWarp.radius);
+  };
+
+  /**
+  * Returns the mapid of the time warp
+  *
+  * @return {number}
+  *   The id of the map currently shown in the time warp
+  *   
+  */
+  mapHandler.getMapId = function () {
+    return mapState.id;
+  };
+
+  /**
+  * Returns the shown state of the time warp
+  *
+  * @return {boolean}
+  *   The shown state of the time warp, ie. true if its turned on, false if not
+  *   
+  */
+  mapHandler.getTimeWarpShown = function () {
+    return mapState.timeWarp.shown();
   };
 
   /**
