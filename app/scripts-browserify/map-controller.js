@@ -228,6 +228,16 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     };
 
+    // Invoked if HA makes an internal update that we need to reflect.
+    // This is mostly done to have a hook we can use to update the browser url
+    // with the new state.
+    var onHaUpdate = function() {
+      console.log("So refreshing part II");
+      if (options.mode === 'search') {
+        searchControllerCallbacks.refresh();
+      }
+    };
+
     // The user has clicked on an asset on the map that needs to be displayed.
     var onPopupClick = function (id) {
       window.location.href = id;
@@ -249,7 +259,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
         onPopupClick: onPopupClick,
-        onTimeWarpToggle: options.onTimeWarpToggle,
+        onUpdate: onHaUpdate,
         onDirectionRemoved: searchControllerCallbacks.onDirectionRemoved,
         icons: options.icons
       }
@@ -351,9 +361,9 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         const mapId = frozenState.frozen ? frozenState.mapId : defaultMapHandler.getMapId();
         searchParams.smap = `${twCenter.latitude},${twCenter.longitude},${twRadius}r,${mapId}id`;
       }
-      else
-        searchParams.smap = null
-
+      else {
+        searchParams.smap = null;
+      }
       // If we're zoomed out wide enough, use hash-based results.
       searchParams.geohash = zoomLevel <= options.geohashAtZoomLevel;
 

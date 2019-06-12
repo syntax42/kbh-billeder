@@ -71,7 +71,7 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId, icons, mode, maps, onTimeWarpToggle) {
+function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId, icons, mode, maps, onUpdateMapControllerCallback) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
@@ -96,6 +96,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       var source = mapState.isSearchMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
       mapState.id = mapState.mapSelectElement.value;
       source.setUrl(mapState.getMapUrl(mapState.id));
+      onUpdateMapControllerCallback();
     }, false);
 
     // Read in the maps passed in "maps" and crates options for them
@@ -378,7 +379,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   } else
 
     // If mode is not "single" we should create and prepare the time warp
-    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onUpdateMapControllerCallback, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
 
   return mapState;
 }
@@ -398,7 +399,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 * @param {Function} getMapUrl
 *   Function to get map url template by id
 *
-* @param {Function} onTimeWarpToggle
+* @param {Function} onUpdateMapControllerCallback
 *   Callback function called when the time warp is toggled
 *
 * @param {Array} maps
@@ -407,7 +408,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 * @return {ol.layer.Tile}
 *   The tile layer representing the time warp
 */
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps, shown, center, radius, mapId) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpdateMapControllerCallback, maps, shown, center, radius, mapId) {
 
   // Create the tile layer and init it with the
   // first map in the map array
@@ -465,10 +466,6 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
       // Toggle (close) the TW.
       timeWarp.toggle();
-
-      // If callback onTimeWarpToggle is defined call it
-      if (onTimeWarpToggle)
-        onTimeWarpToggle();
 
     }, false);
     ol.control.Control.call(this, {
@@ -589,6 +586,10 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
       timeWarp.show(center, radius)
     else
       timeWarp.hide()
+
+    // If callback onUpdateMapControllerCallback is defined call it
+    if (onUpdateMapControllerCallback)
+      onUpdateMapControllerCallback();
   }
 
   /**
@@ -897,6 +898,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     // Otherwise calculate as new situation
     else
       timeWarp.touchDown(event);
+
+    onUpdateMapControllerCallback();
   }
 
   /**
@@ -906,6 +909,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
     // Drag set to NONE
     timeWarp.dragMode = timeWarp.dragModes.NONE;
+    onUpdateMapControllerCallback();
   }
 
   /**
@@ -968,7 +972,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.timeWarpShown, options.timeWarpCenter, options.timeWarpRadius, options.timeWarpMapId, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
+  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.timeWarpShown, options.timeWarpCenter, options.timeWarpRadius, options.timeWarpMapId, options.icons, options.mode, options.maps, options.onUpdate);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
