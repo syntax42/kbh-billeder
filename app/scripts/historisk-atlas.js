@@ -19,18 +19,18 @@ function _prepareMapOptions (options) {
   if (!options.timeWarpShown) {
     options.timeWarpShown = false;
   }
-  
+
   if (!options.timeWarpCenter) {
     options.timeWarpCenter = options.center;
   }
 
   if (!options.timeWarpRadius) {
     options.timeWarpRadius = 200;
-  }  
+  }
 
   if (!options.timeWarpMapId) {
     options.timeWarpMapId = 85;
-  }  
+  }
 
   if (!options.clusterAtZoomLevel) {
     options.clusterAtZoomLevel = 11;
@@ -86,7 +86,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   timeWarpMapId = newTimeWarpMapId;
   mapState.id = timeWarpMapId;
 
-  // Dropdown select control for the map. In single mode used to select the 
+  // Dropdown select control for the map. In single mode used to select the
   // background map, otherwise used to select the time warp map.
   mapState.mapSelectControl = function () {
     mapState.mapSelectElement = document.createElement('select');
@@ -97,6 +97,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       mapState.id = mapState.mapSelectElement.value;
       source.setUrl(mapState.getMapUrl(mapState.id));
       onUpdateMapControllerCallback();
+
     }, false);
 
     // Read in the maps passed in "maps" and crates options for them
@@ -134,7 +135,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       // Add listener to catch clicks on the element
       mapState.locationElement.addEventListener('click', function (event) {
 
-        // Toggle the "location" class on the main map element and 
+        // Toggle the "location" class on the main map element and
         // check if it is present now
         if (mapElement.classList.toggle('location')) {
 
@@ -209,7 +210,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
   /**
   * Returns the url template for map tiles
-  * 
+  *
   * @param {number} id
   *   DOM object for the table to be made draggable.
   *
@@ -248,7 +249,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
     /**
     * Calculates the style for a feature (asset)
-    * 
+    *
     * @param {ol.fature} feature
     *   The feature for which a style should be calculated
     *
@@ -290,7 +291,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       if (!style) {
         style = new ol.style.Style({
           image: new ol.style.Icon({
-            // The size of the icon is determined by how many digits 
+            // The size of the icon is determined by how many digits
             // is in count, ie. (1-9 = small), (10-99) = medium, (100+) = large
             src: featureIcons[Math.min(count.toString().length, 3)]
           }),
@@ -386,7 +387,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
 /**
 * Prepares the time warp for use and defines functions
-* 
+*
 * @param {ol.Map} map
 *   The open layers map object
 *
@@ -420,7 +421,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   // The time warp starts hidden
   timeWarp.setVisible(false);
-  
+
   // Insert it after the background map, but before
   // the feature (asset) layer.
   map.getLayers().insertAt(1, timeWarp);
@@ -509,7 +510,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called just before the TW layer is drawn
-  * 
+  *
   * @param {Event} event
   *   The event containg the drawing context
   */
@@ -529,7 +530,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called just after the TW layer is drawn
-  * 
+  *
   * @param {Event} event
   *   The event containg the drawing context
   */
@@ -552,7 +553,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Applies the path to the drawing context
-  * 
+  *
   * @param {CanvasRenderingContext2D} ctx
   *   The context being drawn on for the TW
   */
@@ -562,7 +563,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
     ctx.beginPath();
     switch (timeWarp.mode) {
       case timeWarp.modes.CIRCLE:
-        
+
         // apply the path of the circle in CIRCLE mode
         ctx.arc(x, y, timeWarp.radius * timeWarp.pixelRatio, 0, 2 * Math.PI);
 
@@ -690,7 +691,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called when user start touch event
-  * 
+  *
   * @param {Event} event
   *   The event holding the incoming touches
   */
@@ -703,13 +704,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called when user start touch event or mouse down event
-  * 
+  *
   * @param {Array} coord
   *   The coordinates of the event
-  * 
+  *
   * @param {boolean} forceMove
   *   Should this be forced to start a move
-  * 
+  *
   * @param {boolean} relative
   *   Is the supplied coords relative to the map element or the screen
   */
@@ -754,7 +755,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called when user start Open Layers pointer drag event
-  * 
+  *
   * @param {Event} event
   *   The event containing coords
   */
@@ -796,7 +797,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called when user is dragging finger
-  * 
+  *
   * @param {Event} event
   *   The event containing touches
   */
@@ -822,13 +823,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Calculates average coords of multiple touch points
-  * 
+  *
   * @param {Array} touches
   *   Array containg touch points
-  * 
+  *
   * @param {boolean} relative
   *   Are the coords relative to the map element?
-  * 
+  *
   * @return {Array}
   *   The average coords
   */
@@ -857,10 +858,10 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Calculates distance between touches
-  * 
+  *
   * @param {Array} touches
   *   Array containg touch points
-  * 
+  *
   * @return {Array}
   *   The distance between the first to touch points
   */
@@ -884,7 +885,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   /**
   * Called when touch point is released
-  * 
+  *
   * @param {Event} event
   *   Event containg touch points
   */
@@ -949,14 +950,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   if (shown)
     map.once('postrender', function () {
       timeWarp.toggle(center, timeWarp.radius)
-    });    
+    });
 
   return timeWarp;
 }
 
 /**
 * Integration between kbhbilleder and a map-provider.
-* 
+*
 * @param {HTMLElement} mapElement
 *   The html element holding the open layers map
 *
@@ -1198,7 +1199,7 @@ function HistoriskAtlas(mapElement, options) {
   *
   * @return {number}
   *   The radius of the of the time warp in pixels
-  *   
+  *
   */
   mapHandler.getTimeWarpRadius = function () {
     return Math.round(mapState.timeWarp.radius);
@@ -1209,7 +1210,7 @@ function HistoriskAtlas(mapElement, options) {
   *
   * @return {number}
   *   The id of the map currently shown in the time warp
-  *   
+  *
   */
   mapHandler.getMapId = function () {
     return mapState.id;
@@ -1220,7 +1221,7 @@ function HistoriskAtlas(mapElement, options) {
   *
   * @return {boolean}
   *   The shown state of the time warp, ie. true if its turned on, false if not
-  *   
+  *
   */
   mapHandler.getTimeWarpShown = function () {
     return mapState.timeWarp.shown();
@@ -1251,7 +1252,7 @@ function HistoriskAtlas(mapElement, options) {
 
     if (options.mode === 'edit') {
 
-      // Add a translate interaction to the feature so 
+      // Add a translate interaction to the feature so
       // it can be dragged around
       mapHandler.translate = new ol.interaction.Translate({
         features: new ol.Collection([mapState.feature])
@@ -1267,7 +1268,7 @@ function HistoriskAtlas(mapElement, options) {
         pixel[0] += Math.cos(radian) * 120;
         pixel[1] += Math.sin(radian) * 120;
         var targetCoordinates = mapState.map.getCoordinateFromPixel(pixel);
-        
+
         // Add a dotted line feature from the asset to the target
         mapState.lineFeature = new ol.Feature({
           geometry: new ol.geom.LineString([coordinates, targetCoordinates])
@@ -1493,7 +1494,7 @@ function HistoriskAtlas(mapElement, options) {
     // If a single asset is clicked
     if (subFeatures.length == 1 && !asset.clustered) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
-      
+
       // If the popup would go outside the map border, center on the feature first.
       if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
         mapState.feature = subFeatures[0];
@@ -1504,7 +1505,7 @@ function HistoriskAtlas(mapElement, options) {
         });
         return;
       }
-      
+
       // Otherwise just show the popup
       mapState.showPopup(subFeatures[0], pixel)
       return;
