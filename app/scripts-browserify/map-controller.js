@@ -185,7 +185,6 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     }
 
-
     if (!options.geohashAtZoomLevel) {
       options.geohashAtZoomLevel = 15;
     }
