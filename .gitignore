@@ -41,3 +41,6 @@ google-key.json
 
 # mongodb
 data
+
+# Visual Studio files
+/.vs
