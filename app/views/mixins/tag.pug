@@ -1,4 +1,4 @@
 mixin tag(name)
   a.btn.btn-dark(
-  href='/?q='+encodeURIComponent(name)
+  href='/?q="'+encodeURIComponent(name) + '"'
   )= name
