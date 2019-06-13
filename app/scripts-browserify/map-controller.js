@@ -231,7 +231,6 @@ function MapController (mapElement, searchControllerCallbacks, options) {
     // This is mostly done to have a hook we can use to update the browser url
     // with the new state.
     var onHaUpdate = function() {
-      console.log("So refreshing part II");
       if (options.mode === 'search') {
         searchControllerCallbacks.refresh();
       }
