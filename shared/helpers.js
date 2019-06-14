@@ -40,23 +40,45 @@ helpers.getDocumentURL = (metadata) => {
   return '/' + path.join('/');
 };
 
+/**
+ * Determine which players are available for a given asset.
+ *
+ * We currently support either video (with an optional backside) or video.
+ *
+ * @param metadata
+ * @returns {Array}
+ */
 helpers.determinePlayers = metadata => {
   const players = [];
 
-  // We always have an image.
-  players.push({
-    type: 'image',
-    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-    title: helpers.documentTitle(metadata)
-  });
-
-  // Add backside if we have one
-  if (helpers.hasBacksideAsset(metadata)) {
+  // Is this a video?
+  if (metadata.file_format && metadata.file_format === 'MPEG-4 Video') {
+    const license = helpers.licenseMapped(metadata);
+    const licenseUrl = license ? license.url : null;
     players.push({
-      type: 'backside',
-      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-      backsides: helpers.getBacksideAssets(metadata)
+      type: 'video',
+      thumbnailLocation: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      title: helpers.documentTitle(metadata),
+      description: helpers.documentTitle(metadata),
+      contentLocation: helpers.getDirectDownloadURL(metadata),
+      licenseUrl
     });
+  } else {
+    // Default to image.
+    players.push({
+      type: 'image',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      title: helpers.documentTitle(metadata)
+    });
+
+    // Add backside if we have one
+    if (helpers.hasBacksideAsset(metadata)) {
+      players.push({
+        type: 'backside',
+        thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+        backsides: helpers.getBacksideAssets(metadata)
+      });
+    }
   }
 
   return players;

@@ -1,0 +1,10 @@
+- let downloadURL = helpers.getStreamURL(metadata);
+video(
+  width="100%",
+  controls,
+  src=downloadURL,
+  itemprop='video',
+)
+  | Undskyld, din browser understøtter ikke dette videoformat du kan
+  a(href=downloadURL) downloaded video
+  | i stedet.
