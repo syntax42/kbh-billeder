@@ -19,7 +19,7 @@ exports.proxy = proxy;
  * size is a parameter that
  * next is a callback method for potential errors
  */
-exports.proxyDownload = (id, size) => {
+exports.proxyDownload = (id, size, range = false) => {
   let url = '/asset/download/' + id;
   const option = config.downloadOptions[size];
   assert(option, 'Expected value for "' + size + '" in config.downloadOptions');
@@ -30,7 +30,14 @@ exports.proxyDownload = (id, size) => {
     url += '?options=' + JSON.stringify(option.cumulus);
   }
 
-  return proxy(url, includeSessionId);
+  if (range) {
+    // Pass on the range-headers from the browser all the way to the backend
+    // so that it also gets a range-request.
+    return proxy(url, includeSessionId, {range});
+  } else {
+    return proxy(url, includeSessionId);
+  }
+
 };
 
 /**

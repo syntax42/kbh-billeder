@@ -24,7 +24,7 @@ var request = require('request').defaults({
   timeout: config.cip.timeout || 55000 // 55 secs
 });
 
-function proxy(url, includeJSessionId = false) {
+function proxy(url, includeJSessionId = false, headers = []) {
   // Prefix the baseURL
   url = config.cip.baseURL + url;
   // Add any available jsessionid, just before any querystring.
@@ -47,7 +47,8 @@ function proxy(url, includeJSessionId = false) {
   return request
     .get({
       url,
-      rejectUnauthorized: config.cip.client.trustSelfSigned ? false : true
+      rejectUnauthorized: config.cip.client.trustSelfSigned ? false : true,
+      headers
     })
     .auth(username, password)
     .on('response', function(response) {
