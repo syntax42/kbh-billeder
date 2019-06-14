@@ -36,6 +36,9 @@ module.exports = function(searchParameters) {
   if (searchParameters.map) {
     parameters.map = searchParameters.map;
   }
+  if (searchParameters.smap) {
+    parameters.smap = searchParameters.smap;
+  }
   var result = querystring.stringify(parameters);
 
   result = result.replace(/%20/g,'+').replace(/%2C/g,',');
