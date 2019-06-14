@@ -91,6 +91,14 @@ helpers.getDownloadURL = (metadata, size) => {
   return path.join('/');
 };
 
+helpers.getStreamURL = (metadata, size) => {
+  let path = [
+    helpers.getDocumentURL(metadata),
+    'stream'
+  ];
+  return path.join('/');
+};
+
 helpers.getAbsoluteURL = (req, relativePath) => {
   return req.protocol + '://' + req.get('host') + relativePath;
 };
