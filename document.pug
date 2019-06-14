@@ -6,7 +6,7 @@ include mixins/display-license
 
 append header
   - let title = helpers.documentTitle(metadata);
-  - let description = helpers.documentDescription(metadata);
+  - let description = 'Fotograf/Skaber: ' + metadata.creator + ', ' + metadata.catalog_name;
   - let socialThumbnailURL = helpers.getSocialThumbnailURL(metadata);
   +meta(title, description, socialThumbnailURL)
 
