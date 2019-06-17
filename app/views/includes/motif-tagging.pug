@@ -15,10 +15,11 @@ h2 Brugernes emneord
   div(class={"col-md-6": config.features.enableVisionTagSuggestions, "col-xs-12": !config.features.enableVisionTagSuggestions })
     h2 Tilføj flere emneord
     div Husk at gemme til sidst.
+    - var add_tag_description = "Indtast nyt emneord og tryk enter"
     .motif-tagging__add-tag
       .motif-tagging__add-input.material-input
-        input(type='text', required)
+        input(type='text', required, aria-label=add_tag_description)
         span.bar
-        label Indtast nyt emneord og tryk enter
+        label #{add_tag_description}
       .motif-tagging__save-buttons(data-template='save-buttons')
         include ./motif-tagging/save-buttons
