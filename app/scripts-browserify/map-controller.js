@@ -178,7 +178,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         if (!isNaN(parsedZoom)) {
           options.initialTimeWarpRadius = parsedRadius;
         }
-        var parsedMapId = parseInt(parts[3].substring(0, parts[2].length - 2));
+        var parsedMapId = parseInt(parts[3].substring(0, parts[3].length - 2));
         if (!isNaN(parsedMapId)) {
           options.initialTimeWarpMapId = parsedMapId;
         }
@@ -354,8 +354,8 @@ function MapController (mapElement, searchControllerCallbacks, options) {
 
       // Add values from the time warp (secondary map or smap).
       if (frozenState.frozen ? frozenState.twShown : defaultMapHandler.getTimeWarpShown()) {
-        const twCenter = frozenState.frozen ? frozenState.twCenter : defaultMapHandler.getTimeWarpCenter(); 
-        const twRadius = frozenState.frozen ? frozenState.twRadius : defaultMapHandler.getTimeWarpRadius(); 
+        const twCenter = frozenState.frozen ? frozenState.twCenter : defaultMapHandler.getTimeWarpCenter();
+        const twRadius = frozenState.frozen ? frozenState.twRadius : defaultMapHandler.getTimeWarpRadius();
         const mapId = frozenState.frozen ? frozenState.mapId : defaultMapHandler.getMapId();
         searchParams.smap = `${twCenter.latitude},${twCenter.longitude},${twRadius}r,${mapId}id`;
       }
@@ -369,7 +369,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
     },
-    
+
     /**
      * Freeze values that might change while the map is being manipulated.
      */
