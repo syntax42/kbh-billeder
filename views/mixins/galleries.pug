@@ -9,7 +9,7 @@ mixin gridGallery(gallery, i, evenOrOdd)
         each item, index in gallery.items
           .col-xs-6
             +galleryItem(item, index, 'grid', true)
-                
+
 mixin carouselGallery(gallery, evenOrOdd)
   .row.gallery.gallery--carousel(class="gallery--" + evenOrOdd)
     .col-xs-12
@@ -39,8 +39,8 @@ mixin galleryItem(item, index, type, fill, imageDimensions)
   - var itemImageUrl = item._.image.fill(imageDimensions[0],imageDimensions[1],{gravity: 'center', quality: 75});
   - var className = 'gallery-thumb-' + index + ' gallery-thumb-' + type
     a.gallery-thumb.no-touch-hover(href=item.link, class=className)
-      img(src=fill ? itemImageUrl : item.image.url).gallery-thumb__image
+      img(src=fill ? itemImageUrl : item.image.url alt="").gallery-thumb__image
       .gallery-thumb__overlay
         h3.gallery-thumb__title= item.title
         p.gallery-thumb__text= item.description
-  
+
