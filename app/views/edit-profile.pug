@@ -31,31 +31,31 @@ block inner-content
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b Brugernavn
-              input(type='text', name='username', disabled=!auth0User, placeholder=user._json.username, aria-label='Brugernavn')
+                b#edit-profile-username Brugernavn
+              input(type='text', name='username', disabled=!auth0User, placeholder=user._json.username, aria-labelledby='edit-profile-username')
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b Email
-              input(type='email', name='email', disabled=!auth0User, placeholder=user._json.email, aria-label='Email')
+                b#edit-profile-email Email
+              input(type='email', name='email', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-email')
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b Gentag email
-              input(type='email', name='emailConfirmation', disabled=!auth0User, placeholder=user._json.email, aria-label='Gentag email')
+                b#edit-profile-repeat-email Gentag email
+              input(type='email', name='emailConfirmation', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-repeat-email')
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b Adgangskode
-              input(type='password', name='password', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-label='Adgangskode')
+                b#edit-profile-password Adgangskode
+              input(type='password', name='password', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-password')
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b Gentag adgangskode
-              input(type='password', name='passwordConfirmation', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-label='Gentag adgangskode')
+                b#edit-profile-repeat-password Gentag adgangskode
+              input(type='password', name='passwordConfirmation', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-repeat-password')
         .col-xs-12.my-page__edit-profile__buttons
-          a(href='/min-side').btn
+          a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn
             | Annuller
           input(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
