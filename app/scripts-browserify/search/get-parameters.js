@@ -22,6 +22,9 @@ module.exports = function() {
   // Holds the centerpoint and zoom-level of the map. Empty if we're not viewing
   // the map.
   var map = '';
+  // Same, but for our Historisk Atlas map
+  var smap ='';
+
   // The rest are filters
   Object.keys(parameters).forEach(function(field) {
     // TODO: Look for the skipSplit config parameter
@@ -36,6 +39,9 @@ module.exports = function() {
     else if (field === 'map') {
       map = parameters[field];
     }
+    else if (field === 'smap') {
+      smap = parameters[field];
+    }
     else {
       console.warn('Skipping an unexpected search parameter:', field);
     }
@@ -44,6 +50,7 @@ module.exports = function() {
   return {
     filters: filters,
     sorting: sorting,
-    map: map
+    map: map,
+    smap: smap
   };
 };

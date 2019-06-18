@@ -380,6 +380,10 @@ function initialize() {
   if (searchParams.map) {
     options.mapInitParam = searchParams.map;
   }
+  if (searchParams.smap) {
+    options.sMapInitParam = searchParams.smap;
+  }
+
   // Setup the map with a callback it can use when it needs a new search
   // triggered and a configuration for when we switch between hash and asset
   // search-results.
