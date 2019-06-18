@@ -246,7 +246,7 @@ const kbhStatsApi = {
   _doPost: function(url, object)  {
     return new Promise((resolve, reject) => {
       console.log('Posting to ' + url);
-      request.post(url, {form: object}, (error, response, body) => {
+      request.post(url, {body: object, json: true}, (error, response, body) => {
         if (error || (response.statusCode < 200 || response.statusCode > 299)) {
           const payload = JSON.stringify(object);
           const errorString = response.statusCode + ': ' + response.statusMessage;
