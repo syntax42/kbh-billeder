@@ -1,12 +1,13 @@
 .feedback
   h2.feedback__title Ved du mere om dette billede?
-  p Skriv til os, hvis du har yderligere oplysninger om fx fotografen, dateringen, motivet eller personerne på billedet.
+  p#feedback_description
+    | Skriv til os, hvis du har yderligere oplysninger om fx fotografen, dateringen, motivet eller personerne på billedet.
   .feedback__btn-form-show.btn.btn-primary(data-action='feedback:start')
     | Skriv til os
   .feedback__success-message
-    | Tak for din besked. Vi kigger på oplysningerne og vurderer om billedets beskrivelse skal opdateres. 
+    | Tak for din besked. Vi kigger på oplysningerne og vurderer om billedets beskrivelse skal opdateres.
   .feedback__container
-    textarea.feedback__form.form-control(maxlength=config.feedback.maxLength)
+    textarea.feedback__form.form-control(maxlength=config.feedback.maxLength aria-labelledby='feedback_description')
     .feedback__controls
       .feedback__btn-form-send.btn.btn-primary(data-action='feedback:send')
         | Send
@@ -16,5 +17,5 @@
         | Der skete en fejl. Prøv venligst igen senere.
       span.feedback__counter-container
         span.feedback__counter 0
-        |  / 
+        |  /
         = config.feedback.maxLength
