@@ -102,9 +102,11 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
     // Read in the maps passed in "maps" and crates options for them
     for (var i = 0; i < maps.length; i++) {
+      var mapTitle = maps[i].title + ' ' + maps[i].year;
       var elementOption = document.createElement('option');
+      elementOption.title = mapTitle;
       elementOption.value = maps[i].id;
-      elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      elementOption.innerText = mapTitle;
       elementOption.selected = maps[i].id == timeWarpMapId;
       mapState.mapSelectElement.appendChild(elementOption);
     }
