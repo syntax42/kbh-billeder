@@ -2,7 +2,7 @@ extends index
 include mixins/meta
 
 append header
-  +meta(data.page.title)
+  +meta(data.page.title, data.page.soMeDescription, data.page.soMeImage.url)
 
 block content
   .let-it-grow.page-wrap
