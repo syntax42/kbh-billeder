@@ -3,7 +3,7 @@
 /**
  * Read in options and set defaults.
  */
-function _prepareMapOptions (options) {
+function _prepareMapOptions(options) {
   if (!options) {
     options = {};
   }
@@ -37,11 +37,11 @@ function _prepareMapOptions (options) {
   }
 
   if (!options.onMoveStart) {
-    options.onMoveStart = function () {};
+    options.onMoveStart = function () { };
   }
 
   if (!options.onMoveEnd) {
-    options.onMoveEnd = function () {};
+    options.onMoveEnd = function () { };
   }
 
   if (!options.onPopupClick) {
@@ -102,9 +102,11 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
 
     // Read in the maps passed in "maps" and crates options for them
     for (var i = 0; i < maps.length; i++) {
+      var mapTitle = maps[i].title + ' ' + maps[i].year;
       var elementOption = document.createElement('option');
+      elementOption.title = mapTitle;
       elementOption.value = maps[i].id;
-      elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      elementOption.innerText = mapTitle;
       elementOption.selected = maps[i].id == timeWarpMapId;
       mapState.mapSelectElement.appendChild(elementOption);
     }
@@ -173,7 +175,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
             }, function (error) {
               navigator.geolocation.clearWatch(mapState.watchId);
             });
-          }, function (error) {});
+          }, function (error) { });
         } else {
 
           // Remove location feature by remoung the layer and
@@ -217,7 +219,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   * @return {string}
   *   Url template for maps with id "id".
   */
-  mapState.getMapUrl = function(id) {
+  mapState.getMapUrl = function (id) {
     return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
   }
 
@@ -514,7 +516,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   * @param {Event} event
   *   The event containg the drawing context
   */
-  timeWarp.precomposeTimeWarp = function(event) {
+  timeWarp.precomposeTimeWarp = function (event) {
     var ctx = event.context;
     timeWarp.pixelRatio = event.frameState.pixelRatio;
 
@@ -582,7 +584,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   /**
   * Toggles the time warp visibility
   */
-  timeWarp.toggle = function(center, radius) {
+  timeWarp.toggle = function (center, radius) {
     if (mapElement.classList.toggle('time-warp'))
       timeWarp.show(center, radius)
     else
@@ -673,7 +675,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   */
   timeWarp.updateControls = function () {
     mapSelectDivElement.style.left = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px' : null;
-    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ?(timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
+    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
     mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
     mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
 
@@ -759,7 +761,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   * @param {Event} event
   *   The event containing coords
   */
-  timeWarp.pointerDrag = function(event) {
+  timeWarp.pointerDrag = function (event) {
     var newposition = event.pixel ? event.pixel : [event.offsetX, event.offsetY];
     switch (timeWarp.dragMode) {
 
@@ -833,7 +835,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   * @return {Array}
   *   The average coords
   */
-  timeWarp.centerCoordFromTouches = function(touches, relative) {
+  timeWarp.centerCoordFromTouches = function (touches, relative) {
     var center = [0, 0];
     var offset = mapElement.getBoundingClientRect();
     var count = 0;
@@ -865,7 +867,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   * @return {Array}
   *   The distance between the first to touch points
   */
-  timeWarp.touchDistFromTouches = function(touches) {
+  timeWarp.touchDistFromTouches = function (touches) {
 
     // Only calculate new distance if there are morhe than one touch point
     if (touches.length < 2)
@@ -889,11 +891,10 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
   * @param {Event} event
   *   Event containg touch points
   */
-  timeWarp.touchUp = function(event)
-  {
+  timeWarp.touchUp = function (event) {
 
     // If all touches are released we are done
-    if(event.touches.length == 0)
+    if (event.touches.length == 0)
       timeWarp.up();
 
     // Otherwise calculate as new situation
@@ -982,7 +983,7 @@ function HistoriskAtlas(mapElement, options) {
   /**
    * "Freeze" the map by removing all interactions from the map.
    */
-  mapHandler.freeze = function() {
+  mapHandler.freeze = function () {
     if (!mapState.map) {
       return;
     }
@@ -1243,7 +1244,7 @@ function HistoriskAtlas(mapElement, options) {
   */
   mapHandler.toggleEditMode = function (editOn) {
     // If the user specifically requested a mode, use it.
-    if (editOn !== undefined){
+    if (editOn !== undefined) {
       options.mode = editOn ? 'edit' : 'single';
     } else {
       // Otherwise go for toggle.
@@ -1380,7 +1381,7 @@ function HistoriskAtlas(mapElement, options) {
    * @param targetFeature
    *   Coordinate of the target feature.
    */
-  function _cursorHoversCloseIcon (hoverPixel, targetFeature) {
+  function _cursorHoversCloseIcon(hoverPixel, targetFeature) {
     return hoverPixel[0] - targetFeature[0] > 13 && targetFeature[1] - hoverPixel[1] > 10;
   }
 
@@ -1399,7 +1400,7 @@ function HistoriskAtlas(mapElement, options) {
         } else {
           return false;
         }
-      }, {layerFilter: _doNotShowLocationLayerFilter}
+      }, { layerFilter: _doNotShowLocationLayerFilter }
     );
 
     // If we are hovering over a feature and it is the target feature, show pointer if over the "close" icon
@@ -1427,7 +1428,7 @@ function HistoriskAtlas(mapElement, options) {
   /**
    * Checks whether the specified layer is the user-location layer.
    */
-  function _doNotShowLocationLayerFilter (layer) {
+  function _doNotShowLocationLayerFilter(layer) {
     return layer !== mapState.locationLayer;
   }
 
@@ -1453,7 +1454,7 @@ function HistoriskAtlas(mapElement, options) {
           return false;
         }
       },
-      {layerFilter: _doNotShowLocationLayerFilter}
+      { layerFilter: _doNotShowLocationLayerFilter }
     );
 
     mapState.hidePopup();
@@ -1596,19 +1597,19 @@ function HistoriskAtlas(mapElement, options) {
     geohash = geohash.toLowerCase();
 
     var evenBit = true;
-    var latMin =  -90, latMax =  90;
+    var latMin = -90, latMax = 90;
     var lonMin = -180, lonMax = 180;
 
-    for (var i=0; i<geohash.length; i++) {
+    for (var i = 0; i < geohash.length; i++) {
       var chr = geohash.charAt(i);
       var idx = '0123456789bcdefghjkmnpqrstuvwxyz'.indexOf(chr);
       if (idx == -1) throw new Error('Invalid geohash');
 
-      for (var n=4; n>=0; n--) {
+      for (var n = 4; n >= 0; n--) {
         var bitN = idx >> n & 1;
         if (evenBit) {
           // longitude
-          var lonMid = (lonMin+lonMax) / 2;
+          var lonMid = (lonMin + lonMax) / 2;
           if (bitN == 1) {
             lonMin = lonMid;
           } else {
@@ -1616,7 +1617,7 @@ function HistoriskAtlas(mapElement, options) {
           }
         } else {
           // latitude
-          var latMid = (latMin+latMax) / 2;
+          var latMid = (latMin + latMax) / 2;
           if (bitN == 1) {
             latMin = latMid;
           } else {
