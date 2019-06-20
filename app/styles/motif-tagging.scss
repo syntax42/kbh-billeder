@@ -1,4 +1,15 @@
 .motif-tagging {
+  .print {
+    display: none;
+  }
+  @media print {
+    .non-print {
+      display: none;
+    }
+    .print {
+      display: block;
+    }
+  }
   &__tags {
     margin-top: $spacer-md;
   }
