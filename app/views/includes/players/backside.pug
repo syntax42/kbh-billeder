@@ -1,8 +1,8 @@
 img(src=player.thumbnailUrl,
-alt=player.title,
+alt=player.title ? player.title : 'Beskrivelse af billede mangler',
 data-action='toggle-expandable').asset__image
 
 each backside in player.backsides
   img(src=helpers.getThumbnailURL(backside, 2000, 'bottom-right'),
-  alt=player.title,
+  alt='Fotografiets bagside',
   data-action='toggle-expandable').asset__image.asset__image--hide.asset__image--backside
