@@ -90,6 +90,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   // background map, otherwise used to select the time warp map.
   mapState.mapSelectControl = function () {
     mapState.mapSelectElement = document.createElement('select');
+    mapState.mapSelectElement.title = 'Vælg kort';
 
     // When select is changes update the source of the appropriate source.
     mapState.mapSelectElement.addEventListener('change', function (event) {
