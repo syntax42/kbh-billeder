@@ -11,7 +11,9 @@
 @media print {
   .topbar,
   .footer,
-  .feedback {
+  .feedback,
+  .cc-banner,
+  .map-coordinates__map--edit {
     display: none;
   }
   .document {
@@ -28,11 +30,11 @@
       display: none !important;
     }
     .geo-tagging-mini-map {
-      height: 125px;
-      width: 350px;
+      height: 95px;
+      width: 320px;
       canvas {
-        height: 125px;
-        width: 350px;
+        height: 95px;
+        width: 320px;
       }
     }
     &__title {
