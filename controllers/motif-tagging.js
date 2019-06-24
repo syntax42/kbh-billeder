@@ -15,13 +15,13 @@ motifTagging.typeaheadSuggestions = text => {
       aggs: {
         tags: {
           terms: {
-            'field': 'tags',
+            'field': 'tags.keyword',
             'include': text + '.*'
           }
         },
         tags_vision: {
           terms: {
-            'field': 'tags_vision',
+            'field': 'tags_vision.keyword',
             'include': text + '.*'
           }
         }

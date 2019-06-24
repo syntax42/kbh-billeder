@@ -15,6 +15,11 @@
       }
     }
   }
+  &__section-3 {
+    a {
+      color: $brand-primary-darker;
+    }
+  }
   &__expandable--expanded {
     [class*='col-'] {
       width: 100%;
@@ -100,7 +105,7 @@
       font-size: 15px;
     }
   }
-  
+
   // Have any controls on the asset-page that allows the user to toggle zoom
   // show a zoom cursor.
   &__expandable {

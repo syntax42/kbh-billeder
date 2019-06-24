@@ -11,3 +11,5 @@ block document__player
       each player in players
         if (player.type === 'image')
           include ./players/image
+        else if (player.type === 'video')
+          include ./players/video

@@ -3,7 +3,7 @@
 /**
  * Read in options and set defaults.
  */
-function _prepareMapOptions (options) {
+function _prepareMapOptions(options) {
   if (!options) {
     options = {};
   }
@@ -16,16 +16,32 @@ function _prepareMapOptions (options) {
     options.zoomLevel = 12;
   }
 
+  if (!options.timeWarpShown) {
+    options.timeWarpShown = false;
+  }
+
+  if (!options.timeWarpCenter) {
+    options.timeWarpCenter = options.center;
+  }
+
+  if (!options.timeWarpRadius) {
+    options.timeWarpRadius = 200;
+  }
+
+  if (!options.timeWarpMapId) {
+    options.timeWarpMapId = 85;
+  }
+
   if (!options.clusterAtZoomLevel) {
     options.clusterAtZoomLevel = 11;
   }
 
   if (!options.onMoveStart) {
-    options.onMoveStart = function () {};
+    options.onMoveStart = function () { };
   }
 
   if (!options.onMoveEnd) {
-    options.onMoveEnd = function () {};
+    options.onMoveEnd = function () { };
   }
 
   if (!options.onPopupClick) {
@@ -55,29 +71,44 @@ function _prepareMapOptions (options) {
  * Setup a map instance and wrap it in an object containing references to
  * everything we'll need to handle the map going forward.
  */
-function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, onTimeWarpToggle) {
+function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId, icons, mode, maps, onUpdateMapControllerCallback) {
   // Collect any map-related objects we're going to be referencing in the rest
   // of the setup and in callbacks.
   var mapState = {};
 
   mapState.mapElement = mapElement;
 
-  // Dropdown select control for the map. In single mode used to select the 
+  //check that timeWarpMapId reference an existing map
+  var newTimeWarpMapId = 85;
+  for (var i = 0; i < maps.length; i++)
+    if (maps[i].id == timeWarpMapId)
+      newTimeWarpMapId = timeWarpMapId;
+  timeWarpMapId = newTimeWarpMapId;
+  mapState.id = timeWarpMapId;
+
+  // Dropdown select control for the map. In single mode used to select the
   // background map, otherwise used to select the time warp map.
   mapState.mapSelectControl = function () {
     mapState.mapSelectElement = document.createElement('select');
+    mapState.mapSelectElement.title = 'Vælg kort';
 
     // When select is changes update the source of the appropriate source.
     mapState.mapSelectElement.addEventListener('change', function (event) {
       var source = mapState.isSearchMode() ? mapState.timeWarp.getSource() : mapState.rasterLayer.getSource();
-      source.setUrl(mapState.getMapUrl(mapState.mapSelectElement.value));
+      mapState.id = mapState.mapSelectElement.value;
+      source.setUrl(mapState.getMapUrl(mapState.id));
+      onUpdateMapControllerCallback();
+
     }, false);
 
     // Read in the maps passed in "maps" and crates options for them
     for (var i = 0; i < maps.length; i++) {
+      var mapTitle = maps[i].title + ' ' + maps[i].year;
       var elementOption = document.createElement('option');
+      elementOption.title = mapTitle;
       elementOption.value = maps[i].id;
-      elementOption.innerText = maps[i].title + ' ' + maps[i].year;
+      elementOption.innerText = mapTitle;
+      elementOption.selected = maps[i].id == timeWarpMapId;
       mapState.mapSelectElement.appendChild(elementOption);
     }
 
@@ -107,7 +138,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       // Add listener to catch clicks on the element
       mapState.locationElement.addEventListener('click', function (event) {
 
-        // Toggle the "location" class on the main map element and 
+        // Toggle the "location" class on the main map element and
         // check if it is present now
         if (mapElement.classList.toggle('location')) {
 
@@ -145,7 +176,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
             }, function (error) {
               navigator.geolocation.clearWatch(mapState.watchId);
             });
-          }, function (error) {});
+          }, function (error) { });
         } else {
 
           // Remove location feature by remoung the layer and
@@ -182,14 +213,14 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 
   /**
   * Returns the url template for map tiles
-  * 
+  *
   * @param {number} id
   *   DOM object for the table to be made draggable.
   *
   * @return {string}
   *   Url template for maps with id "id".
   */
-  mapState.getMapUrl = function(id) {
+  mapState.getMapUrl = function (id) {
     return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
   }
 
@@ -221,7 +252,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 
     /**
     * Calculates the style for a feature (asset)
-    * 
+    *
     * @param {ol.fature} feature
     *   The feature for which a style should be calculated
     *
@@ -263,7 +294,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
       if (!style) {
         style = new ol.style.Style({
           image: new ol.style.Icon({
-            // The size of the icon is determined by how many digits 
+            // The size of the icon is determined by how many digits
             // is in count, ie. (1-9 = small), (10-99) = medium, (100+) = large
             src: featureIcons[Math.min(count.toString().length, 3)]
           }),
@@ -352,14 +383,14 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
   } else
 
     // If mode is not "single" we should create and prepare the time warp
-    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onTimeWarpToggle, maps);
+    mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onUpdateMapControllerCallback, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
 
   return mapState;
 }
 
 /**
 * Prepares the time warp for use and defines functions
-* 
+*
 * @param {ol.Map} map
 *   The open layers map object
 *
@@ -372,7 +403,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 * @param {Function} getMapUrl
 *   Function to get map url template by id
 *
-* @param {Function} onTimeWarpToggle
+* @param {Function} onUpdateMapControllerCallback
 *   Callback function called when the time warp is toggled
 *
 * @param {Array} maps
@@ -381,13 +412,13 @@ function _prepareMap(mapElement, center, offset, zoomLevel, icons, mode, maps, o
 * @return {ol.layer.Tile}
 *   The tile layer representing the time warp
 */
-function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTimeWarpToggle, maps) {
+function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpdateMapControllerCallback, maps, shown, center, radius, mapId) {
 
   // Create the tile layer and init it with the
   // first map in the map array
   var timeWarp = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: getMapUrl(maps[0].id)
+      url: getMapUrl(mapId)
     })
   });
 
@@ -414,14 +445,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   timeWarp.dragMode = timeWarp.dragModes.NONE;
 
   // Default time warp position. Not used, as it
-  // becomes centered on show
+  // becomes centered or set on show
   timeWarp.position = [300, 300];
-
-  // Default radius. Not used, as it is set on show
-  timeWarp.radius = 200;
 
   // The minimum radius in pixels
   timeWarp.minRadius = 100;
+
+  // Default radius. Not used, as it is set on show
+  timeWarp.radius = radius < timeWarp.minRadius ? timeWarp.minRadius : radius;
 
   timeWarp.rectWidth = 2;
 
@@ -439,10 +470,6 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
       // Toggle (close) the TW.
       timeWarp.toggle();
-
-      // If callback onTimeWarpToggle is defined call it
-      if (onTimeWarpToggle)
-        onTimeWarpToggle();
 
     }, false);
     ol.control.Control.call(this, {
@@ -486,11 +513,11 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called just before the TW layer is drawn
-  * 
+  *
   * @param {Event} event
   *   The event containg the drawing context
   */
-  timeWarp.precomposeTimeWarp = function(event) {
+  timeWarp.precomposeTimeWarp = function (event) {
     var ctx = event.context;
     timeWarp.pixelRatio = event.frameState.pixelRatio;
 
@@ -506,7 +533,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called just after the TW layer is drawn
-  * 
+  *
   * @param {Event} event
   *   The event containg the drawing context
   */
@@ -529,7 +556,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Applies the path to the drawing context
-  * 
+  *
   * @param {CanvasRenderingContext2D} ctx
   *   The context being drawn on for the TW
   */
@@ -539,7 +566,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     ctx.beginPath();
     switch (timeWarp.mode) {
       case timeWarp.modes.CIRCLE:
-        
+
         // apply the path of the circle in CIRCLE mode
         ctx.arc(x, y, timeWarp.radius * timeWarp.pixelRatio, 0, 2 * Math.PI);
 
@@ -558,17 +585,28 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   /**
   * Toggles the time warp visibility
   */
-  timeWarp.toggle = function() {
+  timeWarp.toggle = function (center, radius) {
     if (mapElement.classList.toggle('time-warp'))
-      timeWarp.show()
+      timeWarp.show(center, radius)
     else
       timeWarp.hide()
+
+    // If callback onUpdateMapControllerCallback is defined call it
+    if (onUpdateMapControllerCallback)
+      onUpdateMapControllerCallback();
+  }
+
+  /**
+  * Returns the toggel state of the TW
+  */
+  timeWarp.shown = function () {
+    return (mapElement.classList.contains('time-warp'))
   }
 
   /**
   * Shows the TW
   */
-  timeWarp.show = function () {
+  timeWarp.show = function (center, radius) {
 
     // Always start as a CIRCLE
     timeWarp.mode = timeWarp.modes.CIRCLE;
@@ -576,10 +614,21 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     var size = map.getSize();
 
     // Set position at middle of map
-    timeWarp.position = [size[0] / 2, size[1] / 2];
+    if (center) {
+      timeWarp.position = map.getPixelFromCoordinate(ol.proj.fromLonLat(center));
+      if (timeWarp.position[0] < 0)
+        timeWarp.position[0] = 0;
+      if (timeWarp.position[1] < 0)
+        timeWarp.position[1] = 0;
+      if (timeWarp.position[0] > size[0])
+        timeWarp.position[0] = size[0];
+      if (timeWarp.position[1] > size[1])
+        timeWarp.position[1] = size[1];
+    } else
+      timeWarp.position = [size[0] / 2, size[1] / 2];
 
     // Set radius af the TW to approx 1/3 of smallest dimension of map
-    timeWarp.radius = Math.min(size[0], size[1]) * 0.3;
+    timeWarp.radius = radius ? radius : Math.min(size[0], size[1]) * 0.3;
     timeWarp._show();
   }
   timeWarp._show = function () {
@@ -627,7 +676,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
   */
   timeWarp.updateControls = function () {
     mapSelectDivElement.style.left = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[0] - mapSelectDivElement.clientWidth / 2) + 'px' : null;
-    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ?(timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
+    mapSelectDivElement.style.top = timeWarp.mode == timeWarp.modes.CIRCLE ? (timeWarp.position[1] + timeWarp.radius - 21) + 'px' : null;
     mapSelectDivElement.style.right = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
     mapSelectDivElement.style.bottom = timeWarp.mode == timeWarp.modes.CIRCLE ? null : '18px';
 
@@ -645,7 +694,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called when user start touch event
-  * 
+  *
   * @param {Event} event
   *   The event holding the incoming touches
   */
@@ -658,13 +707,13 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called when user start touch event or mouse down event
-  * 
+  *
   * @param {Array} coord
   *   The coordinates of the event
-  * 
+  *
   * @param {boolean} forceMove
   *   Should this be forced to start a move
-  * 
+  *
   * @param {boolean} relative
   *   Is the supplied coords relative to the map element or the screen
   */
@@ -709,11 +758,11 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called when user start Open Layers pointer drag event
-  * 
+  *
   * @param {Event} event
   *   The event containing coords
   */
-  timeWarp.pointerDrag = function(event) {
+  timeWarp.pointerDrag = function (event) {
     var newposition = event.pixel ? event.pixel : [event.offsetX, event.offsetY];
     switch (timeWarp.dragMode) {
 
@@ -751,7 +800,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called when user is dragging finger
-  * 
+  *
   * @param {Event} event
   *   The event containing touches
   */
@@ -777,17 +826,17 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Calculates average coords of multiple touch points
-  * 
+  *
   * @param {Array} touches
   *   Array containg touch points
-  * 
+  *
   * @param {boolean} relative
   *   Are the coords relative to the map element?
-  * 
+  *
   * @return {Array}
   *   The average coords
   */
-  timeWarp.centerCoordFromTouches = function(touches, relative) {
+  timeWarp.centerCoordFromTouches = function (touches, relative) {
     var center = [0, 0];
     var offset = mapElement.getBoundingClientRect();
     var count = 0;
@@ -812,14 +861,14 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Calculates distance between touches
-  * 
+  *
   * @param {Array} touches
   *   Array containg touch points
-  * 
+  *
   * @return {Array}
   *   The distance between the first to touch points
   */
-  timeWarp.touchDistFromTouches = function(touches) {
+  timeWarp.touchDistFromTouches = function (touches) {
 
     // Only calculate new distance if there are morhe than one touch point
     if (touches.length < 2)
@@ -839,20 +888,21 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
   /**
   * Called when touch point is released
-  * 
+  *
   * @param {Event} event
   *   Event containg touch points
   */
-  timeWarp.touchUp = function(event)
-  {
+  timeWarp.touchUp = function (event) {
 
     // If all touches are released we are done
-    if(event.touches.length == 0)
+    if (event.touches.length == 0)
       timeWarp.up();
 
     // Otherwise calculate as new situation
     else
       timeWarp.touchDown(event);
+
+    onUpdateMapControllerCallback();
   }
 
   /**
@@ -862,6 +912,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
 
     // Drag set to NONE
     timeWarp.dragMode = timeWarp.dragModes.NONE;
+    onUpdateMapControllerCallback();
   }
 
   /**
@@ -897,12 +948,18 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onTim
     return '';
   }
 
+  // Toggles on if shown is true
+  if (shown)
+    map.once('postrender', function () {
+      timeWarp.toggle(center, timeWarp.radius)
+    });
+
   return timeWarp;
 }
 
 /**
 * Integration between kbhbilleder and a map-provider.
-* 
+*
 * @param {HTMLElement} mapElement
 *   The html element holding the open layers map
 *
@@ -918,7 +975,7 @@ function HistoriskAtlas(mapElement, options) {
 
   // Then prepare the map for use and get a state object we can use to interact
   // with the map.
-  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.icons, options.mode, options.maps, options.onTimeWarpToggle);
+  var mapState = _prepareMap(mapElement, options.center, options.offset, options.zoomLevel, options.timeWarpShown, options.timeWarpCenter, options.timeWarpRadius, options.timeWarpMapId, options.icons, options.mode, options.maps, options.onUpdate);
 
   // Setup handler functions the client will use to interact with the map - ie.
   // we never expose the mapState to the user, only handler functions.
@@ -927,7 +984,7 @@ function HistoriskAtlas(mapElement, options) {
   /**
    * "Freeze" the map by removing all interactions from the map.
    */
-  mapHandler.freeze = function() {
+  mapHandler.freeze = function () {
     if (!mapState.map) {
       return;
     }
@@ -1125,6 +1182,54 @@ function HistoriskAtlas(mapElement, options) {
   };
 
   /**
+  * Returns the center of the time warp
+  *
+  * @return {Object}
+  *   The center of where the time warp is placed on the map of the format:
+  *   {longitude, latitude}
+  */
+  mapHandler.getTimeWarpCenter = function () {
+    var center = ol.proj.toLonLat(mapState.map.getCoordinateFromPixel(mapState.timeWarp.position));
+    return {
+      longitude: center[0],
+      latitude: center[1]
+    };
+  };
+
+  /**
+  * Returns the radius of the time warp
+  *
+  * @return {number}
+  *   The radius of the of the time warp in pixels
+  *
+  */
+  mapHandler.getTimeWarpRadius = function () {
+    return Math.round(mapState.timeWarp.radius);
+  };
+
+  /**
+  * Returns the mapid of the time warp
+  *
+  * @return {number}
+  *   The id of the map currently shown in the time warp
+  *
+  */
+  mapHandler.getMapId = function () {
+    return mapState.id;
+  };
+
+  /**
+  * Returns the shown state of the time warp
+  *
+  * @return {boolean}
+  *   The shown state of the time warp, ie. true if its turned on, false if not
+  *
+  */
+  mapHandler.getTimeWarpShown = function () {
+    return mapState.timeWarp.shown();
+  };
+
+  /**
   * Adds a target feature with default heading of 90 (to the right of the asset)
   */
   mapHandler.addDirection = function () {
@@ -1140,7 +1245,7 @@ function HistoriskAtlas(mapElement, options) {
   */
   mapHandler.toggleEditMode = function (editOn) {
     // If the user specifically requested a mode, use it.
-    if (editOn !== undefined){
+    if (editOn !== undefined) {
       options.mode = editOn ? 'edit' : 'single';
     } else {
       // Otherwise go for toggle.
@@ -1149,7 +1254,7 @@ function HistoriskAtlas(mapElement, options) {
 
     if (options.mode === 'edit') {
 
-      // Add a translate interaction to the feature so 
+      // Add a translate interaction to the feature so
       // it can be dragged around
       mapHandler.translate = new ol.interaction.Translate({
         features: new ol.Collection([mapState.feature])
@@ -1165,7 +1270,7 @@ function HistoriskAtlas(mapElement, options) {
         pixel[0] += Math.cos(radian) * 120;
         pixel[1] += Math.sin(radian) * 120;
         var targetCoordinates = mapState.map.getCoordinateFromPixel(pixel);
-        
+
         // Add a dotted line feature from the asset to the target
         mapState.lineFeature = new ol.Feature({
           geometry: new ol.geom.LineString([coordinates, targetCoordinates])
@@ -1277,7 +1382,7 @@ function HistoriskAtlas(mapElement, options) {
    * @param targetFeature
    *   Coordinate of the target feature.
    */
-  function _cursorHoversCloseIcon (hoverPixel, targetFeature) {
+  function _cursorHoversCloseIcon(hoverPixel, targetFeature) {
     return hoverPixel[0] - targetFeature[0] > 13 && targetFeature[1] - hoverPixel[1] > 10;
   }
 
@@ -1296,7 +1401,7 @@ function HistoriskAtlas(mapElement, options) {
         } else {
           return false;
         }
-      }, {layerFilter: _doNotShowLocationLayerFilter}
+      }, { layerFilter: _doNotShowLocationLayerFilter }
     );
 
     // If we are hovering over a feature and it is the target feature, show pointer if over the "close" icon
@@ -1324,7 +1429,7 @@ function HistoriskAtlas(mapElement, options) {
   /**
    * Checks whether the specified layer is the user-location layer.
    */
-  function _doNotShowLocationLayerFilter (layer) {
+  function _doNotShowLocationLayerFilter(layer) {
     return layer !== mapState.locationLayer;
   }
 
@@ -1350,7 +1455,7 @@ function HistoriskAtlas(mapElement, options) {
           return false;
         }
       },
-      {layerFilter: _doNotShowLocationLayerFilter}
+      { layerFilter: _doNotShowLocationLayerFilter }
     );
 
     mapState.hidePopup();
@@ -1391,7 +1496,7 @@ function HistoriskAtlas(mapElement, options) {
     // If a single asset is clicked
     if (subFeatures.length == 1 && !asset.clustered) {
       var pixel = mapState.map.getPixelFromCoordinate(clickFeature.getGeometry().getCoordinates());
-      
+
       // If the popup would go outside the map border, center on the feature first.
       if (pixel[1] < 310 || pixel[0] < 225 || pixel[0] > mapState.map.getSize()[0] - 225) {
         mapState.feature = subFeatures[0];
@@ -1402,7 +1507,7 @@ function HistoriskAtlas(mapElement, options) {
         });
         return;
       }
-      
+
       // Otherwise just show the popup
       mapState.showPopup(subFeatures[0], pixel)
       return;
@@ -1493,19 +1598,19 @@ function HistoriskAtlas(mapElement, options) {
     geohash = geohash.toLowerCase();
 
     var evenBit = true;
-    var latMin =  -90, latMax =  90;
+    var latMin = -90, latMax = 90;
     var lonMin = -180, lonMax = 180;
 
-    for (var i=0; i<geohash.length; i++) {
+    for (var i = 0; i < geohash.length; i++) {
       var chr = geohash.charAt(i);
       var idx = '0123456789bcdefghjkmnpqrstuvwxyz'.indexOf(chr);
       if (idx == -1) throw new Error('Invalid geohash');
 
-      for (var n=4; n>=0; n--) {
+      for (var n = 4; n >= 0; n--) {
         var bitN = idx >> n & 1;
         if (evenBit) {
           // longitude
-          var lonMid = (lonMin+lonMax) / 2;
+          var lonMid = (lonMin + lonMax) / 2;
           if (bitN == 1) {
             lonMin = lonMid;
           } else {
@@ -1513,7 +1618,7 @@ function HistoriskAtlas(mapElement, options) {
           }
         } else {
           // latitude
-          var latMid = (latMin+latMax) / 2;
+          var latMid = (latMin + latMax) / 2;
           if (bitN == 1) {
             latMin = latMid;
           } else {

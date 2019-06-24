@@ -159,6 +159,32 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         }
       }
     }
+
+    if (options.sMapInitParam) {
+      // Time Warp state serialized down into a string.
+      var parts = options.sMapInitParam.split(',');
+      // The expected format is nn.nnnnnn,nn.nnnnnn,nnr,nnid
+      // Eg. 55.67175956237506,12.766296393235555,300z,55id
+      // Do a simple verification of the parameters, check that we have 4 parts
+      // and that the last two part ends on a r and id.
+      if (parts.length === 4 && parts[2].charAt(parts[2].length - 1) === 'r' && parts[3].substring(parts[3].length - 2) === 'id') {
+        // Parse the individual parts, and add them if we're successful.
+        options.initialTimeWarpShown = true;
+        var parsedCenter = [parseFloat(parts[1]), parseFloat(parts[0])];
+        if (!isNaN(parsedCenter[0]) && !isNaN(parsedCenter[1])) {
+          options.initialTimeWarpCenter = parsedCenter;
+        }
+        var parsedRadius = parseInt(parts[2].substring(0, parts[2].length - 1));
+        if (!isNaN(parsedZoom)) {
+          options.initialTimeWarpRadius = parsedRadius;
+        }
+        var parsedMapId = parseInt(parts[3].substring(0, parts[3].length - 2));
+        if (!isNaN(parsedMapId)) {
+          options.initialTimeWarpMapId = parsedMapId;
+        }
+      }
+    }
+
     if (!options.geohashAtZoomLevel) {
       options.geohashAtZoomLevel = 15;
     }
@@ -201,6 +227,15 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     };
 
+    // Invoked if HA makes an internal update that we need to reflect.
+    // This is mostly done to have a hook we can use to update the browser url
+    // with the new state.
+    var onHaUpdate = function() {
+      if (options.mode === 'search') {
+        searchControllerCallbacks.refresh();
+      }
+    };
+
     // The user has clicked on an asset on the map that needs to be displayed.
     var onPopupClick = function (id) {
       window.location.href = id;
@@ -213,12 +248,16 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         mode: options.mode,
         center: options.initialCenter,
         zoomLevel: options.initialZoomLevel,
+        timeWarpShown: options.initialTimeWarpShown,
+        timeWarpCenter: options.initialTimeWarpCenter,
+        timeWarpRadius: options.initialTimeWarpRadius,
+        timeWarpMapId: options.initialTimeWarpMapId,
         offset: options.initialOffset,
         clusterAtZoomLevel: options.clusterAtZoomLevel,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
         onPopupClick: onPopupClick,
-        onTimeWarpToggle: options.onTimeWarpToggle,
+        onUpdate: onHaUpdate,
         onDirectionRemoved: searchControllerCallbacks.onDirectionRemoved,
         icons: options.icons
       }
@@ -313,6 +352,16 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       const zoomLevel =  frozenState.frozen ? frozenState.zoomLevel : defaultMapHandler.getZoomLevel();
       searchParams.map = `${center.latitude},${center.longitude},${zoomLevel}z`;
 
+      // Add values from the time warp (secondary map or smap).
+      if (frozenState.frozen ? frozenState.twShown : defaultMapHandler.getTimeWarpShown()) {
+        const twCenter = frozenState.frozen ? frozenState.twCenter : defaultMapHandler.getTimeWarpCenter();
+        const twRadius = frozenState.frozen ? frozenState.twRadius : defaultMapHandler.getTimeWarpRadius();
+        const mapId = frozenState.frozen ? frozenState.mapId : defaultMapHandler.getMapId();
+        searchParams.smap = `${twCenter.latitude},${twCenter.longitude},${twRadius}r,${mapId}id`;
+      }
+      else {
+        searchParams.smap = null;
+      }
       // If we're zoomed out wide enough, use hash-based results.
       searchParams.geohash = zoomLevel <= options.geohashAtZoomLevel;
 
@@ -320,7 +369,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       // search. We'll get control back via onResults().
       searchCallback(searchParams);
     },
-    
+
     /**
      * Freeze values that might change while the map is being manipulated.
      */
@@ -328,6 +377,10 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       frozenState.center = defaultMapHandler.getCenter();
       frozenState.zoomLevel = defaultMapHandler.getZoomLevel();
       frozenState.bounds = defaultMapHandler.getBoundingBox();
+      frozenState.twCenter = defaultMapHandler.getTimeWarpCenter();
+      frozenState.twRadius = defaultMapHandler.getTimeWarpRadius();
+      frozenState.mapId = defaultMapHandler.getMapId();
+      frozenState.twShown = defaultMapHandler.getTimeWarpShown();
       frozenState.frozen = true;
       defaultMapHandler.freeze();
     },

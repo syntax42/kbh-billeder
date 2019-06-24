@@ -69,7 +69,7 @@ let config = {
     timeout: 55000
   },
   email: {
-    baseUrl: '@api.mailgun.net/v3/kbhbilleder.dk',
+    baseUrl: '@api.eu.mailgun.net/v3/mg.kbhbilleder.dk',
     mailgunKey: process.env.MAILGUN_API_KEY,
     // Email to send errors to.
     fallbackEmailTo: process.env.FALLBACK_EMAIL_TO || 'daf@kff.kk.dk',
@@ -129,7 +129,7 @@ let config = {
   },
   feedback: {
     maxLength: 600,
-    recipients: 'contributors@kbhbilleder.dk',
+    recipients: 'kbhbilleder@kff.kk.dk',
     fromAddress: 'Feedback@kbhbilleder.dk'
   },
   generatedDir: generatedDir,
