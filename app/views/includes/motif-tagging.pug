@@ -17,8 +17,8 @@ h2 Brugernes emneord
     div Husk at gemme til sidst.
     .motif-tagging__add-tag
       .motif-tagging__add-input.material-input
-        input(type='text', required)
+        input(type='text', required, aria-labelledby='add_tag_description')
         span.bar
-        label Indtast nyt emneord og tryk enter
+        label#add_tag_description Indtast nyt emneord og tryk enter
       .motif-tagging__save-buttons(data-template='save-buttons')
         include ./motif-tagging/save-buttons

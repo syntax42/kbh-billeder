@@ -5,8 +5,13 @@ include ../mixins/loader
     include ./player
   .geo-tagging__map
     - // TODO: Refactor geotagging.js such that elementsById is no longer needed
+    - var geotagging_description = "Søg efter adresse"
     .geo-tagging__map-element
-    input.geo-tagging__input.controls(type="text", placeholder="Søg efter adresse")
+    input.geo-tagging__input.controls(
+      type="text",
+      placeholder=geotagging_description,
+      aria-label=geotagging_description
+    )
     .geo-tagging__map-buttons
       button.btn.btn-primary(data-action='geo-tagging:stop')
         | Annuller

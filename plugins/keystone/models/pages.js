@@ -10,7 +10,9 @@ const Page = new keystone.List('Page', {
 Page.add({
     title: { type: String, required: true },
     state: { type: Types.Select, options: 'draft, published', default: 'draft' },
-    content: { type: Types.Html, wysiwyg: true, height: 400 }
+    content: { type: Types.Html, wysiwyg: true, height: 400 },
+    soMeImage: { type: Types.CloudinaryImage, autoCleanup : true },
+    soMeDescription: { type: Types.Textarea }
 });
 
 Page.defaultColumns = 'title, state'
