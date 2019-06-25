@@ -3,6 +3,8 @@
     display: none;
   }
   @media print {
+    &__remove-btn,
+    &__editing-container,
     .non-print {
       display: none;
     }
@@ -12,7 +14,11 @@
   }
   &__tags {
     margin-top: $spacer-md;
+    .motif-tagging__remove-btn {
+      float: right;
+    }
   }
+
   &__edit-btn {
     svg {
       width: 12px;

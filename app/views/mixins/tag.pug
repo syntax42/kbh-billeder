@@ -1,7 +1,7 @@
 mixin tag(name)
-  div.non-print
+  span.non-print
     a.btn.btn-dark(
-    href='/?q="'+encodeURIComponent(name) + '"'
+      href='/?q="'+encodeURIComponent(name) + '"'
     )= name
-  div.print
+  span.print
     .btn.btn-dark= name
