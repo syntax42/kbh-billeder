@@ -635,9 +635,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
     // Register listeners
     mapElement.addEventListener('touchstart', timeWarp.touchDownEventHandle = function (event) { timeWarp.touchDown(event) });
-    window.addEventListener('touchend', timeWarp.touchUpEventHandle = function (event) { timeWarp.touchUp(event) });
     mapElement.addEventListener('mousedown', timeWarp.downEventHandle = function (event) { timeWarp.down([event.pageX, event.pageY]) });
-    window.addEventListener('mouseup', timeWarp.upEventHandle = function (event) { timeWarp.up(); });
     mapElement.addEventListener('touchmove', timeWarp.touchMoveEventHandle = function (event) { timeWarp.touchMove(event); });
     timeWarp.listenerKeyPointerDrag = map.on('pointerdrag', function (event) { timeWarp.pointerDrag(event); });
 
@@ -657,9 +655,7 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
     //Unregister listeners
     mapElement.removeEventListener('touchstart', timeWarp.touchDownEventHandle);
-    window.removeEventListener('touchend', timeWarp.touchUpEventHandle);
     mapElement.removeEventListener('mousedown', timeWarp.downEventHandle);
-    window.removeEventListener('mouseup', timeWarp.upEventHandle);
     mapElement.removeEventListener('touchmove', timeWarp.touchMoveEventHandle);
     ol.Observable.unByKey(this.listenerKeyPointerDrag);
 
