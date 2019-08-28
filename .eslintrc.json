@@ -24,9 +24,9 @@
     "angular": false,
     "Bloodhound": false,
     "$": false,
-    "jQuery": false,
     "HistoriskAtlas": true,
-    "L": true
+    "L": true,
+    "jQuery": false
   },
 
   "plugins": [

@@ -1,7 +1,11 @@
-extends frontpage
+extends index
 include mixins/meta
+include mixins/galleries
 include mixins/search-freetext-form
-  
+
+append header
+  +meta()
+
 block content-top
   // Only show the first jumbo item for now.
   - var jumboItem = jumboItems[0]

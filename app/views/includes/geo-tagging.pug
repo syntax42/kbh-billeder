@@ -1,10 +1,29 @@
-extends ./geo-tagging
+include ../mixins/loader
 
-block geo-tagging__overlay
-  h2 Placer billedet på kortet
-  p Ved du hvor billedet er taget fra og i hvilken retning?
-  p Placer først fotografen ved at klikke på kortet.
-    | Fotografen er den grønne markør. Træk herefter i den røde markør og placer
-    | markøren i den retning og med den længde, som billedets motiv viser.
-  p Tak for din hjælp!
-  a(href='/deltag').btn.btn-default Læs mere
+.geo-tagging
+  .geo-tagging__player.document__player
+    include ./player
+  .geo-tagging__map
+    - // TODO: Refactor geotagging.js such that elementsById is no longer needed
+    - var geotagging_description = "Søg efter adresse"
+    .geo-tagging__map-element
+    input.geo-tagging__input.controls(
+      type="text",
+      placeholder=geotagging_description,
+      aria-label=geotagging_description
+    )
+    .geo-tagging__map-buttons
+      button.btn.btn-primary(data-action='geo-tagging:stop')
+        | Annuller
+      button.btn.btn-primary(data-action='save-geo-tag')
+        +loader('Gem placering')
+      button.btn.btn-primary(data-action='back-to-map')
+        | Tilbage til kortvisning
+    .geo-tagging__overlay
+      h2 Placer billedet på kortet
+        p Ved du hvor billedet er taget fra og i hvilken retning?
+        p Placer først fotografen ved at klikke på kortet.
+          | Fotografen er den grønne markør. Træk herefter i den røde markør og placer
+          | markøren i den retning og med den længde, som billedets motiv viser.
+        p Tak for din hjælp!
+        a(href='/deltag').btn.btn-default Læs mere

@@ -1,4 +1,3 @@
-/.env
 # Logs
 logs
 *.log
@@ -44,3 +43,20 @@ data
 
 # Visual Studio files
 /.vs
+/npm-debug.log
+/app/styles/main.css
+public
+.tmp
+.sass-cache
+bower_components
+heroku
+/views
+dist
+elasticsearch
+.DS_Store
+
+# Atom build settings
+.atom-build.json
+
+# Environment variables
+.env

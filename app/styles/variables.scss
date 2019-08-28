@@ -11,32 +11,79 @@ $brand-secondary: #A81349;
 $brand-primary-darker: #BF1554;
 $text-color: $gray-dark;
 $input-color: $gray-dark;
-
+$topbar-color: #262626 !default;
+$menu-shadow: rgba(0, 0, 0, .5) !default;
+$menu-no-shadow: rgba(0, 0, 0, 0) !default;
+$menu-highlight: rgba(255, 255, 255, .1) !default;
+$dropdown-bg: $white !default;
+$dropdown-bg-hover: $gray-lighter !default;
+$dropdown-padding: .5em !default;
+// Scaffolding
+$body-bg: $white !default;
+$text-color: $gray-dark !default;
+$link-color: $brand-primary !default;
+$link-hover-color: lighten($link-color, 10%) !default;
 // Typography
+$font-family-sans-serif: 'FFUnitWebLight', sans-serif;
 $font-family-thin: 'FFUnitWebThin', sans-serif;
 $font-family-light: 'FFUnitWebLight', sans-serif;
 $font-family-medium: 'FFUnitWebMedium', sans-serif;
-$font-family-sans-serif: $font-family-light;
+$font-size-base: 14px !default;
+$line-height-base: 1.6 !default;
 $headings-font-weight: normal;
-$input-border-focus: $brand-primary;
-
+$border-radius-base: 0 !default;
+$border-radius-large: 0 !default;
+$border-radius-small: 0 !default;
+$input-border-focus: $brand-primary !default;
+// Animation
+$anim-duration: 300ms !default;
+$anim-duration-long: 400ms !default;
+$anim-duration-fast: 150ms !default;
+$anim-entrance: ease-out !default;
+$anim-exit: ease-in !default;
+$anim-default: $anim-duration ease !default;
+$document-expansion-animation: true !default;
 // Menu
-$menu-width: 200px;
-$menu-width-small: 200px;
-$topbar-height: 50px;
+$menu-width: 200px !default;
+$menu-width-small: 200px !default;
+$topbar-height: 50px !default;
+// Breakpoints
+$extra-small-size: 480px !default;
+$extra-small-size-min: $extra-small-size + 1px !default;
+$small-size: 768px !default;
+$medium-size: 992px !default;
+$large-size: 1070px !default;
+$extra-large-size: 1220px !default;
+// Spacers
+$spacer-base: 5px !default;
+$spacer-xs: $spacer-base !default;
+$spacer-sm: $spacer-base * 2 !default;
+$spacer-md: $spacer-base * 3 !default;
+$spacer-lg: $spacer-base * 6 !default;
+
+$spacer-layout: 20px;
+$spacer-layout-large: 130px;
+
+// item
+$button-bg: $gray !default;
+$snackbar-bg: $gray-dark !default;
+$snackbar-front: $white !default;
+
+// Footer
+$footer-background-color: $topbar-color !default;
+$footer-text-color: $white !default;
+
+//z-indexes
+$snackbar-zindex: 1000 !default;
+
+// SVG
+$icon-size: 24px !default;
+
+// Search result
+$filter-btn-full-width: false !default;
+$filter-btn-svg-right-margin: .2em !default;
 
 // Documents
-$document-heading-font: $font-family-medium;
-
-// Jumbo (frontpage)
-$logo-height: 4rem;
-$jumbo-bg: $black;
-$jumbo-text-shadow: $black;
-// Andreas suggestion
-// $logo-height: 3rem;
-// $jumbo-bg: hsl(350, 100%, 25%);
-// $jumbo-text-shadow: hsl(346, 100%, 15%);
-
 $document-section-backgrounds: (
   1: mix($white, $gray, 100%),
   2: mix($white, $gray, 75%),
@@ -45,5 +92,19 @@ $document-section-backgrounds: (
   5: mix($white, $gray, 0%)
 ) !default;
 
-// Loading variables again at the bottom allows default
-@import '../../node_modules/collections-online/app/styles/variables';
+$document-section-colors: (
+  1: $text-color,
+  2: $text-color,
+  3: $text-color,
+  4: $text-color,
+  5: $text-color
+) !default;
+
+$document-heading-font: $font-family-medium;
+$navigator-arrow-background: rgba(0, 0, 0, .7) !default;
+$navigator-arrow-color: $white !default;
+
+// Jumbo (frontpage)
+$logo-height: 4rem;
+$jumbo-bg: $black;
+$jumbo-text-shadow: $black;

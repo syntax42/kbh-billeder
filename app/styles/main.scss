@@ -2,7 +2,6 @@
 @import 'variables';
 
 @import 'bootstrap';
-@import 'collections-online';
 
 @import 'header';
 @import 'menu';
@@ -25,3 +24,63 @@
 @import 'page';
 @import 'motif-tagging';
 @import 'tiled-zoom';
+
+html {
+  font-size: 87.5%;
+}
+
+body {
+  // For category menu
+  overflow-x: hidden; // Enable bleeds without horizontal scroll
+  position  : relative;
+
+  a {
+    cursor : pointer;
+    outline: none;
+  }
+}
+
+.main-wrapper {
+  display       : flex;
+  flex-direction: column;
+  min-height    : 100vh;
+
+  > .let-it-grow {
+    flex-grow: 1;
+    .is-mobile & {
+      margin-top: $topbar-height;
+    }
+  }
+}
+
+.row.is-flex {
+  display: flex;
+}
+.row.is-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: $large-size) {
+  .container-fluid {
+    width: $large-size;
+  }
+}
+
+@media (min-width: $extra-large-size) {
+  .container-fluid {
+    width: $extra-large-size;
+  }
+}
+
+.sprite {
+  display: none;
+}
+
+.dimmed {
+  opacity: .5;
+}
+
+svg {
+  fill-rule: evenodd;
+}

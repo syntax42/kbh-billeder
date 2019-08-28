@@ -1,0 +1,13 @@
+include ../mixins/search-count
+include ../mixins/loader
+
+.search-results-header
+  h1.search-results-header__title
+    .search-results-header__title--loading
+      +loader()
+    .search-results-header__title--loaded
+      if isFiltered
+        | Filtrering gav
+      else
+        | I alt
+      +searchCount

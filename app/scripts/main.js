@@ -47,21 +47,20 @@ function flipAsset() {
   var frontText = document.getElementsByClassName('document__player-controls__rotate--front')[0];
   backsideText.classList.toggle('document__player-controls__rotate--item--active');
   frontText.classList.toggle('document__player-controls__rotate--item--active');
-  return false;
 }
 
-$(function() {
+$(function () {
   var AssetPage = window.AssetPage;
   AssetPage.init();
 
-  $('#search-input').on('focus', function() {
+  $('#search-input').on('focus', function () {
     $(this).parent().addClass('input-group--focus');
   });
-  $('#search-input').on('blur', function() {
+  $('#search-input').on('blur', function () {
     $(this).parent().removeClass('input-group--focus');
   });
 
-  var updateQueryStringParameter = function(uri, key, value) {
+  var updateQueryStringParameter = function (uri, key, value) {
     var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
     var separator = uri.indexOf('?') !== -1 ? '&' : '?';
     if (uri.match(re)) {
@@ -71,14 +70,14 @@ $(function() {
     }
   };
 
-  $('form[data-method="modify-query"]').on('submit', function(e) {
+  $('form[data-method="modify-query"]').on('submit', function (e) {
     e.preventDefault();
     var $this = $(this);
     var $inputs = $this.find('[name]:input');
 
     var url = window.location.pathname + window.location.search;
 
-    $inputs.each(function() {
+    $inputs.each(function () {
       var $this = $(this);
       var key = $this.attr('name');
       var val = $this.val();
@@ -97,7 +96,7 @@ $(function() {
   }
 
   $('.asset[data-license-id=7] .image-wrap')
-  .on('dragstart contextmenu', function(e) {
-    e.preventDefault();
-  });
+    .on('dragstart contextmenu', function (e) {
+      e.preventDefault();
+    });
 });

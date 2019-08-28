@@ -1,4 +1,4 @@
-extends asset
+extends document
 
 block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
@@ -76,3 +76,22 @@ block document__section-3
           != assetSection('additional-information', metadata)
         .col-sm-5
           != assetSection('technical-information', metadata)
+
+block document__section-4
+  if config.features.feedback
+    .document__section-4
+      .container-fluid
+          .row
+            .col-sm-7
+              include includes/feedback
+
+block document__section-5
+  if helpers.hasRelations(metadata)
+    .document__section-5
+      .container-fluid
+        .row
+          include includes/relations
+
+append document__overlays
+  include includes/download-overlay
+  include includes/verify-overlay

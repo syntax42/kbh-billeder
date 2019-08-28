@@ -1,6 +1,95 @@
+$overlay-color: rgba($gray-dark, .2);
+$search-results-item-bg: #fff;
+
 .search-results-item {
+  background: $search-results-item-bg;
+  color: $black;
+  display: block;
+  margin-bottom: $spacer-md;
+  padding: $spacer-md;
+  transition: box-shadow $anim-default;
+
+  &:focus,
+  &:hover {
+    border: 0;
+    color: $black;
+    text-decoration: none;
+    img {
+      border-bottom: 5px solid $brand-primary;
+    }
+  }
+
+  // Only target devices with mouse
+  @media (pointer: fine) {
+    &:focus,
+    &:hover {
+      @include shadow(3);
+      z-index: 1;
+    }
+  }
+
+  &__squared-container {
+    height: 0;
+    line-height: 0;
+    padding-bottom: 100%;
+    position: relative;
+    width: 100%;
+  }
+
+  &__squared-image {
+    font-family: 'object-fit: cover;'; // Object fit polyfil
+    height: 100%;
+    left: 0;
+    margin: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  &__description,
   &__title {
     font-size: 120%;
     font-weight: 600;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: normal;
+  }
+
+  &__title {
+    height: $spacer-sm * 3;
+    padding-top: $spacer-sm;
+  }
+
+  &__description {
+    height: $spacer-sm * 2;
+  }
+
+  &__overlay {
+    background-color: $overlay-color;
+    bottom: 0;
+    color: $white;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    svg {
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+  }
+
+  svg {
+    bottom: 1rem;
+    fill: currentcolor;
+    height: 3rem;
+    position: absolute;
+    right: 1rem;
+    width: 3rem;
   }
 }

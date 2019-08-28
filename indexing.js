@@ -1,14 +1,28 @@
 'use strict';
-// Requiring collections-online and loading configuration
-const co = require('collections-online');
+
+// Loading the configuration
+var co = require('.');
+var plugins = require('./plugins');
 co.config(__dirname);
-// Register collections-online plugins
-require('./plugins').register();
 
 // Loading the configuration
 var state = {};
 
 // This registers the cumulus indexing-engine
 require('collections-online-cumulus').registerPlugins();
+
+module.exports.run = (state) => {
+  // Run the indexing with the first available indexing-engine
+  var indexingEngine = plugins.getFirst('indexing-engine');
+  return indexingEngine(state || {}).then(function () {
+    console.log('\nAll done - good bye!');
+    process.exit(0);
+  }, function (err) {
+    console.error('An error occured!');
+    console.error(err.stack || err);
+    process.exit(1);
+  });
+};
+
 // Start the indexing
-require('collections-online/indexing').run();
+require('./indexing').run();
