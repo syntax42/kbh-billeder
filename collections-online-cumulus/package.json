@@ -1,0 +1,25 @@
+{
+  "name": "collections-online-cumulus",
+  "version": "0.1.0",
+  "description": "A module that enables collections-online to index and display assets from the Canto Cumulus™ DAMS",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/collections-online/collections-online-cumulus"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "agentkeepalive": "~2.0.3",
+    "cip-js": "git+https://github.com/CopenhagenCityArchives/cip.js.git",
+    "iconv": "~2.2.0",
+    "lodash": "~4.17.5",
+    "q": "~1.4.1",
+    "yargs": "^4.2.0"
+  },
+  "peerDependencies": {
+    "collections-online": "^1.0.0"
+  },
+  "engines": {
+    "node": "^6.1"
+  }
+}
