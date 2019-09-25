@@ -1,0 +1,26 @@
+extends document
+
+block document__section-2
+  if config.features.motifTagging
+    .document__section-2
+      .container-fluid.motif-tagging
+        include includes/motif-tagging
+
+block document__section-4
+  if config.features.feedback
+    .document__section-4
+      .container-fluid
+          .row
+            .col-sm-7
+              include includes/feedback
+
+block document__section-5
+  if helpers.hasRelations(metadata)
+    .document__section-5
+      .container-fluid
+        .row
+          include includes/relations
+
+append document__overlays
+  include includes/download-overlay
+  include includes/verify-overlay

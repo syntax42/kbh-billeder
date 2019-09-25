@@ -1,0 +1,35 @@
+extends index
+include mixins/meta
+include mixins/galleries
+
+append header
+  +meta()
+
+block content
+  .let-it-grow.is-frontpage
+    block content-top
+    block content-bottom
+      .container-fluid.frontpage-galleries
+        - var gridGalleryCount = 0
+        each gallery, i in galleries
+          - gridGalleryCount += 1
+          - var evenOrOdd = (gridGalleryCount % 2 == 0 ? 'even' : 'odd')
+          -if(gallery.appearance === 'grid')
+            +gridGallery(gallery, i, evenOrOdd)
+          -if(gallery.appearance === 'carousel')
+            +carouselGallery(gallery, evenOrOdd)
+          -if(gallery.appearance === 'block')
+            +blockGallery(gallery, evenOrOdd)
+append javascript
+  - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
+  script(type="application/ld+json").
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "#{baseURL}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "#{baseURL}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }

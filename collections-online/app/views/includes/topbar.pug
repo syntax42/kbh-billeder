@@ -1,0 +1,10 @@
+include ../mixins/icon
+
+header.topbar(class=frontpage ? 'topbar--frontpage' : '')
+  .container-fluid
+    nav
+      .topbar__items
+        include ./topbar-menu
+        include ./topbar-search
+      if frontpage
+        include ./topbar-frontpage

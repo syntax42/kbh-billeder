@@ -1,0 +1,24 @@
+h2 Brugernes emneord
+.motif-tagging__tags(data-template='tags')
+  include ./motif-tagging/tags
+
+.row.motif-tagging__editing-container
+  - const tags = helpers.motifTagging.getVisionTags(metadata) || [];
+  if tags && tags.length && config.features.enableVisionTagSuggestions
+    .col-md-6
+      .motif-tagging__tag-suggestions(data-template='tag-suggestions')
+
+  // Only set the offset class if we have tags (in which case we have a
+  // suggestion element in front of us).
+  // Use 6 columns if vision tag suggestions are enabled to make space for suggestions.
+  // If vision tag suggestions are disabled, use all 12 columns.
+  div(class={"col-md-6": config.features.enableVisionTagSuggestions, "col-xs-12": !config.features.enableVisionTagSuggestions })
+    h2 Tilføj flere emneord
+    div Husk at gemme til sidst.
+    .motif-tagging__add-tag
+      .motif-tagging__add-input.material-input
+        input(type='text', required, aria-labelledby='add_tag_description')
+        span.bar
+        label#add_tag_description Indtast nyt emneord og tryk enter
+      .motif-tagging__save-buttons(data-template='save-buttons')
+        include ./motif-tagging/save-buttons
