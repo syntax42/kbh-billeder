@@ -1,0 +1,20 @@
+doctype html
+html(lang='da')
+  head
+    include includes/head
+    block header
+    include includes/analytics
+
+  body.is-desktop
+    include includes/svg-sprite
+    include includes/sidebar-menu
+
+    .main-wrapper
+      include includes/topbar
+      block content
+      block footer
+        include includes/footer
+
+    include includes/scripts
+    block javascript
+    block extra
