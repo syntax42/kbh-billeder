@@ -1,0 +1,17 @@
+mixin licenseImageOrText(license)
+  - if(license && license.img)
+    img(src=license.img, alt=license.short)
+  - else if(license && license.short)
+    = license.short
+  - else if(license && license.displaystring)
+    = license.displaystring
+  - else
+    p No known rights
+
+mixin displayLicense(metadata)
+  - license = helpers.licenseMapped(metadata)
+  - if (license && license.url)
+    a(href=license.url, rel='license', target='_blank')
+      +licenseImageOrText(license)
+  - else
+    +licenseImageOrText(license)

@@ -1,0 +1,18 @@
+include ../../mixins/tag
+include ../../mixins/icon
+
+each tag in helpers.motifTagging.getVerifiedTags(metadata) || []
+  .btn-group
+    +tag(tag)
+
+each tag in helpers.motifTagging.getTags(metadata) || []
+  .btn-group(data-tag=tag)
+    +tag(tag)
+    if editing
+      .motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag')
+        +icon('cross')
+if !helpers.motifTagging.hasTags(metadata)
+  p.motif-tagging__no-tags Der er ikke tilføjet nogle emneord endnu.
+if !editing
+  .motif-tagging__edit-btn.btn.btn-primary(data-action='motif-tagging:start')
+    | Tilføj
