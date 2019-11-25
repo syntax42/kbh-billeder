@@ -1,0 +1,53 @@
+.map-view {
+  // Ensure markup nested under the view can position relative to the map-view
+  // container.
+  position: relative;
+  padding: 0;
+  height: 100vh;
+  margin-left: 0;
+  float: left;
+  width: 100%;
+  // Don't display map on list view.
+  .is-list-view & {
+    display: none;
+  }
+  .is-mobile & {
+    #timeWarpToggle, #mapLocation {
+      position: fixed;
+    }
+  }
+}
+
+.infoBox {
+ background-color: #fff;
+ border-top: 4px solid $brand-primary;
+ text-align: center;
+ @include shadow(3);
+ &__image {
+   height: 220px;
+   width: 220px;
+   background-size: cover;
+ }
+ a {
+   color: inherit;
+   text-decoration: none;
+ }
+ h1 {
+   font-size: 18px;
+   margin-bottom: 20px;
+   padding: 0 10px;
+ }
+}
+
+.infoBox:after {
+  content:'';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  border-top: solid 10px #fff;
+  border-left: solid 10px transparent;
+  border-right: solid 10px transparent;
+}
