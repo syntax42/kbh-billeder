@@ -1,0 +1,8 @@
+// Reduce a list of paths to a list of seperated values.
+if row.paths && row.title
+  - const values = helpers.getAnyFlat(metadata, row.paths).filter(v => v);
+  tr
+    th!= row.title
+    td!= values.join(row.separator || ', ')
+else
+  | Missing row.title or row.paths
