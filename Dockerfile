@@ -16,9 +16,6 @@ RUN apt-get update && apt-get install -y \
 COPY . /tmp/
 WORKDIR /tmp/
 
-# Patch the package.json to install relevant variants of dependencies
-RUN npm run patch-package-json
-
 # --no-color is needed to prevent strange chars in the CI logs
 # --no-spin is needed to prevent duplicated lines in the CI logs
 # --unsafe-perm is needed for the lifecycle scripts to run
