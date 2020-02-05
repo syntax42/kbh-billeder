@@ -21,6 +21,4 @@ WORKDIR /tmp/
 # --unsafe-perm is needed for the lifecycle scripts to run
 RUN npm install --no-color --no-spin --unsafe-perm
 
-RUN npm run create-legacy-symlinks
-
 CMD ["/usr/bin/supervisord", "-n", "-c", "/tmp/configurations/supervisord.conf"]
