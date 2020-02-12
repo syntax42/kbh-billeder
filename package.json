@@ -6,8 +6,7 @@
   "scripts": {
     "gulp": "gulp",
     "index": "node indexing.js",
-    "patch-package-json": "npm install dotenv && node ./package-json-patcher.js",
-    "prepublish": "gulp build",
+    "prepublish": "npm run create-legacy-symlinks && gulp build",
     "start:dev": "concurrently \"npm run gulp\" \"npm run start:nodemon\"",
     "start:nodemon": "nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
     "start:inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 server.js",

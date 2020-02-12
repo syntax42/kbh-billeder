@@ -10,7 +10,7 @@ var sequence = require('run-sequence')
 // Get the gulp content from the main
 // ------------------------------------------
 
-require('collections-online/build/gulp')(gulp, __dirname);
+require('./collections-online/build/gulp')(gulp, __dirname);
 
 // ------------------------------------------
 // Combining tasks
