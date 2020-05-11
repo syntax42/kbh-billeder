@@ -111,7 +111,6 @@ let config = {
     'kbh-museum': process.env.FACEBOOK_APP_ID_KBH_MUSEUM || 116055131754566
   },
   features: {
-    cookieConsent: true,
     feedback: false,
     motifTagging: true,
     filterSidebar: true,
