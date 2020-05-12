@@ -10,7 +10,7 @@ block content-top
   .jumbo
     if hasJumboItems
       if jumboItem.image.url
-        .jumbo__image(style="background-image: url('" + jumboItem.image.url + "');")
+        .jumbo__image(style="background-image: url('" + jumboItem._.image.src() + "');")
       else
         .jumbo__image
     else
