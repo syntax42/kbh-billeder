@@ -31,6 +31,7 @@
     a {
       text-align: center;
       padding: 50px 15px;
+      transition: box-shadow 0.2s, background-color 0.2s;
       .is-mobile & {
         padding: 20px 0;
       }
