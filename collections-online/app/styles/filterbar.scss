@@ -140,7 +140,7 @@ $heading-adjustment: 2px;
   &__item {
     float: left;
     position: relative;
-    margin-right: $spacer-sm;
+    margin-right: $spacer-md;
   }
   &__tab {
     position: relative;
@@ -167,7 +167,6 @@ $heading-adjustment: 2px;
     .filterbar__item {
       height: $topbar-height;
       cursor: pointer;
-      min-width: 80px;
       &:not(:last-child) {
         margin-right: 20px;
       }
