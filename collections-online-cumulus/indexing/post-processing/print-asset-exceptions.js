@@ -28,7 +28,12 @@ function printAssetExceptions(state) {
       message += ') ---';
 
       console.error(message);
-      console.error(error.innerError.stack || error.innerError.message);
+      if(error.innerError) {
+        console.error(error.innerError.stack || error.innerError.message);
+      }
+      else {
+        console.error('<no inner error>');
+      }
     });
   }
 
