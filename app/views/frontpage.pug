@@ -3,60 +3,59 @@ include mixins/meta
 include mixins/search-freetext-form
   
 block content-top
-  // Only show the first jumbo item for now.
-  - var jumboItem = jumboItems[0]
-  - var hasJumboItems = jumboItems.length > 0;
-
-  .jumbo
-    if hasJumboItems
-      if jumboItem.image.url
-        .jumbo__image(style="background-image: url('" + jumboItem._.image.src() + "');")
-      else
-        .jumbo__image
-    else
-      .jumbo__image
-    .container-fluid
-      .jumbo__inner
-        .col-xs-12.col-xs-12.col-sm-8.col-md-8
-          .jumbo__teaser
-            if hasJumboItems
-              p= jumboItem.description1 + ' ' + totalAssets + ' ' + jumboItem.description2
-            else
-              include includes/tagline
-        .col-xs-12.col-xs-12.col-sm-8.col-md-8.clear
-          .jumbo__search
-            +searchFreetextForm('Søg efter billeder', 'jumbo')
-        .col-xs-12
-          .jumbo__logos
-            a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
-              +icon('kbh-museum')
-            a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
-              +icon('kbh-arkiv')
-            a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
-              +icon('frb-arkiv')
-            if config.features.magasinMuseum
-              a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
-                +icon('magasin-museum')
-    .jumbo__triangle
+  // No content-top use
 
 block content-bottom
   .frontpage-galleries
     - var gridGalleryCount = 0
-    each gallery, i in galleries
+    each item, i in frontpageItems
       - gridGalleryCount += 1
       - var evenOrOdd = (gridGalleryCount % 2 == 0 ? 'even' : 'odd')
-      -if(gallery.appearance === 'grid')
+      //- Could probably be simplified as all types have the same scaffolding:
+      -if(item.jumbo)
+        - gridGalleryCount -= 1
+        .jumbo
+          if item.jumbo.image.url
+            .jumbo__image(style="background-image: url('" + item.jumbo._.image.src() + "');")
+          else
+            .jumbo__image
+          .container-fluid
+            .jumbo__inner
+              .col-xs-12.col-xs-12.col-sm-8.col-md-8
+                .jumbo__teaser
+                  p= item.jumbo.description1 + ' ' + totalAssets + ' ' + item.jumbo.description2
+              .col-xs-12.col-xs-12.col-sm-8.col-md-8.clear
+                .jumbo__search
+                  +searchFreetextForm('Søg efter billeder', 'jumbo')
+              .col-xs-12
+                .jumbo__logos
+                  a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
+                    +icon('kbh-museum')
+                  a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
+                    +icon('kbh-arkiv')
+                  a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
+                    +icon('frb-arkiv')
+                  if config.features.magasinMuseum
+                    a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
+                      +icon('magasin-museum')
+          .jumbo__triangle
+      -if(item.gallery)
+        -if(item.gallery.appearance === 'grid')
+          .gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +gridGallery(item.gallery, i, evenOrOdd)
+        -if(item.gallery.appearance === 'carousel')
+          .gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +carouselGallery(item.gallery, evenOrOdd)
+        -if(item.gallery.appearance === 'block')
+          .gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +blockGallery(item.gallery, evenOrOdd)
+      -if(item.tagCloud)
         .gallery__container(class="gallery--" + evenOrOdd)
           .container-fluid
-            +gridGallery(gallery, i, evenOrOdd)
-      -if(gallery.appearance === 'carousel')
-        .gallery__container(class="gallery--" + evenOrOdd)
-          .container-fluid
-            +carouselGallery(gallery, evenOrOdd)
-      -if(gallery.appearance === 'block')
-        .gallery__container(class="gallery--" + evenOrOdd)
-          .container-fluid
-            +blockGallery(gallery, evenOrOdd)
+            +tagGallery(item.tagCloud, evenOrOdd)
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'

@@ -73,6 +73,19 @@
       }
     }
   }
+  &--tags {
+    .tag-cloud {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .btn {
+        box-shadow: none;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
   &__title {
     font-size: 1.75rem;
     font-weight: bold;

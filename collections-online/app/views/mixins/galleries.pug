@@ -33,6 +33,16 @@ mixin blockGallery(gallery, evenOrOdd)
           .col-xs-6.col-sm-6.col-md-3
             +galleryItem(item, index, 'block')
 
+mixin tagGallery(tagCloud, evenOrOdd)
+  .row.gallery.gallery--tags(class="gallery--" + evenOrOdd)
+    .tag-cloud.col-xs-12.col-sm-5
+      each item, index in tagCloud.items
+        a.btn.btn-primary(href='/?q='+encodeURIComponent(item))= item
+    .col-sm-1
+    .col-xs-12.col-sm-6
+      h2.gallery__title= tagCloud.title
+      h3.gallery__text= tagCloud.description
+
 mixin galleryItem(item, index, type, fill, imageDimensions)
   - var fill = fill
   - var imageDimensions = imageDimensions ? imageDimensions : [270, 200]
@@ -43,4 +53,3 @@ mixin galleryItem(item, index, type, fill, imageDimensions)
       .gallery-thumb__overlay
         h3.gallery-thumb__title= item.title
         p.gallery-thumb__text= item.description
-

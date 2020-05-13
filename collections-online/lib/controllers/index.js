@@ -14,18 +14,19 @@ exports.frontpage = function(req, res, next) {
   if ('q' in req.query) {
     next();
   } else {
-    var jumboItems = [];
-    var jumboItemsQuery = keystone.list('Jumbo item').model.find().sort('order');
-
-    jumboItemsQuery.exec(function(err, results) {
-      jumboItems = results;
-    });
-
-    keystone.list('Gallery').model.find()
-    .where('state', 'published')
-    .populate('items')
+    keystone.list('Frontpage item').model.find()
+    .populate('tagCloud')
+    .populate({
+      path: 'gallery',
+      populate: {
+        path: 'items',
+        model: 'Gallery item'
+      }
+    })
+    .populate('jumbo')
+    .populate('map')
     .sort('order')
-    .exec(function(err, galleries) {
+    .exec(function(err, frontpageItems) {
       if(!err) {
         ds.count({
           body: {
@@ -33,8 +34,7 @@ exports.frontpage = function(req, res, next) {
           }
         }).then(function(response) {
           res.render('frontpage', {
-            galleries,
-            jumboItems,
+            frontpageItems,
             frontpage: true,
             totalAssets: helpers.thousandsSeparator(response.count),
             req: req
