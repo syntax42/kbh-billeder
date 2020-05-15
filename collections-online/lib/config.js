@@ -34,8 +34,8 @@ const defaults = {
       users: 'users',
       pages: 'pages',
       menus: ['menu-items'],
-      galleries: ['galleries', 'gallery-items'],
-      jumbos: ['jumbo-items']
+      frontpage: ['frontpage-items'],
+      sections: ['galleries', 'gallery-items', 'jumbo-items', 'tag-clouds', 'map-views'],
     }
   },
   root: rootPath,
