@@ -33,6 +33,21 @@ mixin blockGallery(gallery, evenOrOdd)
           .col-xs-6.col-sm-6.col-md-3
             +galleryItem(item, index, 'block')
 
+mixin mapGallery(map, evenOrOdd, followsJumbo)
+  .row.gallery.gallery--map(class="gallery--" + evenOrOdd)
+    .col-xs-12.col-sm-5
+      h2.gallery__title= map.title
+      h3.gallery__text
+        = map.description
+        .spacer
+        a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= 'Kortvisning'
+    .col-sm-1
+    .gallery-map.col-xs-12.col-sm-6
+      -if(followsJumbo)
+        .mini-map-with-query.after-jumbo(data-query-string=map.queryString)
+      -else
+        .mini-map-with-query(data-query-string=map.queryString)
+
 mixin tagGallery(tagCloud, evenOrOdd)
   .row.gallery.gallery--tags(class="gallery--" + evenOrOdd)
     .tag-cloud.col-xs-12.col-sm-5

@@ -62,3 +62,34 @@ $map-height: 455px;
     }
   }
 }
+
+/*
+Should probably be in a separate file
+*/
+.mini-map-with-query {
+  height: 45vh;
+  min-height: 350px;
+  background-color: #f0f0f0;
+  //position: relative;
+
+  /*
+  &.after-jumbo {
+    height: calc(40vh + 100px);
+    margin-top: -100px;
+
+    &:before {
+      background-image: url('../images/frontpage-triangle.svg');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-position: top;
+      content: '';
+      position: absolute;
+      transform: rotate(180deg);
+      width: 100%;
+      //TODO: this height calc works for the biggest screen size, need different onces for cutoffs
+      //      also breaks over 2700px
+      height: calc(100px - 2.6vw);
+      z-index: 1;
+    }
+  }*/
+}

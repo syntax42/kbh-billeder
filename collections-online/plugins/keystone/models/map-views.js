@@ -10,6 +10,7 @@ const MapView = new keystone.List('Map view', {
 MapView.add({
     title: { type: String, required: true },
     queryString: { type: Types.Text },
+    description: { type: Types.Textarea },
 });
 
 MapView.defaultColumns = 'title'

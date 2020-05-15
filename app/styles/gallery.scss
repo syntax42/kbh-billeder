@@ -73,6 +73,11 @@
       }
     }
   }
+  &--map {
+    .gallery__text .btn {
+      margin-top: 2rem;
+    }
+  }
   &--tags {
     .tag-cloud {
       display: flex;
