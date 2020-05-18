@@ -73,6 +73,29 @@
       }
     }
   }
+  &--map {
+    .gallery__text .btn {
+      margin-top: 2rem;
+    }
+  }
+  &--tags {
+    .tag-cloud {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 2rem 0 0;
+
+      @media (min-width: $small-size) and (orientation: landscape) {
+        margin: 0;
+      }
+
+      .btn {
+        box-shadow: none;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
   &__title {
     font-size: 1.75rem;
     font-weight: bold;

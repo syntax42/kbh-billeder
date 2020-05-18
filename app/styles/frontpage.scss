@@ -1,20 +1,22 @@
 .jumbo {
   background-color: $jumbo-bg;
-  height: 85vh;
+  height: calc(85vh + 300px);
   min-height: 30rem;
   position: relative;
   align-items: center;
+  margin-bottom: -300px;
+  overflow: hidden;
 
   @media (min-width: $small-size) and (orientation: landscape) {
-    height: 45vh;
+    height: calc(45vh + 300px);
   }
 
   @media (min-width: $medium-size) and (orientation: landscape) {
-    height: 50vh;
+    height: calc(50vh + 300px);
   }
 
   @media (min-width: $large-size) and (orientation: landscape) {
-    height: 75vh;
+    height: calc(75vh + 300px);
   }
 
   .clear {
@@ -130,7 +132,7 @@
 
   &__image {
     background-image: url('../images/frontpagetop.jpg');
-    background-position: center center;
+    background-position: center calc(50% - 150px);
     background-size: cover;
     height: 100%;
     left: 0;
@@ -179,22 +181,18 @@
   }
 
   &__inner {
-    bottom: 8rem;
+    bottom: calc(8rem + 300px);
     position: absolute;
   }
 
-  &__triangle {
-    background-image: url('../images/frontpage-triangle.svg');
-    background-repeat: no-repeat;
-    background-size: 100% 155px;
-    background-position: bottom;
-    height: 100%;
+  &:after {
+    content: '';
+    height: 700px;
     width: 100%;
     position: absolute;
-    bottom: 0;
-    .is-mobile & {
-      background-size: 100% 45px;
-    }
+    background-color: white;
+    bottom: -310px;
+    transform: skewY(-5.5deg);
   }
 }
 
