@@ -73,7 +73,7 @@ Should probably be in a separate file
   position: relative;
 
   &.after-jumbo {
-    @media (min-width: $small-size) and (orientation: landscape) {
+    @media (min-width: $small-size) {
       height: calc(45vh + 85px);
       margin-top: -85px;
 
@@ -89,7 +89,7 @@ Should probably be in a separate file
       }
     }
 
-    @media (min-width: $medium-size) and (orientation: landscape) {
+    @media (min-width: $medium-size) {
       height: calc(45vh + 115px);
       margin-top: -115px;
 
