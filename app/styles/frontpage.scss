@@ -6,7 +6,6 @@
   align-items: center;
   margin-bottom: -300px;
   overflow: hidden;
-  z-index: -1;
 
   @media (min-width: $small-size) and (orientation: landscape) {
     height: calc(45vh + 300px);
