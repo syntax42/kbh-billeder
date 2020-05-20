@@ -8,8 +8,6 @@ Below is a list of the features that can be enabled or disabled per deployment:
 - **keystone**
   A simple CMS for editors to produce simple pages with guides and galleries
   as curations of content.
-- **cookieConsent**
-  Provides a simple popup to comply with the EU Cookie Law.
 - **motifTagging**
   Let's visitors contribute additional information in the form of tags that
   describes what is depicted on the piece of content (typically an image).

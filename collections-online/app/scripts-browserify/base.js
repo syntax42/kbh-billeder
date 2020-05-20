@@ -7,9 +7,6 @@ module.exports = options => {
 
   require('./mobile')
   require('./search');
-  if(config.features.cookieConsent) {
-    require('./cookie-consent');
-  }
 
   if(config.features.users) {
     require('./auth');
