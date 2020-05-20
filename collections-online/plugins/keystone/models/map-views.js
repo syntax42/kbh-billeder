@@ -11,6 +11,7 @@ MapView.add({
     title: { type: String, required: true },
     queryString: { type: Types.Text },
     description: { type: Types.Textarea },
+    viewFullMapButtonText: { type: Types.Text },
 });
 
 MapView.defaultColumns = 'title'

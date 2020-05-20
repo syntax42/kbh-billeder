@@ -1,6 +1,9 @@
 .gallery {
   &__container {
     margin-bottom: $spacer-lg;
+    z-index: 1;
+    position: relative;
+
     &:last-child {
       margin-bottom: 0;
     }
