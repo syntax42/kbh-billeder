@@ -40,7 +40,7 @@ mixin mapGallery(map, evenOrOdd, followsJumbo)
       h3.gallery__text
         = map.description
         .spacer
-        a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= 'Kortvisning'
+        a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= map.viewFullMapButtonText || 'Kortvisning'
     .col-sm-1
     .gallery-map.col-xs-12.col-sm-6
       -if(followsJumbo)
