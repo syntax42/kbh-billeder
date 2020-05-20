@@ -1,11 +1,12 @@
 .jumbo {
   background-color: $jumbo-bg;
   height: calc(85vh + 300px);
-  min-height: 30rem;
+  min-height: calc(30rem + 300px);
   position: relative;
   align-items: center;
   margin-bottom: -300px;
   overflow: hidden;
+  z-index: -1;
 
   @media (min-width: $small-size) and (orientation: landscape) {
     height: calc(45vh + 300px);
