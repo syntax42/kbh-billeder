@@ -3,7 +3,6 @@
 .dropdown {
   display    : inline-block;
   position   : relative;
-  user-select: none;
 
   &--active {
     .dropdown__options {

@@ -212,6 +212,3 @@
     cursor: pointer;
     width: 100%;
 }
-.ol-control button:focus, .ol-control select:focus {
-    outline: 0;
-}
