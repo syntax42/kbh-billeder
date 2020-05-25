@@ -14,7 +14,7 @@ block content-bottom
       //- Could probably be simplified as all types have the same scaffolding:
       -if(item.jumbo)
         - gridGalleryCount -= 1
-        .jumbo
+        section.jumbo
           if item.jumbo.image.url
             .jumbo__image(style="background-image: url('" + item.jumbo._.image.src() + "');")
           else
@@ -23,7 +23,7 @@ block content-bottom
             .jumbo__inner
               .col-xs-12.col-xs-12.col-sm-8.col-md-8
                 .jumbo__teaser
-                  p= item.jumbo.description1 + ' ' + totalAssets + ' ' + item.jumbo.description2
+                  h1.jumbo__teaser-text= item.jumbo.description1 + ' ' + totalAssets + ' ' + item.jumbo.description2
               .col-xs-12.col-xs-12.col-sm-8.col-md-8.clear
                 .jumbo__search
                   +searchFreetextForm('Søg efter billeder', 'jumbo')
@@ -38,25 +38,25 @@ block content-bottom
                   if config.features.magasinMuseum
                     a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
                       +icon('magasin-museum')
-      -if(item.gallery)
+      -if(item.gallery) 
         -if(item.gallery.appearance === 'grid')
-          .gallery__container(class="gallery--" + evenOrOdd)
+          section.gallery__container(class="gallery--" + evenOrOdd)
             .container-fluid
               +gridGallery(item.gallery, i, evenOrOdd)
         -if(item.gallery.appearance === 'carousel')
-          .gallery__container(class="gallery--" + evenOrOdd)
+          section.gallery__container(class="gallery--" + evenOrOdd)
             .container-fluid
               +carouselGallery(item.gallery, evenOrOdd)
         -if(item.gallery.appearance === 'block')
-          .gallery__container(class="gallery--" + evenOrOdd)
+          section.gallery__container(class="gallery--" + evenOrOdd)
             .container-fluid
               +blockGallery(item.gallery, evenOrOdd)
       -if(item.map)
-        .gallery__container(class="gallery--" + evenOrOdd)
+        section.gallery__container(class="gallery--" + evenOrOdd)
           .container-fluid
             +mapGallery(item.map, evenOrOdd, frontpageItems[i - 1] && frontpageItems[i - 1].jumbo)
       -if(item.tagCloud)
-        .gallery__container(class="gallery--" + evenOrOdd)
+        section.gallery__container(class="gallery--" + evenOrOdd)
           .container-fluid
             +tagGallery(item.tagCloud, evenOrOdd)
 
