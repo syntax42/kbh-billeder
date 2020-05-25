@@ -102,6 +102,10 @@ $topbar-auth-tab-width: 170px;
     }
 
     .dropdown {
+      &__button {
+        background-color: transparent;
+        border: 0;
+      }
       &__option {
         padding: 12px;
       }
@@ -120,7 +124,8 @@ $topbar-auth-tab-width: 170px;
           }
         }
       }
-      &--active, &__selected {
+      &--active,
+      &__selected {
         &::after {
           border: 0;
         }
