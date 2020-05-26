@@ -63,8 +63,9 @@ mixin galleryItem(item, index, type, fill, imageDimensions)
   - var imageDimensions = imageDimensions ? imageDimensions : [270, 200]
   - var itemImageUrl = item._.image.fill(imageDimensions[0],imageDimensions[1],{gravity: 'center', quality: 75});
   - var className = 'gallery-thumb-' + index + ' gallery-thumb-' + type
+  - var altText = item.altText || ''
     a.gallery-thumb.no-touch-hover(href=item.link, class=className)
-      img(src=fill ? itemImageUrl : item._.image.src() alt="").gallery-thumb__image
+      img(src=fill ? itemImageUrl : item._.image.src() alt= altText).gallery-thumb__image
       .gallery-thumb__overlay
         h3.gallery-thumb__title= item.title
         p.gallery-thumb__text= item.description
