@@ -92,10 +92,8 @@ users.fetchUserContributions = async (req, res, next) => {
           const contribution = doc._source;
           // Add in the contribution time from our original fetch of
           // contributions.
-          contribution.contribution_time = _.find(contributions,
-            contribution => {
-              return contribution.asset_id === doc._id;
-            }).updated;
+          const original = contributions.find(c => c.asset_id === doc._id);
+          contribution.contribution_time = original.updated;
           contribution.formatted_date = helpers.formatDate(contribution.contribution_time);
           return contribution;
         });
