@@ -8,26 +8,22 @@ include ../../mixins/loader
         // The data attributes must be in sync with their section counterparts.
         // See profile/index.js
         .user-contributions__header-tabs
-          .user-contributions__header-tab(data-section='tag')
-              h2.user-contributions__header-tab-title Emneord
-              +icon('tag')
-          .user-contributions__header-tab(data-section='location')
-            h2.user-contributions__header-tab-title Lokationer
-            +icon('location')
+            .user-contributions__header-tab(data-section='tag')
+                h2.user-contributions__header-tab-title Emneord
+                +icon('tag')
+            .user-contributions__header-tab(data-section='location')
+                h2.user-contributions__header-tab-title Lokationer
+                +icon('location')
     .user-contributions__section.user-contributions__section-tag(data-section='tag')
-        .loader-wrapper
-            +loader()
         .user-contributions__section-no-contributions Du har ingen bidrag i denne kategori.
         .user-contributions__section-contributions
         .col-xs-12
-            button.btn.btn-primary.btn-lg.load-more.load-more-btn
-                +loader('Vis flere...')
+            +loader("Henter flere...")
+            button.btn.btn-primary.btn-lg.load-more.load-more-btn= "Vis flere"
 
     .user-contributions__section.user-contributions__section-location(data-section='location')
-        .loader-wrapper
-            +loader()
         .user-contributions__section-no-contributions Du har ingen bidrag i denne kategori.
         .user-contributions__section-contributions
         .col-xs-12
-            button.btn.btn-primary.btn-lg.load-more.load-more-btn
-                +loader('Vis flere...')
+            +loader("Henter flere...")
+            button.btn.btn-primary.btn-lg.load-more.load-more-btn= "Vis flere"
