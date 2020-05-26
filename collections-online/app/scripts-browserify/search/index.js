@@ -223,13 +223,19 @@ function initialize() {
       resultsTotal = response.hits.total;
       loadingResults = false;
 
-      response.hits.hits.forEach(function(hit) {
+      response.hits.hits.forEach(function(hit, i) {
         const item = {
           type: hit._type,
           metadata: hit._source
         };
         const markup = templates.searchResultItem(item);
         $results.append(markup);
+
+        //Focus on the first new element added
+        if(i === 0) {
+          $results.children().last().focus();
+        }
+
         resultsLoaded.push(item);
       });
 
