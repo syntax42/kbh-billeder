@@ -128,10 +128,8 @@ function initialize() {
       if(updateWidgets) {
         resultsHeader.update(searchParams, resultsTotal);
       }
-      if(indicateLoading) {
-        $('.search-results').removeClass('search-results--loading');
-        $results.removeAttr('aria-busy');
-      }
+      $('.search-results').removeClass('search-results--loading');
+      $results.removeAttr('aria-busy');
     };
 
     // Do search depending on current viewmode.
