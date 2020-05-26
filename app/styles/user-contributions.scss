@@ -78,7 +78,7 @@
       font-weight: bolder;
       font-size: 1.25rem;
     }
-    .is-loading {
+    &[aria-busy] {
       .loader-wrapper {
         display: flex;
       }
