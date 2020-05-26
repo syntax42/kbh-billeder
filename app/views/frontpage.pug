@@ -30,14 +30,14 @@ block content-bottom
               .col-xs-12
                 .jumbo__logos
                   a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
-                    +icon('kbh-museum')
+                    +icon('kbh-museum', '', 'Københavns museum')
                   a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
-                    +icon('kbh-arkiv')
+                    +icon('kbh-arkiv', '', 'Københavns stadsarkiv')
                   a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
-                    +icon('frb-arkiv')
+                    +icon('frb-arkiv', '', 'Frederiksberg stadsarkiv')
                   if config.features.magasinMuseum
                     a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
-                      +icon('magasin-museum')
+                      +icon('magasin-museum', '', 'Magasain du nord museum')
       -if(item.gallery) 
         -if(item.gallery.appearance === 'grid')
           section.gallery__container(class="gallery--" + evenOrOdd)
