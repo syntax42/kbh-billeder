@@ -67,8 +67,17 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
 
   const _enableEndlessScrolling = () => {
     $loadMoreButton.hide();
+
     // Kick off the first fetch.
-    doFetch();
+    doFetch(function(newItems) {
+      console.log("first fetch finisheed!", newItems);
+      // Only in the first fetch do we focus next element;
+      // for all the future loads we rely on endless scrolling
+      // letting us continue tabbing through elements.
+      if(newItems.length) {
+        newItems[0].focus();
+      }
+    });
 
     $(window).on('scroll', function(e) {
       if (!hasMore) {
@@ -83,7 +92,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
       var lastItemOffset = $lastItem.offset();
       var scrollTop = $(window).scrollTop();
       var scrollBottom = scrollTop + $(window).height();
-      if(scrollBottom > lastItemOffset.top && !$sectionElement.hasClass('is-loading') && hasMore) {
+      if(scrollBottom > lastItemOffset.top && !$sectionElement.attr('aria-busy') && hasMore) {
         // TODO - after we've fetched we might still end up with few enough
         // results to confuse the user (we de-duplicate results).
         // We should either fetch more results, or have the api-endpoint changed
@@ -91,7 +100,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
         doFetch();
       }
 
-    }).scroll();
+    });
   };
 
   // Setup listeners
@@ -101,11 +110,11 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   /**
    * Fetch data from the backend.
    */
-  const _responseCallback = (error, response, body) => {
+  const _responseCallback = (done) => (error, response, body) => {
     if (error) {
       console.warn('Error while fetching contributions');
       console.warn(error);
-      $sectionElement.removeClass('is-loading');
+      $sectionElement.removeAttr('aria-busy');
       return;
     }
 
@@ -115,7 +124,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
       // The API will give us repeat results for assets if the user has made
       // multiple contributions to it. We only want to display a single result pr
       // asset so we reduce it down to a uniqe list.
-      load(_.uniqBy(jsonData, 'id'));
+      load(_.uniqBy(jsonData, 'id'), done);
     } else if (!firstFetchAttempted) {
       // We where never able to fetch any data for this section, add a class
       // saying so.
@@ -138,20 +147,20 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
       firstFetchAttempted = true;
     }
 
-    $sectionElement.removeClass('is-loading');
+    $sectionElement.removeAttr('aria-busy');
   };
 
-  const doFetch = () => {
+  const doFetch = (done) => {
     if (!hasMore) {
       return;
     }
 
-    $sectionElement.addClass('is-loading');
-    request({'url': `${fetchEndpoint}/${nextPage}`}, _responseCallback);
+    $sectionElement.attr('aria-busy', true);
+    request({'url': `${fetchEndpoint}/${nextPage}`}, _responseCallback(done));
   };
 
   // Function for loading contributions into an element.
-  const load = (items) => {
+  const load = (items, done) => {
     // See if we should start off with the last section.
     let initialList = [];
     if (lastSection && lastSection.date === getContributionDate(items[0].contribution_time)) {
@@ -159,18 +168,25 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
       // Remove last section.
       $sectionElement.find('#' + lastSection.id).remove();
     }
+
     // Convert list of items to list of sections with items
     const sections = items.reduce(_sectionBuilder, initialList);
 
     // TODO - at this point we could start storing results into the browsers
     // history in order to be able to return to the same resultset.
     // Render each section and add it to the region.
-    sections.forEach(
-      (section) => {
-        $sectionElement.children('.user-contributions__section-contributions').first().append(templates.contributionSection({section}));
-        lastSection = section;
-      }
-    );
+    const $contributionsSection = $sectionElement
+      .children('.user-contributions__section-contributions')
+      .first();
+
+    sections.forEach((section) => {
+      $contributionsSection.append(templates.contributionSection({section}));
+      lastSection = section;
+    });
+
+    if(done) {
+      done(items.map((item) => $contributionsSection.find(`[data-id='${item.id}']`)));
+    }
   };
 
   // Return a handler object the caller can use to load more elments.
