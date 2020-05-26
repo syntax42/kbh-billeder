@@ -1,6 +1,8 @@
 mixin loader(text)
-  if text
-    span.text #{text}
-  .loader
-  .loader.one
-  .loader.two
+  .loader-wrapper
+    if text
+      span.text #{text}
+    .loader-set
+      .loader
+      .loader.one
+      .loader.two

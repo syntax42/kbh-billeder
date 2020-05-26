@@ -127,9 +127,10 @@ function initialize() {
       // Update the results header with the result
       if(updateWidgets) {
         resultsHeader.update(searchParams, resultsTotal);
-        if(indicateLoading) {
-          $('.search-results').removeClass('search-results--loading');
-        }
+      }
+      if(indicateLoading) {
+        $('.search-results').removeClass('search-results--loading');
+        $results.removeAttr('aria-busy');
       }
     };
 
@@ -187,15 +188,11 @@ function initialize() {
         console.trace(error.message);
       });
     } else if (viewMode === 'list') {
-      if (updateWidgets) {
-        // Start updating the results header
-        resultsHeader.update(searchParams, resultsTotal);
-        // Update the results header before the result comes in
-        if(indicateLoading) {
-          $('.search-results').addClass('search-results--loading');
-        }
+      if(indicateLoading) {
+        $('.search-results').addClass('search-results--loading');
+        $results.attr('aria-busy', true);
       }
-      resultsTotal = updateList(searchParams, updateWidgets, resultCallback);
+      updateList(searchParams, updateWidgets, resultCallback);
     }
   }
 
@@ -311,7 +308,7 @@ function initialize() {
         var scrollBottom = scrollTop + $(window).height();
         if(scrollBottom > lastResultOffset.top && !loadingResults) {
           resultsDesired += PAGE_SIZE;
-          update();
+          update(false, true);
         }
       }
     }).scroll();
@@ -343,7 +340,7 @@ function initialize() {
 
       // Using the updateWidgets=true, updates the header as well
       // Using the indicateLoading=false makes sure the UI doesn't blink
-      update(true, false);
+      update(true, true);
     }
   }
 
@@ -356,7 +353,7 @@ function initialize() {
   const searchControllerCallbacks = {
     // Allow the caller to refresh the current search-results.
     refresh: function() {
-      update(true, false);
+      update(true, true);
     },
 
     getCurrentSearchParameters: function (){
@@ -415,7 +412,7 @@ function initialize() {
       }
       // Store changed parameters and trigger a search.
       persistChangedParams(searchParams);
-      update();
+      update(false, true);
     } else if(action === 'remove-filter') {
       if(typeof(filters[field]) === 'object') {
         filters[field] = filters[field].filter(function(v) {
@@ -426,7 +423,7 @@ function initialize() {
       }
       // Store changed parameters and trigger a search.
       persistChangedParams(searchParams);
-      update();
+      update(false, true);
     }
   });
 
@@ -436,7 +433,7 @@ function initialize() {
     searchParams.sorting = sorting;
     // Store changed parameters and trigger a search.
     persistChangedParams(searchParams);
-    update();
+    update(false, true);
   });
 
   // Enabled the load-more button
@@ -527,7 +524,7 @@ function initialize() {
     searchParams.filters.q = queryString;
     // Store changed parameters and trigger a search.
     persistChangedParams(searchParams);
-    update();
+    update(false, true);
   });
 
   // Everything is ready, prepare to show results.
@@ -546,7 +543,7 @@ function initialize() {
     }
     else {
       // No relevant url-parameter and no relevant state, just do a cold update.
-      update();
+      update(false, true);
     }
   }
 }

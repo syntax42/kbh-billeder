@@ -72,11 +72,6 @@
     }
   }
 
-  // We have a wrapper around the loader to be able to select it.
-  .loader-wrapper {
-    display: none;
-  }
-
   &__section {
     &-title {
       margin: 15px 0;
@@ -85,7 +80,7 @@
     }
     .is-loading {
       .loader-wrapper {
-        display: block;
+        display: flex;
       }
     }
   }
