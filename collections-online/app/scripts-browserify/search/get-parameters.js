@@ -34,6 +34,26 @@ module.exports = function() {
       if(!filter.skipSplit) {
         value = value.split(',');
       }
+
+      if(field == 'q') {
+        // Escape all Lucene special characters, to avoid syntax errors in
+        // Elastic Search query, c.f.
+        // https://lucene.apache.org/core/3_0_3/queryparsersyntax.html#Escaping%20Special%20Characters
+        // BUT with the note that we allow ?, ", and *.
+        [
+          '\\+', '\\-', '\&\&', '\\|\\|', '!', '\\(', '\\)', '\\{', '\\}',
+          '\\[', '\\]', '\\^', '~', '\\:', '\\\\'
+        ].forEach((luceneSpecialCharacter) => {
+          const characterGlobalPattern = new RegExp(luceneSpecialCharacter, 'g');
+          if(Array.isArray(value)) {
+            value = value.map((part) => part.replace(characterGlobalPattern, ' '));
+          }
+          else {
+            value = value.replace(characterGlobalPattern, ' ');
+          }
+        });
+      }
+
       filters[field] = value;
     }
     else if (field === 'map') {

@@ -8,7 +8,7 @@
 #sidebarmobile {
   width: 100%;
   height: calc(100vh - 40px);
-  position: absolute;
+  position: static;
   top: 40px;
   left: 0;
   background: $gray-lighter;

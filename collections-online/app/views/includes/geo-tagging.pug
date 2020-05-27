@@ -15,8 +15,7 @@ include ../mixins/loader
     .geo-tagging__map-buttons
       button.btn.btn-primary(data-action='geo-tagging:stop')
         | Annuller
-      button.btn.btn-primary(data-action='save-geo-tag')
-        +loader('Gem placering')
+      button.btn.btn-primary(data-action='save-geo-tag')= "Gem placering"
       button.btn.btn-primary(data-action='back-to-map')
         | Tilbage til kortvisning
     .geo-tagging__overlay
