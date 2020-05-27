@@ -62,7 +62,7 @@ block content-bottom
 
 append javascript
   - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
-  script(type="application/ld+json").
+  script(type='application/ld+json').
     {
       "@context": "http://schema.org",
       "@type": "WebSite",
