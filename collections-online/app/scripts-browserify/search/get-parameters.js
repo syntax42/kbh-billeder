@@ -43,7 +43,12 @@ module.exports = function() {
         '\\[', '\\]', '\\^', '"', '~', '\\*', '\\?', '\\:', '\\\\'
       ].forEach((luceneSpecialCharacter) => {
         const characterGlobalPattern = new RegExp(luceneSpecialCharacter, 'g');
-        value = value.replace(characterGlobalPattern, ' ');
+        if(Array.isArray(value)) {
+          value = value.map((part) => part.replace(characterGlobalPattern, ' '));
+        }
+        else {
+          value = value.replace(characterGlobalPattern, ' ');
+        }
       });
 
       filters[field] = value;
