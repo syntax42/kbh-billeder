@@ -38,9 +38,10 @@ module.exports = function() {
       // Escape all Lucene special characters, to avoid syntax errors in
       // Elastic Search query, c.f.
       // https://lucene.apache.org/core/3_0_3/queryparsersyntax.html#Escaping%20Special%20Characters
+      // BUT with the note that we allow ?, ", and *.
       [
         '\\+', '\\-', '\&\&', '\\|\\|', '!', '\\(', '\\)', '\\{', '\\}',
-        '\\[', '\\]', '\\^', '"', '~', '\\*', '\\?', '\\:', '\\\\'
+        '\\[', '\\]', '\\^', '~', '\\:', '\\\\'
       ].forEach((luceneSpecialCharacter) => {
         const characterGlobalPattern = new RegExp(luceneSpecialCharacter, 'g');
         if(Array.isArray(value)) {
