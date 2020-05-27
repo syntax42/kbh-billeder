@@ -134,7 +134,9 @@ $heading-adjustment: 2px;
       }
       &__option {
         &--active {
-          color: $brand-primary;
+          color: $white;
+          background-color: $brand-primary;
+          text-decoration: underline;
         }
       }
     }
