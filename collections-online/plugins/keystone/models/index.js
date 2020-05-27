@@ -4,5 +4,8 @@ module.exports = {
   MenuItem: require('./menu-items.js'),
   Gallery: require('./galleries.js'),
   GalleryItem: require('./gallery-items.js'),
-  JumboItem: require('./jumbo-items.js')
+  JumboItem: require('./jumbo-items.js'),
+  TagClouds: require('./tag-clouds.js'),
+  MapView: require('./map-views.js'),
+  FrontpageItem: require('./frontpage-items.js'),
 };

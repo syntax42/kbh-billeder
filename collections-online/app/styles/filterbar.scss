@@ -140,7 +140,7 @@ $heading-adjustment: 2px;
   &__item {
     float: left;
     position: relative;
-    margin-right: $spacer-sm;
+    margin-right: $spacer-md;
   }
   &__tab {
     position: relative;
@@ -167,7 +167,6 @@ $heading-adjustment: 2px;
     .filterbar__item {
       height: $topbar-height;
       cursor: pointer;
-      min-width: 80px;
       &:not(:last-child) {
         margin-right: 20px;
       }
@@ -225,7 +224,6 @@ $heading-adjustment: 2px;
     margin: 0;
     padding-left: $spacer-sm + $spacer-xs;
     padding-right: $spacer-sm + $spacer-xs;
-    user-select: none;
 
     @media (min-width: $small-size) {
       font-size: 1.285714286rem; // 18/14
@@ -242,10 +240,6 @@ $heading-adjustment: 2px;
 
     &::first-letter {
       text-transform: uppercase;
-    }
-
-    &:focus {
-      outline: none;
     }
 
     // Used for mobile accordion navigation

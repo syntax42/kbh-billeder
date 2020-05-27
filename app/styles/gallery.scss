@@ -1,6 +1,9 @@
 .gallery {
   &__container {
     margin-bottom: $spacer-lg;
+    z-index: 1;
+    position: relative;
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -31,6 +34,7 @@
     a {
       text-align: center;
       padding: 50px 15px;
+      transition: box-shadow 0.2s, background-color 0.2s;
       .is-mobile & {
         padding: 20px 0;
       }
@@ -69,6 +73,29 @@
       }
       &__items {
         display: inline-block;
+      }
+    }
+  }
+  &--map {
+    .gallery__text .btn {
+      margin-top: 2rem;
+    }
+  }
+  &--tags {
+    .tag-cloud {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 2rem 0 0;
+
+      @media (min-width: $small-size) and (orientation: landscape) {
+        margin: 0;
+      }
+
+      .btn {
+        box-shadow: none;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
       }
     }
   }

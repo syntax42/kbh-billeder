@@ -13,4 +13,4 @@ block content
             h1 Siden eksisterer ikke
           else
             h1= data.page.title
-            p!= data.page.content
+            p!= data.page.content.replace(/%COOKIE_LIST%/g, '<script id="CookieDeclaration" src="https://consent.cookiebot.com/e079a717-1a3f-4fd9-8677-b42d07ce6446/cd.js" type="text/javascript" async></script>')

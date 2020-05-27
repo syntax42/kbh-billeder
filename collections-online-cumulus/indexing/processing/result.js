@@ -36,7 +36,7 @@ async function getResultPage(query, catalog, index, pageSize) {
     'search',
     catalog,
     config.cip.client.constants.layoutAlias,
-  ]
+  ];
 
   const options = {
     querystring: query,
@@ -48,7 +48,18 @@ async function getResultPage(query, catalog, index, pageSize) {
     options.field = config.cip.indexing.additionalFields;
   }
 
-  const response = await cip.request(operation, options);
+  let response;
+  try {
+    response = await cip.request(operation, options);
+  } catch(error) {
+    if(error.code === 'ECONNREFUSED') {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      response = await cip.request(operation, options);
+    }
+    else {
+      throw error;
+    }
+  }
 
   if (!response || !response.body || typeof(response.body.items) === 'undefined') {
     console.error('Unexpected response:', response);

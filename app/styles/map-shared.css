@@ -32,10 +32,10 @@
 #mapPopupClose {
   background: url('/app/images/icons/map/close.png') center center no-repeat;
   position: absolute;
-  right: 0px;
-  top: 0px;
-  width: 40px;
-  height: 40px;  
+  right: 5px;
+  top: 5px;
+  width: 20px;
+  height: 20px;
 }
 
 #mapPopupHeading {
@@ -211,7 +211,4 @@
     border: none;
     cursor: pointer;
     width: 100%;
-}
-.ol-control button:focus, .ol-control select:focus {
-    outline: 0;
 }

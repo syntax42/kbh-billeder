@@ -8,7 +8,7 @@
   }
   &-button-container {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 30px);
     .is-desktop & {
       top: 105px;
     }

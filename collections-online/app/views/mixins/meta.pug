@@ -26,8 +26,10 @@ mixin meta(title, description, image)
   - // Add image if available - also support both relative and absolute paths
   if image && image.substr(0, 4) !== 'http'
     - image = unsafeBaseUrl + image
+    - secureImage = baseUrl + image
   else if !image
     - image = unsafeBaseUrl + '/images/defaultshare.jpg'
+    - secureImage = baseUrl + '/images/defaultshare.jpg'
   - // Print it out
   title #{title}
   meta(name='description', content=description)
@@ -41,6 +43,7 @@ mixin meta(title, description, image)
   meta(property='og:type', content=facebookType)
   meta(property='og:url', content=pageUrl)
   meta(property='og:image', content=image)
+  meta(property='og:image:secure_url', content=secureImage)
   meta(property='og:description', content=description)
   meta(property='og:site_name', content=siteTitle)
   if facebookAppId

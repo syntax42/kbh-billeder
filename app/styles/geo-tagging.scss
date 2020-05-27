@@ -62,3 +62,42 @@ $map-height: 455px;
     }
   }
 }
+
+/*
+Should probably be in a separate file
+*/
+.mini-map-with-query {
+  height: 45vh;
+  min-height: 350px;
+  background-color: #f0f0f0;
+  position: relative;
+
+  &.after-jumbo {
+    @media (min-width: $small-size) {
+      height: calc(45vh + 85px);
+      margin-top: -85px;
+
+      &:before {
+        content: '';
+        background-color: white;
+        position: absolute;
+        transform: skewY(-5.5deg);
+        width: 100%;
+        top: -30px;
+        height: 61px;
+        z-index: 1;
+      }
+    }
+
+    @media (min-width: $medium-size) {
+      height: calc(45vh + 115px);
+      margin-top: -115px;
+
+      &:before {
+        top: -30px;
+        height: 61px;
+        z-index: 1;
+      }
+    }
+  }
+}

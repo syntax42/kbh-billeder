@@ -16,7 +16,10 @@
   position: relative;
 }
 
-.btn:not(.search-freetext-form__btn, .btn-no-shadow) {
+.btn:not(
+  .search-freetext-form__btn,
+  .btn-no-shadow
+) {
   @include shadow(1);
 }
 
