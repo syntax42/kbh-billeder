@@ -1,33 +1,33 @@
 [
   {
     "short": "CC-BY",
-    "url": "http://creativecommons.org/licenses/by/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by/2.5/88x31.png",
     "watermark": false
   }, {
     "short": "CC-BY-NC",
-    "url": "http://creativecommons.org/licenses/by-nc/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by-nc/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by-nc/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by-nc/2.5/88x31.png",
     "watermark": false
   }, {
     "short": "CC-BY-NC-ND",
-    "url": "http://creativecommons.org/licenses/by-nc-nd/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by-nc-nd/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by-nc-nd/2.5/88x31.png",
     "watermark": false
   }, {
     "short": "CC-BY-NC-SA",
-    "url": "http://creativecommons.org/licenses/by-nc-sa/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by-nc-sa/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by-nc-sa/2.5/88x31.png",
     "watermark": false
   }, {
     "short": "CC-BY-ND",
-    "url": "http://creativecommons.org/licenses/by-nd/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by-nd/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by-nd/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by-nd/2.5/88x31.png",
     "watermark": false
   }, {
     "short": "CC-BY-SA",
-    "url": "http://creativecommons.org/licenses/by-sa/2.5/dk/",
-    "img": "http://i.creativecommons.org/l/by-sa/2.5/88x31.png",
+    "url": "https://creativecommons.org/licenses/by-sa/2.5/dk/",
+    "img": "https://i.creativecommons.org/l/by-sa/2.5/88x31.png",
     "watermark": false
   },
   {
@@ -38,8 +38,8 @@
   },
   {
     "short": "Public Domain",
-    "url": "http://creativecommons.org/publicdomain/mark/1.0/deed.da",
-    "img":"http://mirrors.creativecommons.org/presskit/buttons/88x31/png/publicdomain.png",
+    "url": "https://creativecommons.org/publicdomain/mark/1.0/deed.da",
+    "img":"https://mirrors.creativecommons.org/presskit/buttons/88x31/png/publicdomain.png",
     "watermark": false
   },
   {
