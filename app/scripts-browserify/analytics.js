@@ -1,5 +1,5 @@
 $(function() {
-  if(ga && window.Cookiebot && window.Cookiebot.consent.statistics) {
+  if(typeof ga !== "undefined" && window.Cookiebot && window.Cookiebot.consent.statistics) {
     $('[data-content="asset-download"] .btn').on('click', function(){
       var href = $(this).attr('href');
       var hrefArray = href.split("/");
