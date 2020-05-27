@@ -42,7 +42,7 @@
         &:hover {
           background: white;
           text-decoration: none;
-          @include shadow(5);
+          @include shadow(1);
         }
       }
     }
