@@ -28,7 +28,7 @@ block document__section-2
   - const geotagable = helpers.geoTagging.enabled(metadata);
 
     if !hasLocation
-      .document__section-2.document__section-2--no-location
+      section.document__section-2.document__section-2--no-location
         .container-fluid
           .row
             .col-sm-7
@@ -41,7 +41,7 @@ block document__section-2
                   | Placer billede på kort
                   +icon('pencil')
 
-    .document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
+    section.document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
       .geo-tagging-mini-map(
         data-has-location=(hasLocation) ? 'true' : 'false'
         data-latitude=location.latitude,
@@ -69,7 +69,7 @@ block document__section-2
 
 
 block document__section-3
-  .document__section-3
+  section.document__section-3
     .container-fluid
       .row
         .col-sm-7
