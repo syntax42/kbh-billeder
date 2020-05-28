@@ -1,5 +1,7 @@
+- var altText = players[0].title + ": " + players[0].tags.join(', ');
+
 img(src=player.thumbnailUrl,
-alt=player.title ? player.title : 'Beskrivelse af billede mangler',
+alt=altText,
 data-action='toggle-expandable').asset__image
 
 each backside in player.backsides
