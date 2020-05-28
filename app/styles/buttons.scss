@@ -21,9 +21,6 @@
   .btn-no-shadow
 ) {
   @include shadow(1);
-}
-
-.btn:not(.search-freetext-form__btn) {
 
   @media (pointer:fine) {
     transition: $anim-default;
