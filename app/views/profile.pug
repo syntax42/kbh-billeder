@@ -3,10 +3,10 @@ include mixins/meta
 include mixins/search-freetext-form
 
 append header
-  +meta()
+  +meta(user.nickname + ' profil')
 
 block content
-  .let-it-grow.page-wrap
+  main.let-it-grow.page-wrap
     .container-fluid
       img.img-responsive(src=user.picture)
       h3(data-user-id=user.id)
