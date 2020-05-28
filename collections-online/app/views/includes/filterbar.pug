@@ -2,24 +2,24 @@ if config.features.filterSidebar
   section#filterbar.filterbar
     .filterbar__item
       .filterbar__tab.filterbar__tab--filters
-        button.search-filter-sidebar__heading.search-filter-sidebar__tab
+        button(aria-label='Åbn filtreringsmuligheder').search-filter-sidebar__heading.search-filter-sidebar__tab
           span(data-action='show-filterbar-menu')= 'Filtrering'
       #sidebar.filterbar__menu.filterbar__menu--filters
         block sidebar
     .filterbar__item
       .filterbar__tab.filterbar__tab--sorting
-        button.search-filter-sidebar__heading.search-filter-sidebar__tab
+        button(aria-label='Åbn sorteringsmuligheder').search-filter-sidebar__heading.search-filter-sidebar__tab
           span(data-action='show-filterbar-menu')= 'Sortering'
       #sorting-menu.filterbar__menu.filterbar__menu--sorting
         include search-results-sorting
     .view-mode
       .filterbar__item(data-action='show-view-map')
         .filterbar__tab--map
-          button.search-filter-sidebar__heading.search-filter-sidebar__tab Kort
+          button(aria-label='Vis resultater på kort').search-filter-sidebar__heading.search-filter-sidebar__tab Kort
           +icon('location')
       .filterbar__item(data-action='show-view-list')
         .filterbar__tab.filterbar__tab--list
-          button.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
+          button(aria-label='Vis resultater som liste').search-filter-sidebar__heading.search-filter-sidebar__tab Liste
           +icon('view-thumb')
   #filterbar--mobile.filterbar--mobile
     .filterbar--mobile__container
