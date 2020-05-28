@@ -57,15 +57,15 @@ block document__section-2
               tbody
                 tr
                   td(colspan=2, class='map-coordinates__map--edit')
-                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
+                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start', aria-label="rediger lokation")
                       | Rediger
                       +icon('pencil')
-                    button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
-                      | Annuller
                     button.btn.btn-primary(data-action='geo-tagging:add-direction', style="display:none")
                       | Tilføj retning
                     button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
                       | Gem placering
+                    button.btn.btn-default(data-action='geo-tagging:stop', style="display: none")
+                      | Annuller
 
 
 block document__section-3
