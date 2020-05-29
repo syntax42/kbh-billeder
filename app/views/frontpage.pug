@@ -38,7 +38,7 @@ block content-bottom
                   if config.features.magasinMuseum
                     a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
                       +icon('magasin-museum', '', 'Magasain du nord museum')
-      -if(item.gallery) 
+      -if(item.gallery)
         -if(item.gallery.appearance === 'grid')
           section.gallery__container(class="gallery--" + evenOrOdd)
             .container-fluid
