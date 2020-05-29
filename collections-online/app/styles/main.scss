@@ -9,6 +9,11 @@ body {
 
   a {
     cursor : pointer;
+
+    // Default links should have an underline
+    &:not([class]) {
+      text-decoration: underline;
+    }
   }
 }
 

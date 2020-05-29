@@ -11,6 +11,7 @@ GalleryItem.add({
     title: { type: String, required: true },
     description: { type: Types.Textarea },
     image: { type: Types.CloudinaryImage, autoCleanup : true },
+    altText: { type: String },
     link: { type: Types.Url }
 });
 

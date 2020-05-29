@@ -1,4 +1,5 @@
 - const getZoomTilesId = helpers.getZoomTilesId(metadata);
+- var altText = player.title + ": " + player.tags.join(', ');
 
 if getZoomTilesId
     img(src=player.thumbnailUrl,
@@ -6,5 +7,5 @@ if getZoomTilesId
         data-action='toggle-tiled-zoom').asset__image
 else
     img(src=player.thumbnailUrl,
-        alt=player.title,
+        alt=altText,
         data-action='toggle-expandable').asset__image
