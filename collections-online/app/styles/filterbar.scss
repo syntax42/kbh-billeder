@@ -87,6 +87,8 @@ $heading-adjustment: 2px;
         height: 48px;
         border-radius: 48px;
         background: white;
+        padding: 0;
+        border: 0;
         @include shadow(3);
       }
       // Half width of container.
@@ -132,7 +134,9 @@ $heading-adjustment: 2px;
       }
       &__option {
         &--active {
-          color: $brand-primary;
+          color: $white;
+          background-color: $brand-primary;
+          text-decoration: underline;
         }
       }
     }
@@ -281,6 +285,7 @@ $heading-adjustment: 2px;
   &__tab {
     float: left;
     background: none;
+    border: 0;
   }
 
   &__dates {
