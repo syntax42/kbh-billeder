@@ -71,8 +71,6 @@ helpers.determinePlayers = metadata => {
       title: helpers.documentTitle(metadata),
       description: helpers.documentDescription(metadata),
       tags: helpers.motifTagging.getTags(metadata)
-
-
     });
 
     // Add backside if we have one
