@@ -1,7 +1,7 @@
 include ../mixins/icon
 
 nav
-  ul(aria-labelledby='heading-categories-menu', role='menu').nav.sidebar-menu
+  ul(role='menu').nav.sidebar-menu
     if menus && menus.main
       block before
       each parent in menus.main
