@@ -40,7 +40,6 @@ $(function() {
     }
 
     handleError(errorMessage) {
-      console.warn('msg', errorMessage, this.$errorMessage)
       this.$errorMessage.text(errorMessage);
       this.$feedback.addClass(ERROR_CLASS);
     }
