@@ -19,9 +19,9 @@ $font-family-medium: 'FFUnitWebMedium', sans-serif;
 $font-family-sans-serif: $font-family-light;
 $headings-font-weight: normal;
 $input-border-focus: $brand-primary;
-$focus-styling: 2px solid $brand-primary;
-$focus-styling--light: 2px solid $white;
-$focus-styling--dark: 2px solid $brand-secondary;
+$focus-styling: 3px solid rgb(255,49,129); //$brand-primary;
+$focus-styling--light: 3px solid $white;
+$focus-styling--dark: 3px solid $brand-secondary;
 
 // Menu
 $menu-width: 200px;
