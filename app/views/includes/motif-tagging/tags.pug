@@ -9,11 +9,11 @@ each tag in helpers.motifTagging.getTags(metadata) || []
   .btn-group(data-tag=tag)
     +tag(tag)
     if editing
-      button.motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag', aria-label='fjern emneord')
+      button.motif-tagging__remove-btn.btn.btn-danger(data-action='remove-motif-tag', aria-label='fjern emneord', type='button')
         +icon('cross')
 if !helpers.motifTagging.hasTags(metadata)
   p.motif-tagging__no-tags Der er ikke tilføjet nogle emneord endnu.
 if !editing
-  button.motif-tagging__edit-btn.btn.btn-primary(data-action='motif-tagging:start', aria-label='tilføj nyt emneord')
+  button.motif-tagging__edit-btn.btn.btn-primary(data-action='motif-tagging:start', aria-label='tilføj nyt emneord', type='button')
     | Tilføj
     +icon('plus')

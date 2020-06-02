@@ -14,19 +14,19 @@ block inner-content
   .col-xs-12.col-md-4
     .row
       .my-page__edit-profile__page-header--desktop
-        img.img-responsive.my-page__profile-photo(src=profileImage)
+        img.img-responsive.my-page__profile-photo(src=profileImage alt='profilbillede')
       .my-page__edit-profile__page-header--mobile
         h1 Rediger profil
-        img.img-responsive.my-page__profile-photo(src=profileImage, alt='profilbillede')
-        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
-        p(style='color: green;')= !error ? status : ''
+        img.img-responsive.my-page__profile-photo(src=profileImage alt='profilbillede')
+        p.my-page__edit-profile__error= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
+        p.my-page__edit-profile__status= !error ? status : ''
   .col-xs-12.col-md-8.my-page__edit-profile
     .row
       .my-page__edit-profile__page-header--desktop
         h1 Rediger profil
-        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
-        p(style='color: green;')= !error ? status : ''
-      form(action='/update-user', method='POST').my-page__edit-profile__form
+        p.my-page__edit-profile__error= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
+        p.my-page__edit-profile__status= !error ? status : ''
+      form(action='/update-user', method='post').my-page__edit-profile__form
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
@@ -58,4 +58,4 @@ block inner-content
         .col-xs-12.my-page__edit-profile__buttons
           a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn.btn-default
             | Annuller
-          input(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
+          button(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary

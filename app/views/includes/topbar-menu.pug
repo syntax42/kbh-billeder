@@ -1,7 +1,7 @@
 .topbar__hamburger.hidden-lg.hidden-md(data-action="toggle-sidebar-menu")
   +icon('menu')
   .topbar__hamburger-text Menu
-span.topbar__menu.hidden-sm.hidden-xs
+div.topbar__menu.hidden-sm.hidden-xs
   if menus && menus.main
     each parent in menus.main
       if parent.children.length > 0

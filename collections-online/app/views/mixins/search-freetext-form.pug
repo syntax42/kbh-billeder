@@ -11,6 +11,6 @@ mixin searchFreetextForm(placeholder, ...modifiers)
         value=req.query.q || '',
         aria-label=placeholder
       )
-      button.btn.search-freetext-form__btn
+      button.btn.search-freetext-form__btn(type='submit')
         span.sr-only Søg
         +icon('search')

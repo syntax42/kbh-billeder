@@ -13,12 +13,12 @@ include ../mixins/loader
       aria-label=geotagging_description
     )
     .geo-tagging__map-buttons
-      button.btn.btn-primary(data-action='geo-tagging:stop')
+      button.btn.btn-primary(data-action='geo-tagging:stop' type='button')
         | Annuller
-      button.btn.btn-primary(data-action='save-geo-tag')= "Gem placering"
-      button.btn.btn-primary(data-action='back-to-map')
+      button.btn.btn-primary(data-action='save-geo-tag' type='button')= "Gem placering"
+      button.btn.btn-primary(data-action='back-to-map' type='button')
         | Tilbage til kortvisning
     .geo-tagging__overlay
       block geo-tagging__overlay
-      .btn.btn-primary(data-action='close-overlay')
+      .btn.btn-primary(data-action='close-overlay' type='button')
         | Videre
