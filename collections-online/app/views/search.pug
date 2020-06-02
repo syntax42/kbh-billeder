@@ -22,7 +22,7 @@ block content
             #results-header
               block results-header
             include includes/no-results-text
-            #results.row
+            #results.row(aria-busy=true)
               block results
               .centered-loader
                 +loader("Henter poster...")
@@ -34,7 +34,7 @@ block content
           #results-header
             block results-header
           include includes/no-results-text
-          #results.row
+          #results.row(aria-busy=true)
             block results
             .centered-loader
               +loader("Henter poster...")
