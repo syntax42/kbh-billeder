@@ -22,24 +22,24 @@ block content
             #results-header
               block results-header
             include includes/no-results-text
-            #results.row
+            #results.row(aria-busy=true)
               block results
               .centered-loader
                 +loader("Henter poster...")
             block after-results
-              button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn= "Vis flere"
+              button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn(type='button')= "Vis flere"
     else
       section.container-fluid
         .search-results
           #results-header
             block results-header
           include includes/no-results-text
-          #results.row
+          #results.row(aria-busy=true)
             block results
             .centered-loader
               +loader("Henter poster...")
           block after-results
-            button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn= "Vis flere"
+            button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn(type='button')= "Vis flere"
   .clearfix
 
   if(config.features.scrollToTop)

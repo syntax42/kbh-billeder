@@ -12,6 +12,6 @@ mixin searchFreetextForm(placeholder, ...modifiers)
         aria-label=placeholder
       )
       .input-group-btn
-        button.btn.search-freetext-form__btn
+        button.btn.search-freetext-form__btn(type='submit')
           span.sr-only Søg
           +icon('search')
