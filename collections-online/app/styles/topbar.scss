@@ -85,12 +85,14 @@ $topbar-auth-tab-width: 170px;
     align-items: center;
     display: flex;
     height: $topbar-height;
+    position: relative;
+    z-index: 2;
 
     &-link {
       color: $white;
       flex-shrink: 0;
       text-decoration: none;
-      padding: 12px;
+      padding: 12px 12px 11px;
       display: inline-block;
       line-height: 32px;
 
@@ -174,6 +176,8 @@ $topbar-auth-tab-width: 170px;
 
   &__menu {
     flex-grow: 3;
+    position: relative;
+    z-index: 2;
   }
 
   &__search {
@@ -232,8 +236,10 @@ $topbar-auth-tab-width: 170px;
       &__selected {
         width: 100%;
         margin-top: 0;
-        position: static;
-        padding: 0;
+        position: relative;
+        z-index: 2;
+        padding: 9px 0;
+        outline-offset: 0;
       }
     }
     .dropdown__selected::after {
