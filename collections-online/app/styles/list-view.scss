@@ -34,4 +34,8 @@
   #filters {
     display: none;
   }
+
+  .is-desktop & {
+    min-height: calc(100vh - 186px - 50px);
+  }
 }
