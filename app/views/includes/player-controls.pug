@@ -11,13 +11,13 @@ block document__player-controls
       span.zoom-in Zoom
 
   else
-    button(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow
+    button(data-action='toggle-expandable' type='button').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow
       +icon('zoom-in', 'zoom-in')
       +icon('zoom-out', 'zoom-out')
       span.zoom-in Forstør billede
       span.zoom-out Formindsk billede
 
-  button(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed' class='document__player-controls__actions btn btn-transparent btn-no-shadow')
+  button(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed' class='document__player-controls__actions btn btn-transparent btn-no-shadow' type='button')
     +icon('download')
     span Download
 

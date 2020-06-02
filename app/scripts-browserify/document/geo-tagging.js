@@ -83,7 +83,7 @@ $(function ($) {
       onDirectionRemoved: function () {
         // If the user removes heading from the place-marker, display a
         // button for adding a heading back.
-        $(ADD_HEADING_SELECTOR).show();
+        $(ADD_HEADING_SELECTOR).removeClass('hidden');
       }
     };
 
@@ -98,31 +98,31 @@ $(function ($) {
 
   // Hide the edit button and show save/cancel.
   function _setStateEdit () {
-    $(START_GEO_TAGGING_SELECTOR).hide();
-    $(STOP_GEOTAGGING_SELECTOR).show();
-    $(SAVE_GEO_TAG_SELECTOR).show();
+    $(START_GEO_TAGGING_SELECTOR).addClass('hidden');
+    $(STOP_GEOTAGGING_SELECTOR).removeClass('hidden');
+    $(SAVE_GEO_TAG_SELECTOR).removeClass('hidden');
     if (!controllerState.hasHeading) {
-      $(ADD_HEADING_SELECTOR).show();
+      $(ADD_HEADING_SELECTOR).removeClass('hidden');
     }
   }
 
   // Hide the save/cancel button and show edit.
   function _setStateView () {
-    $(START_GEO_TAGGING_SELECTOR).show();
-    $(STOP_GEOTAGGING_SELECTOR).hide();
-    $(SAVE_GEO_TAG_SELECTOR).hide();
+    $(START_GEO_TAGGING_SELECTOR).removeClass('hidden');
+    $(STOP_GEOTAGGING_SELECTOR).addClass('hidden');
+    $(SAVE_GEO_TAG_SELECTOR).addClass('hidden');
   }
 
   // Show the map pane and hide the data pane.
   function _setStateNoLocationStartEdit () {
-    $(MAP_SECTION_SELECTOR).show();
-    $(DATA_SECTION_NO_LOCATION).hide();
+    $(MAP_SECTION_SELECTOR).removeClass('hidden');
+    $(DATA_SECTION_NO_LOCATION).addClass('hidden');
   }
 
   // Show the data pane and hide the map pane.
   function _setStateNoLocationEndEdit () {
-    $(MAP_SECTION_SELECTOR).hide();
-    $(DATA_SECTION_NO_LOCATION).show();
+    $(MAP_SECTION_SELECTOR).addClass('hidden');
+    $(DATA_SECTION_NO_LOCATION).removeClass('hidden');
   }
 
   function _registerListeners (mapController) {
@@ -165,7 +165,7 @@ $(function ($) {
     $(document).on('click', ADD_HEADING_SELECTOR, () => {
       // Add direction to the place-marker.
       mapController.addDirection();
-      $(ADD_HEADING_SELECTOR).hide();
+      $(ADD_HEADING_SELECTOR).addClass('hidden');
     });
 
     // The user clicked "save".

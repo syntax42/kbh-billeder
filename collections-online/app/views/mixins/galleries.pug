@@ -19,8 +19,8 @@ mixin carouselGallery(gallery, evenOrOdd)
         each item, index in gallery.items
           +galleryItem(item, index, 'carousel', true, [270, 264])
       .slick-button-container
-        button.slick-prev
-        button.slick-next
+        button.slick-prev(type='button')
+        button.slick-next(type='button')
 
 mixin blockGallery(gallery, evenOrOdd)
   .row.gallery.gallery--block(class="gallery--" + evenOrOdd)
@@ -37,10 +37,9 @@ mixin mapGallery(map, evenOrOdd, followsJumbo)
   .row.gallery.gallery--map(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-5
       h2.gallery__title= map.title
-      h3.gallery__text
-        = map.description
-        .spacer
-        a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= map.viewFullMapButtonText || 'Kortvisning'
+      h3.gallery__text= map.description
+      .spacer
+      a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= map.viewFullMapButtonText || 'Kortvisning'
     .col-sm-1
     .gallery-map.col-xs-12.col-sm-6
       -if(followsJumbo)

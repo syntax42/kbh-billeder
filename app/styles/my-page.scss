@@ -148,6 +148,12 @@ $circle-size-mobile: 24px;
       }
     }
   }
+  &__error {
+    color: red;
+  }
+  &__status {
+    color: green;
+  }
   &__header {
     margin-bottom: $spacer-sm;
   }
