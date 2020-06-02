@@ -39,7 +39,8 @@
         padding: 20px 0;
       }
       .is-desktop & {
-        &:hover {
+        &:hover,
+        &:focus {
           background: white;
           text-decoration: none;
           @include shadow(1);

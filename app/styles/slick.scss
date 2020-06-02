@@ -34,8 +34,7 @@
     &:focus {
       background: url(../images/icons/arrow-thin-left.png) no-repeat center;
       background-size: 16px;
-      outline: 1px dotted #212121;
-      outline: 5px auto -webkit-focus-ring-color;
+      outline: $focus-styling;
     }
     &:hover {
       background: url(../images/icons/arrow-thin-left-hover.png) no-repeat center;

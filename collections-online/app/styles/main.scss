@@ -14,6 +14,10 @@ body {
     &:not([class]) {
       text-decoration: underline;
     }
+
+    &:focus {
+      outline: $focus-styling;
+    }
   }
 }
 

@@ -229,6 +229,10 @@ $heading-adjustment: 2px;
     padding-left: $spacer-sm + $spacer-xs;
     padding-right: $spacer-sm + $spacer-xs;
 
+    &:focus {
+      outline: $focus-styling;
+    }
+
     @media (min-width: $small-size) {
       font-size: 1.285714286rem; // 18/14
       padding-bottom: -$heading-adjustment;

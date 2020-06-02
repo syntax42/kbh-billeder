@@ -5,6 +5,11 @@
 .btn {
   border: 0;
 
+  
+  &:focus {
+    outline: $focus-styling;
+  }
+
   svg {
     fill: currentColor;
     height: 18px;

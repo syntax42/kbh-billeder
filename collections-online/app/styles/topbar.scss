@@ -96,8 +96,12 @@ $topbar-auth-tab-width: 170px;
 
       &:focus,
       &:hover {
-        color: $white;
+        color: $gray-lighter;
         text-decoration: none;
+      }
+
+      &:focus {
+        outline: $focus-styling--light;
       }
     }
 
@@ -121,6 +125,9 @@ $topbar-auth-tab-width: 170px;
         a {
           &:hover {
             color: $brand-primary;
+          }
+          &:focus {
+            outline: $focus-styling;
           }
         }
       }
