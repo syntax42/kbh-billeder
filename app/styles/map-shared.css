@@ -67,6 +67,9 @@
     width: 36px;
     height: 72px;
 }
+.ol-zoom button:focus {
+    outline: 1px dotted black;
+}
 .map.single .ol-zoom {
     top: 18px;
 }
