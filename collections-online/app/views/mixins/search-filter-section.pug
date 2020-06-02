@@ -2,8 +2,8 @@ include ../mixins/date-interval-range-picker
 
 mixin filterSection(displayStringSingular, displayStringPlural, field, type)
   - var dataId = field + '-filters'
-  p.search-filter-sidebar__heading(class='search-filter-sidebar__heading--' + dataId)
-    span(data-action='show-filters' data-id=field tabindex="0")= displayStringSingular
+  p.search-filter-sidebar__heading(class='search-filter-sidebar__heading--' + dataId data-action='show-filters' data-id=field tabindex="0")
+    span= displayStringSingular
 
   .search-filter-sidebar__filters(data-id=dataId, aria-expanded='false')
     if type === 'date-interval-range'
