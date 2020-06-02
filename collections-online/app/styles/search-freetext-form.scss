@@ -34,6 +34,7 @@
 
   .input-group {
     max-width: 20rem;
+    display: flex;
 
     &::after {
       bottom: .2rem;
@@ -74,7 +75,8 @@
     height: auto;
     line-height: 1.2;
     margin-left: 0;
-    padding-right: 0;
+    position: relative;
+    z-index: 2;
 
     &:active {
       box-shadow: none;

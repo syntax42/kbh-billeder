@@ -11,7 +11,6 @@ mixin searchFreetextForm(placeholder, ...modifiers)
         value=req.query.q || '',
         aria-label=placeholder
       )
-      .input-group-btn
-        button.btn.search-freetext-form__btn
-          span.sr-only Søg
-          +icon('search')
+      button.btn.search-freetext-form__btn
+        span.sr-only Søg
+        +icon('search')

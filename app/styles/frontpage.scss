@@ -163,7 +163,7 @@
         margin-right: 5px;
       }
 
-      .input-group-btn {
+      button {
         background: $brand-primary;
         color: white;
         border-radius: 3px;
@@ -171,6 +171,10 @@
         border-top-left-radius: 0;
         width: 100px;
         text-align: center;
+
+        &:focus {
+          border-radius: 0;
+        }
       }
 
       .input-group {
@@ -186,6 +190,10 @@
         background: white;
         padding: 15px;
         height: 60px;
+
+        &:focus {
+          border-radius: 0;
+        }
       }
     }
   }

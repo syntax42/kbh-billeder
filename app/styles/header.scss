@@ -28,7 +28,6 @@
     }
     .input-group {
       background: $brand-secondary;
-      padding: 0 $spacer-md;
       // Set the max width to 320px
       // following the Sketch file with the design.
       max-width: 320px;
@@ -43,6 +42,7 @@
     }
     input {
       height: $topbar-height;
+      padding: 0 $spacer-md;
     }
   }
 }
