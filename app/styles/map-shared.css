@@ -70,6 +70,9 @@
 .ol-zoom button:focus {
     outline: 1px dotted black;
 }
+.ol-control:focus {
+    outline: 1px dotted black;
+}
 .map.single .ol-zoom {
     top: 18px;
 }
