@@ -25,11 +25,14 @@
   @media (pointer:fine) {
     transition: $anim-default;
 
-    &:hover,
-    &:focus {
+    &:hover {
       @include shadow(2);
       transform: translateY(-1px);
       z-index: 1;
+    }
+
+    &:focus {
+      outline: $white solid 1px;
     }
   }
 }
