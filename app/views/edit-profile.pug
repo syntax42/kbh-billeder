@@ -56,6 +56,6 @@ block inner-content
                 label(for='edit-profile-repeat-password-input')#edit-profile-repeat-password Gentag adgangskode
               input(type='password', name='passwordConfirmation', id='edit-profile-repeat-password-input', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-repeat-password')
         .col-xs-12.my-page__edit-profile__buttons
-          a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn
+          a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn.btn-default
             | Annuller
           input(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
