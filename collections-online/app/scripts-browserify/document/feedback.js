@@ -6,6 +6,7 @@ const HIDE_EDITING_SELECTOR = '[data-action="feedback:stop"]';
 const SEND_FORM_SELECTOR = '[data-action="feedback:send"]';
 
 const FORM_SELECTOR = '.feedback__form';
+const FORM_ERROR_MESSAGE = '.feedback__error-message';
 const COUNTER_SELECTOR = '.feedback__counter';
 const EDITING_CONTAINER_SELECTOR = '.feedback__container';
 
@@ -20,6 +21,7 @@ $(function() {
       this.$feedback = $feedback;
       this.$container = $feedback.find(EDITING_CONTAINER_SELECTOR);
       this.$form = $feedback.find(FORM_SELECTOR);
+      this.$errorMessage = $feedback.find(FORM_ERROR_MESSAGE);
       this.$counter = $feedback.find(COUNTER_SELECTOR);
       this.$sendButton = $feedback.find(SEND_FORM_SELECTOR);
 
@@ -37,7 +39,8 @@ $(function() {
       this.$feedback.toggleClass(IS_EDITING_CLASS, editing);
     }
 
-    handleError() {
+    handleError(errorMessage) {
+      this.$errorMessage.text(errorMessage);
       this.$feedback.addClass(ERROR_CLASS);
     }
 
@@ -49,11 +52,16 @@ $(function() {
     send() {
       const url = location.pathname + '/feedback';
       const message = this.$form.val();
-      this.$sendButton.attr('disabled', true);
-      $.post(url, {message}, () => {}, 'json')
-      .done(() => this.handleSuccess())
-      .fail(() => this.handleError())
-      .always(() => this.$sendButton.attr('disabled', false))
+      if(message) {
+        this.$sendButton.attr('disabled', true);
+        $.post(url, {message}, () => {}, 'json')
+        .done(() => this.handleSuccess())
+        .fail(() => this.handleError('Der skete en fejl. Prøv venligst igen senere.'))
+        .always(() => this.$sendButton.attr('disabled', false))
+      }
+      else {
+        this.handleError('Du kan ikke sende en tom besked.');
+      }
     }
 
     registerListeners() {
