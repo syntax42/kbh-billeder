@@ -1,0 +1,19 @@
+.skip-to-content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    background-color: $brand-primary-darker;
+    padding: 13px;
+
+    margin: 0;
+    clip: rect(1px,1px,1px,1px);
+
+    &:focus {
+        z-index: 20;
+        width: auto;
+        height: auto;
+        clip: auto;
+        color: white;
+    }
+}
