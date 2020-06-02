@@ -7,6 +7,12 @@
   margin-left: 0;
   float: left;
   width: 100%;
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
   // Don't display map on list view.
   .is-list-view & {
     display: none;
