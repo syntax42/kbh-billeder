@@ -2,16 +2,16 @@
   h2.feedback__title Ved du mere om dette billede?
   p#feedback_description
     | Skriv til os, hvis du har yderligere oplysninger om fx fotografen, dateringen, motivet eller personerne på billedet.
-  button.feedback__btn-form-show.btn.btn-primary(data-action='feedback:start')
+  button.feedback__btn-form-show.btn.btn-primary(data-action='feedback:start' type='button')
     | Skriv til os
   .feedback__success-message
     | Tak for din besked. Vi kigger på oplysningerne og vurderer om billedets beskrivelse skal opdateres.
   .feedback__container
     textarea.feedback__form.form-control(maxlength=config.feedback.maxLength aria-labelledby='feedback_description')
     .feedback__controls
-      button.feedback__btn-form-send.btn.btn-primary(data-action='feedback:send')
+      button.feedback__btn-form-send.btn.btn-primary(data-action='feedback:send' type='button')
         | Send
-      button.feedback__btn-form-hide.btn.btn-default(data-action='feedback:stop')
+      button.feedback__btn-form-hide.btn.btn-default(data-action='feedback:stop' type='button')
         | Annuller
       span.feedback__error-message
       span.feedback__counter-container
