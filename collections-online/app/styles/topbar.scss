@@ -176,6 +176,10 @@ $topbar-auth-tab-width: 170px;
       float: right;
     }
 
+    button:focus {
+      outline: 1px dotted black;
+    }
+
     svg {
       height: 1.7rem;
       width: 1.7rem;
