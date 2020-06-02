@@ -60,11 +60,11 @@ block document__section-2
                     button.btn.btn-primary.btn-block(data-action='geo-tagging:start' type='button' aria-label="rediger lokation")
                       | Rediger
                       +icon('pencil')
-                    button.btn.btn-primary(data-action='geo-tagging:add-direction' type='button' style="display:none")
+                    button.btn.btn-primary.hidden(data-action='geo-tagging:add-direction' type='button')
                       | Tilføj retning
-                    button.btn.btn-primary(data-action='save-geo-tag' type='button' style="display: none")
+                    button.btn.btn-primary.hidden(data-action='save-geo-tag' type='button')
                       | Gem placering
-                    button.btn.btn-default(data-action='geo-tagging:stop' type='button' style="display: none")
+                    button.btn.btn-default.hidden(data-action='geo-tagging:stop' type='button')
                       | Annuller
 
 
