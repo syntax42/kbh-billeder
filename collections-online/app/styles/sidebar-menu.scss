@@ -12,10 +12,15 @@
   }
 
   .sidebar-menu {
+    display: block;
     box-shadow: 0 0 1px $menu-shadow, 0 0 3px $menu-shadow, 0 0 10px $menu-shadow;
     padding-left: 0;
     right     : 0;
     transition: right $anim-entrance $anim-duration;
+
+    a {
+      display: block;
+    }
   }
 }
 
@@ -72,7 +77,7 @@ $expand-width: 50px;
 
   a {
     color: $white;
-    display: block;
+    display: none;
     float: none;
     padding: 10px 15px;
     text-decoration: none;
