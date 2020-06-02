@@ -3,7 +3,7 @@ include ../mixins/icon
 .topbar__auth.hidden-xs.hidden-sm
   if user
     .dropdown
-      button.dropdown__selected.topbar__items-link.topbar__name.dropdown__button(aria-label='åbn bruger menu' type='button')
+      a.dropdown__selected.topbar__items-link.topbar__name.dropdown__button(aria-label='åbn bruger menu' tabindex='0')
         = (user.name.givenName || user.nickname)
         span.icon
           +icon('chevron-up')
