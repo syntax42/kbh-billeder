@@ -32,7 +32,8 @@
     }
 
     &:focus {
-      outline: $white solid 2px;
+      outline: $focus-styling--dark;
+      text-decoration: underline;
     }
   }
 }
