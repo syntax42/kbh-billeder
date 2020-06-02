@@ -68,7 +68,9 @@ helpers.determinePlayers = metadata => {
     players.push({
       type: 'image',
       thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-      title: helpers.documentTitle(metadata)
+      title: helpers.documentTitle(metadata),
+      description: helpers.documentDescription(metadata),
+      tags: helpers.motifTagging.getTags(metadata)
     });
 
     // Add backside if we have one

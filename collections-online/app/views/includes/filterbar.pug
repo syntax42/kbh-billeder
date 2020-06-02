@@ -1,39 +1,39 @@
 if config.features.filterSidebar
-  #filterbar.filterbar
+  section#filterbar.filterbar
     .filterbar__item
       .filterbar__tab.filterbar__tab--filters
-        h2.search-filter-sidebar__heading.search-filter-sidebar__tab
-          span(data-action='show-filterbar-menu')= 'Filtrering'
-      #sidebar.filterbar__menu.filterbar__menu--filters
+        .search-filter-sidebar__heading.search-filter-sidebar__tab
+          button(data-action='show-filterbar-menu', aria-label='Åbn filtreringsmuligheder').search-filter-sidebar__tab Filtrering
+      #sidebar.filterbar__menu.filterbar__menu--filters(aria-expanded='false')
         block sidebar
     .filterbar__item
       .filterbar__tab.filterbar__tab--sorting
-        h2.search-filter-sidebar__heading.search-filter-sidebar__tab
-          span(data-action='show-filterbar-menu')= 'Sortering'
-      #sorting-menu.filterbar__menu.filterbar__menu--sorting
+        .search-filter-sidebar__heading.search-filter-sidebar__tab
+          button(data-action='show-filterbar-menu', aria-label='Åbn sorteringsmuligheder').search-filter-sidebar__tab Sortering
+      #sorting-menu.filterbar__menu.filterbar__menu--sorting(aria-expanded='false')
         include search-results-sorting
     .view-mode
       .filterbar__item(data-action='show-view-map')
         .filterbar__tab--map
-          h2.search-filter-sidebar__heading.search-filter-sidebar__tab Kort
+          button(aria-label='Vis resultater på kort').search-filter-sidebar__heading.search-filter-sidebar__tab Kort
           +icon('location')
       .filterbar__item(data-action='show-view-list')
         .filterbar__tab.filterbar__tab--list
-          h2.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
+          button(aria-label='Vis resultater som liste').search-filter-sidebar__heading.search-filter-sidebar__tab Liste
           +icon('view-thumb')
   #filterbar--mobile.filterbar--mobile
     .filterbar--mobile__container
       .filterbar--mobile__button.filterbar--mobile__button--filters(data-action='show-filterbar-menu')
         +icon('toggles')
-        h2.search-filter-sidebar__heading.search-filter-sidebar__tab Filter
+        button.search-filter-sidebar__heading.search-filter-sidebar__tab Filter
       .filterbar--mobile__button.filterbar--mobile__button--list(data-action='show-view-list')
         +icon('view-thumb')
-        h2.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
+        button.search-filter-sidebar__heading.search-filter-sidebar__tab Liste
       .filterbar--mobile__button.filterbar--mobile__button--map(data-action='show-view-map')
         +icon('location')
-        h2.search-filter-sidebar__heading.search-filter-sidebar__tab Kort
+        button.search-filter-sidebar__heading.search-filter-sidebar__tab Kort
     .filterbar--mobile__container--close
-      .filterbar--mobile__button.filterbar--mobile__button--close(data-action='close-filter-menu')
+      button.filterbar--mobile__button.filterbar--mobile__button--close(data-action='close-filter-menu', aria-label='Luk filtreringsmenuen')
         +icon('cross')
   #sidebarmobile.filterbar__menu.filterbar__menu--filters.search-filter-sidebar
     block sidebar

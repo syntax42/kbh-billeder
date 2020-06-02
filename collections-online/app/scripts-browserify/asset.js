@@ -55,8 +55,15 @@ const config = require('collections-online/shared/config');
       if (show === true) {
         $el.addClass(OVERLAY_ACTIVE_CLASS);
         $el.addClass(OVERLAY_ANIM_IN_CLASS);
-      } else if (show === false) {
+
+        // Focus first link in the overlay
+        setTimeout(function(){
+          $el.find('.btn:first').focus();
+        }, 50); // wait for the elements to be visible otherwise focus won't happen
+      }
+      else if (show === false) {
         $el.removeClass(OVERLAY_ANIM_IN_CLASS);
+        $(ACTION_ASSET_DOWNLOAD_SHOW).focus();
         setTimeout(function() {
           $el.removeClass(OVERLAY_ACTIVE_CLASS);
         }, 300);

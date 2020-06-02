@@ -136,6 +136,10 @@
     }
   }
 
+  &__teaser-text {
+    font-size: 1em;
+  }
+
   &__image {
     background-image: url('../images/frontpagetop.jpg');
     background-position: center calc(50% - 150px);

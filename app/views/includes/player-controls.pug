@@ -11,18 +11,18 @@ block document__player-controls
       span.zoom-in Zoom
 
   else
-    a(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn
+    button(data-action='toggle-expandable').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow
       +icon('zoom-in', 'zoom-in')
       +icon('zoom-out', 'zoom-out')
-      span.zoom-in Forstør
-      span.zoom-out Formindsk
+      span.zoom-in Forstør billede
+      span.zoom-out Formindsk billede
 
-  a(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed' class='document__player-controls__actions')
+  button(data-action="download:show-overlay", class= isDownloadable ? '' : 'dimmed' class='document__player-controls__actions btn btn-transparent btn-no-shadow')
     +icon('download')
     span Download
 
   if hasBacksideAsset
-    a.document__player-controls__rotate(href="javascript:flipAsset()")
+    button.document__player-controls__rotate(onclick="javascript:flipAsset()").btn.btn-transparent.btn-no-shadow
       +icon('clockwise')
       span.document__player-controls__rotate--item.document__player-controls__rotate--backside.document__player-controls__rotate--item--active
         | Se bagside
@@ -30,9 +30,9 @@ block document__player-controls
         | Se forside
 
   div.document__player-controls--social-share
-    a(href="javascript:fbshareCurrentPage()", target="_blank", alt="Del på Facebook")
+    a(href="javascript:fbshareCurrentPage()", title="Del på Facebook", aria-label="Del på Facebook")
       +icon('facebook')
-    a(href="javascript:twittershareCurrentPage()", target="_blank", alt="Del på Twitter")
+    a(href="javascript:twittershareCurrentPage()", title="Del på Twitter", aria-label="Del på Twitter")
       +icon('twitter')
-    a(href="javascript:pinterestshareCurrentPage()", target="_blank", alt="Del på Pinterest")
+    a(href="javascript:pinterestshareCurrentPage()", title="Del på Pinterest", aria-label="Del på Pinterest")
       +icon('pinterest')

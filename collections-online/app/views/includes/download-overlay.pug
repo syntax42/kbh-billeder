@@ -5,8 +5,9 @@
       each option in helpers.getDownloadOptions(metadata)
         a.btn.btn-primary(href=option.url, target="_blank")
           = option.label
-      .overlay__license
+      .overlay__license.btn
         +displayLicense(metadata)
     else
       h2 Vi beklager
       p Billedet er ophavsretligt beskyttet og kan derfor ikke downloades uden forudgående aftale med fotografen.
+    button.btn.btn-default Luk

@@ -26,9 +26,13 @@ $(function() {
       if (show === true) {
         $el.addClass(OVERLAY_ACTIVE_CLASS);
         $el.addClass(OVERLAY_ANIM_IN_CLASS);
+        setTimeout(function(){
+          $el.find('.btn:first').focus();
+        }, 50); // wait for the elements to be visible otherwise focus won't happen
       }
       else if (show === false) {
         $el.removeClass(OVERLAY_ANIM_IN_CLASS);
+        $(DELETE_ACCOUNT_SELECTOR).focus();
         // Animate the removal.
         setTimeout(function () {
           $el.removeClass(OVERLAY_ACTIVE_CLASS);

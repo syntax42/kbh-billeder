@@ -17,9 +17,9 @@ append javascript
       script(async defer src="https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap&libraries=geometry,places")
 
 block content
-  section.document.let-it-grow(
+  main.document.let-it-grow(
       itemscope,
-      itemtype='http://schema.org/CreativeWork',
+      itemtype='https://schema.org/CreativeWork',
       data-collection=metadata.collection,
       data-id=metadata.id
     )

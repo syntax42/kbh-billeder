@@ -16,12 +16,11 @@
 
   &-default {
     background-color: $button-bg;
-    color: $white;
+    color: $black;
 
     &:hover,
     &:focus {
       background-color: darken($button-bg, 10%);
-      color: $white;
     }
   }
 
@@ -33,6 +32,10 @@
     &:focus {
       background-color: lighten($brand-primary, 5%);
     }
+  }
+
+  &-transparent {
+    background-color: transparent;
   }
 
   &-icon {

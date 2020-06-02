@@ -28,7 +28,7 @@ block document__section-2
   - const geotagable = helpers.geoTagging.enabled(metadata);
 
     if !hasLocation
-      .document__section-2.document__section-2--no-location
+      section.document__section-2.document__section-2--no-location
         .container-fluid
           .row
             .col-sm-7
@@ -41,7 +41,7 @@ block document__section-2
                   | Placer billede på kort
                   +icon('pencil')
 
-    .document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
+    section.document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
       .geo-tagging-mini-map(
         data-has-location=(hasLocation) ? 'true' : 'false'
         data-latitude=location.latitude,
@@ -57,19 +57,19 @@ block document__section-2
               tbody
                 tr
                   td(colspan=2, class='map-coordinates__map--edit')
-                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start')
+                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start', aria-label="rediger lokation")
                       | Rediger
                       +icon('pencil')
-                    button.btn.btn-primary(data-action='geo-tagging:stop', style="display: none")
-                      | Annuller
                     button.btn.btn-primary(data-action='geo-tagging:add-direction', style="display:none")
                       | Tilføj retning
                     button.btn.btn-primary(data-action='save-geo-tag', style="display: none")
                       | Gem placering
+                    button.btn.btn-default(data-action='geo-tagging:stop', style="display: none")
+                      | Annuller
 
 
 block document__section-3
-  .document__section-3
+  section.document__section-3
     .container-fluid
       .row
         .col-sm-7

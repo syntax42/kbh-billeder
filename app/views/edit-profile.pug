@@ -17,44 +17,44 @@ block inner-content
         img.img-responsive.my-page__profile-photo(src=profileImage)
       .my-page__edit-profile__page-header--mobile
         h1 Rediger profil
-        img.img-responsive.my-page__profile-photo(src=profileImage)
-        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        img.img-responsive.my-page__profile-photo(src=profileImage, alt='profilbillede')
+        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
         p(style='color: green;')= !error ? status : ''
   .col-xs-12.col-md-8.my-page__edit-profile
     .row
       .my-page__edit-profile__page-header--desktop
         h1 Rediger profil
-        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : error
+        p(style='color: red;')= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : (error ? 'Fejl: ' + error : '')
         p(style='color: green;')= !error ? status : ''
       form(action='/update-user', method='POST').my-page__edit-profile__form
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b#edit-profile-username Brugernavn
-              input(type='text', name='username', disabled=!auth0User, placeholder=user._json.username, aria-labelledby='edit-profile-username')
+                label(for='edit-profile-username-input')#edit-profile-username Brugernavn
+              input(type='text', name='username', id='edit-profile-username-input', disabled=!auth0User, placeholder=user._json.username, aria-labelledby='edit-profile-username')
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b#edit-profile-email Email
-              input(type='email', name='email', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-email')
+                label(for='edit-profile-email-input')#edit-profile-email Email
+              input(type='email', name='email', id='edit-profile-email-input', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-email')
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b#edit-profile-repeat-email Gentag email
-              input(type='email', name='emailConfirmation', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-repeat-email')
+                label(for='edit-profile-repeat-email-input')#edit-profile-repeat-email Gentag email
+              input(type='email', name='emailConfirmation', id='edit-profile-repeat-email-input', disabled=!auth0User, placeholder=user._json.email, aria-labelledby='edit-profile-repeat-email')
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b#edit-profile-password Adgangskode
-              input(type='password', name='password', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-password')
+                label(for='edit-profile-password-input')#edit-profile-password Adgangskode
+              input(type='password', name='password', id='edit-profile-password-input', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-password')
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
               .my-page__edit-profile__header
-                b#edit-profile-repeat-password Gentag adgangskode
-              input(type='password', name='passwordConfirmation', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-repeat-password')
+                label(for='edit-profile-repeat-password-input')#edit-profile-repeat-password Gentag adgangskode
+              input(type='password', name='passwordConfirmation', id='edit-profile-repeat-password-input', disabled=!auth0User, placeholder=!auth0User ? placeholderDisabled : '', aria-labelledby='edit-profile-repeat-password')
         .col-xs-12.my-page__edit-profile__buttons
           a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn
             | Annuller
