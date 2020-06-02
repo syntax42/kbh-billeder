@@ -5,7 +5,8 @@ include ../mixins/icon
 - const mediaTypes = helpers.determineMediaTypes(metadata);
 - const hasMediaType = type => mediaTypes.indexOf(type) !== -1;
 - const target = config.features.preferTargetBlank ? '_blank' : '_self';
-- const altText = helpers.documentTitle(metadata) + ': ' + metadata.tags.join(', ');
+- const tagString = metadata.tags && metadata.tags.join(', ');
+- const altText = helpers.documentTitle(metadata) + (tagString ? ': ' + tagString : '');
 
 a(href=documentURL target=target).search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1
   .search-results-item__squared-container
