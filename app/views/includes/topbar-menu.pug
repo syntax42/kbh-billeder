@@ -6,7 +6,7 @@ div.topbar__menu.hidden-sm.hidden-xs
     each parent in menus.main
       if parent.children.length > 0
         .dropdown
-          a.topbar__items-link.dropdown__selected= parent.title
+          a(tabindex='0').topbar__items-link.dropdown__selected= parent.title
           .dropdown__options
             each childPage in parent.children
               a(href=childPage.url).topbar__items-link.dropdown__option= childPage.title
