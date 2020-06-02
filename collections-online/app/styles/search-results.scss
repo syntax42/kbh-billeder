@@ -3,7 +3,8 @@
     clear: both;
   }
 
-  &--loading, [aria-busy] {
+  &--loading,
+  [aria-busy] {
     .loader-wrapper {
       display: flex;
     }
