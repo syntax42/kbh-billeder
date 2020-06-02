@@ -24,7 +24,7 @@ block content
       block photo
         .col-xs-6.col-md-4
           - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
-          img.img-responsive.my-page__profile-photo(src=profileImage, alt="profilbillede")
+          img.img-responsive.my-page__profile-photo(src=profileImage alt='profilbillede')
       block inner-content
       .col-xs-6.col-md-8.my-page__profile-stats
           block stats
