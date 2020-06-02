@@ -2,15 +2,15 @@ if config.features.filterSidebar
   section#filterbar.filterbar
     .filterbar__item
       .filterbar__tab.filterbar__tab--filters
-        button(aria-label='Åbn filtreringsmuligheder').search-filter-sidebar__heading.search-filter-sidebar__tab
-          span(data-action='show-filterbar-menu')= 'Filtrering'
-      #sidebar.filterbar__menu.filterbar__menu--filters
+        .search-filter-sidebar__heading.search-filter-sidebar__tab
+          button(data-action='show-filterbar-menu', aria-label='Åbn filtreringsmuligheder').search-filter-sidebar__tab Filtrering
+      #sidebar.filterbar__menu.filterbar__menu--filters(aria-expanded='false')
         block sidebar
     .filterbar__item
       .filterbar__tab.filterbar__tab--sorting
-        button(aria-label='Åbn sorteringsmuligheder').search-filter-sidebar__heading.search-filter-sidebar__tab
-          span(data-action='show-filterbar-menu')= 'Sortering'
-      #sorting-menu.filterbar__menu.filterbar__menu--sorting
+        .search-filter-sidebar__heading.search-filter-sidebar__tab
+          button(data-action='show-filterbar-menu', aria-label='Åbn sorteringsmuligheder').search-filter-sidebar__tab Sortering
+      #sorting-menu.filterbar__menu.filterbar__menu--sorting(aria-expanded='false')
         include search-results-sorting
     .view-mode
       .filterbar__item(data-action='show-view-map')
