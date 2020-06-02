@@ -8,7 +8,7 @@ var hideAllDropdowns = function(e) {
   }
 };
 
-$('body').on('click', '.dropdown__selected', function(e) {
+$('body').on('keypress click', '.dropdown__selected', function(e) {
   console.warn('PRSS')
   if (e.which === 13 || e.type === 'click') {
     var $this = $(this);

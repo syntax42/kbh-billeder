@@ -251,7 +251,8 @@ $heading-adjustment: 2px;
     }
 
     // Used for mobile accordion navigation
-    span {
+    span,
+    button {
       cursor: pointer;
       display: inline-block;
       padding-right: $spacer-lg;

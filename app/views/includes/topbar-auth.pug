@@ -3,10 +3,10 @@ include ../mixins/icon
 .topbar__auth.hidden-xs.hidden-sm
   if user
     .dropdown
-      a(tabindex='0').dropdown__selected.topbar__items-link.topbar__name.dropdown__button
+      a.dropdown__selected.topbar__items-link.topbar__name.dropdown__button(tabindex='0', aria-label='åbn bruger menu')
         = (user.name.givenName || user.nickname)
         span.icon
-          +icon('chevron-up', '', 'åbn bruger menu')
+          +icon('chevron-up')
       .dropdown__options
         a.dropdown__option(href='/min-side') Min side
         a.dropdown__option(href='/logout') Log ud

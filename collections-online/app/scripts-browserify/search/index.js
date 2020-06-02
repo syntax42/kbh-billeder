@@ -170,7 +170,8 @@ function initialize() {
           'short_title',
           'type',
           'heading',
-          'description'
+          'description',
+          'tags'
         ],
       };
 
@@ -209,7 +210,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags'],
       size: resultsDesired - resultsLoaded.length
     };
 
@@ -431,13 +432,15 @@ function initialize() {
     }
   });
 
-  $('#sorting-menu').on('click', '.dropdown__options a', function() {
-    var sorting = $(this).data('value');
-    var searchParams = getSearchParams();
-    searchParams.sorting = sorting;
-    // Store changed parameters and trigger a search.
-    persistChangedParams(searchParams);
-    update(false, true);
+  $('#sorting-menu').on('keypress click ', '.dropdown__options a', function(e) {
+    if (e.which === 13 || e.type === 'click') {
+      var sorting = $(this).data('value');
+      var searchParams = getSearchParams();
+      searchParams.sorting = sorting;
+      // Store changed parameters and trigger a search.
+      persistChangedParams(searchParams);
+      update(false, true);
+    }
   });
 
   // Enabled the load-more button
@@ -446,18 +449,22 @@ function initialize() {
   });
 
   // Toggle filtersection visibility on mobile
-  $('#sidebar, #sidebarmobile').on('click', '[data-action="show-filters"]', function() {
-    var filterSection = $(this).data('id') + '-filters';
-    var $filterSection = $('[data-id="' + filterSection + '"]');
-    var wasExpanded = $(this).hasClass('expanded');
-    var visibleClass = 'search-filter-sidebar__filters--expanded';
+  $('#sidebar, #sidebarmobile').on('keypress click', '[data-action="show-filters"]', function(e) {
+    if (e.which === 13 || e.type === 'click') {
+      var filterSection = $(this).data('id') + '-filters';
+      var $filterSection = $('[data-id="' + filterSection + '"]');
+      var wasExpanded = $(this).hasClass('expanded');
+      var visibleClass = 'search-filter-sidebar__filters--expanded';
 
-    if (!wasExpanded) {
-      $(this).addClass('expanded');
-      $filterSection.addClass(visibleClass);
-    } else {
-      $(this).removeClass('expanded');
-      $filterSection.removeClass(visibleClass);
+      if (!wasExpanded) {
+        $(this).addClass('expanded');
+        $filterSection.attr('aria-expanded','true')
+        $filterSection.addClass(visibleClass);
+      } else {
+        $(this).removeClass('expanded');
+        $filterSection.attr('aria-expanded', 'false')
+        $filterSection.removeClass(visibleClass);
+      }
     }
   });
 
@@ -512,10 +519,12 @@ function initialize() {
     if (!wasExpanded) {
       $(this).addClass('expanded');
       $parentItem.find('.filterbar__tab').addClass('expanded');
+      $parentItem.find('.filterbar__menu').attr('aria-expanded', 'true');
       $parentItem.find('.filterbar__menu').show();
     } else {
       $(this).removeClass('expanded');
       $parentItem.find('.filterbar__tab').removeClass('expanded');
+      $parentItem.find('.filterbar__menu').attr('aria-expanded', 'false');
       $parentItem.find('.filterbar__menu').hide();
     }
   });
