@@ -26,7 +26,7 @@ block inner-content
         h1 Rediger profil
         p.my-page__edit-profile__error= !auth0User ? 'Du kan ikke ændre din profil, da du er logget på med Facebook eller Google.' : 'Fejl: ' + error
         p.my-page__edit-profile__status= !error ? status : ''
-      form(action='/update-user', method='POST').my-page__edit-profile__form
+      form(action='/update-user', method='post').my-page__edit-profile__form
         .row
           .col-xs-12.col-md-6
             .my-page__edit-profile__form-element
@@ -58,4 +58,4 @@ block inner-content
         .col-xs-12.my-page__edit-profile__buttons
           a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn
             | Annuller
-          input(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
+          button(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
