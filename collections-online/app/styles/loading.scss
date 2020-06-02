@@ -8,6 +8,14 @@ $one-scale: scaleX(1) scaleY(1);
   justify-content: center;
   align-items: center;
   width: 100%;
+
+  .loader-wrapper {
+    position: fixed;
+    top: \min(200px, 20vh);
+    background: white;
+    z-index: 3;
+    @include shadow(1);
+  }
 }
 
 .loader-wrapper {
