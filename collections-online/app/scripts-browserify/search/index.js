@@ -170,7 +170,8 @@ function initialize() {
           'short_title',
           'type',
           'heading',
-          'description'
+          'description',
+          'tags'
         ],
       };
 
@@ -209,7 +210,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags'],
       size: resultsDesired - resultsLoaded.length
     };
 
