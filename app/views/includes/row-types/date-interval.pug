@@ -1,7 +1,7 @@
 include ../../mixins/format-date-interval
 
 tr
-  th #{row.title}:
+  th(scope='row') #{row.title}:
   td
     - var fromDate = metadata[row.fields.from];
     - var toDate = metadata[row.fields.to];
