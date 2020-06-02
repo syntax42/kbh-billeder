@@ -58,4 +58,4 @@ block inner-content
         .col-xs-12.my-page__edit-profile__buttons
           a#edit-profile-cancel(href='/min-side' aria-labelledby='edit-profile-cancel').btn.btn-default
             | Annuller
-          button(type='submit', value='Gem ændringer', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary
+          button(type='submit', disabled=!auth0User, aria-label='Gem ændringer').btn.btn-primary= "Gem ændringer"
