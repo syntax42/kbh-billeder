@@ -1,4 +1,9 @@
 .btn {
+  outline-offset: 0px;
+  &:focus {
+    outline-offset: 0px;
+  }
+
   &-dark {
     background-color: $gray-dark;
     color: $white;
