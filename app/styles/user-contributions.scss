@@ -47,6 +47,7 @@
     }
     &-tab {
       display: inline-block;
+      border: none;
       cursor: pointer;
       padding: 8px 10px;
       margin-right: 10px;
@@ -54,14 +55,19 @@
         float: left;
         font-size: 1.1rem;
         margin-top: 0;
+        letter-spacing: -0.03em;
+        font-family: 'FFUnitWebMedium', sans-serif;
       }
       &.is-active {
-        padding: 5px 10px;
+        padding: 8px 10px 5px;
         border-bottom: 3px solid $brand-primary;
       }
       svg {
         margin-top: -6px;
         margin-left: 6px;
+      }
+      &:focus {
+        outline: 1px dotted black;
       }
     }
 

@@ -131,7 +131,8 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
     mapState.locationControl = function () {
 
       // Create the div that represents the location button
-      mapState.locationElement = document.createElement('div');
+      mapState.locationElement = document.createElement('button');
+      mapState.locationElement.setAttribute('aria-label', 'Find din lokation på kortet');
       mapState.locationElement.id = 'mapLocation';
       mapState.locationElement.className = 'ol-unselectable ol-control';
 
@@ -196,7 +197,8 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
     mapState.timeWarpToggleControl = function () {
 
       // Create the div that represents the toggle time warp button
-      mapState.timeWarpToggleElement = document.createElement('div');
+      mapState.timeWarpToggleElement = document.createElement('button');
+      mapState.timeWarpToggleElement.setAttribute('aria-label', 'Slå tidsrejse til/fra');
       mapState.timeWarpToggleElement.id = 'timeWarpToggle';
       mapState.timeWarpToggleElement.className = 'ol-unselectable ol-control';
 
@@ -461,7 +463,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   // Create the close control for the TW
   timeWarp.closeControl = function () {
-    timeWarp.closeElement = document.createElement('div');
+    timeWarp.closeElement = document.createElement('button');
+    timeWarp.closeElement.setAttribute('aria-label', 'Luk tidsrejse');
     timeWarp.closeElement.id = 'timeWarpClose';
     timeWarp.closeElement.className = 'ol-unselectable ol-control time-warp-button';
 
@@ -481,7 +484,8 @@ function _prepareTimeWarp(map, mapElement, mapSelectDivElement, getMapUrl, onUpd
 
   // Crate the mode (CIRCLE or SPLIT) control for the TW
   timeWarp.modeControl = function () {
-    timeWarp.modeElement = document.createElement('div');
+    timeWarp.modeElement = document.createElement('button');
+    timeWarp.modeElement.setAttribute('aria-label', 'Skift tidsrejsevisning');
     timeWarp.modeElement.id = 'timeWarpMode';
     timeWarp.modeElement.className = 'ol-unselectable ol-control time-warp-button';
 
