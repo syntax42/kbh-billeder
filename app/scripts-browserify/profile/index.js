@@ -66,11 +66,10 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
   };
 
   const _enableEndlessScrolling = () => {
-    $loadMoreButton.hide();
+    $loadMoreButton.addClass('hidden');
 
     // Kick off the first fetch.
     doFetch(function(newItems) {
-      console.log("first fetch finisheed!", newItems);
       // Only in the first fetch do we focus next element;
       // for all the future loads we rely on endless scrolling
       // letting us continue tabbing through elements.
@@ -139,7 +138,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
     } else {
       hasMore = false;
       // Hide the load more button if its where visible.
-      $loadMoreButton.hide();
+      $loadMoreButton.addClass('hidden');
     }
 
     // We've successfully initialized.

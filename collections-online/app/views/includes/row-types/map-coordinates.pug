@@ -24,12 +24,12 @@ if Object.keys(metadata).length > 0 && config.features.geoTagging
     .map-data
       block map-coordinates__map--info
         tr
-          th #{row.title}:
+          th(scope='row') #{row.title}:
           td= latitude.toFixed(5) + ', ' + longitude.toFixed(5) + details
           // Display heading if the asset contains one.
           if row.titleHeading && heading
             tr
-              th #{row.titleHeading}:
+              th(scope='row') #{row.titleHeading}:
               td= headingText + ' (' + heading.toFixed(0) + '°' + ')'
       if geotaggable
         - let extraClasses = approximate ? 'btn-primary' : 'btn-primary btn-sm';

@@ -153,6 +153,8 @@ $topbar-auth-tab-width: 170px;
     padding-left: 10px;
     padding-right: 2px;
     text-decoration: none;
+    background: transparent;
+    border: none;
 
     .is-mobile & {
       padding: 0 20px;
@@ -162,6 +164,10 @@ $topbar-auth-tab-width: 170px;
       height: 20px;
       margin-right: 10px;
       width: 26px;
+    }
+
+    &:focus {
+      outline: 1px dotted black;
     }
   }
 
@@ -174,6 +180,10 @@ $topbar-auth-tab-width: 170px;
 
     .input-group {
       float: right;
+    }
+
+    button:focus {
+      outline: 1px dotted black;
     }
 
     svg {

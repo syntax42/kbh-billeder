@@ -287,6 +287,10 @@ $heading-adjustment: 2px;
     float: left;
     background: none;
     border: 0;
+
+    &:focus {
+      outline: 1px dotted black;
+    }
   }
 
   &__dates {

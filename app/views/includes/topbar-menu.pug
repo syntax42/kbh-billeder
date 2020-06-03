@@ -1,12 +1,12 @@
-.topbar__hamburger.hidden-lg.hidden-md(data-action="toggle-sidebar-menu")
+button.topbar__hamburger.hidden-lg.hidden-md(data-action="toggle-sidebar-menu" aria-label="Åbn menu")
   +icon('menu')
   .topbar__hamburger-text Menu
-span.topbar__menu.hidden-sm.hidden-xs
+div.topbar__menu.hidden-sm.hidden-xs
   if menus && menus.main
     each parent in menus.main
       if parent.children.length > 0
         .dropdown
-          a.topbar__items-link.dropdown__selected= parent.title
+          a(tabindex='0').topbar__items-link.dropdown__selected= parent.title
           .dropdown__options
             each childPage in parent.children
               a(href=childPage.url).topbar__items-link.dropdown__option= childPage.title

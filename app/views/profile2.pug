@@ -3,11 +3,11 @@ include mixins/meta
 include mixins/search-freetext-form
 include mixins/icon
 
-append header
+block header
   +meta(user.nickname + ' profil')
 
 block content
-  main.let-it-grow.page-wrap.my-page
+  main.let-it-grow.page-wrap.my-page#start-of-content
     .overlay__container(data-content="auth-verification")
       .overlay__content
         h2 Er du sikker på at du vil slette din konto?
@@ -16,7 +16,7 @@ block content
         p Vi sletter ikke de konkrete emneord og kortplaceringer, som du har tilføjet.
         .my-page__overlay-buttons
           a(href='/delete-account').btn.btn-primary Ja, slet min konto
-          button.btn.btn-dark Annuller
+          button.btn.btn-dark(type='button') Annuller
     .container-fluid
       block username
         .col-xs-12
@@ -24,7 +24,7 @@ block content
       block photo
         .col-xs-6.col-md-4
           - let profileImage = user.picture ? user.picture : '../images/default_profile_photo.png'
-          img.img-responsive.my-page__profile-photo(src=profileImage, alt="profilbillede")
+          img.img-responsive.my-page__profile-photo(src=profileImage alt='profilbillede')
       block inner-content
       .col-xs-6.col-md-8.my-page__profile-stats
           block stats
@@ -63,7 +63,7 @@ block content
               | Rediger profil
               +icon('pencil')
           .my-page__delete-user
-            button(data-action='delete-account-verification').btn.btn-default
+            button(data-action='delete-account-verification' type='button').btn.btn-default
               | Slet profil
               +icon('trash')
     block user-contributions
