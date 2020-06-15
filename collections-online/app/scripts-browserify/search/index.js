@@ -171,7 +171,9 @@ function initialize() {
           'type',
           'heading',
           'description',
-          'tags'
+          'tags',
+          'creation_time',
+          'creation_time_estimated'
         ],
       };
 
@@ -210,7 +212,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated'],
       size: resultsDesired - resultsLoaded.length
     };
 
