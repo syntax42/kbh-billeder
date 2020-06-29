@@ -26,7 +26,7 @@ mixin blockGallery(gallery, evenOrOdd)
   .row.gallery.gallery--block(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-4
       h2.gallery__title= gallery.title
-      h3.gallery__text= gallery.description
+      p.gallery__text= gallery.description
     .gallery__items
       .flex
         each item, index in gallery.items
@@ -37,7 +37,7 @@ mixin mapGallery(map, evenOrOdd, followsJumbo)
   .row.gallery.gallery--map(class="gallery--" + evenOrOdd)
     .col-xs-12.col-sm-5
       h2.gallery__title= map.title
-      h3.gallery__text= map.description
+      p.gallery__text= map.description
       .spacer
       a.btn.btn-primary.btn-big(href='/søg' + map.queryString)= map.viewFullMapButtonText || 'Kortvisning'
     .col-sm-1
@@ -55,7 +55,7 @@ mixin tagGallery(tagCloud, evenOrOdd)
     .col-sm-1
     .col-xs-12.col-sm-6
       h2.gallery__title= tagCloud.title
-      h3.gallery__text= tagCloud.description
+      p.gallery__text= tagCloud.description
 
 mixin galleryItem(item, index, type, fill, imageDimensions)
   - var fill = fill
