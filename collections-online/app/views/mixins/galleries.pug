@@ -19,8 +19,8 @@ mixin carouselGallery(gallery, evenOrOdd)
         each item, index in gallery.items
           +galleryItem(item, index, 'carousel', true, [270, 264])
       .slick-button-container
-        button.slick-prev(type='button')
-        button.slick-next(type='button')
+        button.slick-prev(type='button', aria-label='forrige billeder')
+        button.slick-next(type='button', aria-label='næste billeder')
 
 mixin blockGallery(gallery, evenOrOdd)
   .row.gallery.gallery--block(class="gallery--" + evenOrOdd)
