@@ -92,10 +92,8 @@
   },
   "devDependencies": {
     "concurrently": "^3.6.1",
-    "gulp": "^3.9.1",
     "http-server": "^0.11.1",
     "kill-port": "^1.5.1",
-    "nodemon": "^1.19.1",
-    "run-sequence": "^1.1.5"
+    "nodemon": "^1.19.1"
   }
 }
