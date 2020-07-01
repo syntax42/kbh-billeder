@@ -5,7 +5,7 @@ div.topbar__menu.hidden-sm.hidden-xs
   if menus && menus.main
     each parent in menus.main
       if parent.children.length > 0
-        .dropdown
+        .dropdown(aria-expanded='false')
           a(tabindex='0').topbar__items-link.dropdown__selected= parent.title
           .dropdown__options
             each childPage in parent.children
