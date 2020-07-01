@@ -4,6 +4,7 @@ var hideAllDropdowns = function(e) {
   var isInputInDropdown = $target.is('input') || $dropdown.size() > 0;
   if (isInputInDropdown === false) {
     $('.dropdown').removeClass('dropdown--active');
+    $('.dropdown').attr('aria-expanded', false);
     $('body').off('click', hideAllDropdowns);
   }
 };
@@ -15,6 +16,7 @@ $('body').on('keypress click', '.dropdown__selected', function(e) {
     var wasActive = $dropdown.hasClass('dropdown--active');
 
     $('.dropdown').removeClass('dropdown--active');
+    $('.dropdown').attr('aria-expanded', false);
 
     if (wasActive === true) {
       return;
@@ -23,10 +25,12 @@ $('body').on('keypress click', '.dropdown__selected', function(e) {
     $('body').off('click', hideAllDropdowns);
 
     $dropdown.addClass('dropdown--active');
+    $dropdown.attr('aria-expanded', true);
 
     // Clicking an option in a dropdown makes it deactivate
     $dropdown.on('click', '.dropdown__options a', function() {
       $dropdown.removeClass('dropdown--active');
+      $dropdown.attr('aria-expanded', false);
     });
 
     setTimeout(function() {

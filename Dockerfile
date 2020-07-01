@@ -10,11 +10,21 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     g++ \
     supervisor \
+    curl \
+    gnupg2 \
+    ca-certificates \
+    lsb-release \
+&& rm -rf /var/lib/apt/lists/* # Keeps the image size down
+
+RUN echo "deb http://nginx.org/packages/debian `lsb_release -cs` nginx" \ | tee /etc/apt/sources.list.d/nginx.list
+RUN curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+
+RUN apt-get update && apt-get install -y \
     nginx \
 && rm -rf /var/lib/apt/lists/* # Keeps the image size down
 
-COPY . /tmp/
 WORKDIR /tmp/
+COPY . .
 
 # --no-color is needed to prevent strange chars in the CI logs
 # --no-spin is needed to prevent duplicated lines in the CI logs
