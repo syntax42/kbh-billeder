@@ -7,7 +7,7 @@ block document__player-controls
   - const getZoomTilesId = helpers.getZoomTilesId(metadata);
 
   if getZoomTilesId
-    a(data-action='toggle-tiled-zoom').hidden-xs.hidden-sm.zoom-btn
+    button(data-action='toggle-tiled-zoom').zoom-btn.btn.btn-transparent.btn-no-shadow
       +icon('zoom-in', 'zoom-in')
       span.zoom-in Zoom
 
