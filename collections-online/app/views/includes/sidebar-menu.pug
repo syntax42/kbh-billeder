@@ -6,8 +6,8 @@ nav
       block before
       each parent in menus.main
         if parent.children.length > 0
-          li.sidebar-menu__children.sidebar-menu__children--inactive
-            a(data-action='toggle-sidebar-submenu-item')= parent.title
+          li.sidebar-menu__children.sidebar-menu__children--inactive(aria-expanded='false')
+            a(data-action='toggle-sidebar-submenu-item', tabindex='0', href='#')= parent.title
               .icon
                 +icon('chevron-up')
             ul.children.hidden
@@ -25,5 +25,5 @@ nav
           a(href='/logout') Log ud
       else
         li
-          a(data-action='login') Log ind
+          a(data-action='login', href="#") Log ind
 .gray-overlay
