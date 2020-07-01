@@ -28,18 +28,17 @@ $map-height: 455px;
   }
   &__inner {
     pointer-events: auto;
+    background: white;
+    margin-top: 75px;
+    max-width: 400px;
+    min-height: 300px;
+    padding: $spacer-lg;
+    @include shadow(5);
     .is-mobile & {
       position: static;
       margin-top: 0;
       @include shadow(0);
     }
-    display: inline-block;
-    background: white;
-    margin-top: 75px;
-    width: 400px;
-    min-height: 300px;
-    padding: $spacer-lg;
-    @include shadow(5);
     .btn {
       float: left;
       width: auto;
