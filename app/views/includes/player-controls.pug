@@ -2,7 +2,7 @@ extends ./player-controls
 
 block document__player-controls
   - const isDownloadable = helpers.isDownloadable(metadata);
-  - const downloadText = isDownloadable ? 'Download' : 'Ophavsretligt beskyttet'
+  - const downloadText = isDownloadable ? 'Download' : 'Download ikke tilgængelig'
   - const hasBacksideAsset = helpers.hasBacksideAsset(metadata);
   - const getZoomTilesId = helpers.getZoomTilesId(metadata);
 
