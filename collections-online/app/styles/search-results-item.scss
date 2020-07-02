@@ -63,8 +63,15 @@ $search-results-item-bg: #fff;
     padding-top: $spacer-sm;
   }
 
-  &__description {
+  &__description,
+  &__period {
     height: $spacer-sm * 2;
+  }
+
+  &__period {
+    font-size: 0.8rem;
+    margin-top: 3px;
+    margin-bottom: 0;
   }
 
   &__overlay {
