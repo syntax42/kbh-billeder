@@ -306,7 +306,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
             text: count.toString(),
             font: '11px Arial, sans-serif',
             fill: new ol.style.Fill({
-              color: '#e32166'
+              color: '#E01962'
             }),
             stroke: new ol.style.Stroke({
               color: '#fff',
