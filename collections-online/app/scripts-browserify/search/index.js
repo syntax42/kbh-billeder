@@ -173,7 +173,9 @@ function initialize() {
           'description',
           'tags',
           'creation_time',
-          'creation_time_estimated'
+          'creation_time_estimated',
+          'creation_time_from',
+          'creation_time_to'
         ],
       };
 
@@ -212,7 +214,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to'],
       size: resultsDesired - resultsLoaded.length
     };
 
