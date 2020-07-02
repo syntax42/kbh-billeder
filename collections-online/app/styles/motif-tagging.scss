@@ -1,6 +1,6 @@
 .motif-tagging {
   .btn-group {
-    display: inline-block;
+    display: flex;
 
     &:not(:last-child) {
       margin-right: .5rem;
