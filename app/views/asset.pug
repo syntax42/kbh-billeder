@@ -41,7 +41,7 @@ block document__section-2
                   | Placer billede på kort
                   +icon('pencil')
 
-    section.document__section-2--map(class=(hasLocation ? 'has-location' : 'no-location'))
+    section.document__section-2--map(class=(hasLocation ? 'has-location' : 'hidden'))
       .geo-tagging-mini-map(
         data-has-location=(hasLocation) ? 'true' : 'false'
         data-latitude=location.latitude,
