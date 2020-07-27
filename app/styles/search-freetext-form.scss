@@ -7,6 +7,10 @@
     .search-freetext-form {
       &__input {
         background: white;
+
+        &::placeholder {
+          color: $gray-dark;
+        }
       }
     }
   }

@@ -7,6 +7,8 @@ include ../mixins/icon
 - const target = config.features.preferTargetBlank ? '_blank' : '_self';
 - const tagString = metadata.tags && metadata.tags.join(', ');
 - const altText = helpers.documentTitle(metadata) + (tagString ? ': ' + tagString : '');
+- const creationPeriod = (metadata.creation_time_from ? metadata.creation_time_from.year + '-' : '') + (metadata.creation_time_to ? metadata.creation_time_to.year : '');
+- const creationTime = (metadata.creation_time ? (metadata.creation_time_estimated ? 'ca. ' : '') + helpers.formatDate(metadata.creation_time) : '');
 
 a(href=documentURL target=target).search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1
   .search-results-item__squared-container
@@ -19,3 +21,4 @@ a(href=documentURL target=target).search-results-item.col-xs-6.col-sm-6.col-md-3
           +icon('play')
   h2.search-results-item__title= helpers.documentTitle(metadata)
   p.search-results-item__description= helpers.documentDescription(metadata)
+  p.search-results-item__period= creationTime ? creationTime : creationPeriod
