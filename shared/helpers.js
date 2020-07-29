@@ -64,6 +64,7 @@ helpers.determinePlayers = metadata => {
       licenseUrl
     });
   }
+  
   // Is this Audio?
   if (metadata.file_format && metadata.file_format === 'MP3 Format') {
     const license = helpers.licenseMapped(metadata);
@@ -75,8 +76,9 @@ helpers.determinePlayers = metadata => {
       contentLocation: helpers.getDirectDownloadURL(metadata),
       licenseUrl
     });
-  }
-    else {
+  } 
+  
+  else {
     // Default to image.
     players.push({
       type: 'image',
