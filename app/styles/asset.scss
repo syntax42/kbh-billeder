@@ -1,10 +1,18 @@
-.asset {
-  &__image {
-    width: 100%;
-    max-width: 100%;
-    &--hide {
-      display: none;
-    }
+.asset__image {
+  width: 100%;
+  max-width: 100%;
+
+  &--hide {
+    display: none;
+  }
+}
+
+.asset__audio {
+  width: 100%;
+
+  @media (max-width: $small-size) {
+    padding: 0 15px;
+    margin-top: 30px;
   }
 }
 

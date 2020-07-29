@@ -99,6 +99,14 @@ helpers.getStreamURL = (metadata, size) => {
   return path.join('/');
 };
 
+helpers.getAudioURL = (metadata, size) => {
+  let path = [
+    helpers.getDocumentURL(metadata),
+    'download'
+  ];
+  return path.join('/');
+};
+
 helpers.getAbsoluteURL = (req, relativePath) => {
   return req.protocol + '://' + req.get('host') + relativePath;
 };
