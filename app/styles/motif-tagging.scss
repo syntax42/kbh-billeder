@@ -13,6 +13,8 @@
     }
   }
   &__tags {
+    display: flex;
+    flex-wrap: wrap;
     margin-top: $spacer-md;
     .motif-tagging__remove-btn {
       float: right;
