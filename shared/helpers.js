@@ -63,7 +63,22 @@ helpers.determinePlayers = metadata => {
       contentLocation: helpers.getDirectDownloadURL(metadata),
       licenseUrl
     });
-  } else {
+  }
+  
+  // Is this Audio?
+  if (metadata.file_format && metadata.file_format === 'MP3 Format') {
+    const license = helpers.licenseMapped(metadata);
+    const licenseUrl = license ? license.url : null;
+    players.push({
+      type: 'audio',
+      title: helpers.documentTitle(metadata),
+      description: helpers.documentTitle(metadata),
+      contentLocation: helpers.getDirectDownloadURL(metadata),
+      licenseUrl
+    });
+  } 
+  
+  else {
     // Default to image.
     players.push({
       type: 'image',
@@ -82,7 +97,6 @@ helpers.determinePlayers = metadata => {
       });
     }
   }
-
   return players;
 };
 
@@ -234,6 +248,11 @@ if(config.downloadOptions) {
 }
 
 helpers.isDownloadable = (metadata) => {
+  // diable download for video and audio assets
+  if(helpers.determineMediaTypes(metadata) === 'audio' || helpers.determineMediaTypes(metadata) === 'video') {
+    return false;
+  }
+
   return !metadata.license || metadata.license.id !== 7;
 };
 

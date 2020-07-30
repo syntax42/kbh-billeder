@@ -58,6 +58,9 @@ helpers.getDocumentURL = (metadata) => {
 };
 
 helpers.getThumbnailURL = (metadata, size, watermarkPosition) => {
+  if(metadata.file_format && metadata.file_format === 'MP3 Format') {
+    return '../images/audio.jpg';
+  }
   let path = [
     helpers.getDocumentURL(metadata),
     'thumbnail'
@@ -95,6 +98,14 @@ helpers.getStreamURL = (metadata, size) => {
   let path = [
     helpers.getDocumentURL(metadata),
     'stream'
+  ];
+  return path.join('/');
+};
+
+helpers.getAudioURL = (metadata, size) => {
+  let path = [
+    helpers.getDocumentURL(metadata),
+    'download'
   ];
   return path.join('/');
 };
@@ -248,8 +259,14 @@ helpers.getAnyFlat = (object, paths) => {
   * @param {Object} metadata The documents metadata object.
   */
 helpers.determineMediaTypes = metadata => {
-  const players = helpers.determinePlayers(metadata);
-  return players.map(player => player.type);
+  if(metadata.file_format === 'MP3 Format') {
+    return 'audio';
+  }
+  if(metadata.file_format === 'MPEG-4 Video') {
+    return 'video';
+  }
+
+  return 'image';
 };
 
 /**

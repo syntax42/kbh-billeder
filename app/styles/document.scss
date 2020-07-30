@@ -10,6 +10,7 @@
     }
     &--map {
       background: none;
+      position: relative;
       &.no-location {
         display: none;
       }
