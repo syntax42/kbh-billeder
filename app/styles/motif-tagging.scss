@@ -2,6 +2,7 @@
   .print {
     display: none;
   }
+
   @media print {
     &__remove-btn,
     &__editing-container,
@@ -12,6 +13,10 @@
       display: block;
     }
   }
+  &__no-tags {
+    width: 100%;
+  }
+
   &__tags {
     display: flex;
     flex-wrap: wrap;
