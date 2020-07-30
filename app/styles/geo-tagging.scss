@@ -1,7 +1,12 @@
 $map-height: 455px;
+$map-height--desktop: 480px;
 
 .geo-tagging-mini-map {
-  height: $map-height;
+  height: $map-height--desktop;
+
+  @media(max-width: $small-size) {
+    height: $map-height;
+  }
 }
 
 // Have floated buttons seperate a bit.
