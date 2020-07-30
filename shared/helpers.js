@@ -248,6 +248,11 @@ if(config.downloadOptions) {
 }
 
 helpers.isDownloadable = (metadata) => {
+  // diable download for video and audio assets
+  if(helpers.determineMediaTypes(metadata) === 'audio' || helpers.determineMediaTypes(metadata) === 'video') {
+    return false;
+  }
+
   return !metadata.license || metadata.license.id !== 7;
 };
 
