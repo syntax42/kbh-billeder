@@ -51,6 +51,20 @@ helpers.getDocumentURL = (metadata) => {
 helpers.determinePlayers = metadata => {
   const players = [];
 
+  // Is this Audio?
+  if (metadata.file_format && metadata.file_format === 'MP3 Format') {
+    const license = helpers.licenseMapped(metadata);
+    const licenseUrl = license ? license.url : null;
+    players.push({
+      type: 'audio',
+      title: helpers.documentTitle(metadata),
+      description: helpers.documentTitle(metadata),
+      contentLocation: helpers.getDirectDownloadURL(metadata),
+      licenseUrl
+    });
+    return players;
+  } 
+
   // Is this a video?
   if (metadata.file_format && metadata.file_format === 'MPEG-4 Video') {
     const license = helpers.licenseMapped(metadata);
@@ -63,40 +77,27 @@ helpers.determinePlayers = metadata => {
       contentLocation: helpers.getDirectDownloadURL(metadata),
       licenseUrl
     });
+    return players;
   }
   
-  // Is this Audio?
-  if (metadata.file_format && metadata.file_format === 'MP3 Format') {
-    const license = helpers.licenseMapped(metadata);
-    const licenseUrl = license ? license.url : null;
-    players.push({
-      type: 'audio',
-      title: helpers.documentTitle(metadata),
-      description: helpers.documentTitle(metadata),
-      contentLocation: helpers.getDirectDownloadURL(metadata),
-      licenseUrl
-    });
-  } 
-  
-  else {
-    // Default to image.
-    players.push({
-      type: 'image',
-      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-      title: helpers.documentTitle(metadata),
-      description: helpers.documentDescription(metadata),
-      tags: helpers.motifTagging.getTags(metadata)
-    });
+  // Default to image.
+  players.push({
+    type: 'image',
+    thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+    title: helpers.documentTitle(metadata),
+    description: helpers.documentDescription(metadata),
+    tags: helpers.motifTagging.getTags(metadata)
+  });
 
-    // Add backside if we have one
-    if (helpers.hasBacksideAsset(metadata)) {
-      players.push({
-        type: 'backside',
-        thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
-        backsides: helpers.getBacksideAssets(metadata)
-      });
-    }
+  // Add backside if we have one
+  if (helpers.hasBacksideAsset(metadata)) {
+    players.push({
+      type: 'backside',
+      thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
+      backsides: helpers.getBacksideAssets(metadata)
+    });
   }
+
   return players;
 };
 
