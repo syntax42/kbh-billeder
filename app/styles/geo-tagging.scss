@@ -22,6 +22,9 @@ $map-height--desktop: 480px;
   top: 0;
   max-width: $extra-large-size;
   padding: 0 $spacer-md;
+  left: 50%;
+  transform: translateX(-50%);
+
   .is-mobile & {
     position: static;
     // The box is now placed underneath the map, so we can allow it to auto-fit
@@ -29,6 +32,7 @@ $map-height--desktop: 480px;
     margin-top: 0;
     min-height: auto;
     height: auto;
+    transform: none;
   }
   &__inner {
     pointer-events: auto;
