@@ -1,7 +1,12 @@
 $map-height: 455px;
+$map-height--desktop: 480px;
 
 .geo-tagging-mini-map {
-  height: $map-height;
+  height: $map-height--desktop;
+
+  @media(max-width: $small-size) {
+    height: $map-height;
+  }
 }
 
 // Have floated buttons seperate a bit.
@@ -13,9 +18,8 @@ $map-height: 455px;
   pointer-events: none;
   width: 100%;
   margin: 0 auto;
-  margin-top: -$map-height;
-  height: $map-height;
-  position: relative;
+  position: absolute;
+  top: 0;
   max-width: $extra-large-size;
   padding: 0 $spacer-md;
   .is-mobile & {
@@ -29,7 +33,7 @@ $map-height: 455px;
   &__inner {
     pointer-events: auto;
     background: white;
-    margin-top: 75px;
+    margin-top: 100px;
     max-width: 400px;
     min-height: 300px;
     padding: $spacer-lg;
