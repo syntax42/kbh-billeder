@@ -48,7 +48,7 @@ function initialize() {
 
   // Save scroll position if the user needs to return to
   // their previous scroll position after watching an asset.
-  document.addEventListener('scroll', _.throttle(saveScrollPosition, 500),
+  document.addEventListener('scroll', _.throttle(saveScrollPosition, 300),
     { capture: false, passive: true }
   );
 
