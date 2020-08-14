@@ -236,12 +236,6 @@ function initialize() {
         };
         const markup = templates.searchResultItem(item);
         $results.append(markup);
-
-        //Focus on the first new element added
-        if(i === 0) {
-          $results.children().last().focus();
-        }
-
         resultsLoaded.push(item);
       });
 
@@ -451,6 +445,8 @@ function initialize() {
   // Enabled the load-more button
   $loadMoreBtn.on('click', function() {
     enableEndlessScrolling();
+    // Focus on the first new element added
+    $results.children().last().focus();
   });
 
   // Toggle filtersection visibility on mobile
