@@ -329,6 +329,8 @@ function initialize() {
 
   function saveScrollPosition() {
     if(window.sessionStorage) {
+      // prevent scrollposition to be overwritten when returning from
+      // an asset page.
       if(window.scrollY != 0) {
         sessionStorage.setItem('lastScrollPosition', window.scrollY);
       }
