@@ -6,6 +6,7 @@ const config = require('collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
 const MapController = require('map-controller');
+const _ = require('lodash');
 require('./search-freetext-form');
 
 const getSearchParams = require('./get-parameters');
@@ -44,6 +45,12 @@ function initialize() {
   // of more results.
   const $loadMoreBtn = $('#load-more-btn');
   const $noResultsText = $('#no-results-text');
+
+  // Save scroll position if the user needs to return to
+  // their previous scroll position after watching an asset.
+  document.addEventListener('scroll', _.throttle(saveScrollPosition, 500),
+    { capture: false, passive: true }
+  );
 
   function reset() {
     resultsLoaded = [];
@@ -295,6 +302,8 @@ function initialize() {
       }
       else {
         history.pushState(state, '', url);
+        // reset scroll position when making a new search
+        resetScrollPosition();
       }
     }
     else {
@@ -317,6 +326,31 @@ function initialize() {
       }
     }).scroll();
   }
+
+  function saveScrollPosition() {
+    if(window.sessionStorage) {
+      // prevent scrollposition to be overwritten when returning from
+      // an asset page.
+      if(window.scrollY != 0) {
+        sessionStorage.setItem('lastScrollPosition', window.scrollY);
+      }
+    }
+  };
+
+  function resetScrollPosition() {
+    if(window.sessionStorage) {
+      sessionStorage.setItem('lastScrollPosition', 0);
+    }
+  }
+
+  function returnToPreviousScrollPosition() {
+    if(window.sessionStorage) {
+      let lastScrollPosition = sessionStorage.getItem('lastScrollPosition');
+      if(lastScrollPosition) {
+        window.scrollTo(0, lastScrollPosition);
+      }
+    }
+  };
 
   /**
    * Check if the user has any relevant history data during init and use it.
@@ -554,9 +588,12 @@ function initialize() {
     // Examine the history - if we have a state, load results from it.
     if (history.state) {
       inflateHistoryState(history.state);
+      // Return to the scroll position when going back from an asset site.
+      returnToPreviousScrollPosition();
     }
     else {
       // No relevant url-parameter and no relevant state, just do a cold update.
+      resetScrollPosition();
       update(false, true);
     }
   }
