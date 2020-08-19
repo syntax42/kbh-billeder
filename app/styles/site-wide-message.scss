@@ -1,4 +1,5 @@
 .site-wide-message {
+  position: relative;
   padding: 15px 32px;
   margin-left: -20px;
   background-color: $brand-primary-darker;
@@ -13,4 +14,13 @@
 
 .site-wide-message__description {
   margin: 0;
+  text-align: center;
+}
+
+.site-wide-message__close {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }

@@ -42,6 +42,7 @@ module.exports = options => {
   require('./galleries');
 
   require('./view-mode');
+  require('./site-messages');
 
   window.helpers = options.helpers;
 };
