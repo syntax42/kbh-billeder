@@ -1,4 +1,5 @@
 each message in messages
   div.site-wide-message
-    p.site-wide-message__title= message.title
-    p.site-wide-message__description= message.description
+    p.site-wide-message__description
+      span.site-wide-message__title= message.title + ' '
+      span= message.description

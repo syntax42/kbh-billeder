@@ -1,6 +1,10 @@
 .site-wide-message {
   padding: 15px 32px;
   margin-left: -20px;
+  background-color: $brand-primary-darker;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: $brand-secondary;
 }
 
 .site-wide-message__title {
