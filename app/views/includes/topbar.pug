@@ -9,3 +9,5 @@ header.topbar(class=frontpage ? 'topbar--frontpage' : '')
         include ./topbar-auth
     if frontpage
       include ./topbar-frontpage
+  if messages
+    include ./topbar-messages

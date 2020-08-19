@@ -8,4 +8,5 @@ module.exports = {
   TagClouds: require('./tag-clouds.js'),
   MapView: require('./map-views.js'),
   FrontpageItem: require('./frontpage-items.js'),
+  SiteMessage: require('./site-message.js'),
 };
