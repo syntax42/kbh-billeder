@@ -99,12 +99,20 @@ async function BuildMenu() {
   }));
 
   app.set('menus', menus);
-}
+};
+
+async function BuildMessages() {
+  MessageList = keystone.list('Site message');
+  let messages = await MessageList.model.find({})
+  app.set('messages', messages);
+};
 
 module.exports = function(expressApp) {
   app = expressApp;
   BuildMenu();
+  BuildMessages();
 };
 
 module.exports.reload = BuildMenu;
+module.exports.reloadMessages = BuildMessages;
 module.exports.MENUS = MENUS;

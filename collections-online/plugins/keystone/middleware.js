@@ -17,6 +17,7 @@
 */
 exports.initLocals = (req, res, next) => {
   res.locals.menus = req.app.get('menus');
+  res.locals.messages = req.app.get('messages');
   next();
 };
 
