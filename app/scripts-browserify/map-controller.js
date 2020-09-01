@@ -263,6 +263,10 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     );
 
+    if(options.keyboardNavigationHandler) {
+      setUpKeyboardNavigation(mapElement, defaultMapHandler);
+    }
+
     // We're now attached to the dom.
     initialized = true;
   }
@@ -412,6 +416,82 @@ function MapController (mapElement, searchControllerCallbacks, options) {
 
   // Hand the callbacks back to the Search Controller.
   return handlerCallbacks;
+}
+
+function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
+  var canvas = $(mapElement).find('canvas')[0];
+
+  var instructionBox = document.createElement('div');
+  instructionBox.setAttribute('style', 'height: 0; padding: 0; overflow: hidden;');
+  instructionBox.classList.add('map-instruction-box');
+
+  instructionBox.innerHTML =
+    `Brug piletasterne til at bevæge kortet, og PLUS (+) og MINUS (-)
+    for at zoome ind og ud.
+    Tryk ENTER for at begynde at gennemgå elementerne der vises på det
+    aktuelle udsnit af kortet, og ESCAPE for at stoppe gennemgang og
+    komme tilbage hertil.
+  `;
+
+  $(mapElement).parent()[0].appendChild(instructionBox);
+
+  canvas.setAttribute('tabindex', '0');
+  canvas.addEventListener('focus', function(e) {
+    instructionBox.setAttribute('style', '');
+  });
+
+  canvas.addEventListener('blur', function(e) {
+    instructionBox.setAttribute('style', 'height: 0; padding: 0; overflow: hidden;');
+  });
+
+  // Key press support
+  canvas.addEventListener('keydown', function(e) {
+    var currentCenter = defaultMapHandler.getCenter();
+    var currentZoomLevel = defaultMapHandler.getZoomLevel();
+
+    //The pan speed is calculated with an exponential fit based on three
+    //points in order to get a reasonable speed for each pan step at all
+    //the zoom levels people are likely to use with the maps.
+    //zoom level 17 => ~0.0001 pan distance
+    //zoom level 15 => ~0.001 pan distance
+    //zoom level 10 => ~0.01 pan distance
+    var panSpeed = 1.29976 * Math.exp(-0.486705 * currentZoomLevel);
+
+    var panKeys = {
+      ArrowLeft: {x: -panSpeed, y: 0},
+      ArrowRight: {x: panSpeed, y: 0},
+      ArrowUp: {x: 0, y: panSpeed},
+      ArrowDown: {x: 0, y: -panSpeed},
+    };
+
+    if(Object.keys(panKeys).includes(e.key)) {
+      e.preventDefault();
+      var pan = panKeys[e.key];
+      var newCenter = {
+        longitude: currentCenter.longitude + pan.x,
+        latitude: currentCenter.latitude + pan.y,
+      };
+
+      defaultMapHandler.setCenter(newCenter);
+      return;
+    }
+
+    var zoomKeys = {
+      '+': 1,
+      '-': -1,
+    };
+
+    if(Object.keys(zoomKeys).includes(e.key)) {
+      e.preventDefault();
+      var zoom = zoomKeys[e.key];
+      defaultMapHandler.setZoomLevel(currentZoomLevel + zoom);
+      return;
+    }
+
+    if(e.key == 'Enter') {
+      e.preventDefault();
+    }
+  });
 }
 
 module.exports = MapController;

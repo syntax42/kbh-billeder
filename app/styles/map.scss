@@ -30,4 +30,13 @@
   background-image: url('/images/icons/map/maptogglewhite.png');
 }
 
-
+// instruction box
+.map-instruction-box {
+  background: white;
+  padding: 10px;
+  font-size: 0.9em;
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  right: 10px;
+}
