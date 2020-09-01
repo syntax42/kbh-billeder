@@ -325,7 +325,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   // Create the OpenLayers View that controls the map
   mapState.view = new ol.View({
     center: ol.proj.fromLonLat(center),
-    zoom: zoomLevel
+    zoom: zoomLevel,
   });
 
   // Create the raster layer which shows the background map
@@ -1167,6 +1167,16 @@ function HistoriskAtlas(mapElement, options) {
   };
 
   /**
+   *
+   * @param {Object} center
+   *   The center to place the view at.
+   *   {longitude, latitude}
+   */
+  mapHandler.setCenter = function (center) {
+    mapState.view.setCenter(ol.proj.fromLonLat([center.longitude, center.latitude]));
+  };
+
+  /**
   * Clears the map for features (assets)
   */
   mapHandler.clear = function () {
@@ -1179,6 +1189,14 @@ function HistoriskAtlas(mapElement, options) {
   */
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
+  };
+
+  /**
+   * Set the zoom level
+   * @param {number} zoom the new zoom level
+   */
+  mapHandler.setZoomLevel = function (zoom) {
+    mapState.view.setZoom(zoom);
   };
 
   /**
