@@ -467,6 +467,7 @@ function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
       return;
     }
 
+    // Zoom is implemented by navigating up or down a single zoom level.
     var zoomKeys = {
       '+': 1,
       '-': -1,
@@ -481,6 +482,7 @@ function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
 
     if(e.key == 'Enter') {
       e.preventDefault();
+      defaultMapHandler.showFirstAssetPopup();
     }
   });
 }

@@ -977,6 +977,38 @@ function HistoriskAtlas(mapElement, options) {
   // we never expose the mapState to the user, only handler functions.
   var mapHandler = {};
 
+  // Set up keyboard controls of viewing popups
+  mapState.mapPopupElement.addEventListener('keydown', function(e) {
+    if(e.key == 'Escape') {
+      e.preventDefault();
+      mapState.hidePopup();
+      return;
+    }
+
+    if(e.key == 'Tab') {
+      e.preventDefault();
+      var currentFeatureIndex = features.findIndex((feature) => feature.ol_uid == mapState.feature.ol_uid);
+      if(currentFeatureIndex === -1) {
+        mapState.hidePopup();
+        mapHandler.showFirstAssetPopup();
+        return;
+      }
+
+      var nextFeature = features[currentFeatureIndex + 1];
+      if(!nextFeature) {
+        mapState.hidePopup();
+        return;
+      }
+
+      mapState.hidePopup();
+      mapState.feature = nextFeature;
+      var coords = mapState.feature.getGeometry().getCoordinates();
+      var pixel = mapState.map.getPixelFromCoordinate(coords);
+      mapState.showPopup(mapState.feature, pixel);
+      return;
+    }
+  });
+
   /**
    * "Freeze" the map by removing all interactions from the map.
    */
@@ -1009,6 +1041,8 @@ function HistoriskAtlas(mapElement, options) {
       mapState.timeWarp.show();
   }
 
+  var features;
+
   /**
   * Called to show assets on the map
   *
@@ -1019,7 +1053,7 @@ function HistoriskAtlas(mapElement, options) {
 
     // Start by removing exisisting assets
     mapState.vectorSource.clear(true);
-    var features = [];
+    features = [];
 
     // Iterate over the assets array
     for (var i = 0; i < assets.length; i++) {
@@ -1075,6 +1109,15 @@ function HistoriskAtlas(mapElement, options) {
         var pixel = mapState.map.getPixelFromCoordinate(coords);
         mapState.showPopup(mapState.feature, pixel);
       }
+    }
+  };
+
+  mapHandler.showFirstAssetPopup = function() {
+    if (features.length > 0) {
+      mapState.feature = features[0];
+      var coords = mapState.feature.getGeometry().getCoordinates();
+      var pixel = mapState.map.getPixelFromCoordinate(coords);
+      mapState.showPopup(mapState.feature, pixel);
     }
   };
 
@@ -1555,17 +1598,20 @@ function HistoriskAtlas(mapElement, options) {
     mapState.feature = feature;
 
     // Set new style now the feature is selected
-    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
+    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true));
 
     // Position and show the popup
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
+    mapState.mapPopupElement.href = feature.asset.id;
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
     document.getElementById('mapPopupDescription').innerText = feature.asset.description ? feature.asset.description : '';
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = feature.asset.id;
-  }
+
+    mapState.mapPopupElement.focus();
+  };
 
   /**
   * Hides a popup
@@ -1576,6 +1622,8 @@ function HistoriskAtlas(mapElement, options) {
       mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
       mapState.feature = null;
     }
+
+    mapState.mapPopupElement.parentElement.querySelector('canvas').focus();
   }
 
   /**
