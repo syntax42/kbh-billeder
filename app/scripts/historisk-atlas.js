@@ -370,7 +370,6 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   mapElement.classList.add('map');
 
   if (mode == 'single') {
-
     // If mode is "single" we need to position the map select
     // in the lower right corner.
     mapElement.classList.add('single');
@@ -383,10 +382,10 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       var size = mapState.map.getSize();
       mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
     }
-  } else
-
+  } else {
     // If mode is not "single" we should create and prepare the time warp
     mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onUpdateMapControllerCallback, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
+  }
 
   return mapState;
 }
@@ -1069,16 +1068,16 @@ function HistoriskAtlas(mapElement, options) {
     mapState.vectorSource.addFeatures(features);
 
     if (features.length > 0) {
-
       // If in single or edit mode set as selected feature
       if (mapState.isSingleOrEditMode()) {
         mapState.feature = features[0];
-      } else {
-
-        // Otherwise if a feature is selected, show popup
-        // persists popup across map manipulations
-        if (mapState.feature)
-          mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
+      }
+      // Otherwise if a feature is selected, show popup
+      // persists popup across map manipulations
+      else if (mapState.feature) {
+        var coords = mapState.feature.getGeometry().getCoordinates();
+        var pixel = mapState.map.getPixelFromCoordinate(coords);
+        mapState.showPopup(mapState.feature, pixel);
       }
     }
   };
@@ -1107,7 +1106,7 @@ function HistoriskAtlas(mapElement, options) {
         })
       })];
 
-    return style
+    return style;
   }
 
   /**
@@ -1528,7 +1527,7 @@ function HistoriskAtlas(mapElement, options) {
       }
 
       // Otherwise just show the popup
-      mapState.showPopup(subFeatures[0], pixel)
+      mapState.showPopup(subFeatures[0], pixel);
       return;
     }
 
@@ -1546,9 +1545,10 @@ function HistoriskAtlas(mapElement, options) {
 
   // If the close icon on a popup is clicked, close the popup
   document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
+    evt.preventDefault();
     mapState.hidePopup();
     evt.stopPropagation();
-  })
+  });
 
   /**
   * Shows a popup
