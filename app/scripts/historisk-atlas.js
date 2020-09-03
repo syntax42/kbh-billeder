@@ -362,8 +362,9 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   });
 
   // Create popup element and place it before the end of the map element
-  mapElement.insertAdjacentHTML('beforeend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
+  mapElement.insertAdjacentHTML('beforeend', '<a id="mapPopup" href="#"></a>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
+  mapState.mapPopupElement.innerHTML = '<div id="mapPopupImage"></div><a href="#" id="mapPopupClose"></a><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div>';
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
   mapElement.classList.add('map');
