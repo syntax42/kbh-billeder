@@ -401,7 +401,9 @@ function initialize() {
 
   // Get any initial parameters from the url and pass the relevant part to the
   // map.
-  var options = {};
+  var options = {
+    keyboardNavigationHandler: true,
+  };
 
   // Set initial center if specified via config.
   if (config.geoTagging && config.geoTagging.initialCenter && config.geoTagging.initialCenter['lon'] && config.geoTagging.initialCenter['lat']) {
