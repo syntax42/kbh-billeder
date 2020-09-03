@@ -11,20 +11,20 @@
  * @private
  */
 function _mapEsResultsToAssets(results, searchParameters) {
-  let assets = [];
   // If the results are aggregated geo-hashes, produce assets with hashes.
   if (searchParameters.geohash) {
-    results.aggregations.geohash_grid.buckets.forEach(function(hashBucket) {
+    return results.aggregations.geohash_grid.buckets.map(function(hashBucket) {
       let count = hashBucket.doc_count;
-      assets.push({
+      return {
         geohash: hashBucket.key,
         clustered: true,
         count: count,
-      });
+      };
     });
-  } else {
+  }
+
     // We're looking at a result-set with full assets.
-    results.hits.hits.forEach(function(hit) {
+    return results.hits.hits.map(function(hit) {
 
       var asset = hit._source;
       var colid = `${asset.collection}/${asset.id}`;
@@ -46,11 +46,8 @@ function _mapEsResultsToAssets(results, searchParameters) {
         assetResult.heading = asset.heading;
       }
 
-      assets.push(assetResult);
+      return assetResult;
     });
-  }
-
-  return assets;
 }
 
 /**
