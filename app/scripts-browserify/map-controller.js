@@ -233,11 +233,6 @@ function MapController (mapElement, searchControllerCallbacks, options) {
       }
     };
 
-    // The user has clicked on an asset on the map that needs to be displayed.
-    var onPopupClick = function (id) {
-      window.location.href = id;
-    };
-
     // Create and init map object.
     defaultMapHandler = HistoriskAtlas(
       mapElement,
@@ -253,7 +248,6 @@ function MapController (mapElement, searchControllerCallbacks, options) {
         clusterAtZoomLevel: options.clusterAtZoomLevel,
         onMoveStart: onMoveStart,
         onMoveEnd: onMoveEnd,
-        onPopupClick: onPopupClick,
         onUpdate: onHaUpdate,
         onDirectionRemoved: searchControllerCallbacks.onDirectionRemoved,
         icons: options.icons

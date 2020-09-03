@@ -44,10 +44,6 @@ function _prepareMapOptions(options) {
     options.onMoveEnd = function () { };
   }
 
-  if (!options.onPopupClick) {
-    options.onPopupClick = function (id) { };
-  }
-
   if (!options.maps) {
     options.maps = [
       { id: 85, title: 'Luftfoto', year: '2016' },
@@ -1537,11 +1533,7 @@ function HistoriskAtlas(mapElement, options) {
       duration: 1000,
       zoom: mapState.view.getZoom() + 2
     });
-  })
-
-  mapState.mapPopupElement.addEventListener('click', function () {
-    options.onPopupClick(mapState.mapPopupElement.assetId);
-  })
+  });
 
   // If the close icon on a popup is clicked, close the popup
   document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
