@@ -994,7 +994,10 @@ function HistoriskAtlas(mapElement, options) {
         return;
       }
 
-      var nextFeature = features[currentFeatureIndex + 1];
+      var nextFeature = features
+        .slice(currentFeatureIndex + 1)
+        .find((f) => !f.asset.clustered);
+
       if(!nextFeature) {
         mapState.hidePopup();
         return;
@@ -1114,7 +1117,13 @@ function HistoriskAtlas(mapElement, options) {
 
   mapHandler.showFirstAssetPopup = function() {
     if (features.length > 0) {
-      mapState.feature = features[0];
+      // Disallow going through clustered features, pick one that isnt
+      var nextFeature = features.find((f) => !f.asset.clustered);
+      if(!nextFeature) {
+        return;
+      }
+
+      mapState.feature = nextFeature;
       var coords = mapState.feature.getGeometry().getCoordinates();
       var pixel = mapState.map.getPixelFromCoordinate(coords);
       mapState.showPopup(mapState.feature, pixel);
