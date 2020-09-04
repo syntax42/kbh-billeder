@@ -412,7 +412,7 @@ function MapController (mapElement, searchControllerCallbacks, options) {
 function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
   var canvas = $(mapElement).find('canvas')[0];
 
-  var instructionBox = document.createElement('div');
+  var instructionBox = document.createElement('label');
   instructionBox.setAttribute('style', 'height: 0; padding: 0; overflow: hidden;');
   instructionBox.classList.add('map-instruction-box');
 
@@ -425,6 +425,10 @@ function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
   `;
 
   $(mapElement).parent()[0].appendChild(instructionBox);
+
+  //Create random ID to refer to as label, so multiple maps can exist on a single page
+  instructionBox.id = 'instruction-box-' + Math.random().toString(36).substring(2,15);
+  canvas.setAttribute('aria-labelledby', instructionBox.id);
 
   canvas.setAttribute('tabindex', '0');
   canvas.addEventListener('focus', function(e) {
