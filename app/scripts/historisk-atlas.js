@@ -44,10 +44,6 @@ function _prepareMapOptions(options) {
     options.onMoveEnd = function () { };
   }
 
-  if (!options.onPopupClick) {
-    options.onPopupClick = function (id) { };
-  }
-
   if (!options.maps) {
     options.maps = [
       { id: 85, title: 'Luftfoto', year: '2016' },
@@ -325,7 +321,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   // Create the OpenLayers View that controls the map
   mapState.view = new ol.View({
     center: ol.proj.fromLonLat(center),
-    zoom: zoomLevel
+    zoom: zoomLevel,
   });
 
   // Create the raster layer which shows the background map
@@ -362,14 +358,14 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   });
 
   // Create popup element and place it before the end of the map element
-  mapElement.insertAdjacentHTML('beforeend', '<div id="mapPopup"><div id="mapPopupImage"></div><div id="mapPopupClose"></div><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div></div>');
+  mapElement.insertAdjacentHTML('beforeend', '<a id="mapPopup" href="#"></a>');
   mapState.mapPopupElement = document.getElementById('mapPopup');
+  mapState.mapPopupElement.innerHTML = '<div id="mapPopupImage"></div><a href="#" id="mapPopupClose"></a><div id="mapPopupHeading"></div><div id="mapPopupDescription"></div>';
 
   mapState.mapSelectDivElement = document.getElementById('mapSelect');
   mapElement.classList.add('map');
 
   if (mode == 'single') {
-
     // If mode is "single" we need to position the map select
     // in the lower right corner.
     mapElement.classList.add('single');
@@ -382,10 +378,10 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
       var size = mapState.map.getSize();
       mapState.view.centerOn(ol.proj.fromLonLat(center), size, [size[0] / 2 + offset[0], size[1] / 2 + offset[1]]);
     }
-  } else
-
+  } else {
     // If mode is not "single" we should create and prepare the time warp
     mapState.timeWarp = _prepareTimeWarp(mapState.map, mapElement, mapState.mapSelectDivElement, mapState.getMapUrl, onUpdateMapControllerCallback, maps, timeWarpShown, timeWarpCenter, timeWarpRadius, timeWarpMapId);
+  }
 
   return mapState;
 }
@@ -981,6 +977,41 @@ function HistoriskAtlas(mapElement, options) {
   // we never expose the mapState to the user, only handler functions.
   var mapHandler = {};
 
+  // Set up keyboard controls of viewing popups
+  mapState.mapPopupElement.addEventListener('keydown', function(e) {
+    if(e.key == 'Escape') {
+      e.preventDefault();
+      mapState.hidePopup();
+      return;
+    }
+
+    if(e.key == 'Tab') {
+      e.preventDefault();
+      var currentFeatureIndex = features.findIndex((feature) => feature.ol_uid == mapState.feature.ol_uid);
+      if(currentFeatureIndex === -1) {
+        mapState.hidePopup();
+        mapHandler.showFirstAssetPopup();
+        return;
+      }
+
+      var nextFeature = features
+        .slice(currentFeatureIndex + 1)
+        .find((f) => !f.asset.clustered);
+
+      if(!nextFeature) {
+        mapState.hidePopup();
+        return;
+      }
+
+      mapState.hidePopup();
+      mapState.feature = nextFeature;
+      var coords = mapState.feature.getGeometry().getCoordinates();
+      var pixel = mapState.map.getPixelFromCoordinate(coords);
+      mapState.showPopup(mapState.feature, pixel);
+      return;
+    }
+  });
+
   /**
    * "Freeze" the map by removing all interactions from the map.
    */
@@ -1013,6 +1044,8 @@ function HistoriskAtlas(mapElement, options) {
       mapState.timeWarp.show();
   }
 
+  var features;
+
   /**
   * Called to show assets on the map
   *
@@ -1023,7 +1056,7 @@ function HistoriskAtlas(mapElement, options) {
 
     // Start by removing exisisting assets
     mapState.vectorSource.clear(true);
-    var features = [];
+    features = [];
 
     // Iterate over the assets array
     for (var i = 0; i < assets.length; i++) {
@@ -1068,17 +1101,32 @@ function HistoriskAtlas(mapElement, options) {
     mapState.vectorSource.addFeatures(features);
 
     if (features.length > 0) {
-
       // If in single or edit mode set as selected feature
       if (mapState.isSingleOrEditMode()) {
         mapState.feature = features[0];
-      } else {
-
-        // Otherwise if a feature is selected, show popup
-        // persists popup across map manipulations
-        if (mapState.feature)
-          mapState.showPopup(mapState.feature, mapState.map.getPixelFromCoordinate(mapState.feature.getGeometry().getCoordinates()))
       }
+      // Otherwise if a feature is selected, show popup
+      // persists popup across map manipulations
+      else if (mapState.feature) {
+        var coords = mapState.feature.getGeometry().getCoordinates();
+        var pixel = mapState.map.getPixelFromCoordinate(coords);
+        mapState.showPopup(mapState.feature, pixel);
+      }
+    }
+  };
+
+  mapHandler.showFirstAssetPopup = function() {
+    if (features.length > 0) {
+      // Disallow going through clustered features, pick one that isnt
+      var nextFeature = features.find((f) => !f.asset.clustered);
+      if(!nextFeature) {
+        return;
+      }
+
+      mapState.feature = nextFeature;
+      var coords = mapState.feature.getGeometry().getCoordinates();
+      var pixel = mapState.map.getPixelFromCoordinate(coords);
+      mapState.showPopup(mapState.feature, pixel);
     }
   };
 
@@ -1106,7 +1154,7 @@ function HistoriskAtlas(mapElement, options) {
         })
       })];
 
-    return style
+    return style;
   }
 
   /**
@@ -1167,6 +1215,16 @@ function HistoriskAtlas(mapElement, options) {
   };
 
   /**
+   *
+   * @param {Object} center
+   *   The center to place the view at.
+   *   {longitude, latitude}
+   */
+  mapHandler.setCenter = function (center) {
+    mapState.view.setCenter(ol.proj.fromLonLat([center.longitude, center.latitude]));
+  };
+
+  /**
   * Clears the map for features (assets)
   */
   mapHandler.clear = function () {
@@ -1179,6 +1237,14 @@ function HistoriskAtlas(mapElement, options) {
   */
   mapHandler.getZoomLevel = function () {
     return mapState.view.getZoom();
+  };
+
+  /**
+   * Set the zoom level
+   * @param {number} zoom the new zoom level
+   */
+  mapHandler.setZoomLevel = function (zoom) {
+    mapState.view.setZoom(zoom);
   };
 
   /**
@@ -1509,7 +1575,7 @@ function HistoriskAtlas(mapElement, options) {
       }
 
       // Otherwise just show the popup
-      mapState.showPopup(subFeatures[0], pixel)
+      mapState.showPopup(subFeatures[0], pixel);
       return;
     }
 
@@ -1519,17 +1585,14 @@ function HistoriskAtlas(mapElement, options) {
       duration: 1000,
       zoom: mapState.view.getZoom() + 2
     });
-  })
-
-  mapState.mapPopupElement.addEventListener('click', function () {
-    options.onPopupClick(mapState.mapPopupElement.assetId);
-  })
+  });
 
   // If the close icon on a popup is clicked, close the popup
   document.getElementById('mapPopupClose').addEventListener('click', function (evt) {
+    evt.preventDefault();
     mapState.hidePopup();
     evt.stopPropagation();
-  })
+  });
 
   /**
   * Shows a popup
@@ -1544,17 +1607,20 @@ function HistoriskAtlas(mapElement, options) {
     mapState.feature = feature;
 
     // Set new style now the feature is selected
-    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true))
+    feature.setStyle(mapHandler.getFeatureStyle(feature.asset, true));
 
     // Position and show the popup
     mapState.mapPopupElement.style.left = (pixel[0] - 110) + 'px';
     mapState.mapPopupElement.style.top = (pixel[1] - 315) + 'px';
+    mapState.mapPopupElement.href = feature.asset.id;
     document.getElementById('mapPopupImage').style.backgroundImage = "url('" + feature.asset.image_url + "')";
     document.getElementById('mapPopupHeading').innerText = feature.asset.short_title;
     document.getElementById('mapPopupDescription').innerText = feature.asset.description ? feature.asset.description : '';
     mapState.mapPopupElement.style.display = 'block';
     mapState.mapPopupElement.assetId = feature.asset.id;
-  }
+
+    mapState.mapPopupElement.focus();
+  };
 
   /**
   * Hides a popup
@@ -1565,6 +1631,8 @@ function HistoriskAtlas(mapElement, options) {
       mapState.feature.setStyle(mapHandler.getFeatureStyle(mapState.feature.asset))
       mapState.feature = null;
     }
+
+    mapState.mapPopupElement.parentElement.querySelector('canvas').focus();
   }
 
   /**
