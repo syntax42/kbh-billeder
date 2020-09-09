@@ -9,6 +9,7 @@
   border-top: 4px solid #e61a64;
   box-shadow: 0 3px 12px rgba(0,0,0,.08), 0 10px 40px rgba(0,0,0,.06);
   text-decoration: inherit;
+  z-index: 2;
 }
 
 #mapPopup::after {

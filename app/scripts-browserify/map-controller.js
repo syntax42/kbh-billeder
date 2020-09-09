@@ -420,8 +420,8 @@ function setUpKeyboardNavigation(mapElement, defaultMapHandler) {
     `Brug piletasterne til at bevæge kortet, og PLUS (+) og MINUS (-)
     for at zoome ind og ud.
     Tryk ENTER for at begynde at gennemgå elementerne der vises på det
-    aktuelle udsnit af kortet, og ESCAPE for at stoppe gennemgang og
-    komme tilbage hertil.
+    aktuelle udsnit af kortet, TAB for at navigere mellem elementerne,
+    og ESCAPE for at stoppe gennemgang og komme tilbage hertil.
   `;
 
   $(mapElement).parent()[0].appendChild(instructionBox);
