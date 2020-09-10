@@ -119,6 +119,8 @@ $(function ($) {
       }
     };
 
+    options.keyboardNavigationHandler = true;
+
     var mapController = MapController(mapElement, searchCallbacks, options);
     searchCallbacks.refresh();
   }
