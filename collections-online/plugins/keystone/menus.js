@@ -97,13 +97,12 @@ async function BuildMenu() {
   await Promise.all(MENUS.map(menuName => {
     return _populateSubmenus(menuName);
   }));
-
   app.set('menus', menus);
 };
 
 async function BuildMessages() {
   MessageList = keystone.list('Site message');
-  let messages = await MessageList.model.find({})
+  let messages = await MessageList.model.find({});
   app.set('messages', messages);
 };
 
