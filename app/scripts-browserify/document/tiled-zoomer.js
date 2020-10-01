@@ -12,7 +12,7 @@ const TILED_ZOOM_ELEMENT_SELECTOR = '#tiled-zoom';
 const TOGGLE_TILED_ZOOM = '[data-action="toggle-tiled-zoom"]';
 const TOGGLE_TILED_ZOOM_IN = '[data-action="tiled-zoom-in"]';
 const TOGGLE_TILED_ZOOM_OUT = '[data-action="tiled-zoom-out"]';
-const ZOOM_API_DATA_ENDPOINT = 'https://www.kbhkilder.dk/1508/stable/api/data/';
+const ZOOM_API_DATA_ENDPOINT = 'https://api.kbharkiv.dk/data/';
 
 /**
  * Clear out any elements added by leaflet.
