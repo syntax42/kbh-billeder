@@ -25,14 +25,6 @@ MenuItem.schema.methods.getUrl = function() {
   }
 }
 
-// When menu items are saved or removed, the menues are reloaded.
-MenuItem.schema.post('save', function(doc) {
-  require('../menus').reload();
-});
-MenuItem.schema.post('remove', function(doc) {
-  require('../menus').reload();
-});
-
 MenuItem.defaultColumns = 'title, placement, order|20%'
 
 module.exports = MenuItem;
