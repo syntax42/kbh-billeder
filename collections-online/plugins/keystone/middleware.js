@@ -16,9 +16,23 @@
 	or replace it with your own templates / logic.
 */
 exports.initLocals = (req, res, next) => {
-  res.locals.menus = req.app.get('menus');
-  res.locals.messages = req.app.get('messages');
-  next();
+  var menu = new Promise((resolve, reject) => { 
+    resolve(require('./menus').buildMenu());
+  });
+
+  var message = new Promise((resolve, reject) => { 
+    resolve(require('./menus').buildMessages());
+  });
+
+  // Get menu and message items from Keystone
+  Promise.all([
+    menu.catch(error => { next(); }),
+    message.catch(error => { next(); }),
+  ]).then(values => {
+    res.locals.menus = values[0];
+    res.locals.messages = values[1];
+    next();
+  });
 };
 
 exports.error404 = (req, res, next) => {

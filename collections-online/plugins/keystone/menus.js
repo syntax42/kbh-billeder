@@ -97,21 +97,19 @@ async function BuildMenu() {
   await Promise.all(MENUS.map(menuName => {
     return _populateSubmenus(menuName);
   }));
-  app.set('menus', menus);
+  return menus;
 };
 
 async function BuildMessages() {
   MessageList = keystone.list('Site message');
   let messages = await MessageList.model.find({});
-  app.set('messages', messages);
+  return messages;
 };
 
 module.exports = function(expressApp) {
   app = expressApp;
-  BuildMenu();
-  BuildMessages();
 };
 
-module.exports.reload = BuildMenu;
-module.exports.reloadMessages = BuildMessages;
+module.exports.buildMenu = BuildMenu;
+module.exports.buildMessages = BuildMessages;
 module.exports.MENUS = MENUS;

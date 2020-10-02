@@ -12,13 +12,6 @@ SiteMessage.add({
     description: { type: Types.Textarea },
 });
 
-SiteMessage.schema.post('save', function(doc) {
-    require('../menus').reloadMessages();
-  });
-SiteMessage.schema.post('remove', function(doc) {
-    require('../menus').reloadMessages();
-  });
-
 SiteMessage.defaultColumns = 'title';
 
 module.exports = SiteMessage;
