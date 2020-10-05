@@ -16,9 +16,17 @@
 	or replace it with your own templates / logic.
 */
 exports.initLocals = (req, res, next) => {
-  res.locals.menus = req.app.get('menus');
-  res.locals.messages = req.app.get('messages');
-  next();
+  var { buildMenu, buildMessages } = require('./menus');
+  Promise.all([
+    buildMenu(),
+    buildMessages(),
+  ])
+  .then(([ menus, messages ]) => {
+    res.locals.menus = menus;
+    res.locals.messages = messages;
+    next();
+  })
+  .catch((error) => next());
 };
 
 exports.error404 = (req, res, next) => {
