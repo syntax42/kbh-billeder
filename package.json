@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/CopenhagenCityArchives/kbh-billeder#readme",
   "dependencies": {
+    "@google-cloud/translate": "^1.1.0",
+    "@google-cloud/vision": "^0.12.0",
     "agentkeepalive": "~2.0.3",
     "auth0": "^2.34.0",
     "babel-polyfill": "^6.23.0",
@@ -47,8 +49,6 @@
     "errorhandler": "~1.4.3",
     "express": "^4.17.1",
     "express-validator": "^5.3.0",
-    "google-cloud": "^0.57.0",
-    "google-translate": "^1.0.6",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-bower": "0.0.15",
@@ -92,7 +92,6 @@
   },
   "devDependencies": {
     "concurrently": "^3.6.1",
-    "gulp": "^3.9.1",
     "http-server": "^0.12.3",
     "kill-port": "^1.5.1",
     "nodemon": "^1.19.1"
