@@ -2,12 +2,10 @@
 const assert = require('assert');
 const plugins = require('../../plugins');
 const config = require('../config');
-const Q = require('q');
 const fs = require('fs');
 const path = require('path');
 const waterStream = require('water-stream');
 const helpers = require('../../shared/helpers');
-const ds = require('../services/documents');
 
 // Set the cache ttl from the configuration
 waterStream.cached.config({
@@ -49,7 +47,7 @@ function getErrorPlaceholderStream(size) {
 
 const contentDispositionRegexp = /.*\.([^.]+)$/i;
 
-exports.download = function (req, res, next) {
+exports.download = function (req, res) {
   const collection = req.params.collection;
   const id = req.params.id;
   let size = req.params.size || 'original';
