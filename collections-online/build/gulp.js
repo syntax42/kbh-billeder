@@ -1,31 +1,28 @@
+const autoprefixer = require('gulp-autoprefixer');
+const bower = require('gulp-bower');
+const browserify = require('browserify');
+const cleanCSS = require('gulp-clean-css');
+const concat = require('gulp-concat');
+const CustomPug = require('./custom-pug.js');
+const del = require('del');
+const gulpif = require('gulp-if');
+const path = require('path');
+const plumber = require('gulp-plumber');
+const pug = require('gulp-pug');
+const rename = require('gulp-rename');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const svgmin = require('gulp-svgmin');
+const svgstore = require('gulp-svgstore');
+const uglify = require('gulp-uglify');
+const uniqueFiles = require('gulp-unique-files');
+
 module.exports = (gulp, customizationPath) => {
   const config = require('../lib/config');
   config.setCustomizationPath(customizationPath);
 
-  //------------------------------------------
-  // Require
-  //------------------------------------------
-  // sorted alphabetically after const name
-  const autoprefixer = require('gulp-autoprefixer');
-  const bower = require('gulp-bower');
-  const browserify = require('browserify');
-  const cleanCSS = require('gulp-clean-css');
-  const concat = require('gulp-concat');
-  const customPug = require('./custom-pug.js')(config);
-  const del = require('del');
-  const fs = require('fs');
-  const gulpif = require('gulp-if');
-  const path = require('path');
-  const plumber = require('gulp-plumber');
-  const pug = require('gulp-pug');
-  const rename = require('gulp-rename');
-  const sass = require('gulp-sass');
-  const source = require('vinyl-source-stream');
-  const sourcemaps = require('gulp-sourcemaps');
-  const svgmin = require('gulp-svgmin');
-  const svgstore = require('gulp-svgstore');
-  const uglify = require('gulp-uglify');
-  const uniqueFiles = require('gulp-unique-files');
+  const customPug = CustomPug(config);
 
   //------------------------------------------
   // Directories - note that they are relative to the project specific gulpfile
