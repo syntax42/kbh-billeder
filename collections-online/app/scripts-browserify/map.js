@@ -19,7 +19,7 @@
  * event-handler registered in init().
  */
 
-const config = require('../../collections-online/shared/config');
+const config = require('../../../collections-online/shared/config');
 
 var Map = {
   // Start the map off over Copenhagen.
