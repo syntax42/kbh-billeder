@@ -56,11 +56,11 @@ module.exports = (gulp, customizationPath) => {
     '/ev-emitter/ev-emitter.js',
     '/imagesloaded/imagesloaded.js',
     '/jquery-infinite-scroll/jquery.infinitescroll.js',
-    '/get-size/get-size.js',
-    '/desandro-matches-selector/matches-selector.js',
-    '/fizzy-ui-utils/utils.js',
-    '/outlayer/item.js',
-    '/outlayer/outlayer.js',
+    //'/get-size/get-size.js',
+    //'/desandro-matches-selector/matches-selector.js',
+    //'/fizzy-ui-utils/utils.js',
+    //'/outlayer/item.js',
+    //'/outlayer/outlayer.js',
     '/picturefill/dist/picturefill.js',
     '/typeahead.js/dist/typeahead.bundle.js',
     '/scrollToTop/jquery.scrollToTop.js',
@@ -84,19 +84,20 @@ module.exports = (gulp, customizationPath) => {
 
   var SCRIPTS_ALL = SCRIPTS_ARRAY_CO;
 
-  gulp.task('reload-config', function() {
+  gulp.task('reload-config', function(done) {
     config.reload();
+    done();
   });
 
   // Return only
   //------------------------------------------
   // Individual tasks
   //------------------------------------------
-  gulp.task('bower', function() {
+  gulp.task('bower', () => {
     return bower({cwd: ROOT_CO});
   });
 
-  gulp.task('css', function() {
+  gulp.task('css', () => {
     return gulp.src(STYLES_SRC)
       .pipe(plumber())
       .pipe(gulpif(isDevelopment, sourcemaps.init()))
@@ -110,7 +111,25 @@ module.exports = (gulp, customizationPath) => {
       .pipe(gulp.dest(STYLES_DEST));
   });
 
-  gulp.task('js-browserify', ['pug'], function() {
+  gulp.task('pug', () => {
+    return gulp.src([PUG_SRC_CO, PUG_SRC])
+      .pipe(uniqueFiles())
+      .pipe(pug({
+        client: true,
+        compileDebug: isDevelopment,
+        pug: customPug
+      }))
+      .on('error', function (err) {
+        console.log('Error while compiling pug');
+        console.log(err.toString());
+        // This will thrown an error since we're going to write to files after
+        // we've emitted an "end" - but this is the best we can do for now.
+        this.emit('end');
+      })
+      .pipe(gulp.dest(PUG_DEST));
+  });
+
+  gulp.task('js-browserify', gulp.series('pug', () => {
     return browserify({
       paths: [
         SCRIPTS_BROWSERIFY_DIR,
@@ -152,9 +171,9 @@ module.exports = (gulp, customizationPath) => {
     })
     .pipe(source('browserify-index.js'))
     .pipe(gulp.dest(SCRIPTS_DEST));
-  });
+  }));
 
-  gulp.task('js', ['js-browserify'], function() {
+  gulp.task('js', gulp.series('js-browserify', () => {
     var scriptPaths = SCRIPTS_ARRAY_CO.concat([
       SCRIPTS_DEST + '/browserify-index.js'
     ]);
@@ -167,9 +186,9 @@ module.exports = (gulp, customizationPath) => {
       .on('error', function(err){
         console.log(err.stack);
       });
-  });
+  }));
 
-  gulp.task('svg', function() {
+  gulp.task('svg', () => {
     return gulp.src([SVG_SRC_CO, SVG_SRC])
       .pipe(uniqueFiles())
       .pipe(svgmin())
@@ -178,38 +197,22 @@ module.exports = (gulp, customizationPath) => {
       .pipe(gulp.dest(SVG_DEST));
   });
 
-  gulp.task('pug', function() {
-    return gulp.src([PUG_SRC_CO, PUG_SRC])
-      .pipe(uniqueFiles())
-      .pipe(pug({
-        client: true,
-        compileDebug: isDevelopment,
-        pug: customPug
-      }))
-      .on('error', function (err) {
-        console.log('Error while compiling pug');
-        console.log(err.toString());
-        // This will thrown an error since we're going to write to files after
-        // we've emitted an "end" - but this is the best we can do for now.
-        this.emit('end');
-      })
-      .pipe(gulp.dest(PUG_DEST));
-  });
-
-  gulp.task('watch', function() {
-    gulp.watch(STYLES_ALL, { interval: 500 }, ['css']);
-    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 500 }, ['svg']);
-    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 500 }, ['js']);
+  gulp.task('watch', (done) => {
+    gulp.watch(STYLES_ALL, { interval: 500 }, gulp.task('css'));
+    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 500 }, gulp.task('svg'));
+    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 500 }, gulp.task('js'));
     gulp.watch([
-      SCRIPTS_ALL,
+      ...SCRIPTS_ALL,
       SCRIPTS_BROWSERIFY_DIR_CO + '/**/*.js',
       SCRIPTS_BROWSERIFY_DIR + '/**/*.js',
       customizationPath + '/config/**/*',
       customizationPath + '/shared/*.js'
-    ], { interval: 500 }, ['reload-config', 'js']);
+    ], { interval: 500 }, gulp.series('reload-config', 'js'));
+
+    done();
   });
 
-  gulp.task('clean', function() {
+  gulp.task('clean', () => {
     return del([DEST_DIR]);
   });
 };
