@@ -132,40 +132,14 @@ exports.thumbnail = function (req, res, next) {
   }
   const positionFunction = POSITION_FUNCTIONS[position];
 
-  function respond(watermark) {
-    const proxyReq = imageController.proxyThumbnail(
-      collection + '/' + id, next
-    );
-    proxyReq
-      .on('error', err => {
-        console.error(err);
-        res.type('png');
-        res.status(500);
-        getErrorPlaceholderStream(size).pipe(res);
-      })
-      .on('response', function (response) {
-        if (response.statusCode === 200) {
-          var t = waterStream.transformation(watermark, size, positionFunction, 0.25);
-          if (config.assetCacheExpiration) {
-            res.header('Cache-Control', `max-age=${config.assetCacheExpiration}, public`);
-          }
-          proxyReq.pipe(t).pipe(res);
-        } else {
-          res.type('png');
-          res.status(response.statusCode);
-          getErrorPlaceholderStream(size).pipe(res);
-        }
-      });
-  }
-
   if (config.features.watermarks) {
     documentController.get(req, 'asset').then(function (metadata) {
       const isWatermarkRequired = helpers.isWatermarkRequired(metadata);
       const isLarge = size > THUMBNAIL_SIZE;
       if (isWatermarkRequired && isLarge && collection in WATERMARK_BUFFERS) {
-        respond(WATERMARK_BUFFERS[collection]);
+        respond(res, collection, id, next, size, positionFunction, WATERMARK_BUFFERS[collection]);
       } else {
-        respond(null);
+        respond(res, collection, id, next, size, positionFunction, null);
       }
     }).then(null, (err) => {
       console.error(err);
@@ -174,6 +148,32 @@ exports.thumbnail = function (req, res, next) {
       getErrorPlaceholderStream(size).pipe(res);
     });
   } else {
-    respond(null);
+    respond(res, collection, id, next, size, positionFunction, null);
   }
 };
+
+function respond(res, collection, id, next, size, positionFunction, watermark) {
+  const proxyReq = imageController.proxyThumbnail(
+    collection + '/' + id, next
+  );
+  proxyReq
+    .on('error', err => {
+      console.error(err);
+      res.type('png');
+      res.status(500);
+      getErrorPlaceholderStream(size).pipe(res);
+    })
+    .on('response', function (response) {
+      if (response.statusCode === 200) {
+        var t = waterStream.transformation(watermark, size, positionFunction, 0.25);
+        if (config.assetCacheExpiration) {
+          res.header('Cache-Control', `max-age=${config.assetCacheExpiration}, public`);
+        }
+        proxyReq.pipe(t).pipe(res);
+      } else {
+        res.type('png');
+        res.status(response.statusCode);
+        getErrorPlaceholderStream(size).pipe(res);
+      }
+    });
+}
