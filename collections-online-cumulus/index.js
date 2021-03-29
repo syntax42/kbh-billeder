@@ -29,7 +29,7 @@ module.exports.registerPlugins = () => {
           return res.send('Indexing of recent assets started.');
         });
         app.get('/index/all', (req, res) => {
-            if (config.reindexAccessKey && req.query.accesskey !== config.reindexAccessKey) {
+          if (config.reindexAccessKey && req.query.accesskey !== config.reindexAccessKey) {
             res.status(401);
             return res.send('Accesskey required.');
           }
