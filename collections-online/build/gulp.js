@@ -15,7 +15,6 @@ module.exports = (gulp, customizationPath) => {
   const del = require('del');
   const fs = require('fs');
   const gulpif = require('gulp-if');
-  const notify = require('gulp-notify');
   const path = require('path');
   const plumber = require('gulp-plumber');
   const pug = require('gulp-pug');
@@ -107,9 +106,6 @@ module.exports = (gulp, customizationPath) => {
       .pipe(sass().on('error', function(err) {
         console.error('\x07');
         sass.logError.bind(this)(err);
-        return notify().write({
-          'message': 'Sass error'
-        });
       }))
       .pipe(cleanCSS())
       .pipe(autoprefixer({browsers: ['last 4 versions']}))
@@ -156,10 +152,6 @@ module.exports = (gulp, customizationPath) => {
     .bundle()
     .on('error', function(err){
       console.log(err.stack);
-      return notify().write({
-        'title': 'Browserify error',
-        'message': err.message
-      });
     })
     .pipe(source('browserify-index.js'))
     .pipe(gulp.dest(SCRIPTS_DEST));
@@ -175,13 +167,8 @@ module.exports = (gulp, customizationPath) => {
       .pipe(gulp.dest(SCRIPTS_DEST))
       .pipe(gulpif(!isDevelopment, uglify().on('error', console.error)))
       .pipe(gulp.dest(SCRIPTS_DEST))
-      .pipe(notify('Ready to reload'))
       .on('error', function(err){
         console.log(err.stack);
-        return notify().write({
-          'title': 'JavaScript error',
-          'message': err.message
-        });
       });
   });
 
