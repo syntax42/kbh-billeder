@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 const union = require('lodash/union');
-const config = require('collections-online/lib/config');
+const config = require('../../../collections-online/lib/config');
 const cip = require('../../services/cip');
-const helpers = require('collections-online/shared/helpers');
+const helpers = require('../../../collections-online/shared/helpers');
 
-const plugins = require('collections-online/plugins');
+const plugins = require('../../../collections-online/plugins');
 const motifTagController = plugins.getFirst('motif-tag-controller');
 if (!motifTagController) {
   throw new Error('Expected at least one image controller!');
@@ -37,7 +37,7 @@ module.exports = (metadata, context) => {
     let url = cip.generateURL(path);
 
     // Loading here to prevent circular dependency.
-    var motif = require('collections-online/lib/controllers/motif-tagging');
+    var motif = require('../../../collections-online/lib/controllers/motif-tagging');
 
     return motif.fetchSuggestions(url)
     .then(tags => {

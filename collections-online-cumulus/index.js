@@ -1,15 +1,14 @@
 let plugins;
 try {
-  plugins = require('collections-online/plugins');
+  plugins = require('../collections-online/plugins');
 } catch(err) {
   throw new Error('This module is a plugin for collections online', err);
 }
 
-const config = require('collections-online/lib/config');
+const config = require('../collections-online/lib/config');
 const indexing = require('./indexing/run');
 
 module.exports.registerPlugins = () => {
-  const config = require('collections-online/lib/config');
   if(config.es) {
     plugins.register({
       type: 'indexing-engine',

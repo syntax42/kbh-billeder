@@ -1,8 +1,8 @@
 'use strict';
 
-const config = require('collections-online/shared/config');
-const helpers = require('collections-online/shared/helpers');
-const elasticsearchQueryBody = require('collections-online/app/scripts-browserify/search/es-query-body');
+const config = require('../../collections-online/shared/config');
+const helpers = require('../../collections-online/shared/helpers');
+const elasticsearchQueryBody = require('../../collections-online/app/scripts-browserify/search/es-query-body');
 
 const elasticsearch = require('elasticsearch');
 const es = new elasticsearch.Client({

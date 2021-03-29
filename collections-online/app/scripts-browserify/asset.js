@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('collections-online/shared/config');
+const config = require('../../collections-online/shared/config');
 
 (function($, window) {
   var ACTION_ASSET_DOWNLOAD_SHOW = '[data-action="download:show-overlay"]';

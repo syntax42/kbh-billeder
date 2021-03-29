@@ -1,7 +1,7 @@
 const assert = require('assert');
 
 const cip = require('../services/cip');
-const config = require('collections-online/lib/config');
+const config = require('../../collections-online/lib/config');
 
 if(config.features.geoTagging) {
   assert.ok(config.geoTagging, 'Expected a config.geoTagging');

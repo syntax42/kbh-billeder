@@ -1,5 +1,5 @@
 const pug = require('pug');
-const config = require('collections-online/shared/config');
+const config = require('../../../collections-online/shared/config');
 const request = require('request');
 const mailgun = require('../services/mailgun');
 

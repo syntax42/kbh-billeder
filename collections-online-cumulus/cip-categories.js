@@ -2,8 +2,8 @@
 
 const cip = require('./services/cip');
 const Q = require('q');
-const config = require('collections-online/lib/config');
-const ds = require('collections-online/lib/services/documents');
+const config = require('../collections-online/lib/config');
+const ds = require('../collections-online/lib/services/documents');
 
 function Categories(tree) {
   this.getPath = function(x) {

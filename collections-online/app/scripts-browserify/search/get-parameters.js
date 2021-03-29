@@ -1,4 +1,4 @@
-const config = require('collections-online/shared/config');
+const config = require('../../../../collections-online/shared/config');
 
 /**
  * This module generates search parameters that will lead to a specific

@@ -4,7 +4,7 @@
  * The post processing step that clears the index when in clear mode.
  */
 
-const es = require('collections-online/lib/services/elasticsearch');
+const es = require('../../../collections-online/lib/services/elasticsearch');
 
 module.exports = function(state) {
   if (state.mode === 'clear') {

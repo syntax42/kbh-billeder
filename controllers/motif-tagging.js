@@ -2,12 +2,12 @@
 
 const _ = require('lodash');
 
-const motifTagging = require('collections-online-cumulus/controllers/motif-tagging');
+const motifTagging = require('../collections-online-cumulus/controllers/motif-tagging');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 
 motifTagging.typeaheadSuggestions = text => {
   // The document service might be registered after this motif tagging service
-  const ds = require('collections-online/lib/services/documents');
+  const ds = require('../collections-online/lib/services/documents');
   // Search for distinct tags in all relevant fields
   return ds.search({
     size: 0,

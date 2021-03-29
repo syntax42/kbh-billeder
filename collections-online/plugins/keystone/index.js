@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('collections-online/lib/config');
+const config = require('../../../collections-online/lib/config');
 
 const keystone = require('keystone');
 const middleware = require('./middleware');

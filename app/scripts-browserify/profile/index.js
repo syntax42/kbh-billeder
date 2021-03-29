@@ -3,7 +3,7 @@
  */
 
 const request = require('request');
-const config = require('collections-online/shared/config');
+const config = require('../../collections-online/shared/config');
 const _ = require('lodash');
 
 const SELECTOR_USER_CONTRIBUTIONS_SECTIONS = '#user-contributions .user-contributions__section[data-section]';

@@ -18,11 +18,9 @@ module.exports = (gulp, customizationPath) => {
   const notify = require('gulp-notify');
   const path = require('path');
   const plumber = require('gulp-plumber');
-  const print = require('gulp-print');
   const pug = require('gulp-pug');
   const rename = require('gulp-rename');
   const sass = require('gulp-sass');
-  const sequence = require('run-sequence');
   const source = require('vinyl-source-stream');
   const sourcemaps = require('gulp-sourcemaps');
   const svgmin = require('gulp-svgmin');

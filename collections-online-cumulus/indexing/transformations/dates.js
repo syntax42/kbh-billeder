@@ -1,7 +1,7 @@
 'use strict';
 
 var DATA_REGEXP = new RegExp('\\d+');
-var config = require('collections-online/lib/config');
+var config = require('../../../collections-online/lib/config');
 
 function zeroPad(num) {
   num = String(num);

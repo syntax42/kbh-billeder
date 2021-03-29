@@ -1,8 +1,8 @@
 const request = require('request');
-const helpers = require('collections-online/lib/helpers');
+const helpers = require('../../../collections-online/lib/helpers');
 const cip = require('../../services/cip');
 
-const config = require('collections-online/lib/config');
+const config = require('../../../collections-online/lib/config');
 const API_KEY = config.google.keys.unrestricted;
 
 const querystring = require('querystring');

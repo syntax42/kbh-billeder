@@ -14,9 +14,9 @@
  * }
  */
 
-const ds = require('collections-online/lib/services/documents');
-const config = require('collections-online/lib/config');
-const es = require('collections-online/lib/services/elasticsearch');
+const ds = require('../../collections-online/lib/services/documents');
+const config = require('../../collections-online/lib/config');
+const es = require('../../collections-online/lib/services/elasticsearch');
 
 if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
   throw new Error('Need exactly one index for Cumulus triggers to work.');

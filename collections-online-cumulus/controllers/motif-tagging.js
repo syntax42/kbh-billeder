@@ -1,5 +1,5 @@
 const assert = require('assert');
-const config = require('collections-online/lib/config');
+const config = require('../../collections-online/lib/config');
 const cip = require('../services/cip');
 
 const USER_FIELD = config.motifTagging && config.motifTagging.userField;

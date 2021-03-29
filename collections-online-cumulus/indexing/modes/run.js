@@ -6,7 +6,7 @@
 
 var Q = require('q');
 var processQuery = require('../processing/query');
-var config = require('collections-online/lib/config');
+var config = require('../../../collections-online/lib/config');
 
 const POST_PROCESSING_STEPS = [
   require('../post-processing/delete-removed-assets'),

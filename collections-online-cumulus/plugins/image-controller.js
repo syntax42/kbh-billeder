@@ -4,7 +4,7 @@ module.exports = {
   type: 'image-controller',
   module: require('../controllers/image'),
   initialize: () => {
-    const config = require('collections-online/lib/config');
+    const config = require('../../collections-online/lib/config');
 
     if(config.cip.client.authMechanism !== 'http-basic') {
       const cip = require('../services/cip');

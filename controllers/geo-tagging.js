@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 
-const geoTagging = require('collections-online-cumulus/controllers/geo-tagging');
+const geoTagging = require('../collections-online-cumulus/controllers/geo-tagging');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 
 // Override methods on geoTagging as needed.

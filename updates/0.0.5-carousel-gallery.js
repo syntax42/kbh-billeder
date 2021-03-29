@@ -1,4 +1,4 @@
-const keystone = require('collections-online/plugins/keystone').module;
+const keystone = require('../collections-online/plugins/keystone').module;
 
 const Gallery = keystone.list('Gallery');
 const GalleryItem = keystone.list('Gallery item');
