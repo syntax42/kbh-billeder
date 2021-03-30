@@ -1,7 +1,0 @@
-{
-  "name": "collections-online-cumulus",
-  "version": "0.1.0",
-  "description": "A module that enables collections-online to index and display assets from the Canto Cumulus™ DAMS",
-  "main": "index.js",
-  "license": "MIT"
-}
