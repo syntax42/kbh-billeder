@@ -1,6 +1,6 @@
 'use strict';
 
-const cip = require('./services/cip');
+const cip = require('../services/cip');
 const Q = require('q');
 const config = require('../collections-online/lib/config');
 const ds = require('../collections-online/lib/services/documents');

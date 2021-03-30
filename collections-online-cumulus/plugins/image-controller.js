@@ -7,7 +7,7 @@ module.exports = {
     const config = require('../../collections-online/lib/config');
 
     if(config.cip.client.authMechanism !== 'http-basic') {
-      const cip = require('../services/cip');
+      const cip = require('../../services/cip');
       return cip.initSession().then(() => {
         // TODO: Consider creating the structure of categories (used for the menu)
         // from another API than the CIP

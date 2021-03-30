@@ -1,6 +1,6 @@
 const assert = require('assert');
 const config = require('../collections-online/lib/config');
-const cip = require('./services/cip');
+const cip = require('../services/cip');
 
 assert.ok(config.cip.proxy, 'Missing a config.cip.proxy object');
 assert.ok(config.cip.proxy.maxSockets, 'Missing config.cip.proxy.maxSockets');

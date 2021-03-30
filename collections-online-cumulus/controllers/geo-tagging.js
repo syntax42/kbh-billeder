@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const cip = require('../services/cip');
+const cip = require('../../services/cip');
 const config = require('../../collections-online/lib/config');
 
 if(config.features.geoTagging) {

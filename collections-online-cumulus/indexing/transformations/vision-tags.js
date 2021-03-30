@@ -3,7 +3,7 @@
 const assert = require('assert');
 const union = require('lodash/union');
 const config = require('../../../collections-online/lib/config');
-const cip = require('../../services/cip');
+const cip = require('../../../services/cip');
 const helpers = require('../../../collections-online/shared/helpers');
 
 const plugins = require('../../../collections-online/plugins');

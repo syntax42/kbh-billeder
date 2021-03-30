@@ -1,6 +1,6 @@
 const assert = require('assert');
 const config = require('../../collections-online/lib/config');
-const cip = require('../services/cip');
+const cip = require('../../services/cip');
 
 const USER_FIELD = config.motifTagging && config.motifTagging.userField;
 const VISION_FIELD = config.motifTagging && config.motifTagging.visionField;
