@@ -162,6 +162,13 @@ module.exports = (gulp, customizationPath) => {
           ].map(require.resolve)
         }
       },
+      plugins: [
+        [ require.resolve("babel-plugin-module-resolver"), {
+          "alias": {
+            "@collections-online": "./collections-online",
+          }
+        } ],
+      ],
       // Global is needed because JS in collections-online is considered global
       global: !isDevelopment
     })
