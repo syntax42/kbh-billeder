@@ -1,18 +1,20 @@
 'use strict';
 const _ = require('lodash');
-const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-
 const assert = require('assert');
-
+const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const cip = require('../services/cip');
 const config = require('../collections-online/lib/config');
 
 if(config.features.geoTagging) {
   assert.ok(config.geoTagging, 'Expected a config.geoTagging');
-  assert.ok(config.geoTagging.coordinatesField,
-            'Expected config.geoTagging.coordinatesField');
-  assert.ok(config.geoTagging.headingField,
-            'Expected config.geoTagging.headingField');
+  assert.ok(
+    config.geoTagging.coordinatesField,
+    'Expected config.geoTagging.coordinatesField'
+  );
+  assert.ok(
+    config.geoTagging.headingField,
+    'Expected config.geoTagging.headingField'
+  );
 }
 
 const geoTagging = {
@@ -34,43 +36,33 @@ const geoTagging = {
     values[config.geoTagging.headingField] = metadata.heading;
 
     return cip.setFieldValues(metadata.collection, metadata.id, values)
-    .then(function(response) {
-      if (response.statusCode !== 200) {
-        console.error(response.body);
-        throw new Error('Failed to set the field values');
-      } else {
-        console.log('Saved geo-tag on asset: ' +
-                    metadata.collection + '/' + metadata.id);
-        return metadata;
-      }
-    })
+      .then(function(response) {
+        if (response.statusCode !== 200) {
+          console.error(response.body);
+          throw new Error('Failed to set the field values');
+        } else {
+          console.log('Saved geo-tag on asset: ' +
+                      metadata.collection + '/' + metadata.id);
+          return metadata;
+        }
+      })
+      .then(function() {
+        // Pass the same arguments to kbhStatsApi save
+        return kbhStatsApi.saveGeoTag(metadata);
+      });
   },
   // Update an asset in Elastic Search by retriving a fresh copy from Cumulus.
   updateIndex: metadata => {
     const indexController = require('../collections-online-cumulus/controllers/index');
     return indexController.updateAsset(metadata.collection, metadata.id)
-    .then(response => {
-      return metadata;
-    });
+      .then(response => metadata);
   },
   // Update an asset in Elastic Search with data provided by caller.
   updateIndexFromData: metadata => {
     const indexController = require('../collections-online-cumulus/controllers/index');
     return indexController.updateAssetsFromData(metadata)
-    .then(response => {
-      return metadata;
-    });
+      .then(response => metadata);
   }
-};
-
-// Wrap the call to cumulus to save in a function that will inform the
-// kbh-billeder-stats api after a successful save.
-const originalSave = geoTagging.save;
-geoTagging.save = (metadata) => {
-  return originalSave(metadata).then(function() {
-    // Pass the same arguments to our save.
-    return kbhStatsApi.saveGeoTag(metadata);
-  });
 };
 
 module.exports = geoTagging;
