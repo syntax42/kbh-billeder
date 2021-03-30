@@ -20,7 +20,7 @@ module.exports = state => {
     if (exists) {
       console.log('Index was already created');
       return state;
-    } else {
+    }
       var fields = config.types.asset.mapping || {};
       // Get all fields that needs a raw value included in the index
       config.types.asset.fields.filter((field) => {
@@ -90,6 +90,5 @@ module.exports = state => {
           throw err;
         }
       });
-    }
   });
 };
