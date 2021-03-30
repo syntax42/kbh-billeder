@@ -16,7 +16,8 @@ module.exports = state => {
 
   return es.indices.exists({
     index: state.context.index
-  }).then(function(exists) {
+  })
+  .then(function(exists) {
     if (exists) {
       console.log('Index was already created');
       return state;
