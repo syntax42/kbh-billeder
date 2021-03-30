@@ -3,7 +3,6 @@
 var express = require('express');
 var morgan = require('morgan');
 var compression = require('compression');
-var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var cors = require('cors');
@@ -33,10 +32,10 @@ module.exports = function(app) {
 
   // TODO: Consider if 'dev' is to verbose
   app.use(morgan('dev'));
-  app.use(bodyParser.urlencoded({
+  app.use(express.urlencoded({
     extended: true
   }));
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(cookieParser());
   // If the config host is sat and the requested host does not match, redirect
   app.use((req, res, next) => {
