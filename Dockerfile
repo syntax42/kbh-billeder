@@ -1,4 +1,4 @@
-FROM node:8.15
+FROM node:14.16
 EXPOSE 9000
 
 # Dependencies needed for and the node-canvas to install correctly and
