@@ -51,7 +51,6 @@ module.exports.registerPlugins = () => {
   // TODO: Consider not registering these plugins and instead just provide
   // the controllers for document-service implementing plugins or alternatively
   // implement a tag saver and a document-service updating plugin.
-  plugins.register(require('./plugins/geo-tag-controller'));
   plugins.register(require('./plugins/motif-tag-controller'));
 };
 
