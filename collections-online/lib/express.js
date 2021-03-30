@@ -1,14 +1,11 @@
 'use strict';
 
 var express = require('express');
-var favicon = require('serve-favicon');
 var morgan = require('morgan');
 var compression = require('compression');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var errorHandler = require('errorhandler');
 var path = require('path');
-var fs = require('fs');
 var cors = require('cors');
 var config = require('./config');
 var pug = require('./pug')(config);
@@ -22,7 +19,6 @@ module.exports = function(app) {
   app.use(compression());
   app.use(cors());
 
-  // TODO: Consider implementing the use of serve-favicon again.
   config.appPaths.forEach((appPath) => {
     app.use(express.static(appPath));
   });
