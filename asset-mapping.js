@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 
-const config = require('../collections-online/lib/config');
+const config = require('./collections-online/lib/config');
 
 var fields = config.types && config.types.asset && config.types.asset.fields;
 
