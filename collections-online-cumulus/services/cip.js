@@ -75,18 +75,6 @@ cipClient.getRelatedAssets = function(asset, relation) {
   }
 };
 
-/*
-var depth = 0;
-
-function depthTabs() {
-    var result = '';
-    for (var d = 0; d < depth; d++) {
-        result += '\t';
-    }
-    return result;
-}
-*/
-
 var utf16BE2LE = new Iconv('UTF-16BE', 'UTF-16LE');
 
 // We need to use this jshint option, because the three functions reference
