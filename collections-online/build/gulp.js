@@ -106,7 +106,7 @@ module.exports = (gulp, customizationPath) => {
         sass.logError.bind(this)(err);
       }))
       .pipe(cleanCSS())
-      .pipe(autoprefixer({browsers: ['last 4 versions']}))
+      .pipe(autoprefixer())
       .pipe(gulpif(isDevelopment, sourcemaps.write()))
       .pipe(gulp.dest(STYLES_DEST));
   });
