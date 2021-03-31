@@ -4,7 +4,7 @@ const assert = require('assert');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const cip = require('../services/cip');
 const config = require('../collections-online/lib/config');
-const indexController = require('../collections-online-cumulus/controllers/index');
+const indexController = require('./indexing');
 
 if(config.features.geoTagging) {
   assert.ok(config.geoTagging, 'Expected a config.geoTagging');

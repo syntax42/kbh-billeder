@@ -4,7 +4,7 @@ const assert = require('assert');
 const config = require('../collections-online/lib/config');
 const cip = require('../services/cip');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-const indexController = require('../collections-online-cumulus/controllers/index');
+const indexController = require('./indexing');
 
 const USER_FIELD = config.motifTagging && config.motifTagging.userField;
 const VISION_FIELD = config.motifTagging && config.motifTagging.visionField;

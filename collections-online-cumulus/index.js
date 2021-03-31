@@ -47,6 +47,6 @@ module.exports.registerPlugins = () => {
 };
 
 module.exports.registerRoutes = (app) => {
-  var indexController = require('./controllers/index');
+  var indexController = require('../controllers/indexing');
   app.post('/index/asset', indexController.asset);
 };
