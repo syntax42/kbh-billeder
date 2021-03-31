@@ -5,7 +5,5 @@ co.config(__dirname);
 // Register collections-online plugins
 require('./plugins').register();
 
-// This registers the cumulus indexing-engine
-require('./collections-online-cumulus').registerPlugins();
 // Start the indexing
 require('./collections-online/indexing').run();
