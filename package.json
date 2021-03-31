@@ -7,12 +7,11 @@
   "scripts": {
     "gulp": "gulp",
     "index": "node indexing.js",
-    "prepublish": "npm run create-legacy-symlinks && gulp build",
+    "prepublish": "gulp build",
     "start:dev": "concurrently \"npm run gulp\" \"npm run start:nodemon\"",
-    "start:nodemon": "nodemon --watch . --watch ../collections-online --watch ../collections-online-cumulus server.js",
+    "start:nodemon": "nodemon --watch . server.js",
     "start:inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 server.js",
-    "start:nodemon-inspect": "nodemon --delay 80ms --watch . --watch ../collections-online --watch ../collections-online-cumulus --exec 'npm run start:inspect'",
-    "create-legacy-symlinks": "ln -s ../collections-online ./node_modules/collections-online && ln -s ../collections-online-cumulus ./node_modules/collections-online-cumulus"
+    "start:nodemon-inspect": "nodemon --delay 80ms --watch . --exec 'npm run start:inspect'"
   },
   "repository": {
     "type": "git",
