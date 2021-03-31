@@ -55,7 +55,6 @@ To see examples of how to register plug-ins, browse the contents of the
 Don't forget to ask Collections Online (and other collections-online extensions)
 to initialize it´s default plug-ins when initliazing your projects plug-ins:
 
-    require('collections-online-cumulus').registerPlugins();
     require('collections-online').registerPlugins();
 
 ## Using a plug-in
