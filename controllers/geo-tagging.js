@@ -4,6 +4,7 @@ const assert = require('assert');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const cip = require('../services/cip');
 const config = require('../collections-online/lib/config');
+const indexController = require('../collections-online-cumulus/controllers/index');
 
 if(config.features.geoTagging) {
   assert.ok(config.geoTagging, 'Expected a config.geoTagging');
@@ -53,13 +54,11 @@ const geoTagging = {
   },
   // Update an asset in Elastic Search by retriving a fresh copy from Cumulus.
   updateIndex: metadata => {
-    const indexController = require('../collections-online-cumulus/controllers/index');
     return indexController.updateAsset(metadata.collection, metadata.id)
       .then(response => metadata);
   },
   // Update an asset in Elastic Search with data provided by caller.
   updateIndexFromData: metadata => {
-    const indexController = require('../collections-online-cumulus/controllers/index');
     return indexController.updateAssetsFromData(metadata)
       .then(response => metadata);
   }
