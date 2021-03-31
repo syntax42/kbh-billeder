@@ -47,11 +47,6 @@ module.exports.registerPlugins = () => {
 
   // Register the cumulus specific plugins
   plugins.register(require('./plugins/image-controller'));
-
-  // TODO: Consider not registering these plugins and instead just provide
-  // the controllers for document-service implementing plugins or alternatively
-  // implement a tag saver and a document-service updating plugin.
-  plugins.register(require('./plugins/motif-tag-controller'));
 };
 
 module.exports.registerRoutes = (app) => {
