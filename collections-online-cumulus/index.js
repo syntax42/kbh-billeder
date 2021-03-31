@@ -44,9 +44,6 @@ module.exports.registerPlugins = () => {
   } else {
     console.warn('The Cumulus indexing engine is disabled due to configuation');
   }
-
-  // Register the cumulus specific plugins
-  plugins.register(require('./plugins/image-controller'));
 };
 
 module.exports.registerRoutes = (app) => {

@@ -2,8 +2,8 @@
 
 const assert = require('assert');
 
-const config = require('../../collections-online/lib/config');
-const proxy = require('../proxy');
+const config = require('../collections-online/lib/config');
+const proxy = require('../collections-online-cumulus/proxy');
 
 assert.ok(config.cip, 'Missing config.cip');
 assert.ok(config.cip.proxy, 'Missing config.cip.proxy');
