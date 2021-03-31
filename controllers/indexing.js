@@ -22,7 +22,7 @@ if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
   throw new Error('Need exactly one index for Cumulus triggers to work.');
 }
 
-const indexing = require('../collections-online-cumulus/indexing/modes/run');
+const indexing = require('../indexing/modes/run');
 
 var helpers = {
   thousandsSeparator: function(number) {

@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash');
-const cip = require('../../../services/cip');
+const cip = require('../../services/cip');
 
 function relatedFilenameComparison(assetA, assetB) {
   var filenameA = assetA.filename;

@@ -6,7 +6,7 @@
  */
 
 const _ = require('lodash');
-const cip = require('../../../services/cip');
+const cip = require('../../services/cip');
 const processResult = require('./result');
 
 const DEFAULT_PAGE_SIZE = 100;

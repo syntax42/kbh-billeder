@@ -6,7 +6,7 @@ try {
 }
 
 const config = require('../collections-online/lib/config');
-const indexing = require('./indexing/run');
+const indexing = require('../indexing/run');
 
 module.exports.registerPlugins = () => {
   if(config.es) {

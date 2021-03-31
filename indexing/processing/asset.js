@@ -6,7 +6,7 @@
 
 const _ = require('lodash');
 const Q = require('q');
-const config = require('../../../collections-online/lib/config');
+const config = require('../../collections-online/lib/config');
 
 function transformMetadata(metadata, context, transformations) {
   return transformations.reduce((metadata, transformation) => {

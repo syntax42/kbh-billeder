@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../../collections-online/lib/config');
+const config = require('../../collections-online/lib/config');
 
 /**
  * Running the indexing procedure in the catalog mode.

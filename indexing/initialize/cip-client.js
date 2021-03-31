@@ -1,7 +1,7 @@
 'use strict';
 
-const cip = require('../../../services/cip');
-const config = require('../../../collections-online/lib/config');
+const cip = require('../../services/cip');
+const config = require('../../collections-online/lib/config');
 
 /**
  * This initializes the CIP client.

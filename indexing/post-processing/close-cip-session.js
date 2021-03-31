@@ -1,6 +1,6 @@
 'use strict';
 
-const cip = require('../../../services/cip');
+const cip = require('../../services/cip');
 
 /**
  * Close any session with the CIP client.
