@@ -1,13 +1,13 @@
 'use strict';
+const config = require('../collections-online/lib/config');
+const cip = require('../services/cip');
+const imageController = require('../controllers/image');
 
 module.exports = {
   type: 'image-controller',
-  module: require('../controllers/image'),
+  module: imageController,
   initialize: () => {
-    const config = require('../collections-online/lib/config');
-
     if(config.cip.client.authMechanism !== 'http-basic') {
-      const cip = require('../services/cip');
       return cip.initSession().then(() => {
         // TODO: Consider creating the structure of categories (used for the menu)
         // from another API than the CIP

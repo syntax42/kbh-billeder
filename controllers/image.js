@@ -46,5 +46,5 @@ exports.proxyDownload = (id, size, range = false) => {
  * next is a callback method for potential errors
  */
 exports.proxyThumbnail = (id) => {
-    return proxy('/preview/thumbnail/' + id, includeSessionId);
+  return proxy('/preview/thumbnail/' + id, includeSessionId);
 };
