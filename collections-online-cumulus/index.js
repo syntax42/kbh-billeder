@@ -45,8 +45,3 @@ module.exports.registerPlugins = () => {
     console.warn('The Cumulus indexing engine is disabled due to configuation');
   }
 };
-
-module.exports.registerRoutes = (app) => {
-  var indexController = require('../controllers/indexing');
-  app.post('/index/asset', indexController.asset);
-};
