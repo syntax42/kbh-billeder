@@ -1,5 +1,6 @@
 'use strict';
 const plugins = require('../collections-online/plugins');
+const config = require('../collections-online/lib/config');
 
 module.exports.register = () => {
   plugins.register(require('./users'));
@@ -8,5 +9,8 @@ module.exports.register = () => {
   plugins.register(require('./motif-tagging'));
   plugins.register(require('./geo-tagging'));
   plugins.register(require('./stats-pre-renderer'));
-  require('../collections-online-cumulus').registerPlugins();
+  
+  if(config.es) {
+    plugins.register(require('./indexing'));
+  }
 };
