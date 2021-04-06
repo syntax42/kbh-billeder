@@ -9,7 +9,7 @@
 const es = require('collections-online/lib/services/elasticsearch');
 const config = require('collections-online/lib/config');
 
-module.exports = state => {
+module.exports = async (state) => {
   // Save the index in the context
   state.context.index = config.es.index;
   console.log('Initializing the Elastic Search index: ' + state.context.index);
@@ -17,57 +17,37 @@ module.exports = state => {
   return es.indices.exists({
     index: state.context.index
   })
-  .then(function(exists) {
-    if (exists) {
-      console.log('Index was already created');
+    .then((exists) => {
+      if(exists) {
+        //If index exists check that it has the mappings we need
+        return ensureMappingsExists();
+      }
+      //else we create the index
+      return createIndex();
+    })
+
+  function ensureMappingsExists() {
+    return es.indices.get({
+      index: state.context.index
+    })
+    .then(index => {
+      if(!index['kbh-billeder-assets'].mappings.series) {
+        const seriesMapping = getSeriesMapping();
+        return es.indices.putMapping({
+          index: state.context.index,
+          type: "series",
+          body: seriesMapping
+        })
+          .then(response => {
+            console.log("Series mapping successfully added to index", response);
+          })
+          .catch(error => console.error("series error: ", error));
+      }
       return state;
-    }
-    var fields = config.types.asset.mapping || {};
-    // Get all fields that needs a raw value included in the index
-    config.types.asset.fields.filter((field) => {
-      return field.includeRaw;
-    }).forEach((field) => {
-      var fieldName = field.short;
-      fields[fieldName] = {
-        'type': 'string',
-        'analyzer': 'english',
-        'fields': {
-          'raw': {
-            'type': 'string',
-            'index': 'not_analyzed'
-          }
-        }
-      };
     });
-    // Derive mappings from the asset field types
-    // First the fields with date types
-    config.types.asset.fields.filter((field) => {
-      return field.type === 'date';
-    }).forEach((field) => {
-      var fieldName = field.short;
-      fields[fieldName] = {
-        type: 'object',
-        properties: {
-          timestamp: {type: 'date'}
-        }
-      };
-    });
-    // Enumurations should not have their displaystring tokenized
-    config.types.asset.fields.filter((field) => {
-      return field.type === 'enum';
-    }).forEach((field) => {
-      var fieldName = field.short;
-      fields[fieldName] = {
-        type: 'object',
-        properties: {
-          displaystring: {
-            'type': 'string',
-            'index': 'not_analyzed'
-          }
-        }
-      };
-    });
-    // Create the actual index
+  }
+
+  function createIndex() {
     return es.indices.create({
       index: state.context.index,
       body: {
@@ -75,21 +55,121 @@ module.exports = state => {
           'max_result_window': 100000 // So sitemaps can access all assets
         },
         'mappings': {
-          'asset': {
-            'properties': fields
+          asset: getAssetMapping(),
+          series: getSeriesMapping()
+        }
+      }
+    })
+      .then(function() {
+        console.log('Index created.');
+        return state;
+      }, function(err) {
+        // TODO: Add a recursive check for this message.
+        if (err.message === 'No Living connections') {
+          throw new Error('Is the Elasticsearch server running?');
+        } else {
+          throw err;
+        }
+      });
+  }
+
+  function getAssetMapping() {
+    let fields = config.types.asset.mapping || {};
+    // Get all fields that needs a raw value included in the index
+    config.types.asset.fields.filter((field) => {
+      return field.includeRaw;
+    })
+      .forEach((field) => {
+        var fieldName = field.short;
+        fields[fieldName] = {
+          'type': 'string',
+          'analyzer': 'english',
+          'fields': {
+            'raw': {
+              'type': 'string',
+              'index': 'not_analyzed'
+            }
+          }
+        };
+      });
+    // Derive mappings from the asset field types
+    // First the fields with date types
+    config.types.asset.fields.filter((field) => {
+      return field.type === 'date';
+    })
+      .forEach((field) => {
+        var fieldName = field.short;
+        fields[fieldName] = {
+          type: 'object',
+          properties: {
+            timestamp: {type: 'date'}
+          }
+        };
+      });
+    // Enumurations should not have their displaystring tokenized
+    config.types.asset.fields.filter((field) => {
+      return field.type === 'enum';
+    })
+      .forEach((field) => {
+        var fieldName = field.short;
+        fields[fieldName] = {
+          type: 'object',
+          properties: {
+            displaystring: {
+              'type': 'string',
+              'index': 'not_analyzed'
+            }
+          }
+        };
+      });
+
+    return {
+      asset: {
+        properties: fields
+      }
+    };
+  }
+
+  function getSeriesMapping() {
+    return {
+      properties: {
+        title: {
+          type: 'string',
+          analyzer: 'english',
+        },
+        // TO DO: fix description. It is already defined somewhere else
+        // description: {
+        //   type: 'text',
+        //   analyzer: 'english',
+        //   fields: {
+        //     raw: {
+        //       type: 'string',
+        //       index: 'not_analyzed'
+        //     }
+        //   }
+        // },
+        tags: {
+          type: "text"
+        },
+        date1: {
+          type: 'object',
+          properties: {
+            displaystring: {
+              'type': 'string',
+              'index': 'not_analyzed'
+            }
+          }
+        },
+        date2: {
+          type: 'object',
+          properties: {
+            displaystring: {
+              'type': 'string',
+              'index': 'not_analyzed'
+            }
           }
         }
       }
-    }).then(function() {
-      console.log('Index created.');
-      return state;
-    }, function(err) {
-      // TODO: Add a recursive check for this message.
-      if (err.message === 'No Living connections') {
-        throw new Error('Is the Elasticsearch server running?');
-      } else {
-        throw err;
-      }
-    });
-  });
+    };
+  }
 };
