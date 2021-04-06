@@ -85,6 +85,84 @@ function processResultPage(totalcount, context, pageIndex) {
     console.log(progress + ' Received metadata');
     // Perform a processing of all the assets on the page
     const assetPromises = assets.map(asset => {
+      const series = [];
+      let assetSeries = paserAsset(asset);
+
+      if(assetSeries) {
+        console.log(assetSeries);
+      }
+      function paserAsset(asset) {
+        const assetSeries = getAssetSeries(asset);
+        if(!assetSeries.length) {
+          return [];
+        }
+
+        return assetSeries.map(assetSeries => formatSeries(assetSeries));
+
+        function getAssetSeries(asset) {
+          let assetSeries = [];
+          if(asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"]) {
+            assetSeries.push({
+              title: asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"],
+              description: asset["{095e1a43-d628-4944-8e8f-64d3db8c5df5}"],
+              tags: asset["{bef11691-f8a1-49dd-8fbf-45c7d359764f}"],
+              dateFrom: asset["{1a29ca44-f655-49c8-b015-223b51f2e4c5}"],
+              dateTo: asset["{a22b11c8-5c33-4761-96bc-52467080468a}"]
+            });
+          }
+          if(asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"]) {
+            assetSeries.push({
+              title: asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"],
+              description: asset["{956b74f0-9cc7-4525-8fda-40e3df807986}"],
+              tags: asset["{be219ed7-c0c3-4b38-9991-4dab67dc084f}"],
+              dateFrom: asset["{03879423-335a-4772-829c-b31b1d768270}"],
+              dateTo: asset["{fe893328-4d92-4c8f-a847-c42cc1f6fd8d}"]
+            });
+          }
+          return assetSeries;
+        }
+
+        function formatSeries(assetSeries) {
+          const formattedSeries = {
+            title: assetSeries.title,
+            description: assetSeries.description,
+            tags: [],
+            date1: {
+              year: "",
+              month: 1,
+              day: 1,
+              displaystring: ""
+            },
+            date1: {
+              year: "",
+              month: 1,
+              day: 1,
+              displaystring: ""
+            }
+          }
+          //Up qualify a series object
+          const tags = assetSeries.tags.split(",");
+          tags.map(tag => {
+            if(tag == "") {
+              return;
+            }
+            const trimedAndLowerCasedTag = tag.trim().toLowerCase();
+            if(!formattedSeries.tags.includes(trimedAndLowerCasedTag)) {
+              formattedSeries.tags.push(trimedAndLowerCasedTag);
+            }
+          });
+          if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
+            formattedSeries.date1 = assetSeries.dateTo;
+            formattedSeries.date2 = assetSeries.dateFrom;
+          }
+          if(assetSeries.dateFrom.year < assetSeries.dateTo.year) {
+            formattedSeries.date1 = assetSeries.dateFrom;
+            formattedSeries.date2 = assetSeries.dateTo;
+          }
+
+          return formattedSeries;
+        }
+      }
       // Clone the context for every asset
       const clonedContext = _.cloneDeep(context);
       // Keep an object of requested changes to the asset in Cumulus
