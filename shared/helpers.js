@@ -1,6 +1,6 @@
 /* global config */
-const config = require('collections-online/lib/config');
-const helpers = require('collections-online/shared/helpers');
+const config = require('../collections-online/lib/config');
+const helpers = require('../collections-online/shared/helpers');
 // Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
 const backsideAssetCumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
 

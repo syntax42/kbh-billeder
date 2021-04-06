@@ -6,13 +6,14 @@ const path = require('path');
 const limiter = require('limiter');
 
 const config = require('../config');
-const gcloud = require('google-cloud');
+const gcloudTranslate = require('@google-cloud/translate');
+const gcloudVision = require('@google-cloud/vision');
 
 const KEY_FILE_PATH = path.join(config.customizationPath, 'google-key.json');
 assert.ok(fs.existsSync(KEY_FILE_PATH),
           'Missing the Google API key file: ' + KEY_FILE_PATH);
 
-const vision = gcloud.vision({
+const vision = gcloudVision({
   keyFilename: KEY_FILE_PATH
 });
 
@@ -34,7 +35,7 @@ vision.annotate = function() {
   });
 };
 
-const translate = gcloud.translate({
+const translate = gcloudTranslate({
   keyFilename: KEY_FILE_PATH
 });
 

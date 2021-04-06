@@ -1,0 +1,301 @@
+'use strict';
+
+/**
+ * The processor handling an entire result.
+ */
+
+const _ = require('lodash');
+const cip = require('../../services/cip');
+const config = require('../../collections-online/lib/config');
+const es = require('../../collections-online/lib/services/elasticsearch');
+const Q = require('q');
+
+function AssetIndexingError(catalogAlias, assetId, innerError) {
+  this.catalogAlias = catalogAlias;
+  this.assetId = assetId;
+  this.innerError = innerError;
+}
+
+const processAsset = require('./asset');
+
+function saveChangesToCIP(catalogAlias, items) {
+  const operation = [
+    'metadata',
+    'setfieldvalues',
+    catalogAlias
+  ].join('/');
+  // Call the CIP
+  return cip.request(operation, {}, {
+    items
+  });
+}
+
+async function getResultPage(query, catalog, index, pageSize) {
+  const operation = [
+    'metadata',
+    'search',
+    catalog,
+    config.cip.client.constants.layoutAlias,
+  ];
+
+  const options = {
+    querystring: query,
+    startindex: index,
+    maxreturned: pageSize
+  };
+
+  if(config.cip.indexing.additionalFields) {
+    options.field = config.cip.indexing.additionalFields;
+  }
+
+  let response;
+  try {
+    response = await cip.request(operation, options);
+  } catch(error) {
+    if(error.code === 'ECONNREFUSED') {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      response = await cip.request(operation, options);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  if (!response || !response.body || typeof(response.body.items) === 'undefined') {
+    console.error('Unexpected response:', response);
+    throw new Error('The request for field values returned an empty result.');
+  } else {
+    return response.body.items;
+  }
+}
+
+/**
+ * Process a specific result page, with assets.
+ */
+function processResultPage(totalcount, context, pageIndex) {
+  const { query, collection, pageSize } = context
+
+  const totalPages = Math.ceil(totalcount / pageSize);
+  const progress = '[' + (pageIndex + 1) + '/' + totalPages + ']';
+  console.log(progress + ' Queuing page');
+
+
+  return getResultPage(query, collection, pageIndex * pageSize, pageSize)
+  .then(assets => {
+    console.log(progress + ' Received metadata');
+    // Perform a processing of all the assets on the page
+    const assetPromises = assets.map(asset => {
+      const series = [];
+      let assetSeries = paserAsset(asset);
+
+      if(assetSeries) {
+        console.log(assetSeries);
+      }
+      function paserAsset(asset) {
+        const assetSeries = getAssetSeries(asset);
+        if(!assetSeries.length) {
+          return [];
+        }
+
+        return assetSeries.map(assetSeries => formatSeries(assetSeries));
+
+        function getAssetSeries(asset) {
+          let assetSeries = [];
+          if(asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"]) {
+            assetSeries.push({
+              title: asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"],
+              description: asset["{095e1a43-d628-4944-8e8f-64d3db8c5df5}"],
+              tags: asset["{bef11691-f8a1-49dd-8fbf-45c7d359764f}"],
+              dateFrom: asset["{1a29ca44-f655-49c8-b015-223b51f2e4c5}"],
+              dateTo: asset["{a22b11c8-5c33-4761-96bc-52467080468a}"]
+            });
+          }
+          if(asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"]) {
+            assetSeries.push({
+              title: asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"],
+              description: asset["{956b74f0-9cc7-4525-8fda-40e3df807986}"],
+              tags: asset["{be219ed7-c0c3-4b38-9991-4dab67dc084f}"],
+              dateFrom: asset["{03879423-335a-4772-829c-b31b1d768270}"],
+              dateTo: asset["{fe893328-4d92-4c8f-a847-c42cc1f6fd8d}"]
+            });
+          }
+          return assetSeries;
+        }
+
+        function formatSeries(assetSeries) {
+          const formattedSeries = {
+            title: assetSeries.title,
+            description: assetSeries.description,
+            tags: [],
+            date1: {
+              year: "",
+              month: 1,
+              day: 1,
+              displaystring: ""
+            },
+            date1: {
+              year: "",
+              month: 1,
+              day: 1,
+              displaystring: ""
+            }
+          }
+          //Up qualify a series object
+          const tags = assetSeries.tags.split(",");
+          tags.map(tag => {
+            if(tag == "") {
+              return;
+            }
+            const trimedAndLowerCasedTag = tag.trim().toLowerCase();
+            if(!formattedSeries.tags.includes(trimedAndLowerCasedTag)) {
+              formattedSeries.tags.push(trimedAndLowerCasedTag);
+            }
+          });
+          if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
+            formattedSeries.date1 = assetSeries.dateTo;
+            formattedSeries.date2 = assetSeries.dateFrom;
+          }
+          if(assetSeries.dateFrom.year < assetSeries.dateTo.year) {
+            formattedSeries.date1 = assetSeries.dateFrom;
+            formattedSeries.date2 = assetSeries.dateTo;
+          }
+
+          return formattedSeries;
+        }
+      }
+      // Clone the context for every asset
+      const clonedContext = _.cloneDeep(context);
+      // Keep an object of requested changes to the asset in Cumulus
+      clonedContext.changes = {};
+      // Define a method to persist values in Cumulus
+      clonedContext.persist = (name, value) => {
+        // Determine the fields UUID in Cumulus
+        if(!config.types || !config.types.asset || !config.types.asset.fields) {
+          throw new Error('Cannot get field: Missing config.types.asset.fields');
+        }
+        const field = config.types.asset.fields.find(field => field.short === name);
+        if(!field) {
+          throw new Error('Field is missing in config.types.asset.fields: ' + name);
+        }
+        // Update the value in the changes object
+        clonedContext.changes[field.cumulusKey] = value;
+      };
+      // Process each asset
+      return processAsset(asset, clonedContext)
+      .then(null, err => {
+        const msg = 'ERROR processing ' + collection + '-' + asset.id;
+        console.error(msg + (err.message && ': ' + err.message));
+        return new AssetIndexingError(collection, asset.id, err);
+      });
+    });
+
+    // Once all asset promises resolves:
+    // 1. changes are saved to Cumulus
+    // 2. metedata is indexed in elasticsearch
+    // in two bulk calls
+
+    return Q.all(assetPromises)
+    .then(assets => {
+      return {
+        errors: assets.filter(a => a instanceof AssetIndexingError),
+        assets: assets.filter(a => !(a instanceof AssetIndexingError))
+      };
+    })
+    .then(({assets, errors}) => {
+      // Save the changes to the CIP
+      const changes = assets.filter(({context}) => {
+        // Filter out assets without changes
+        return context.changes && Object.keys(context.changes).length > 0;
+      }).map(({metadata, context}) => {
+        return Object.assign({
+          id: metadata.id
+        }, context.changes);
+      });
+      // If changes to the CIP assets is needed, save them
+      if(changes.length > 0) {
+        // TODO: Consider the response from the CIP - as a change might fail.
+        return saveChangesToCIP(context.collection, changes)
+        .then(response => {
+          if(response.statusCode === 200) {
+            console.log(progress + ' Updated', changes.length, 'assets in Cumulus');
+            return { assets, errors };
+          } else {
+            throw new Error('Error updating assets in Cumulus');
+          }
+        });
+      } else {
+        return { assets, errors };
+      }
+    }).then(({assets, errors}) => {
+      // Create a list of items for a bulk call, for assets that are not errors.
+      const items = [];
+      assets.filter(asset => !(asset instanceof AssetIndexingError))
+      .forEach(({metadata, context}) => {
+        items.push({
+          'index' : {
+            '_index': context.index,
+            '_type': 'asset',
+            '_id': metadata.collection + '-' + metadata.id
+          }
+        });
+        items.push(metadata);
+      });
+      // Perform the bulk operation
+      return es.bulk({
+        body: items
+      }).then(response => {
+        const indexedIds = [];
+        // Go through the items in the response and replace failures with errors
+        // in the assets
+        response.items.forEach(item => {
+          if(item.index.status >= 200 && item.index.status < 300) {
+            indexedIds.push(item.index._id);
+          } else {
+            // TODO: Consider using the AssetIndexingError instead
+            errors.push(new Error('Failed index ' + item.index._id));
+          }
+        });
+        console.log(progress + ' Indexed', indexedIds.length, 'assets in ES');
+        // Return the result
+        return { errors, indexedIds };
+      });
+    });
+  });
+}
+
+function processResultPages(totalcount, context) {
+  // Build up a list of parameters for all the pages in the entire result
+  const pageIndecies = [];
+  for(let p = context.offset; p * context.pageSize < totalcount; p++) {
+    pageIndecies.push(p);
+  }
+  // Return a promise of process result pages (evaluated one after another)
+  return pageIndecies.reduce((idsAndErrors, pageIndex) => {
+    return Q.when(idsAndErrors)
+    .then(({allIndexedIds, allErrors}) => {
+      return processResultPage(totalcount, context, pageIndex)
+      .then(({indexedIds, errors}) => {
+        return {
+          allIndexedIds: allIndexedIds.concat(indexedIds),
+          allErrors: allErrors.concat(errors)
+        };
+      });
+    });
+  }, new Q({
+    allIndexedIds: [],
+    allErrors: []
+  }))
+  .then(({allIndexedIds, allErrors}) => {
+    return {
+      indexedIds: allIndexedIds,
+      errors: allErrors
+    };
+  });
+}
+
+function processResult(context, query, totalcount) {
+  console.log('Processing a result of ' + totalcount + ' assets');
+  return processResultPages(totalcount, context);
+}
+
+module.exports = processResult;

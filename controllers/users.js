@@ -1,6 +1,6 @@
-const users = require('collections-online/lib/controllers/users');
+const users = require('../collections-online/lib/controllers/users');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-const config = require('collections-online/shared/config');
+const config = require('../collections-online/shared/config');
 const _ = require('lodash');
 const helpers = require('../shared/helpers')
 
@@ -43,7 +43,7 @@ users.renderEditProfile = async (req, res) => {
 users.fetchUserContributions = async (req, res, next) => {
   // We have to require the document service late as it is loaded later than
   // the controller.
-  const ds = require('collections-online/lib/services/documents');
+  const ds = require('../collections-online/lib/services/documents');
 
   // Only process requests from logged in users.
   if (!req.user) {
