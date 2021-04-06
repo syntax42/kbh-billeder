@@ -21,6 +21,9 @@ function processQuery(state, query) {
   ], {
     querystring: query.query
   }).then(result => {
+    // console.log("query: ", query);
+    // console.log("cumulus result: ", result);
+
     const { totalcount } = result.body;
     // Copy the context, to prevent race-conditions across queries
     const clonedContext = _.cloneDeep(state.context);
