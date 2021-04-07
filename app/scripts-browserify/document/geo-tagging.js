@@ -12,7 +12,7 @@ $(function ($) {
   const DATA_SECTION_NO_LOCATION = '.document__section-2--no-location';
   const MAP_SECTION_SELECTOR = '.document__section-2--map';
   const MAP_ELEMENT_SELECTOR = '.geo-tagging-mini-map';
-  const config = require('collections-online/shared/config');
+  const config = require('../../../collections-online/shared/config');
 
   const controllerState = {
     assetBackup: undefined,

@@ -2,7 +2,7 @@
  * This module handles all clientside searching
  */
 
-const config = require('collections-online/shared/config');
+const config = require('../../../../collections-online/shared/config');
 const helpers = require('../../../shared/helpers');
 
 const MapController = require('map-controller');

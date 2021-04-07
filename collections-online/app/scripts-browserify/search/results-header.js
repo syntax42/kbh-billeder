@@ -1,4 +1,4 @@
-const config = require('collections-online/shared/config');
+const config = require('../../../../collections-online/shared/config');
 
 /**
  * This module handles the rendering of the results header

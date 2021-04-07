@@ -36,7 +36,7 @@ module.exports = function(app) {
   const types = Object.keys(config.types);
   types.forEach((type) => {
     // Register all routes related to the particular type
-    const router = require(config.types[type].router);
+    const router = require('../../' + config.types[type].router);
     // Register the types router on the app
     let path;
     if(types.length > 1) {

@@ -1,34 +1,28 @@
+const autoprefixer = require('gulp-autoprefixer');
+const bower = require('gulp-bower');
+const browserify = require('browserify');
+const cleanCSS = require('gulp-clean-css');
+const concat = require('gulp-concat');
+const CustomPug = require('./custom-pug.js');
+const del = require('del');
+const gulpif = require('gulp-if');
+const path = require('path');
+const plumber = require('gulp-plumber');
+const pug = require('gulp-pug');
+const rename = require('gulp-rename');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const svgmin = require('gulp-svgmin');
+const svgstore = require('gulp-svgstore');
+const uglify = require('gulp-uglify');
+const uniqueFiles = require('gulp-unique-files');
+
 module.exports = (gulp, customizationPath) => {
   const config = require('../lib/config');
   config.setCustomizationPath(customizationPath);
 
-  //------------------------------------------
-  // Require
-  //------------------------------------------
-  // sorted alphabetically after const name
-  const autoprefixer = require('gulp-autoprefixer');
-  const bower = require('gulp-bower');
-  const browserify = require('browserify');
-  const cleanCSS = require('gulp-clean-css');
-  const concat = require('gulp-concat');
-  const customPug = require('./custom-pug.js')(config);
-  const del = require('del');
-  const fs = require('fs');
-  const gulpif = require('gulp-if');
-  const notify = require('gulp-notify');
-  const path = require('path');
-  const plumber = require('gulp-plumber');
-  const print = require('gulp-print');
-  const pug = require('gulp-pug');
-  const rename = require('gulp-rename');
-  const sass = require('gulp-sass');
-  const sequence = require('run-sequence');
-  const source = require('vinyl-source-stream');
-  const sourcemaps = require('gulp-sourcemaps');
-  const svgmin = require('gulp-svgmin');
-  const svgstore = require('gulp-svgstore');
-  const uglify = require('gulp-uglify');
-  const uniqueFiles = require('gulp-unique-files');
+  const customPug = CustomPug(config);
 
   //------------------------------------------
   // Directories - note that they are relative to the project specific gulpfile
@@ -62,11 +56,11 @@ module.exports = (gulp, customizationPath) => {
     '/ev-emitter/ev-emitter.js',
     '/imagesloaded/imagesloaded.js',
     '/jquery-infinite-scroll/jquery.infinitescroll.js',
-    '/get-size/get-size.js',
-    '/desandro-matches-selector/matches-selector.js',
-    '/fizzy-ui-utils/utils.js',
-    '/outlayer/item.js',
-    '/outlayer/outlayer.js',
+    //'/get-size/get-size.js',
+    //'/desandro-matches-selector/matches-selector.js',
+    //'/fizzy-ui-utils/utils.js',
+    //'/outlayer/item.js',
+    //'/outlayer/outlayer.js',
     '/picturefill/dist/picturefill.js',
     '/typeahead.js/dist/typeahead.bundle.js',
     '/scrollToTop/jquery.scrollToTop.js',
@@ -90,36 +84,52 @@ module.exports = (gulp, customizationPath) => {
 
   var SCRIPTS_ALL = SCRIPTS_ARRAY_CO;
 
-  gulp.task('reload-config', function() {
+  gulp.task('reload-config', function(done) {
     config.reload();
+    done();
   });
 
   // Return only
   //------------------------------------------
   // Individual tasks
   //------------------------------------------
-  gulp.task('bower', function() {
+  gulp.task('bower', () => {
     return bower({cwd: ROOT_CO});
   });
 
-  gulp.task('css', function() {
+  gulp.task('css', () => {
     return gulp.src(STYLES_SRC)
       .pipe(plumber())
       .pipe(gulpif(isDevelopment, sourcemaps.init()))
       .pipe(sass().on('error', function(err) {
         console.error('\x07');
         sass.logError.bind(this)(err);
-        return notify().write({
-          'message': 'Sass error'
-        });
       }))
       .pipe(cleanCSS())
-      .pipe(autoprefixer({browsers: ['last 4 versions']}))
+      .pipe(autoprefixer())
       .pipe(gulpif(isDevelopment, sourcemaps.write()))
       .pipe(gulp.dest(STYLES_DEST));
   });
 
-  gulp.task('js-browserify', ['pug'], function() {
+  gulp.task('pug', () => {
+    return gulp.src([PUG_SRC_CO, PUG_SRC])
+      .pipe(uniqueFiles())
+      .pipe(pug({
+        client: true,
+        compileDebug: isDevelopment,
+        pug: customPug
+      }))
+      .on('error', function (err) {
+        console.log('Error while compiling pug');
+        console.log(err.toString());
+        // This will thrown an error since we're going to write to files after
+        // we've emitted an "end" - but this is the best we can do for now.
+        this.emit('end');
+      })
+      .pipe(gulp.dest(PUG_DEST));
+  });
+
+  gulp.task('js-browserify', gulp.series('pug', () => {
     return browserify({
       paths: [
         SCRIPTS_BROWSERIFY_DIR,
@@ -152,22 +162,25 @@ module.exports = (gulp, customizationPath) => {
           ].map(require.resolve)
         }
       },
+      plugins: [
+        [ require.resolve("babel-plugin-module-resolver"), {
+          "alias": {
+            "@collections-online": "./collections-online",
+          }
+        } ],
+      ],
       // Global is needed because JS in collections-online is considered global
       global: !isDevelopment
     })
     .bundle()
     .on('error', function(err){
       console.log(err.stack);
-      return notify().write({
-        'title': 'Browserify error',
-        'message': err.message
-      });
     })
     .pipe(source('browserify-index.js'))
     .pipe(gulp.dest(SCRIPTS_DEST));
-  });
+  }));
 
-  gulp.task('js', ['js-browserify'], function() {
+  gulp.task('js', gulp.series('js-browserify', () => {
     var scriptPaths = SCRIPTS_ARRAY_CO.concat([
       SCRIPTS_DEST + '/browserify-index.js'
     ]);
@@ -177,17 +190,12 @@ module.exports = (gulp, customizationPath) => {
       .pipe(gulp.dest(SCRIPTS_DEST))
       .pipe(gulpif(!isDevelopment, uglify().on('error', console.error)))
       .pipe(gulp.dest(SCRIPTS_DEST))
-      .pipe(notify('Ready to reload'))
       .on('error', function(err){
         console.log(err.stack);
-        return notify().write({
-          'title': 'JavaScript error',
-          'message': err.message
-        });
       });
-  });
+  }));
 
-  gulp.task('svg', function() {
+  gulp.task('svg', () => {
     return gulp.src([SVG_SRC_CO, SVG_SRC])
       .pipe(uniqueFiles())
       .pipe(svgmin())
@@ -196,38 +204,22 @@ module.exports = (gulp, customizationPath) => {
       .pipe(gulp.dest(SVG_DEST));
   });
 
-  gulp.task('pug', function() {
-    return gulp.src([PUG_SRC_CO, PUG_SRC])
-      .pipe(uniqueFiles())
-      .pipe(pug({
-        client: true,
-        compileDebug: isDevelopment,
-        pug: customPug
-      }))
-      .on('error', function (err) {
-        console.log('Error while compiling pug');
-        console.log(err.toString());
-        // This will thrown an error since we're going to write to files after
-        // we've emitted an "end" - but this is the best we can do for now.
-        this.emit('end');
-      })
-      .pipe(gulp.dest(PUG_DEST));
-  });
-
-  gulp.task('watch', function() {
-    gulp.watch(STYLES_ALL, { interval: 500 }, ['css']);
-    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 500 }, ['svg']);
-    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 500 }, ['js']);
+  gulp.task('watch', (done) => {
+    gulp.watch(STYLES_ALL, { interval: 500 }, gulp.task('css'));
+    gulp.watch([SVG_SRC, SVG_SRC_CO], { interval: 500 }, gulp.task('svg'));
+    gulp.watch([PUG_SRC_CO, PUG_SRC], { interval: 500 }, gulp.task('js'));
     gulp.watch([
-      SCRIPTS_ALL,
+      ...SCRIPTS_ALL,
       SCRIPTS_BROWSERIFY_DIR_CO + '/**/*.js',
       SCRIPTS_BROWSERIFY_DIR + '/**/*.js',
       customizationPath + '/config/**/*',
       customizationPath + '/shared/*.js'
-    ], { interval: 500 }, ['reload-config', 'js']);
+    ], { interval: 500 }, gulp.series('reload-config', 'js'));
+
+    done();
   });
 
-  gulp.task('clean', function() {
+  gulp.task('clean', () => {
     return del([DEST_DIR]);
   });
 };
