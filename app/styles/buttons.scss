@@ -20,15 +20,10 @@
   position: relative;
 }
 
-.btn:not(
-  .search-freetext-form__btn,
-  .btn-no-shadow
-) {
+.btn:not(.search-freetext-form__btn):not(.btn-no-shadow) {
   @include shadow(1);
 
   @media (pointer:fine) {
-    transition: $anim-default;
-
     &:hover {
       @include shadow(2);
       transform: translateY(-1px);
@@ -38,5 +33,7 @@
     &:focus {
       outline: $white solid 1px;
     }
+
+    transition: $anim-default;
   }
 }
