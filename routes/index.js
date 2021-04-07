@@ -1,6 +1,6 @@
 'use strict';
 
-const index = require('../collections-online-cumulus/controllers/index');
+const index = require('../controllers/indexing');
 const users = require('../controllers/users');
 
 module.exports = function(app) {
