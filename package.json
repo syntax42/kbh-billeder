@@ -1,6 +1,6 @@
 {
   "name": "kbh-billeder",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "main": "server.js",
   "browserslist": "last 4 versions",
