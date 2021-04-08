@@ -61,7 +61,7 @@
     "gulp-sourcemaps": "^1.12.1",
     "gulp-svgmin": "^3.0.0",
     "gulp-svgstore": "^6.1.1",
-    "gulp-uglify": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
     "gulp-unique-files": "^0.2.0",
     "hammerjs": "^2.0.8",
     "iconv": "^3.0.0",
