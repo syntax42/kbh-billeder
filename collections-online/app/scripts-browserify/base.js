@@ -3,7 +3,7 @@
 require('babel-polyfill');
 
 module.exports = options => {
-  const config = require('collections-online/shared/config');
+  const config = require('../../../collections-online/shared/config');
 
   require('./mobile')
   require('./search');

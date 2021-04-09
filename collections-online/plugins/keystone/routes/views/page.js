@@ -1,5 +1,5 @@
 var keystone = require('keystone');
-const plugins = require('collections-online/plugins');
+const plugins = require('../../../../../collections-online/plugins');
 
 module.exports = function (req, res, next) {
   var locals = res.locals;

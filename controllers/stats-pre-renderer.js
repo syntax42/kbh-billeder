@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-const auth0 = require('collections-online/lib/services/auth0');
+const auth0 = require('../collections-online/lib/services/auth0');
 const Service = auth0.getManagementService;
 const PLACEHOLDER = '{{STAT}}';
 

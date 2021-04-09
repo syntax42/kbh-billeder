@@ -1,6 +1,6 @@
 var Q = require('q');
 var _ = require('lodash');
-var keystone = require('collections-online/plugins/keystone').module;
+var keystone = require('../collections-online/plugins/keystone').module;
 
 var Page = keystone.list('Page');
 var MenuItem = keystone.list('Menu item');
