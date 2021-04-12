@@ -40,6 +40,7 @@ module.exports = async (state) => {
         })
           .then(response => {
             console.log("Series mapping successfully added to index", response);
+            return state;
           })
           .catch(error => console.error("series error: ", error));
       }
