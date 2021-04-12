@@ -16,7 +16,7 @@ function transformMetadata(metadata, context, transformations) {
   }, metadata);
 }
 
-function processAsset(metadata, context, transformations) {
+function processAsset(metadata, assetSeries, context, transformations) {
   if (!metadata) {
     throw new Error('Metadata is needed to know what to transform.');
   }
@@ -25,6 +25,7 @@ function processAsset(metadata, context, transformations) {
   }
   //console.log('Processing an asset.');
   // Use all transformations by default.
+  //TO DO: does tranformation change from asset to asset? if not then we might be able to remove the outer if statement beneath
   if (typeof(transformations) === 'undefined') {
     if (config.cip.indexing.transformationsModule) {
       transformations = require(config.cip.indexing.transformationsModule);
@@ -37,6 +38,7 @@ function processAsset(metadata, context, transformations) {
   .then(metadata => {
     return {
       metadata,
+      assetSeries,
       context
     };
   });
