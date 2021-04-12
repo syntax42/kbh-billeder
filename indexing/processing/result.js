@@ -261,36 +261,16 @@ function formatSeries(assetSeries) {
     _id: crypto.createHash('sha256').update(assetSeries.title).digest('hex'),
     title: assetSeries.title,
     description: assetSeries.description,
-    tags: [],
-    date1: {
-      year: "",
-      month: 1,
-      day: 1,
-      displaystring: ""
-    },
-    date2: {
-      year: "",
-      month: 1,
-      day: 1,
-      displaystring: ""
-    }
+    tags: assetSeries.tags
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag)
   }
   //further qualify a series object
-  const tags = assetSeries.tags.split(",");
-  tags.map(tag => {
-    if(tag == "") {
-      return;
-    }
-    const trimedAndLowerCasedTag = tag.trim().toLowerCase();
-    if(!formattedSeries.tags.includes(trimedAndLowerCasedTag)) {
-      formattedSeries.tags.push(trimedAndLowerCasedTag);
-    }
-  });
   if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
     formattedSeries.date1 = assetSeries.dateTo;
     formattedSeries.date2 = assetSeries.dateFrom;
-  }
-  if(assetSeries.dateFrom.year < assetSeries.dateTo.year) {
+  } else {
     formattedSeries.date1 = assetSeries.dateFrom;
     formattedSeries.date2 = assetSeries.dateTo;
   }
