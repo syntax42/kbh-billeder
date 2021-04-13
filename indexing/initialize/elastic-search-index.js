@@ -134,6 +134,9 @@ module.exports = async (state) => {
   function getSeriesMapping() {
     return {
       properties: {
+        url: {
+          type: 'keyword'
+        },
         title: {
           type: 'string',
           analyzer: 'english',
@@ -152,21 +155,19 @@ module.exports = async (state) => {
         tags: {
           type: "text"
         },
-        date1: {
+        dateFrom: {
           type: 'object',
           properties: {
-            displaystring: {
-              'type': 'string',
-              'index': 'not_analyzed'
+            timestamp: {
+              type: 'date'
             }
           }
         },
-        date2: {
+        dateTo: {
           type: 'object',
           properties: {
-            displaystring: {
-              'type': 'string',
-              'index': 'not_analyzed'
+            timestamp: {
+              type: 'date'
             }
           }
         }

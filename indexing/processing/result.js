@@ -9,7 +9,6 @@ const cip = require('../../services/cip');
 const config = require('../../collections-online/lib/config');
 const es = require('../../collections-online/lib/services/elasticsearch');
 const Q = require('q');
-const crypto = require("crypto");
 
 function AssetIndexingError(catalogAlias, assetId, innerError) {
   this.catalogAlias = catalogAlias;
@@ -237,6 +236,7 @@ function getAssetSeries(asset) {
   let assetSeries = [];
   if(asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"]) {
     assetSeries.push({
+      url: asset["{44c7a3b9-8ff2-4e58-8120-e0e64ba263ea}"],
       title: asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"],
       description: asset["{095e1a43-d628-4944-8e8f-64d3db8c5df5}"],
       tags: asset["{bef11691-f8a1-49dd-8fbf-45c7d359764f}"],
@@ -246,6 +246,7 @@ function getAssetSeries(asset) {
   }
   if(asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"]) {
     assetSeries.push({
+      url: asset["{ba67b9d6-8459-430c-9819-e660a294f7e7}"],
       title: asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"],
       description: asset["{956b74f0-9cc7-4525-8fda-40e3df807986}"],
       tags: asset["{be219ed7-c0c3-4b38-9991-4dab67dc084f}"],
@@ -258,7 +259,8 @@ function getAssetSeries(asset) {
 
 function formatSeries(assetSeries) {
   const formattedSeries = {
-    _id: crypto.createHash('sha256').update(assetSeries.title).digest('hex'),
+    url: assetSeries.url,
+    _id: "series/" + assetSeries.url,
     title: assetSeries.title,
     description: assetSeries.description,
     tags: assetSeries.tags
@@ -266,16 +268,35 @@ function formatSeries(assetSeries) {
       .map((tag) => tag.trim().toLowerCase())
       .filter((tag) => tag)
   }
-  //further qualify a series object
   if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
-    formattedSeries.date1 = assetSeries.dateTo;
-    formattedSeries.date2 = assetSeries.dateFrom;
+    formattedSeries.dateFrom = formatDate(assetSeries.dateTo);
+    formattedSeries.dateTo = formatDate(assetSeries.dateFrom);
   } else {
-    formattedSeries.date1 = assetSeries.dateFrom;
-    formattedSeries.date2 = assetSeries.dateTo;
+    formattedSeries.dateFrom = formatDate(assetSeries.dateFrom);
+    formattedSeries.dateTo = formatDate(assetSeries.dateTo);
   }
-
   return formattedSeries;
+}
+
+function formatDate(date) {
+  return {
+    ...date,
+    timestamp: getTimestamp(date)
+  };
+}
+
+function getTimestamp(date) {
+  const month = ensureTwoCipheredNumber(date.month || 1);
+  const day = ensureTwoCipheredNumber(date.day || 1);
+  return `${date.year}-${month}-${day}`;
+}
+
+function ensureTwoCipheredNumber(number) {
+  const stringifiedNumber = number.toString();
+  if(stringifiedNumber.length >= 2) {
+    return stringifiedNumber;
+  }
+  return stringifiedNumber.padStart(2,"0");
 }
 
 function processResultPages(totalcount, context) {
