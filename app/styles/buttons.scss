@@ -20,10 +20,7 @@
   position: relative;
 }
 
-.btn:not(
-  .search-freetext-form__btn,
-  .btn-no-shadow
-) {
+.btn:not(.search-freetext-form__btn):not(.btn-no-shadow) {
   @include shadow(1);
 
   @media (pointer:fine) {
