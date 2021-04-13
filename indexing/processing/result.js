@@ -137,7 +137,7 @@ function processResultPage(totalcount, context, pageIndex) {
           if(typeof series.assets == "undefined") {
             series.assets = [];
           }
-          series.assets.push(metadata.id);
+          series.assets.push(metadata.collection + '-' + metadata.id);
           if(typeof series.previewAssets == "undefined") {
             series.previewAssets = [];
           }
