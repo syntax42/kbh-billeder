@@ -8,7 +8,8 @@ include ../mixins/icon
 - const altText = helpers.documentTitle(metadata) + (tagString ? ': ' + tagString : '');
 - const creationPeriod = (metadata.creation_time_from ? metadata.creation_time_from.year + '-' : '') + (metadata.creation_time_to ? metadata.creation_time_to.year : '');
 - const creationTime = (metadata.creation_time ? (metadata.creation_time_estimated ? 'ca. ' : '') + helpers.formatDate(metadata.creation_time) : '');
-a(href=documentURL target=target).search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1
+
+a.search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1(href=documentURL, target=target, class=type === "series" ? 'search-results-item--black' : '')
   .search-results-item__squared-container
     img(src=thumbnailURL alt=altText).search-results-item__squared-image.object-fit
     if mediaType === 'video'
