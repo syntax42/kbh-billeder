@@ -85,6 +85,8 @@ function processResultPage(totalcount, context, pageIndex) {
     console.log(progress + ' Received metadata');
     // Perform a processing of all the assets on the page
     const assetPromises = assets.map(asset => {
+      const assetSeries = parseAssetSeries(asset);
+
       // Clone the context for every asset
       const clonedContext = _.cloneDeep(context);
       // Keep an object of requested changes to the asset in Cumulus
@@ -103,7 +105,7 @@ function processResultPage(totalcount, context, pageIndex) {
         clonedContext.changes[field.cumulusKey] = value;
       };
       // Process each asset
-      return processAsset(asset, clonedContext)
+      return processAsset(asset, assetSeries, clonedContext)
       .then(null, err => {
         const msg = 'ERROR processing ' + collection + '-' + asset.id;
         console.error(msg + (err.message && ': ' + err.message));
@@ -116,23 +118,47 @@ function processResultPage(totalcount, context, pageIndex) {
     // 2. metedata is indexed in elasticsearch
     // in two bulk calls
 
+
     return Q.all(assetPromises)
-    .then(assets => {
+    .then((assets) => {
       return {
         errors: assets.filter(a => a instanceof AssetIndexingError),
         assets: assets.filter(a => !(a instanceof AssetIndexingError))
       };
     })
     .then(({assets, errors}) => {
-      // Save the changes to the CIP
-      const changes = assets.filter(({context}) => {
-        // Filter out assets without changes
-        return context.changes && Object.keys(context.changes).length > 0;
-      }).map(({metadata, context}) => {
-        return Object.assign({
-          id: metadata.id
-        }, context.changes);
+      const seriesLookup = { };
+      assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => seriesLookup[series._id] = series));
+
+      assets.forEach(({ metadata, assetSeries }) => {
+        assetSeries.forEach((as) => {
+          const series = seriesLookup[as._id];
+          if(typeof series.assets == "undefined") {
+            series.assets = [];
+          }
+          series.assets.push(metadata.collection + '-' + metadata.id);
+          if(typeof series.previewAssets == "undefined") {
+            series.previewAssets = [];
+          }
+          if(series.previewAssets.length < 3) {
+            series.previewAssets.push(metadata);
+          }
+        })
       });
+
+      const assetSeries = Object.values(seriesLookup);
+
+      // Save the changes to the CIP
+      const changes = assets
+        .filter(({context}) => {
+          // Filter out assets without changes
+          return context.changes && Object.keys(context.changes).length > 0;
+        })
+        .map(({metadata, context}) => {
+          return Object.assign({
+            id: metadata.id
+          }, context.changes);
+        });
       // If changes to the CIP assets is needed, save them
       if(changes.length > 0) {
         // TODO: Consider the response from the CIP - as a change might fail.
@@ -140,15 +166,15 @@ function processResultPage(totalcount, context, pageIndex) {
         .then(response => {
           if(response.statusCode === 200) {
             console.log(progress + ' Updated', changes.length, 'assets in Cumulus');
-            return { assets, errors };
+            return { assets, assetSeries, errors };
           } else {
             throw new Error('Error updating assets in Cumulus');
           }
         });
       } else {
-        return { assets, errors };
+        return { assets, assetSeries, errors };
       }
-    }).then(({assets, errors}) => {
+    }).then(({assets, assetSeries, errors}) => {
       // Create a list of items for a bulk call, for assets that are not errors.
       const items = [];
       assets.filter(asset => !(asset instanceof AssetIndexingError))
@@ -162,6 +188,22 @@ function processResultPage(totalcount, context, pageIndex) {
         });
         items.push(metadata);
       });
+
+      assetSeries.forEach((series) => {
+        items.push({
+          'index' : {
+            '_index': context.index,
+            '_type': 'series',
+            '_id': series._id
+          }
+        });
+
+        items.push({
+          ...series,
+          _id: undefined
+        });
+      });
+
       // Perform the bulk operation
       return es.bulk({
         body: items
@@ -183,6 +225,78 @@ function processResultPage(totalcount, context, pageIndex) {
       });
     });
   });
+}
+
+function parseAssetSeries(asset) {
+  const assetSeries = getAssetSeries(asset);
+  return assetSeries.map(assetSeries => formatSeries(assetSeries));
+}
+
+function getAssetSeries(asset) {
+  let assetSeries = [];
+  if(asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"]) {
+    assetSeries.push({
+      url: asset["{44c7a3b9-8ff2-4e58-8120-e0e64ba263ea}"],
+      title: asset["{252492cb-6efd-45f3-9bb5-d17824784d30}"],
+      description: asset["{095e1a43-d628-4944-8e8f-64d3db8c5df5}"],
+      tags: asset["{bef11691-f8a1-49dd-8fbf-45c7d359764f}"],
+      dateFrom: asset["{1a29ca44-f655-49c8-b015-223b51f2e4c5}"],
+      dateTo: asset["{a22b11c8-5c33-4761-96bc-52467080468a}"]
+    });
+  }
+  if(asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"]) {
+    assetSeries.push({
+      url: asset["{ba67b9d6-8459-430c-9819-e660a294f7e7}"],
+      title: asset["{665faabb-8f6e-41ef-b300-9433eb5eae6f}"],
+      description: asset["{956b74f0-9cc7-4525-8fda-40e3df807986}"],
+      tags: asset["{be219ed7-c0c3-4b38-9991-4dab67dc084f}"],
+      dateFrom: asset["{03879423-335a-4772-829c-b31b1d768270}"],
+      dateTo: asset["{fe893328-4d92-4c8f-a847-c42cc1f6fd8d}"]
+    });
+  }
+  return assetSeries;
+}
+
+function formatSeries(assetSeries) {
+  const formattedSeries = {
+    url: assetSeries.url,
+    _id: "series/" + assetSeries.url,
+    title: assetSeries.title,
+    description: assetSeries.description,
+    tags: assetSeries.tags
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag)
+  }
+  if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
+    formattedSeries.dateFrom = formatDate(assetSeries.dateTo);
+    formattedSeries.dateTo = formatDate(assetSeries.dateFrom);
+  } else {
+    formattedSeries.dateFrom = formatDate(assetSeries.dateFrom);
+    formattedSeries.dateTo = formatDate(assetSeries.dateTo);
+  }
+  return formattedSeries;
+}
+
+function formatDate(date) {
+  return {
+    ...date,
+    timestamp: getTimestamp(date)
+  };
+}
+
+function getTimestamp(date) {
+  const month = ensureTwoCipheredNumber(date.month || 1);
+  const day = ensureTwoCipheredNumber(date.day || 1);
+  return `${date.year}-${month}-${day}`;
+}
+
+function ensureTwoCipheredNumber(number) {
+  const stringifiedNumber = number.toString();
+  if(stringifiedNumber.length >= 2) {
+    return stringifiedNumber;
+  }
+  return stringifiedNumber.padStart(2,"0");
 }
 
 function processResultPages(totalcount, context) {

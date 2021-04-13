@@ -8,6 +8,7 @@ const robots = require('./controllers/robots');
 const motifTagging = require('./controllers/motif-tagging');
 const index = require('./controllers/index');
 const doc = require('./controllers/document');
+const series = require('./controllers/series');
 const config = require('./config');
 
 /**
@@ -31,6 +32,9 @@ module.exports = function(app) {
     .get(search.clientSideResult);
 
   app.route('/:catalog/sitemap.xml').get(sitemap.catalog);
+
+  // Add a router for series
+  app.get('/:seriesUrl', series.get);
 
   // Register a router for every type
   const types = Object.keys(config.types);

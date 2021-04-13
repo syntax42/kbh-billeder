@@ -3,4 +3,13 @@
     font-size: 120%;
     font-weight: 600;
   }
+
+  &--black {
+    background: black;
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+  }
 }

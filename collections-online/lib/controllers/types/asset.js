@@ -1,8 +1,7 @@
 'use strict';
 
-const ds = require('../../services/documents');
 const documentController = require('../document');
-const config = require('../../config');
+const es = require('../../services/elasticsearch');
 
 const layouts = require('../../layouts');
 const assetSection = layouts.section('asset');
@@ -19,17 +18,39 @@ exports.index = function(req, res, next) {
       return metadata;
     });
   })
-  .then(function(metadata) {
-    res.render('asset.pug', {
-      'metadata': metadata,
-      'assetSection': assetSection(),
-      'req': req
+    .then(function(metadata) {
+      return es.search({
+        type: 'series',
+        body: {
+          query: {
+            match: {
+              assets: `${metadata.collection}-${metadata.id}`
+            }
+          }
+        }
+      })
+        .then((seriesSearchResult) => {
+          const assetSeries = seriesSearchResult.hits.hits
+            .map((seriesDoc) => seriesDoc._source);
+
+          return {
+            assetSeries,
+            metadata,
+          };
+        });
+    })
+    .then(({assetSeries, metadata}) => {
+      res.render('asset.pug', {
+        metadata,
+        assetSection: assetSection(),
+        assetSeries,
+        req,
+      });
+    })
+    .then(null, function(error) {
+      if (error.message === 'Not Found') {
+        error.status = 404;
+      }
+      next(error);
     });
-  })
-  .then(null, function(error) {
-    if (error.message === 'Not Found') {
-      error.status = 404;
-    }
-    next(error);
-  });
 };
