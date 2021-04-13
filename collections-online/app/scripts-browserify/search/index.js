@@ -222,7 +222,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format', 'title', 'dateFrom', 'dateTo', 'previewAssets', 'url'],
       size: resultsDesired - resultsLoaded.length
     };
 
