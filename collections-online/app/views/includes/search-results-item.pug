@@ -9,7 +9,7 @@ include ../mixins/icon
 - const creationPeriod = helpers.getCreationPeriod(metadata);
 - const creationTime = helpers.getCreationTime(metadata);
 
-a.search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1(href=documentURL, target=target, class=type === "series" ? 'search-results-item--black' : '')
+a.search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1(href=documentURL, target=target, class=type === 'series' ? 'search-results-item--black' : '')
   .search-results-item__squared-container
     img(src=thumbnailURL alt=altText).search-results-item__squared-image.object-fit
     if mediaType === 'video'
