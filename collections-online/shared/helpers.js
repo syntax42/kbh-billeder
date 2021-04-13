@@ -49,6 +49,11 @@ helpers.generateSearchTitle = filters => {
 };
 
 helpers.getDocumentURL = (metadata) => {
+  //Detect and handle series
+  if(!metadata.collection && metadata.url) {
+    return `/${metadata.url}`;
+  }
+
   let path = [metadata.collection];
   if(Object.keys(config.types).length > 1) {
     path.push(metadata.type);
@@ -61,6 +66,12 @@ helpers.getThumbnailURL = (metadata, size, watermarkPosition) => {
   if(metadata.file_format && metadata.file_format === 'MP3 Format') {
     return '../images/audio.jpg';
   }
+
+  // Detect and handle series
+  if(!metadata.collection && metadata.previewAssets) {
+    return helpers.getThumbnailURL(metadata.previewAssets[0], size, watermarkPosition);
+  }
+
   let path = [
     helpers.getDocumentURL(metadata),
     'thumbnail'
