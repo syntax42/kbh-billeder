@@ -5,8 +5,9 @@ require('babel-polyfill');
 module.exports = options => {
   const config = require('../../../collections-online/shared/config');
 
-  require('./mobile')
+  require('./mobile');
   require('./search');
+  require('./search/series');
 
   if(config.features.users) {
     require('./auth');
