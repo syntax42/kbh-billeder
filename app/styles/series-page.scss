@@ -21,6 +21,10 @@
   flex-direction: column;
 }
 
+.document-content__metadata {
+  margin-bottom: 3.5em;
+}
+
 .back-to-search-link {
   font-weight: bold;
   margin-bottom: 10px;
@@ -63,6 +67,7 @@
   padding: 5px 11px;
   margin: 0 25px;
   font-weight: bold;
+  white-space: nowrap;
 
   &--white-outline {
     border-color: white;
