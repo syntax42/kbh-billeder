@@ -141,20 +141,8 @@ module.exports = async (state) => {
           type: 'string',
           analyzer: 'english',
         },
-        // TO DO: fix description. It is already defined somewhere else
-        // description: {
-        //   type: 'text',
-        //   analyzer: 'english',
-        //   fields: {
-        //     raw: {
-        //       type: 'string',
-        //       index: 'not_analyzed'
-        //     }
-        //   }
-        // },
-        tags: {
-          type: "text"
-        },
+        description: {type: 'text'},
+        tags: {type: 'text'},
         dateFrom: {
           type: 'object',
           properties: {
