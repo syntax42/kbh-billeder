@@ -72,7 +72,7 @@ async function getResultPage(query, catalog, index, pageSize) {
 /**
  * Process a specific result page, with assets.
  */
-function processResultPage(totalcount, context, pageIndex) {
+function processResultPage(totalcount, context, seriesLookup, pageIndex) {
   const { query, collection, pageSize } = context
 
   const totalPages = Math.ceil(totalcount / pageSize);
@@ -127,7 +127,6 @@ function processResultPage(totalcount, context, pageIndex) {
       };
     })
     .then(({assets, errors}) => {
-      const seriesLookup = { };
       assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => seriesLookup[series._id] = series));
 
       assets.forEach(({ metadata, assetSeries }) => {
@@ -299,7 +298,7 @@ function ensureTwoCipheredNumber(number) {
   return stringifiedNumber.padStart(2,"0");
 }
 
-function processResultPages(totalcount, context) {
+function processResultPages(totalcount, context, seriesLookup) {
   // Build up a list of parameters for all the pages in the entire result
   const pageIndecies = [];
   for(let p = context.offset; p * context.pageSize < totalcount; p++) {
@@ -309,7 +308,7 @@ function processResultPages(totalcount, context) {
   return pageIndecies.reduce((idsAndErrors, pageIndex) => {
     return Q.when(idsAndErrors)
     .then(({allIndexedIds, allErrors}) => {
-      return processResultPage(totalcount, context, pageIndex)
+      return processResultPage(totalcount, context, seriesLookup, pageIndex)
       .then(({indexedIds, errors}) => {
         return {
           allIndexedIds: allIndexedIds.concat(indexedIds),
@@ -329,9 +328,9 @@ function processResultPages(totalcount, context) {
   });
 }
 
-function processResult(context, query, totalcount) {
+function processResult(context, seriesLookup, query, totalcount) {
   console.log('Processing a result of ' + totalcount + ' assets');
-  return processResultPages(totalcount, context);
+  return processResultPages(totalcount, context, seriesLookup);
 }
 
 module.exports = processResult;

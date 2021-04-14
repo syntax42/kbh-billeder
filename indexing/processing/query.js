@@ -32,7 +32,7 @@ function processQuery(state, query) {
       clonedContext.pageSize = DEFAULT_PAGE_SIZE;
     }
     // Process the next page in the search result.
-    return processResult(clonedContext, query, totalcount);
+    return processResult(clonedContext, state.seriesLookup, query, totalcount);
   });
 };
 
