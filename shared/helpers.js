@@ -32,6 +32,11 @@ helpers.getBacksideAssets = (metadata) => {
 
 // TODO: Delete this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
+  //Detect and handle series
+  if(!metadata.collection && metadata.url) {
+    return `/${metadata.url}`;
+  }
+
   let path = [metadata.collection || metadata.catalog];
   if(Object.keys(config.types).length > 1) {
     path.push(metadata.type);
