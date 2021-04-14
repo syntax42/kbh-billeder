@@ -101,11 +101,12 @@ function initialize() {
         es.search({
           body: queryBody,
           size: 0
-        }).then(function (response) {
-          sidebar.update(clonedSearchParams.filters, response.aggregations);
-        }, function (error) {
-          console.trace(error.message);
-        });
+        })
+          .then(function (response) {
+            sidebar.update(clonedSearchParams.filters, response.aggregations);
+          }, function (error) {
+            console.trace(error.message);
+          });
       }
     }
 
@@ -170,13 +171,14 @@ function initialize() {
 
       reset();
 
-      es.search(searchObject).then(function (response) {
-        resultsTotal = response.hits.total;
-        loadingResults = false;
-        mapController.onResults(response, searchParams);
-      }, function (error) {
-        console.trace(error.message);
-      });
+      es.search(searchObject)
+        .then(function (response) {
+          resultsTotal = response.hits.total;
+          loadingResults = false;
+          mapController.onResults(response, searchParams);
+        }, function (error) {
+          console.trace(error.message);
+        });
     } else if (viewMode === 'list') {
       if(indicateLoading) {
         $('.search-results').addClass('search-results--loading');
@@ -210,43 +212,44 @@ function initialize() {
     };
 
     // Pull in the search results.
-    es.search(searchObject).then(function (response) {
-      // If no results are loaded yet, it might be because we just called reset
-      if(resultsLoaded.length === 0) {
-        // Remove all search result items from $results, that might be there
-        $results.find('.search-results-item').remove();
-      }
-      resultsTotal = response.hits.total;
-      loadingResults = false;
+    es.search(searchObject)
+      .then(function (response) {
+        // If no results are loaded yet, it might be because we just called reset
+        if(resultsLoaded.length === 0) {
+          // Remove all search result items from $results, that might be there
+          $results.find('.search-results-item').remove();
+        }
+        resultsTotal = response.hits.total;
+        loadingResults = false;
 
-      response.hits.hits.forEach(function(hit, i) {
-        const item = {
-          type: hit._type,
-          metadata: hit._source
-        };
-        const markup = templates.searchResultItem(item);
-        $results.append(markup);
-        resultsLoaded.push(item);
+        response.hits.hits.forEach(function(hit, i) {
+          const item = {
+            type: hit._type,
+            metadata: hit._source
+          };
+          const markup = templates.searchResultItem(item);
+          $results.append(markup);
+          resultsLoaded.push(item);
+        });
+
+        // Show some text if we don't have any results
+        if (resultsTotal === 0) {
+          $noResultsText.removeClass('hidden');
+        } else {
+          $noResultsText.addClass('hidden');
+        }
+
+        // If we have not loaded all available results, let's show the btn to load
+        if(updateWidgets && resultsLoaded.length < resultsTotal) {
+          $loadMoreBtn.removeClass('invisible');
+        } else {
+          $loadMoreBtn.addClass('invisible');
+        }
+
+        resultCallback(resultsTotal);
+      }, function (error) {
+        console.trace(error.message);
       });
-
-      // Show some text if we don't have any results
-      if (resultsTotal === 0) {
-        $noResultsText.removeClass('hidden');
-      } else {
-        $noResultsText.addClass('hidden');
-      }
-
-      // If we have not loaded all available results, let's show the btn to load
-      if(updateWidgets && resultsLoaded.length < resultsTotal) {
-        $loadMoreBtn.removeClass('invisible');
-      } else {
-        $loadMoreBtn.addClass('invisible');
-      }
-
-      resultCallback(resultsTotal);
-    }, function (error) {
-      console.trace(error.message);
-    });
   }
 
   function enableEndlessScrolling() {
