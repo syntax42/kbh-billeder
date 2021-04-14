@@ -24,7 +24,11 @@ exports.index = function(req, res, next) {
         body: {
           query: {
             match: {
-              assets: `${metadata.collection}-${metadata.id}`
+              assets: {
+                query: `${metadata.collection}-${metadata.id}`,
+                fuzziness: 0,
+                operator: 'and',
+              }
             }
           }
         }
