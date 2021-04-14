@@ -65,7 +65,7 @@
   border: 1px solid black;
   font-size: 0.85rem;
   padding: 5px 11px;
-  margin: 0 25px;
+  margin: 0 18px;
   font-weight: bold;
   white-space: nowrap;
 
@@ -99,6 +99,28 @@
   }
 }
 
+.photo-stack--small {
+  @media(min-width: $extra-small-size) {
+    height: 230px;
+  }
+
+  @media(min-width: $small-size) {
+    height: 275px;
+  }
+
+  @media(min-width: $medium-size) {
+    height: 325px;
+  }
+
+  @media(min-width: $large-size) {
+    height: 375px;
+  }
+
+  @media(min-width: $extra-large-size) {
+    height: 450px;
+  }
+}
+
 .photo-stack__photo {
   position: absolute;
   top: 0;
@@ -111,7 +133,7 @@
 @for $i from 1 through 5 {
   .photo-stack__photo:nth-child(#{$i}) {
     scale: #{1 - 0.03 * $i};
-    transform: translateX(#{20 * $i - 40}px);
+    transform: translateX(#{5 * $i - 7.5}px);
     z-index: #{5 - $i};
   }
 }

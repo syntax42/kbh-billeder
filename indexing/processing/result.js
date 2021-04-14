@@ -284,12 +284,12 @@ function formatDate(date) {
 }
 
 function getTimestamp(date) {
-  const month = ensureTwoCipheredNumber(date.month || 1);
-  const day = ensureTwoCipheredNumber(date.day || 1);
+  const month = zeroPad(date.month || 1);
+  const day = zeroPad(date.day || 1);
   return `${date.year}-${month}-${day}`;
 }
 
-function ensureTwoCipheredNumber(number) {
+function zeroPad(number) {
   const stringifiedNumber = number.toString();
   if(stringifiedNumber.length >= 2) {
     return stringifiedNumber;

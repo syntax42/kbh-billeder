@@ -9,7 +9,7 @@
 const es = require('../../collections-online/lib/services/elasticsearch');
 const config = require('../../collections-online/lib/config');
 
-module.exports = async (state) => {
+module.exports = (state) => {
   // Save the index in the context
   state.context.index = config.es.index;
   console.log('Initializing the Elastic Search index: ' + state.context.index);
@@ -30,12 +30,12 @@ module.exports = async (state) => {
     return es.indices.get({
       index: state.context.index
     })
-    .then(index => {
-      if(!index['kbh-billeder-assets'].mappings.series) {
+    .then((index) => {
+      if(!index[config.es.index].mappings.series) {
         const seriesMapping = getSeriesMapping();
         return es.indices.putMapping({
           index: state.context.index,
-          type: "series",
+          type: 'series',
           body: seriesMapping
         })
           .then(response => {
