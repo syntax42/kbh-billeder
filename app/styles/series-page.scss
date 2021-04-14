@@ -133,7 +133,7 @@
 @for $i from 1 through 5 {
   .photo-stack__photo:nth-child(#{$i}) {
     scale: #{1 - 0.03 * $i};
-    transform: translateX(#{20 * $i - 40}px);
+    transform: translateX(#{5 * $i - 7.5}px);
     z-index: #{5 - $i};
   }
 }
