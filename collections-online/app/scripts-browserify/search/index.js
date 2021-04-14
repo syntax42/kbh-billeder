@@ -18,7 +18,8 @@ const sorting = require('./sorting');
 const navigator = require('../document/navigator');
 
 const templates = {
-  searchResultItem: require('views/includes/search-results-item')
+  searchResultItem: require('views/includes/search-results-item'),
+  searchResultFirstSeries: require('views/includes/search-results-first-series'),
 };
 
 // How many assets should be loaded at once?
@@ -222,7 +223,7 @@ function initialize() {
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format', 'title', 'dateFrom', 'dateTo', 'previewAssets', 'url'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format', 'title', 'dateFrom', 'dateTo', 'previewAssets', 'assets', 'url'],
       size: resultsDesired - resultsLoaded.length
     };
 
@@ -231,7 +232,22 @@ function initialize() {
       // If no results are loaded yet, it might be because we just called reset
       if(resultsLoaded.length === 0) {
         // Remove all search result items from $results, that might be there
-        $results.find('.search-results-item').remove();
+        $results.find('.search-results-item, .search-results-first-series').remove();
+
+        const firstSeriesIndex = response.hits.hits.findIndex((hit) => hit._type === 'series');
+        if(firstSeriesIndex !== -1) {
+          const hit = response.hits.hits[firstSeriesIndex];
+          const item = {
+            type: hit._type,
+            metadata: hit._source
+          };
+          const markup = templates.searchResultFirstSeries(item);
+          $results.append(markup);
+          resultsLoaded.push(item);
+
+          //Remove series from results list so we don't display it twice
+          response.hits.hits.splice(firstSeriesIndex, 1);
+        }
       }
       resultsTotal = response.hits.total;
       loadingResults = false;
@@ -363,12 +379,17 @@ function initialize() {
     if(state.resultsLoaded) {
       reset();
       // Remove all the search result items right away
-      $results.find('.search-results-item').remove();
+      $results.find('.search-results-item, .search-results-first-series').remove();
 
       // Append rendered markup, once per asset loaded from the state.
       resultsLoaded = state.resultsLoaded;
       resultsDesired = resultsLoaded.length;
-      resultsLoaded.forEach(function(item) {
+      resultsLoaded.forEach(function(item, i) {
+        if(i === 0 && item.type === 'series') {
+          var markup = templates.searchResultFirstSeries(item);
+          $results.append(markup);
+          return;
+        }
         var markup = templates.searchResultItem(item);
         $results.append(markup);
       });

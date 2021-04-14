@@ -99,6 +99,28 @@
   }
 }
 
+.photo-stack--small {
+  @media(min-width: $extra-small-size) {
+    height: 230px;
+  }
+
+  @media(min-width: $small-size) {
+    height: 275px;
+  }
+
+  @media(min-width: $medium-size) {
+    height: 325px;
+  }
+
+  @media(min-width: $large-size) {
+    height: 375px;
+  }
+
+  @media(min-width: $extra-large-size) {
+    height: 450px;
+  }
+}
+
 .photo-stack__photo {
   position: absolute;
   top: 0;
