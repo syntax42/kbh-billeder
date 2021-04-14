@@ -21,6 +21,10 @@
   flex-direction: column;
   padding: 1em 1em 2em;
 
+  /* align first series result box with images in other results */
+  margin-bottom: 15px;
+  border-right: 15px solid white;
+
   a:not(.tag) {
     color: inherit;
     text-decoration: inherit;
