@@ -86,7 +86,6 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
     // Perform a processing of all the assets on the page
     const assetPromises = assets.map(asset => {
       const assetSeries = parseAssetSeries(asset);
-
       // Clone the context for every asset
       const clonedContext = _.cloneDeep(context);
       // Keep an object of requested changes to the asset in Cumulus
@@ -123,7 +122,7 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
     .then((assets) => {
       return {
         errors: assets.filter(a => a instanceof AssetIndexingError),
-        assets: assets.filter(a => !(a instanceof AssetIndexingError))
+        assets: assets.filter(a => !(a instanceof AssetIndexingError)),
       };
     })
     .then(({assets, errors}) => {
