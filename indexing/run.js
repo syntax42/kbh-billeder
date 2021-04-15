@@ -15,6 +15,10 @@ function run(state) {
     state.context = {};
   }
 
+  if (typeof state.seriesLookup == 'undefined') {
+    state.seriesLookup = {};
+  }
+
   var steps = [
     require('./initialize/elastic-search-index'),
     require('./initialize/cip-client'),
