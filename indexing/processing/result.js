@@ -126,7 +126,11 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
       };
     })
     .then(({assets, errors}) => {
-      assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => seriesLookup[series._id] = series));
+      assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => {
+        if(!seriesLookup[series._id]) {
+          seriesLookup[series._id] = series;
+        }
+      }));
 
       assets.forEach(({ metadata, assetSeries }) => {
         assetSeries.forEach((as) => {
