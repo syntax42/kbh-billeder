@@ -42,7 +42,26 @@ let es = new elasticsearch.Client({
   host: location.origin + '/api'
 });
 
+let seriesAssetsFilter;
+
 function initialize() {
+  // Prepare series assets filter for this series, used to limit queries
+  // If there are a lot of assets in the query, elasticsearch breaks if
+  // they are in a single list -- so we chunk them.
+  if(window.__seriesAssets.length < 15) {
+    seriesAssetsFilter = {terms: {_id: window.__seriesAssets}};
+  }
+  else {
+    seriesAssetsFilter = {
+      bool: {
+        should: _.chunk(window.__seriesAssets, 15)
+          .map((chunk) => {
+            return {terms: {_id: chunk}};
+          }),
+      },
+    };
+  }
+
   const $results = $('#results');
   // Button shown at the end of the list search result that triggers the load
   // of more results.
@@ -92,10 +111,7 @@ function initialize() {
         sidebar.update(clonedSearchParams.filters, null);
 
         const queryBody = elasticsearchAggregationsBody.generateBody(clonedSearchParams);
-        Object.keys(queryBody.aggs).forEach((key) => {
-          const agg = queryBody.aggs[key];
-          agg.filter.bool.must.push({terms: {_id: window.__seriesAssets}});
-        });
+        queryBody.query = seriesAssetsFilter;
 
         // Get aggragations for the sidebar
         es.search({
@@ -142,7 +158,7 @@ function initialize() {
         };
       }
 
-      queryBody.query.boosting.positive.bool.must.push({terms: {_id: window.__seriesAssets}});
+      queryBody.query.boosting.positive.bool.must.push(seriesAssetsFilter);
 
       const maxAssets = config.search.maxAssetMarkers;
       // We've configured our search, now setup the query and execute it.
@@ -202,7 +218,7 @@ function initialize() {
 
     //TODO: add filter to only include images in series
 
-    queryBody.query.boosting.positive.bool.must.push({terms: {_id: window.__seriesAssets}});
+    queryBody.query.boosting.positive.bool.must.push(seriesAssetsFilter);
 
     const searchObject = {
       body: queryBody,

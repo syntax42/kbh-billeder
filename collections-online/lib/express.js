@@ -35,7 +35,7 @@ module.exports = function(app) {
   app.use(express.urlencoded({
     extended: true
   }));
-  app.use(express.json());
+  app.use(express.json({limit: 1204 * 1204}));
   app.use(cookieParser());
   // If the config host is sat and the requested host does not match, redirect
   app.use((req, res, next) => {
