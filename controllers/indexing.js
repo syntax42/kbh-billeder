@@ -110,11 +110,63 @@ function updateAssetsFromData(partials) {
 }
 
 function deleteAsset(catalogAlias, assetId) {
-  return ds.delete({
-    index: config.es.index,
-    type: 'asset',
-    id: catalogAlias + '-' + assetId
-  });
+  const id = `${catalogAlias}-${assetId}`;
+
+  // First, find all referencing series
+  return ds.search({
+    body: {
+      query: {
+        match: {
+          assets: {
+            query: `${catalogAlias}-${assetId}`,
+            fuzziness: 0,
+            operator: 'and',
+          }
+        }
+      }
+    }
+  })
+    .then((response) => {
+      const bulkOperations = [];
+
+      response.hits.hits.forEach(({ _id: seriesId, _source: series }) => {
+        const assetIndex = series.assets.findIndex((assetId) => assetId === id);
+        series.assets.splice(assetIndex, 1);
+
+        const previewAssetIndex = series.previewAssets.findIndex((previewAsset) => `${previewAsset.collection}-${previewAsset.id}` === id);
+        if(previewAssetIndex !== -1) {
+          //TODO: Replace preview asset -- we need to look up a full new asset
+          // For now, we just remove the preview asset - editing any other asset should
+          // result in it being added here.
+          series.previewAssets.splice(previewAssetIndex, 1);
+        }
+
+        if(series.assets.length > 0) {
+          // If at least one asset remains in series, update it
+          bulkOperations.push({
+            'index' : {
+              '_type': 'series',
+              '_id': seriesId
+            }
+          });
+
+          bulkOperations.push({
+            ...series
+          });
+        }
+        else {
+          // If the serie is now empty, delete it
+          bulkOperations.push({delete: {_type: 'series', _id: seriesId}});
+        }
+      });
+
+      bulkOperations.push({delete: {_type: 'asset', _id: id}});
+
+      return ds.bulk({
+        index: config.es.index,
+        body: bulkOperations,
+      });
+    });
 }
 
 module.exports.asset = function(req, res, next) {
