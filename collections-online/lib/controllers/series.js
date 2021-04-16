@@ -10,7 +10,6 @@ module.exports.get = (req, res, next) => {
     id: `series/${seriesUrl}`
   })
     .then((seriesDoc) => {
-      console.log("seriesDoc", seriesDoc);
       res.render('series.pug', {
         req,
         series: seriesDoc._source,
