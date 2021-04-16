@@ -10,7 +10,7 @@ include ../mixins/tag
 - const creationPeriod = helpers.getCreationPeriod(metadata);
 - const creationTime = helpers.getCreationTime(metadata);
 
-.document.search-results-first-series.col-xs-12.col-sm-12.col-md-6.col-lg-6.col-xl-3
+.document.search-results-first-series.col-xs-12.col-sm-12.col-md-6.col-lg-4.col-xl-3
   a.photo-stack.photo-stack--small(href=documentURL, target=target)
     each previewAsset in metadata.previewAssets
       img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset))
