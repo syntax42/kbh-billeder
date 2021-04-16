@@ -4,27 +4,24 @@
  * Running the indexing procedure in the single mode.
  */
 
-function parseReference(reference) {
-  var result = [];
-  if (typeof(reference) === 'string') {
-    reference = reference.split(',');
+function parseReference(references) {
+  if (typeof(references) === 'string') {
+    references = references.split(',');
   }
-  // In the single mode, each asset is a combination of a catalog alias
-  // and the asset ID, eg. DNT-101
-  for (var r in reference) {
-    reference[r] = reference[r].split('/');
-    if (reference[r].length !== 2) {
-      throw new Error('Every reference in the single mode must ' +
-        'contain a catalog alias seperated by a slash (/), ' +
-        'ex: ES/1234,DNT/123');
-    } else {
-      result.push({
-        catalogAlias: reference[r][0],
-        assetId: reference[r][1]
-      });
-    }
+
+  references = references
+    .map((reference) => reference.split('/'))
+    .map(([ catalogAlias, assetId ]) => ({ catalogAlias, assetId }));
+
+  if(references.some(({ catalogAlias, assetId }) => !catalogAlias || !assetId)) {
+    throw new Error(`
+      Every reference in the single mode must
+      contain a catalog alias seperated by a slash (/),
+      ex: ES/1234,DNT/123
+    `);
   }
-  return result;
+
+  return references;
 }
 
 module.exports.generateQueries = function(state) {
@@ -47,9 +44,9 @@ module.exports.generateQueries = function(state) {
     }).join(' OR ');
 
     queries.push({
-      catalogAlias: catalogAlias,
-      query: query,
-      assetIds: assetIds
+      catalogAlias,
+      query,
+      assetIds
     });
   });
 
