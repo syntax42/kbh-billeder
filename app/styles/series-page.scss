@@ -76,7 +76,7 @@
 
 .photo-stack {
   position: relative;
-  height: 200px;
+  height: 55vw;
   margin: 0 8px;
 
   @media(min-width: $extra-small-size) {
@@ -134,9 +134,39 @@
   transform-origin: center right;
   background-color: rgb(230, 230, 230);
 }
+
+.photo-stack--asset-page {
+  max-width: 500px;
+  margin: 0 auto;
+
+  @media(min-width: $small-size) {
+    max-width: auto;
+    height: 28vw;
+  }
+
+  @media(min-width: $extra-large-size) {
+    height: 400px;
+  }
+}
+
 @for $i from 1 through 3 {
   .photo-stack__photo:nth-child(#{$i}) {
     transform: scale(#{1 - 0.03 * ($i - 1)}) translateX(#{(8 * ($i - 1) - 8)}px);
     z-index: #{4 - $i};
+  }
+}
+
+@media(min-width: $small-size) {
+  .u-ml-2--sm {
+    margin-left: 2rem;
+  }
+  .u-mr-2--sm {
+    margin-right: 2rem;
+  }
+  .u-pl-2--sm {
+    padding-left: 2rem;
+  }
+  .u-pr-2--sm {
+    padding-right: 2rem;
   }
 }
