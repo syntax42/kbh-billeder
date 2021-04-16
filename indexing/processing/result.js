@@ -17,6 +17,7 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
 }
 
 const processAsset = require('./asset');
+const { series } = require('gulp');
 
 function saveChangesToCIP(catalogAlias, items) {
   const operation = [
@@ -72,7 +73,7 @@ async function getResultPage(query, catalog, index, pageSize) {
 /**
  * Process a specific result page, with assets.
  */
-function processResultPage(totalcount, context, seriesLookup, pageIndex) {
+function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
   const { query, collection, pageSize } = context
 
   const totalPages = Math.ceil(totalcount / pageSize);
@@ -125,20 +126,95 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
         assets: assets.filter(a => !(a instanceof AssetIndexingError)),
       };
     })
-    .then(({assets, errors}) => {
-      assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => {
-        if(!seriesLookup[series._id]) {
-          seriesLookup[series._id] = series;
-        }
-      }));
+    .then(({ assets, errors }) => {
+      if(mode == 'all') {
+        assets.forEach(({ assetSeries }) => assetSeries.forEach((series) => {
+          if(!seriesLookup[series._id]) {
+            seriesLookup[series._id] = series;
+          }
+        }));
+        return {assets, errors, seriesLookup};
+      }
 
+      if(mode == 'single' || mode == 'catalog' || mode == 'recent') {
+        const assetSeries = _.uniq(
+          assets
+            .map((asset) => asset.assetSeries)
+            .reduce((a, b) => a.concat(b), []),
+          '_id'
+        );
+
+        const seriesIds = assetSeries
+          .map((series) => series._id);
+
+        const assetIds = _.uniq(assets.map(({metadata}) => `${metadata.collection}-${metadata.id}`));
+
+        return es.search({
+          type: 'series',
+          body: {
+            query: {
+              bool: {
+                should: [
+                  {
+                    terms: {
+                      _id: seriesIds
+                    }
+                  },
+                  {
+                    terms: {
+                      assets: assetIds
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+          .then((response) => {
+            const seriesLookup = {};
+            response.hits.hits.forEach((elasticSearchSeries) => {
+              const series = {
+                _id: elasticSearchSeries._id,
+                ...elasticSearchSeries._source
+              };
+
+              assets.forEach(({metadata}) => {
+                const assetIndex = series.assets.findIndex((assetId) => assetId === `${metadata.collection}-${metadata.id}`);
+                if(assetIndex !== -1) {
+                  series.assets.splice(assetIndex, 1);
+                }
+
+                const previewAssetIndex = series.previewAssets
+                  .findIndex((previewAsset) => `${previewAsset.collection}-${previewAsset.id}` === `${metadata.collection}-${metadata.id}`);
+                if(previewAssetIndex !== -1) {
+                  series.previewAssets.splice(previewAssetIndex, 1);
+                }
+              });
+
+              seriesLookup[series._id] = series;
+            });
+
+            const notFoundSeriesIds = seriesIds.filter((id) => !seriesLookup[id]);
+            const notFoundSeries = notFoundSeriesIds.map((id) => assetSeries.find((series) => id == series._id));
+
+            notFoundSeries.forEach((series) => {
+              seriesLookup[series._id] = series;
+            });
+
+            return {assets, errors, seriesLookup};
+          });
+      }
+    })
+    .then(({assets, errors, seriesLookup}) => {
       assets.forEach(({ metadata, assetSeries }) => {
         assetSeries.forEach((as) => {
           const series = seriesLookup[as._id];
           if(typeof series.assets == "undefined") {
             series.assets = [];
           }
-          series.assets.push(metadata.collection + '-' + metadata.id);
+          if(!series.assets.includes(metadata.collection + '-' + metadata.id)) {
+            series.assets.push(metadata.collection + '-' + metadata.id);
+          }
           if(typeof series.previewAssets == "undefined") {
             series.previewAssets = [];
           }
@@ -192,18 +268,28 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
       });
 
       assetSeries.forEach((series) => {
-        items.push({
-          'index' : {
-            '_index': context.index,
-            '_type': 'series',
-            '_id': series._id
-          }
-        });
+        if(series.assets.length > 0) {
+          items.push({
+            'index' : {
+              '_index': context.index,
+              '_type': 'series',
+              '_id': series._id
+            }
+          });
 
-        items.push({
-          ...series,
-          _id: undefined
-        });
+          items.push({
+            ...series,
+            _id: undefined
+          });
+        } else {
+          items.push({
+            'delete' : {
+              '_index': context.index,
+              '_type': 'series',
+              '_id': series._id
+            }
+          });
+        }
       });
 
       // Perform the bulk operation
@@ -301,7 +387,7 @@ function zeroPad(number) {
   return stringifiedNumber.padStart(2,"0");
 }
 
-function processResultPages(totalcount, context, seriesLookup) {
+function processResultPages(totalcount, context, seriesLookup, mode) {
   // Build up a list of parameters for all the pages in the entire result
   const pageIndecies = [];
   for(let p = context.offset; p * context.pageSize < totalcount; p++) {
@@ -311,7 +397,7 @@ function processResultPages(totalcount, context, seriesLookup) {
   return pageIndecies.reduce((idsAndErrors, pageIndex) => {
     return Q.when(idsAndErrors)
     .then(({allIndexedIds, allErrors}) => {
-      return processResultPage(totalcount, context, seriesLookup, pageIndex)
+      return processResultPage(totalcount, context, seriesLookup, mode, pageIndex)
       .then(({indexedIds, errors}) => {
         return {
           allIndexedIds: allIndexedIds.concat(indexedIds),
@@ -331,9 +417,9 @@ function processResultPages(totalcount, context, seriesLookup) {
   });
 }
 
-function processResult(context, seriesLookup, query, totalcount) {
+function processResult(context, seriesLookup, mode, query, totalcount) {
   console.log('Processing a result of ' + totalcount + ' assets');
-  return processResultPages(totalcount, context, seriesLookup);
+  return processResultPages(totalcount, context, seriesLookup, mode);
 }
 
 module.exports = processResult;
