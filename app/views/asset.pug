@@ -84,12 +84,12 @@ prepend document__section-5
       .container-fluid
         .row
           if !even
-            .document-content__preview.col-xs-12.col-md-7.col-md-push-5
+            .document-content__preview.col-xs-12.col-md-6.col-md-push-6
               .photo-stack
                 each previewAsset in series.previewAssets
                   img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset))
 
-          .document-content__metadata.col-xs-12.col-md-5(class=even ? 'col-md-push-7' : 'col-md-pull-7')
+          .document-content__metadata.col-xs-12.col-md-6(class=even ? 'col-md-push-6' : 'col-md-pull-6')
             .u-type-heading="En del af serien"
             .u-row.document-content__title
               h1.document__title=series.title
@@ -112,7 +112,7 @@ prepend document__section-5
             a.btn.btn-primary(href=`/${series.url}`)="Se billedserie"
 
           if even
-            .document-content__preview.col-xs-12.col-md-7.col-md-pull-5
+            .document-content__preview.col-xs-12.col-md-6.col-md-pull-6
               .photo-stack
                 each previewAsset in series.previewAssets
                   img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset))
