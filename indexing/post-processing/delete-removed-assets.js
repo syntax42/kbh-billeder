@@ -31,7 +31,9 @@ module.exports = function(state) {
     const deletedAssetIds = [];
 
     const indexedIds = state.queries
-      .filter((query) => query.offset === 0)
+      // If query is falsy (undefined or 0) there is no offset
+      // and we want to grab it and get its indexed IDs
+      .filter((query) => !query.offset)
       .map((query) => query.indexedIds)
       .reduce((a, b) => a.concat(b), []);
 
@@ -102,7 +104,10 @@ module.exports = function(state) {
   return Q.when(deletedAssetIdsPromise).then(deletedAssetIds => {
     console.log('Deleting', deletedAssetIds.length, 'asset(s)');
     var actions = deletedAssetIds.map(deletedAssetId => {
-      return {delete: {_id: deletedAssetId}};
+      if(deletedAssetId.startsWith('series/')) {
+        return {delete: {_type: 'series', _id: deletedAssetId}};
+      }
+      return {delete: {_type: 'asset', _id: deletedAssetId}};
     });
     if (actions.length > 0) {
       return es.bulk({
