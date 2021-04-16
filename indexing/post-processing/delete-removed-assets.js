@@ -21,11 +21,40 @@ module.exports = function(state) {
     return state;
   }
 
-  var deletedAssetIds;
-  if (state.mode === 'all' || state.mode === 'catalog') {
-    deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+  let deletedAssetIdsPromise;
+
+  if (state.mode === 'all') {
+    // In 'all' mode we just check the full list of items we indexed,
+    // and remove all the assets and series in elasticsearch that are
+    // not in our list -- we did a full re-index, so all of these can
+    // be removed.
+    const deletedAssetIds = [];
+
+    const indexedIds = state.queries
+      .filter((query) => query.offset === 0)
+      .map((query) => query.indexedIds)
+      .reduce((a, b) => a.concat(b), []);
+
+    deletedAssetIdsPromise = es.scrollSearch({
+      'query': {
+        'bool': {
+          'must_not': {
+            'ids': {
+              'values': indexedIds
+            }
+          }
+        }
+      }
+    }, function(deletedEntry) {
+      deletedAssetIds.push(deletedEntry._id);
+    }).then(function() {
+      return deletedAssetIds;
+    });
+  }
+  else if (state.mode === 'catalog') {
+    deletedAssetIdsPromise = state.queries.reduce((deletedAssetIdsPromise, query) => {
       console.log('Indexed', query.indexedIds.length, 'assets and series from', query.catalogAlias);
-      return deletedAssetIds.then(deletedAssetIds => {
+      return deletedAssetIdsPromise.then(deletedAssetIds => {
         if (query.offset > 0) {
           console.log('Skipping a query that had a non-zero offset.');
           return deletedAssetIds;
@@ -41,7 +70,7 @@ module.exports = function(state) {
               },
               'must_not': {
                 'ids': {
-                  'values': query.indexedIds
+                  'values': query.indexedIds.filter((id) => !id.startsWith('series/')),
                 }
               }
             }
@@ -53,17 +82,24 @@ module.exports = function(state) {
         });
       });
     }, new Q([]));
-  } else {
-    deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
-      var assetIds = query.assetIds.map(assetId => {
-        return query.catalogAlias + '-' + assetId;
-      });
-      var moreDeletedAssetIds = _.difference(assetIds, query.indexedIds);
+  }
+  else {
+    const deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+      const assetIds = query.assetIds
+        .filter((assetId) => !assetId.startsWith('series/'))
+        .map((assetId) => query.catalogAlias + '-' + assetId);
+
+      const indexedAssetIds = query.indexedIds
+        .filter((id) => !id.startsWith('series/'));
+
+      const moreDeletedAssetIds = _.difference(assetIds, indexedAssetIds);
       return _.union(deletedAssetIds, moreDeletedAssetIds);
     }, []);
+
+    deletedAssetIdsPromise = new Q(deletedAssetIds);
   }
 
-  return Q.when(deletedAssetIds).then(deletedAssetIds => {
+  return Q.when(deletedAssetIdsPromise).then(deletedAssetIds => {
     console.log('Deleting', deletedAssetIds.length, 'asset(s)');
     var actions = deletedAssetIds.map(deletedAssetId => {
       return {delete: {_id: deletedAssetId}};
@@ -71,7 +107,6 @@ module.exports = function(state) {
     if (actions.length > 0) {
       return es.bulk({
         index: state.context.index,
-        type: 'asset',
         body: actions
       });
     }
