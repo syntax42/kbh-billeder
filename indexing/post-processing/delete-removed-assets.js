@@ -15,7 +15,12 @@ module.exports = function(state) {
 
   console.log('\n=== ' + activity + ' ===');
 
-  if (['all', 'catalog', 'single'].indexOf(state.mode) !== -1) {
+  if (!['all', 'catalog', 'single'].includes(state.mode)) {
+    console.log('Removed assets gets deleted only in "all", "catalog" or ' +
+                '"single" mode.');
+    return state;
+  }
+
     var deletedAssetIds;
     if (state.mode === 'all' || state.mode === 'catalog') {
       deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
@@ -73,9 +78,4 @@ module.exports = function(state) {
     }).then(function() {
       return state;
     });
-  } else {
-    console.log('Removed assets gets deleted only in "all", "catalog" or ' +
-                '"single" mode.');
-    return state;
-  }
 };
