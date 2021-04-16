@@ -17,7 +17,6 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
 }
 
 const processAsset = require('./asset');
-const { series } = require('gulp');
 
 function saveChangesToCIP(catalogAlias, items) {
   const operation = [
