@@ -14,7 +14,7 @@ block content
         .document-content__preview.col-xs-12.col-md-7.col-md-push-5
           .photo-stack
             each previewAsset in series.previewAssets
-              img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset))
+              img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))
         .document-content__metadata.col-xs-12.col-md-5.col-md-pull-7
           a.back-to-search-link.back-to-search-link--pink(onclick='window.history.back()')
             +icon('arrow-thin-left')
