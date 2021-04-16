@@ -21,61 +21,61 @@ module.exports = function(state) {
     return state;
   }
 
-    var deletedAssetIds;
-    if (state.mode === 'all' || state.mode === 'catalog') {
-      deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
-        console.log('Indexed', query.indexedIds.length, 'assets from', query.catalogAlias);
-        return deletedAssetIds.then(deletedAssetIds => {
-          if (query.offset > 0) {
-            console.log('Skipping a query that had a non-zero offset.');
-            return deletedAssetIds;
-          }
-          // Scroll search for all assets in the catalog that was not indexed.
-          return es.scrollSearch({
-            'query': {
-              'bool': {
-                'must': {
-                  'match': {
-                    'catalog.raw': query.catalogAlias
-                  }
-                },
-                'must_not': {
-                  'ids': {
-                    'values': query.indexedIds
-                  }
+  var deletedAssetIds;
+  if (state.mode === 'all' || state.mode === 'catalog') {
+    deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+      console.log('Indexed', query.indexedIds.length, 'assets and series from', query.catalogAlias);
+      return deletedAssetIds.then(deletedAssetIds => {
+        if (query.offset > 0) {
+          console.log('Skipping a query that had a non-zero offset.');
+          return deletedAssetIds;
+        }
+        // Scroll search for all assets in the catalog that was not indexed.
+        return es.scrollSearch({
+          'query': {
+            'bool': {
+              'must': {
+                'match': {
+                  'catalog.raw': query.catalogAlias
+                }
+              },
+              'must_not': {
+                'ids': {
+                  'values': query.indexedIds
                 }
               }
             }
-          }, function(deletedAsset) {
-            deletedAssetIds.push(deletedAsset._id);
-          }).then(function() {
-            return deletedAssetIds;
-          });
+          }
+        }, function(deletedAsset) {
+          deletedAssetIds.push(deletedAsset._id);
+        }).then(function() {
+          return deletedAssetIds;
         });
-      }, new Q([]));
-    } else {
-      deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
-        var assetIds = query.assetIds.map(assetId => {
-          return query.catalogAlias + '-' + assetId;
-        });
-        var moreDeletedAssetIds = _.difference(assetIds, query.indexedIds);
-        return _.union(deletedAssetIds, moreDeletedAssetIds);
-      }, []);
-    }
-
-    return Q.when(deletedAssetIds).then(deletedAssetIds => {
-      console.log('Deleting', deletedAssetIds.length, 'asset(s)');
-      var actions = deletedAssetIds.map(deletedAssetId => {
-        return {delete: {_id: deletedAssetId}};
       });
-      if (actions.length > 0) {
-        return es.bulk({
-          index: state.context.index,
-          type: 'asset',
-          body: actions
-        });
-      }
-    }).then(function() {
-      return state;
+    }, new Q([]));
+  } else {
+    deletedAssetIds = state.queries.reduce((deletedAssetIds, query) => {
+      var assetIds = query.assetIds.map(assetId => {
+        return query.catalogAlias + '-' + assetId;
+      });
+      var moreDeletedAssetIds = _.difference(assetIds, query.indexedIds);
+      return _.union(deletedAssetIds, moreDeletedAssetIds);
+    }, []);
+  }
+
+  return Q.when(deletedAssetIds).then(deletedAssetIds => {
+    console.log('Deleting', deletedAssetIds.length, 'asset(s)');
+    var actions = deletedAssetIds.map(deletedAssetId => {
+      return {delete: {_id: deletedAssetId}};
     });
+    if (actions.length > 0) {
+      return es.bulk({
+        index: state.context.index,
+        type: 'asset',
+        body: actions
+      });
+    }
+  }).then(function() {
+    return state;
+  });
 };
