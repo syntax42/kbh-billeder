@@ -77,6 +77,7 @@
 .photo-stack {
   position: relative;
   height: 200px;
+  margin: 0 8px;
 
   @media(min-width: $extra-small-size) {
     height: 300px;
@@ -127,13 +128,15 @@
   left: 0;
   height: 100%;
   width: 100%;
-  object-fit: contain;
+  border: 3px solid white;
+  object-fit: cover;
   object-position: center;
+  transform-origin: center right;
+  background-color: rgb(230, 230, 230);
 }
-@for $i from 1 through 5 {
+@for $i from 1 through 3 {
   .photo-stack__photo:nth-child(#{$i}) {
-    scale: #{1 - 0.03 * $i};
-    transform: translateX(#{5 * $i - 7.5}px);
-    z-index: #{5 - $i};
+    transform: scale(#{1 - 0.03 * ($i - 1)}) translateX(#{(8 * ($i - 1) - 8)}px);
+    z-index: #{4 - $i};
   }
 }

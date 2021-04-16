@@ -218,8 +218,22 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
           if(typeof series.previewAssets == "undefined") {
             series.previewAssets = [];
           }
+
           if(series.previewAssets.length < 3) {
             series.previewAssets.push(metadata);
+          }
+          else {
+            // We already have 3 preview assets. Now, we determine if we
+            // should randomly shuffle this asset into the list of preview
+            // assets. First, we get a random index from [0;assets.length - 1]
+            const indexToShuffleInto = Math.floor(Math.random() * series.assets.length);
+
+            // If the calculated index is [0,1,2] we place this asset on that
+            // position -- otherwise we missed the list of preview assets, and
+            // leave it out.
+            if(indexToShuffleInto <= 2) {
+              series.previewAssets[indexToShuffleInto] = metadata;
+            }
           }
         })
       });
