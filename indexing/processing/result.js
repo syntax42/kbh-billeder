@@ -236,7 +236,7 @@ function processResultPage(totalcount, context, seriesLookup, pageIndex) {
             errors.push(new Error('Failed index ' + item.index._id));
           }
         });
-        console.log(progress + ' Indexed', indexedIds.length, 'assets in ES');
+        console.log(progress + ' Indexed', indexedIds.length, 'assets and series in ES');
         // Return the result
         return { errors, indexedIds };
       });
