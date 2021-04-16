@@ -160,11 +160,15 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
                       _id: seriesIds
                     }
                   },
-                  {
-                    terms: {
-                      assets: assetIds
+                  ...assetIds.map((assetId) => ({
+                    match: {
+                      assets: {
+                        query: assetId,
+                        fuzziness: 0,
+                        operator: 'and',
+                      }
                     }
-                  }
+                  }))
                 ]
               }
             }
