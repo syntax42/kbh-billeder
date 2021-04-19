@@ -5,7 +5,7 @@ const helpers = require('../collections-online/shared/helpers');
 const backsideAssetCumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
 
 helpers.documentTitle = (metadata, fallback) => {
-  let title = metadata.short_title || fallback || 'Billede uden titel';
+  let title = metadata.short_title || metadata.title || fallback || 'Billede uden titel';
   return helpers.capitalizeFirstLetter(title);
 };
 
@@ -32,6 +32,11 @@ helpers.getBacksideAssets = (metadata) => {
 
 // TODO: Delete this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
+  //Detect and handle series
+  if(!metadata.collection && metadata.url) {
+    return `/${metadata.url}`;
+  }
+
   let path = [metadata.collection || metadata.catalog];
   if(Object.keys(config.types).length > 1) {
     path.push(metadata.type);
@@ -411,6 +416,35 @@ helpers.geoTagging = {
     ];
   },
   enabled: metadata => !metadata.google_maps_coordinates
+};
+
+helpers.getCreationPeriod = function(metadata) {
+  const parts = [];
+  if(metadata.creation_time_from) {
+    parts.push(metadata.creation_time_from.year);
+  }
+  else if(metadata.dateFrom) {
+    parts.push(metadata.dateFrom.year);
+  }
+
+  if(metadata.creation_time_to) {
+    parts.push(metadata.creation_time_to.year);
+  }
+  else if(metadata.dateTo) {
+    parts.push(metadata.dateTo.year);
+  }
+
+  return parts.join('-');
+};
+
+helpers.getCreationTime = function(metadata) {
+  if(!metadata.creation_time) {
+    return '';
+  }
+
+  const prefix = metadata.creation_time_estimated ? 'ca. ' : '';
+
+  return `${prefix}${helpers.formatDate(metadata.creation_time)}`;
 };
 
 module.exports = helpers;

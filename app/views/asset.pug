@@ -76,3 +76,43 @@ block document__section-3
           != assetSection('additional-information', metadata)
         .col-sm-5
           != assetSection('technical-information', metadata)
+
+prepend document__section-5
+  each series, index in assetSeries
+    - var even = index % 2 == 0;
+    .document-content(class=even ? 'document-content--black' : 'document-content--dark-grey')
+      .container-fluid
+        .row
+          if !even
+            .document-content__preview.col-xs-12.col-sm-6.col-sm-push-6
+              .photo-stack.photo-stack--asset-page.u-ml-2--sm
+                each previewAsset in series.previewAssets
+                  img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))
+
+          .document-content__metadata.col-xs-12.col-sm-6(class=even ? 'col-sm-push-6 u-pl-2--sm' : 'col-sm-pull-6 u-pr-2--sm')
+            .u-type-heading="En del af serien"
+            .u-row.document-content__title
+              h1.document__title=series.title
+              .chip.chip--white-outline=`${series.assets.length} billeder`
+            .document-content__description=series.description
+
+            table
+              tbody
+                tr
+                  th.row="Periode"
+                  td=`${series.dateFrom.year} – ${series.dateTo.year}`
+
+            .motif-tagging
+              .motif-tagging__tags
+                each tag in series.tags
+                  .btn-group
+                    +tag(tag)
+
+            div(style='height:1.5em;')
+            a.btn.btn-primary(href=`/${series.url}`)="Se billedserie"
+
+          if even
+            .document-content__preview.col-xs-12.col-sm-6.col-sm-pull-6
+              .photo-stack.photo-stack--asset-page.u-mr-2--sm
+                each previewAsset in series.previewAssets
+                  img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))

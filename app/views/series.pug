@@ -1,0 +1,60 @@
+extends index
+include ./mixins/tag
+include ./mixins/meta
+include ./mixins/loader
+
+prepend header
+  script!=`window.__seriesAssets = JSON.parse('${JSON.stringify(series.assets)}');`
+  +meta(`${series.title} - Billedserie`, series.description)
+
+block content
+  .document-content.document-content--black
+    .container-fluid.document
+      .row
+        .document-content__preview.col-xs-12.col-md-7.col-md-push-5
+          .photo-stack
+            each previewAsset in series.previewAssets
+              img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))
+        .document-content__metadata.col-xs-12.col-md-5.col-md-pull-7
+          a.back-to-search-link.back-to-search-link--pink(onclick='window.history.back()')
+            +icon('arrow-thin-left')
+            | Tilbage til søgningen
+          .u-type-heading="Billedserie"
+          .u-row.document-content__title
+            h1.document__title=series.title
+            .chip.chip--white-outline=`${series.assets.length} billeder`
+          .document-content__description=series.description
+
+          h2="Tid"
+          table
+            tbody
+              tr
+                th.row="Periode"
+                td=`${series.dateFrom.year} – ${series.dateTo.year}`
+
+          .motif-tagging
+            h2="Emneord"
+            .motif-tagging__tags
+              each tag in series.tags
+                .btn-group
+                  +tag(tag)
+  .let-it-grow.is-list-view#start-of-content
+    include includes/filterbar
+    section.search-results
+      .map-view
+        include includes/map
+      .list-view.container
+          #filters
+            include includes/search-filter-chosen-filters
+          #results-header
+            block results-header
+          include includes/no-results-text
+          #results.row(aria-busy=true)
+            block results
+            .centered-loader
+              +loader("Henter poster...")
+          block after-results
+            button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn(type='button')= "Vis flere"
+
+  if(config.features.scrollToTop)
+    include includes/to-top

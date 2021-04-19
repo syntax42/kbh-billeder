@@ -7,19 +7,22 @@ const helpers = require('../../../shared/helpers');
 
 const MapController = require('map-controller');
 const _ = require('lodash');
-require('./search-freetext-form');
 
-const getSearchParams = require('./get-parameters');
 const elasticsearchQueryBody = require('./es-query-body');
 const elasticsearchAggregationsBody = require('./es-aggregations-body');
-const generateQuerystring = require('./generate-querystring');
 const resultsHeader = require('./results-header');
 const sorting = require('./sorting');
-const navigator = require('../document/navigator');
+const DEFAULT_SORTING = require('./default-sorting');
 
 const templates = {
-  searchResultItem: require('views/includes/search-results-item'),
-  searchResultFirstSeries: require('views/includes/search-results-first-series'),
+  searchResultItem: require('views/includes/search-results-item')
+};
+
+const searchParams = {
+  filters: {},
+  sorting: DEFAULT_SORTING,
+  map: '',
+  smap: ''
 };
 
 // How many assets should be loaded at once?
@@ -39,8 +42,26 @@ let es = new elasticsearch.Client({
   host: location.origin + '/api'
 });
 
+let seriesAssetsFilter;
+
 function initialize() {
-  const $searchInput = $('.search-freetext-form__input');
+  // Prepare series assets filter for this series, used to limit queries
+  // If there are a lot of assets in the query, elasticsearch breaks if
+  // they are in a single list -- so we chunk them.
+  if(window.__seriesAssets.length < 15) {
+    seriesAssetsFilter = {terms: {_id: window.__seriesAssets}};
+  }
+  else {
+    seriesAssetsFilter = {
+      bool: {
+        should: _.chunk(window.__seriesAssets, 15)
+          .map((chunk) => {
+            return {terms: {_id: chunk}};
+          }),
+      },
+    };
+  }
+
   const $results = $('#results');
   // Button shown at the end of the list search result that triggers the load
   // of more results.
@@ -52,14 +73,6 @@ function initialize() {
   document.addEventListener('scroll', _.throttle(saveScrollPosition, 300),
     { capture: false, passive: true }
   );
-
-  function reset() {
-    resultsLoaded = [];
-    resultsTotal = Number.MAX_SAFE_INTEGER;
-    resultsDesired = PAGE_SIZE;
-    $(window).off('scroll');
-    $loadMoreBtn.addClass('invisible');
-  }
 
   /**
    * Perform a search and update the map or list.
@@ -79,33 +92,10 @@ function initialize() {
       indicateLoading = true;
     }
 
-    // If we've not explicitly been passed searchParameters (which right now
-    // only happens when the map calls us back after adding a geo bounding-
-    // box), get it from the url, and see if we should have the mapcontroller
-    // update it.
-    if (!searchParams) {
-      // Get search parameters from the url.
-      searchParams = getSearchParams();
-
-      // Let the map alter our search-parameters if they have not been
-      // overridden and have it call us back with the update parameters.
-      if (viewMode === 'map') {
-        mapController.onUpdate(searchParams, function(updatedParams){
-          update(updateWidgets, indicateLoading, updatedParams);
-        });
-        return;
-      }
-    }
-
     // Update the sort-menu in the filter-bar.
     sorting.update(searchParams);
 
-    // Update the freetext search input, q contains the querystring.
-    $searchInput.val(searchParams.filters.q);
-
     // Update the page title
-    const title = helpers.generateSearchTitle(searchParams.filters);
-    $('head title').text(title + ' - ' + config.siteTitle);
     loadingResults = true;
 
     // A fresh update is the first of potentially many updates with the same
@@ -119,15 +109,20 @@ function initialize() {
         // with searchParams, work on a clone.
         const clonedSearchParams = JSON.parse(JSON.stringify(searchParams));
         sidebar.update(clonedSearchParams.filters, null);
+
+        const queryBody = elasticsearchAggregationsBody.generateBody(clonedSearchParams);
+        queryBody.query = seriesAssetsFilter;
+
         // Get aggragations for the sidebar
         es.search({
-          body: elasticsearchAggregationsBody.generateBody(clonedSearchParams),
+          body: queryBody,
           size: 0
-        }).then(function (response) {
-          sidebar.update(clonedSearchParams.filters, response.aggregations);
-        }, function (error) {
-          console.trace(error.message);
-        });
+        })
+          .then(function (response) {
+            sidebar.update(clonedSearchParams.filters, response.aggregations);
+          }, function (error) {
+            console.trace(error.message);
+          });
       }
     }
 
@@ -163,6 +158,8 @@ function initialize() {
         };
       }
 
+      queryBody.query.boosting.positive.bool.must.push(seriesAssetsFilter);
+
       const maxAssets = config.search.maxAssetMarkers;
       // We've configured our search, now setup the query and execute it.
       const searchObject = {
@@ -188,17 +185,16 @@ function initialize() {
         ],
       };
 
-      // Make sure we persist, but replace state so that we don't end up in
-      // the back/forward history.
-      persistChangedParams(searchParams, true);
+      reset();
 
-      es.search(searchObject).then(function (response) {
-        resultsTotal = response.hits.total;
-        loadingResults = false;
-        mapController.onResults(response, searchParams);
-      }, function (error) {
-        console.trace(error.message);
-      });
+      es.search(searchObject)
+        .then(function (response) {
+          resultsTotal = response.hits.total;
+          loadingResults = false;
+          mapController.onResults(response, searchParams);
+        }, function (error) {
+          console.trace(error.message);
+        });
     } else if (viewMode === 'list') {
       if(indicateLoading) {
         $('.search-results').addClass('search-results--loading');
@@ -220,111 +216,56 @@ function initialize() {
       queryBody = helpers.modifySearchQueryBody(queryBody, searchParams);
     }
 
+    //TODO: add filter to only include images in series
+
+    queryBody.query.boosting.positive.bool.must.push(seriesAssetsFilter);
+
     const searchObject = {
       body: queryBody,
       from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format', 'title', 'dateFrom', 'dateTo', 'previewAssets', 'assets', 'url'],
+      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format'],
       size: resultsDesired - resultsLoaded.length
     };
 
     // Pull in the search results.
-    es.search(searchObject).then(function (response) {
-      // If no results are loaded yet, it might be because we just called reset
-      if(resultsLoaded.length === 0) {
-        // Remove all search result items from $results, that might be there
-        $results.find('.search-results-item, .search-results-first-series').remove();
+    es.search(searchObject)
+      .then(function (response) {
+        // If no results are loaded yet, it might be because we just called reset
+        if(resultsLoaded.length === 0) {
+          // Remove all search result items from $results, that might be there
+          $results.find('.search-results-item').remove();
+        }
+        resultsTotal = response.hits.total;
+        loadingResults = false;
 
-        const firstSeriesIndex = response.hits.hits.findIndex((hit) => hit._type === 'series');
-        if(firstSeriesIndex !== -1) {
-          const hit = response.hits.hits[firstSeriesIndex];
+        response.hits.hits.forEach(function(hit, i) {
           const item = {
             type: hit._type,
             metadata: hit._source
           };
-          const markup = templates.searchResultFirstSeries(item);
+          const markup = templates.searchResultItem(item);
           $results.append(markup);
           resultsLoaded.push(item);
+        });
 
-          //Remove series from results list so we don't display it twice
-          response.hits.hits.splice(firstSeriesIndex, 1);
+        // Show some text if we don't have any results
+        if (resultsTotal === 0) {
+          $noResultsText.removeClass('hidden');
+        } else {
+          $noResultsText.addClass('hidden');
         }
-      }
-      resultsTotal = response.hits.total;
-      loadingResults = false;
 
-      response.hits.hits.forEach(function(hit, i) {
-        const item = {
-          type: hit._type,
-          metadata: hit._source
-        };
-        const markup = templates.searchResultItem(item);
-        $results.append(markup);
-        resultsLoaded.push(item);
+        // If we have not loaded all available results, let's show the btn to load
+        if(updateWidgets && resultsLoaded.length < resultsTotal) {
+          $loadMoreBtn.removeClass('invisible');
+        } else {
+          $loadMoreBtn.addClass('invisible');
+        }
+
+        resultCallback(resultsTotal);
+      }, function (error) {
+        console.trace(error.message);
       });
-
-      // Save the results loaded in the session storage, so we can use them on
-      // out other places.
-      navigator.save({
-        resultsLoaded, queryBody
-      });
-
-      // Replace the state of in the history if supported
-      if(history.replaceState) {
-        history.replaceState({
-          resultsLoaded,
-          resultsTotal
-        }, null, null);
-      }
-
-      // Show some text if we don't have any results
-      if (resultsTotal === 0) {
-        $noResultsText.removeClass('hidden');
-      } else {
-        $noResultsText.addClass('hidden');
-      }
-
-      // If we have not loaded all available results, let's show the btn to load
-      if(updateWidgets && resultsLoaded.length < resultsTotal) {
-        $loadMoreBtn.removeClass('invisible');
-      } else {
-        $loadMoreBtn.addClass('invisible');
-      }
-
-      resultCallback(resultsTotal);
-    }, function (error) {
-      console.trace(error.message);
-    });
-  }
-
-  /**
-   * Store changed params into the browser history.
-   *
-   * @param searchParams
-   *   The search params to persist.
-   * @param replaceState
-   *   Whether to replace state or push a new (the latter lets the browser move
-   *   back and forth between states).
-   */
-  function persistChangedParams (searchParams, replaceState = false) {
-    // Change the URL
-    if (history) {
-      reset();
-      // Update the browser history and the url with our new parameters.
-
-      var state = {searchParams: searchParams};
-      var url = location.pathname + generateQuerystring(searchParams);
-      if (replaceState) {
-        history.replaceState(state, '', url);
-      }
-      else {
-        history.pushState(state, '', url);
-        // reset scroll position when making a new search
-        resetScrollPosition();
-      }
-    }
-    else {
-      throw new Error('History API is required');
-    }
   }
 
   function enableEndlessScrolling() {
@@ -337,7 +278,7 @@ function initialize() {
         var scrollBottom = scrollTop + $(window).height();
         if(scrollBottom > lastResultOffset.top && !loadingResults) {
           resultsDesired += PAGE_SIZE;
-          update(false, true);
+          update(false, true, searchParams);
         }
       }
     }).scroll();
@@ -359,64 +300,14 @@ function initialize() {
     }
   }
 
-  function returnToPreviousScrollPosition() {
-    if(window.sessionStorage) {
-      let lastScrollPosition = sessionStorage.getItem('lastScrollPosition');
-      if(lastScrollPosition) {
-        window.scrollTo(0, lastScrollPosition);
-      }
-    }
-  };
-
-  /**
-   * Check if the user has any relevant history data during init and use it.
-   *
-   * @param state
-   *   The history.state.
-   */
-  function inflateHistoryState(state) {
-    // Render results from the state
-    if(state.resultsLoaded) {
-      reset();
-      // Remove all the search result items right away
-      $results.find('.search-results-item, .search-results-first-series').remove();
-
-      // Append rendered markup, once per asset loaded from the state.
-      resultsLoaded = state.resultsLoaded;
-      resultsDesired = resultsLoaded.length;
-      resultsLoaded.forEach(function(item, i) {
-        if(i === 0 && item.type === 'series') {
-          var markup = templates.searchResultFirstSeries(item);
-          $results.append(markup);
-          return;
-        }
-        var markup = templates.searchResultItem(item);
-        $results.append(markup);
-      });
-
-      // Replace the resultsTotal from the state
-      resultsTotal = state.resultsTotal;
-
-      // Using the updateWidgets=true, updates the header as well
-      // Using the indicateLoading=false makes sure the UI doesn't blink
-      update(true, true);
-    }
-  }
-
-  // When the user navigates the state, update it
-  window.addEventListener('popstate', function(event) {
-    inflateHistoryState(event.state);
-  }, false);
-
-
   const searchControllerCallbacks = {
     // Allow the caller to refresh the current search-results.
     refresh: function() {
-      update(true, true);
+      update(true, true, searchParams);
     },
 
     getCurrentSearchParameters: function (){
-      return getSearchParams();
+      return searchParams;
     },
   };
 
@@ -434,7 +325,6 @@ function initialize() {
     ];
   }
 
-  var searchParams = getSearchParams();
   if (searchParams.map) {
     options.mapInitParam = searchParams.map;
   }
@@ -463,7 +353,6 @@ function initialize() {
         return;
       }
     }
-    var searchParams = getSearchParams();
     var filters = searchParams.filters;
     if(action === 'add-filter') {
       if(typeof(filters[field]) === 'object') {
@@ -471,31 +360,30 @@ function initialize() {
       } else {
         filters[field] = [value];
       }
-      // Store changed parameters and trigger a search.
-      persistChangedParams(searchParams);
-      update(false, true);
+      reset();
+      update(false, true, searchParams);
     } else if(action === 'remove-filter') {
-      if(typeof(filters[field]) === 'object') {
+      if(Array.isArray(filters[field])) {
         filters[field] = filters[field].filter(function(v) {
           return v !== value;
         });
+        if(!filters[field].length) {
+          delete filters[field];
+        }
       } else {
         delete filters[field];
       }
-      // Store changed parameters and trigger a search.
-      persistChangedParams(searchParams);
-      update(false, true);
+      reset();
+      update(false, true, searchParams);
     }
   });
 
   $('#sorting-menu').on('keypress click ', '.dropdown__options a', function(e) {
     if (e.which === 13 || e.type === 'click') {
       var sorting = $(this).data('value');
-      var searchParams = getSearchParams();
       searchParams.sorting = sorting;
-      // Store changed parameters and trigger a search.
-      persistChangedParams(searchParams);
-      update(false, true);
+      reset();
+      update(false, true, searchParams);
     }
   });
 
@@ -550,10 +438,9 @@ function initialize() {
     // If we're switching away from the map view-mode, strip the coordiate from
     // the url. The presence of the parameter will cause a returning user to
     // switch to the map view-mode, so it is important we get rid of it.
-    const searchParams = getSearchParams();
     if (eventViewMode !== 'map' && searchParams.map) {
       delete searchParams.map;
-      persistChangedParams(searchParams, true);
+      reset();
     }
     viewMode = eventViewMode;
     $('.let-it-grow').trigger('search:update');
@@ -561,7 +448,7 @@ function initialize() {
 
   // Let anyone with access to the element with class 'let-it-grow' trigger search-updates.
   $('.let-it-grow').on('search:update', function() {
-    update(true, true);
+    update(true, true, searchParams);
   });
 
   $('.search-filter-sidebar__tab').on('click', '[data-action="show-filterbar-menu"]', function() {
@@ -587,42 +474,32 @@ function initialize() {
     }
   });
 
-  // Take control over the search form.
-  $searchInput.closest('form').submit(function(e) {
-    e.preventDefault();
-    var queryString = $searchInput.val() || '';
-    var searchParams = getSearchParams();
-    searchParams.filters.q = queryString;
-    // Store changed parameters and trigger a search.
-    persistChangedParams(searchParams);
-    update(false, true);
-  });
-
   // Everything is ready, prepare to show results.
-  const currentParams = getSearchParams();
   // If the URL has "map" in it which means we're returning to a step in the
   // history where the view mode was map. Trigger a view-mode change which
   // in turn will cause use to show the map an update the search-results.
-  if (currentParams.map) {
+  if (searchParams.map) {
     // If the url contains a map parameter, set us in map mode.
     $('.let-it-grow').trigger('search:viewModeChanged', ['map']);
   }
   else {
-    // Examine the history - if we have a state, load results from it.
-    if (history.state) {
-      inflateHistoryState(history.state);
-      // Return to the scroll position when going back from an asset site.
-      returnToPreviousScrollPosition();
-    }
-    else {
-      // No relevant url-parameter and no relevant state, just do a cold update.
-      resetScrollPosition();
-      update(false, true);
-    }
+    // No relevant url-parameter and no relevant state, just do a cold update.
+    resetScrollPosition();
+    update(false, true, searchParams);
+  }
+
+  function reset() {
+    resultsLoaded = [];
+    resultsTotal = Number.MAX_SAFE_INTEGER;
+    resultsDesired = PAGE_SIZE;
+    $(window).off('scroll');
+    $loadMoreBtn.addClass('invisible');
   }
 }
 
-// If the path is right - let's initialize
-if(decodeURIComponent(location.pathname) === '/' + config.search.path) {
-  $(initialize);
-}
+// If we know of series assets, load 'er up
+$(() => {
+  if(window.__seriesAssets) {
+    initialize();
+  }
+});

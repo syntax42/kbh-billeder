@@ -232,7 +232,42 @@ module.exports = function(parameters) {
           queries.push({
             'query_string': {
               'query': parameters.filters[field],
-              'default_operator': 'OR'
+              'default_operator': 'OR',
+              'fields': [
+                'title^10',
+                'short_title^5',
+                'description',
+                'tags',
+                'previewAssets.short_title^3',
+                'previewAssets.description',
+                'previewAssets.tags',
+                'catalog_name',
+                'country',
+                'disctrict',
+                'neighborhood',
+                'tags_verified',
+                'secondary_description',
+                'street_name',
+                'place',
+                'archivename',
+                'city',
+                'city_architect',
+                'country',
+                'creator',
+                'description',
+                'district',
+                'neighborhood',
+                'original_material.displaystring',
+                'other_architects',
+                'place',
+                'project_architect',
+                'secondary_description',
+                'street_name',
+                'street_number',
+                'tags',
+                'tags_verified',
+                'zipcode',
+              ],
             }
           });
         }
