@@ -197,11 +197,20 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
               seriesLookup[series._id] = series;
             });
 
-            const notFoundSeriesIds = seriesIds.filter((id) => !seriesLookup[id]);
-            const notFoundSeries = notFoundSeriesIds.map((id) => assetSeries.find((series) => id == series._id));
-
-            notFoundSeries.forEach((series) => {
-              seriesLookup[series._id] = series;
+            assetSeries.forEach((series) => {
+              if(seriesLookup[series._id]) {
+                // If the series already exists in es, prefer data from cumulus (update it)
+                const existingSeries = seriesLookup[series._id];
+                Object.keys(series)
+                  // Get all keys on series that are not `assets` and `previewAssets`
+                  .filter((key) => ![ 'assets', 'previewAssets' ].includes(key))
+                  // And update them in the existing series
+                  .forEach((key) => existingSeries[key] = series[key]);
+              }
+              else {
+                // Otherwise, add the series
+                seriesLookup[series._id] = series;
+              }
             });
 
             return {assets, errors, seriesLookup};
