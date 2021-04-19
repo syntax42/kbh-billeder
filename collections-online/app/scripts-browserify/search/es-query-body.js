@@ -256,7 +256,6 @@ module.exports = function(parameters) {
                 'creator',
                 'description',
                 'district',
-                '_id',
                 'neighborhood',
                 'original_material.displaystring',
                 'other_architects',
