@@ -24,7 +24,9 @@ function _mapEsResultsToAssets(results, searchParameters) {
   }
 
   // We're looking at a result-set with full assets.
-  return results.hits.hits.map(function(hit) {
+  return results.hits.hits
+  .filter((hit) => hit._source.location)
+  .map(function(hit) {
 
     var asset = hit._source;
     var colid = `${asset.collection}/${asset.id}`;
