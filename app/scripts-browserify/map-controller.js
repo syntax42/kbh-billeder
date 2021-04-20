@@ -26,12 +26,11 @@ function _mapEsResultsToAssets(results, searchParameters) {
   // We're looking at a result-set with full assets.
   return results.hits.hits
     .filter((hit) => hit._source.location)
-    .map(function(hit) {
+    .map((hit) => {
+      const asset = hit._source;
+      const colid = `${asset.collection}/${asset.id}`;
 
-      var asset = hit._source;
-      var colid = `${asset.collection}/${asset.id}`;
-
-      var assetResult = {
+      const assetResult = {
         id: colid,
         short_title: asset.short_title,
         description: asset.description,
