@@ -25,31 +25,31 @@ function _mapEsResultsToAssets(results, searchParameters) {
 
   // We're looking at a result-set with full assets.
   return results.hits.hits
-  .filter((hit) => hit._source.location)
-  .map(function(hit) {
+    .filter((hit) => hit._source.location)
+    .map(function(hit) {
 
-    var asset = hit._source;
-    var colid = `${asset.collection}/${asset.id}`;
+      var asset = hit._source;
+      var colid = `${asset.collection}/${asset.id}`;
 
-    var assetResult = {
-      id: colid,
-      short_title: asset.short_title,
-      description: asset.description,
-      image_url: `${colid}/thumbnail`,
-      latitude: asset.location.lat,
-      longitude: asset.location.lon,
-      clustered: false,
-      // We keep the count property to make upstream handling easier.
-      count: 1
-    };
+      var assetResult = {
+        id: colid,
+        short_title: asset.short_title,
+        description: asset.description,
+        image_url: `${colid}/thumbnail`,
+        latitude: asset.location.lat,
+        longitude: asset.location.lon,
+        clustered: false,
+        // We keep the count property to make upstream handling easier.
+        count: 1
+      };
 
-    // Heading is optional, so only add it if we have one.
-    if (asset.heading) {
-      assetResult.heading = asset.heading;
-    }
+      // Heading is optional, so only add it if we have one.
+      if (asset.heading) {
+        assetResult.heading = asset.heading;
+      }
 
-    return assetResult;
-  });
+      return assetResult;
+    });
 }
 
 /**
