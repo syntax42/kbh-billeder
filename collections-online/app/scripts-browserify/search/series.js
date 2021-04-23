@@ -13,6 +13,7 @@ const elasticsearchAggregationsBody = require('./es-aggregations-body');
 const resultsHeader = require('./results-header');
 const sorting = require('./sorting');
 const DEFAULT_SORTING = require('./default-sorting');
+const navigator = require('../document/navigator');
 
 const templates = {
   searchResultItem: require('views/includes/search-results-item')
@@ -246,6 +247,10 @@ function initialize() {
           const markup = templates.searchResultItem(item);
           $results.append(markup);
           resultsLoaded.push(item);
+        });
+
+        navigator.save({
+          resultsLoaded, queryBody
         });
 
         // Show some text if we don't have any results

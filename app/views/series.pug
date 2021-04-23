@@ -38,6 +38,8 @@ block content
               each tag in series.tags
                 .btn-group
                   +tag(tag)
+    .hidden-xs.hidden-sm
+      include includes/navigator
   .let-it-grow.is-list-view#start-of-content
     include includes/filterbar
     section.search-results
