@@ -105,7 +105,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
       };
       // Process each asset
       return processAsset(asset, assetSeries, clonedContext)
-      .then(null, err => {
+      .catch((err) => {
         const msg = 'ERROR processing ' + collection + '-' + asset.id;
         console.error(msg + (err.message && ': ' + err.message));
         return new AssetIndexingError(collection, asset.id, err);
