@@ -244,6 +244,7 @@ function initialize() {
             type: hit._type,
             metadata: hit._source
           };
+          item.metadata.isSeries = true;
           const markup = templates.searchResultItem(item);
           $results.append(markup);
           resultsLoaded.push(item);
@@ -251,7 +252,7 @@ function initialize() {
 
         navigator.save({
           resultsLoaded, queryBody
-        });
+        }, true);
 
         // Show some text if we don't have any results
         if (resultsTotal === 0) {

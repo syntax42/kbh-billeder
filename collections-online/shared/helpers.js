@@ -62,6 +62,13 @@ helpers.getDocumentURL = (metadata) => {
   return '/' + path.join('/');
 };
 
+helpers.getIsSeries = (metadata) => {
+  if(typeof metadata.isSeries == "undefined") {
+    return false;
+  }
+  return true;
+};
+
 helpers.getThumbnailURL = (metadata, size, watermarkPosition) => {
   if(metadata.file_format && metadata.file_format === 'MP3 Format') {
     return '../images/audio.jpg';
