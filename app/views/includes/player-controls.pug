@@ -7,10 +7,15 @@ block document__player-controls
   - const getZoomTilesId = helpers.getZoomTilesId(metadata);
 
   if getZoomTilesId
-    button(data-action='toggle-tiled-zoom').zoom-btn.btn.btn-transparent.btn-no-shadow
+    button(data-action='toggle-tiled-zoom').zoom-btn.btn.btn-transparent.btn-no-shadow.document__player-controls__rotate--item.document__player-controls__rotate--backside.document__player-controls__rotate--item--active
       +icon('zoom-in', 'zoom-in')
       span.zoom-in Zoom
 
+    button(data-action='toggle-expandable' type='button').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow.document__player-controls__rotate--item.document__player-controls__rotate--front
+      +icon('zoom-in', 'zoom-in')
+      +icon('zoom-out', 'zoom-out')
+      span.zoom-in Forstør billede
+      span.zoom-out Formindsk billede
   else
     button(data-action='toggle-expandable' type='button').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow
       +icon('zoom-in', 'zoom-in')
