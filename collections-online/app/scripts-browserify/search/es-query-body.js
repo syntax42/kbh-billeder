@@ -24,12 +24,12 @@ module.exports = function(parameters) {
         };
         query.terms[filter.field] = parameters.filters[field];
         queries.push(query);
-      } else if(filter.type === 'date-range' ||
-                filter.type === 'date-interval-range') {
-        var intervalQueries = parameters.filters[field].map(function(interval) {
+      } else if(filter.type === 'date-range' || filter.type === 'date-interval-range') {
+          var intervalQueries = parameters.filters[field].map(function(interval) {
           var intervalSplit = interval.split('-');
           var range = {
-            format: 'yyyy/MM/dd||yyy'
+            format: 'yyyy/MM/dd||yyy',
+            boost: 5
           };
           if(intervalSplit[0] && intervalSplit[0] !== '*') {
             range.gte = intervalSplit[0];
@@ -95,21 +95,21 @@ module.exports = function(parameters) {
               // Either the end of the range (range.gte) must fall between the
               // start and end of the period.
               periodFilter.bool.should[0].bool.must[0].range[filter.period.from] = {
-                lte: range.gte
+                gte: range.gte
               };
               // and after its end.
               periodFilter.bool.should[0].bool.must[1].range[filter.period.to] = {
-                gte: range.gte
+                lte: range.lte
               };
 
               // Or the end of the range must.
               periodFilter.bool.should[1].bool.must[0].range[filter.period.from] = {
-                lte: range.lt
+                gt: range.gt
               };
 
               // Year should be less than our to.
               periodFilter.bool.should[1].bool.must[1].range[filter.period.to] = {
-                gte: range.lt
+                lt: range.lt
               };
 
               // Should give us something like.
