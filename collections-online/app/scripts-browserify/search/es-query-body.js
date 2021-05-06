@@ -120,49 +120,49 @@ module.exports = function(parameters) {
               // Just return the single-field singlefieldRange.
               return singlefieldRange;
             }
-
-          } else if(filter.type === 'date-interval-range') {
-
-            if(!filter.fields || !filter.fields.from || !filter.fields.to) {
-              throw new Error('Expected filter to have fields.from and .to');
-            }
-            // We query based on the follwing rules:
-
-            // a | |       Excluded of as it's too old
-            // b       | | Excluded of as it's too new
-            // c   |   |   Included as the we are within the interval
-            // d     ||    Included as the interval is enclosed
-            // e |   |     Included as its not quarenteed that it's not too old
-            // f     |  |  Included as its not quarenteed that it's not too new
-            //      ^ ^
-            //      A B
-
-            const queries = [];
-            // If the user has selected a lower bound
-            if(range.gte) {
-              queries.push({
-                range: {
-                  [filter.fields.to]: {
-                    gte: range.gte,
-                  }
-                }
-              });
-            }
-            if(range.lt) {
-              queries.push({
-                range: {
-                  [filter.fields.from]: {
-                    lt: range.lt,
-                  }
-                }
-              });
-            }
-            return {
-              bool: {
-                must: queries
-              }
-            };
           }
+          //else if(filter.type === 'date-interval-range') {
+
+          //   if(!filter.fields || !filter.fields.from || !filter.fields.to) {
+          //     throw new Error('Expected filter to have fields.from and .to');
+          //   }
+          //   // We query based on the follwing rules:
+
+          //   // a | |       Excluded of as it's too old
+          //   // b       | | Excluded of as it's too new
+          //   // c   |   |   Included as the we are within the interval
+          //   // d     ||    Included as the interval is enclosed
+          //   // e |   |     Included as its not quarenteed that it's not too old
+          //   // f     |  |  Included as its not quarenteed that it's not too new
+          //   //      ^ ^
+          //   //      A B
+
+          //   const queries = [];
+          //   // If the user has selected a lower bound
+          //   if(range.gte) {
+          //     queries.push({
+          //       range: {
+          //         [filter.fields.to]: {
+          //           gte: range.gte,
+          //         }
+          //       }
+          //     });
+          //   }
+          //   if(range.lt) {
+          //     queries.push({
+          //       range: {
+          //         [filter.fields.from]: {
+          //           lt: range.lt,
+          //         }
+          //       }
+          //     });
+          //   }
+          //   return {
+          //     bool: {
+          //       must: queries
+          //     }
+          //   };
+          // }
         });
 
         queries.push({
