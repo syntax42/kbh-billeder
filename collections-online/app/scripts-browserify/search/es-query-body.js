@@ -28,8 +28,7 @@ module.exports = function(parameters) {
           var intervalQueries = parameters.filters[field].map(function(interval) {
           var intervalSplit = interval.split('-');
           var range = {
-            format: 'yyyy/MM/dd||yyy',
-            boost: 5
+            format: 'yyyy/MM/dd||yyy'
           };
           if(intervalSplit[0] && intervalSplit[0] !== '*') {
             range.gte = intervalSplit[0];
@@ -63,15 +62,23 @@ module.exports = function(parameters) {
 
               var periodFilter = {
                 bool: {
-                  should: [
+                  must: [
                     {
                       bool: {
                         must: [
                           {
-                            range: {}
+                            range: {
+                              [filter.period.from]: {
+                                gte: range.gte,
+                              }
+                            }
                           },
                           {
-                            range: {}
+                            range: { //TODO: is this even used?
+                              [filter.period.to]: {
+                                lte: range.lte,
+                              }
+                            }
                           }
                         ]
                       }
@@ -80,10 +87,18 @@ module.exports = function(parameters) {
                       bool: {
                         must: [
                           {
-                            range: {}
+                            range: { //TODO: is this even used?
+                              [filter.period.from]: {
+                                gt: range.gt,
+                              }
+                            }
                           },
                           {
-                            range: {}
+                            range: {
+                              [filter.period.to]: {
+                                lt: range.lt,
+                              }
+                            }
                           }
                         ]
                       }
@@ -91,74 +106,6 @@ module.exports = function(parameters) {
                   ]
                 }
               };
-
-              // Either the end of the range (range.gte) must fall between the
-              // start and end of the period.
-              periodFilter.bool.should[0].bool.must[0].range[filter.period.from] = {
-                gte: range.gte
-              };
-              // and after its end.
-              periodFilter.bool.should[0].bool.must[1].range[filter.period.to] = {
-                lte: range.lte
-              };
-
-              // Or the end of the range must.
-              periodFilter.bool.should[1].bool.must[0].range[filter.period.from] = {
-                gt: range.gt
-              };
-
-              // Year should be less than our to.
-              periodFilter.bool.should[1].bool.must[1].range[filter.period.to] = {
-                lt: range.lt
-              };
-
-              // Should give us something like.
-              //   bool: {
-              //     should: [
-              //       {
-              //         bool: {
-              //           must: [
-              //             {
-              //               range: {
-              //                 'creation_time_from.year': {
-              //                   lt: 1950
-              //                 }
-              //               }
-              //             },
-              //             {
-              //               range: {
-              //                 'creation_time_to.year': {
-              //                   gte: 1940
-              //                 }
-              //               }
-              //             }
-              //           ]
-              //         }
-              //       },
-              //       {
-              //         bool: {
-              //           must: [
-              //             {
-              //               range: {
-              //                 'creation_time_from.year': {
-              //                   lt: 1950
-              //                 }
-              //               }
-              //             },
-              //             {
-              //               range: {
-              //                 'creation_time_to.year': {
-              //                   gte: 1940
-              //                 }
-              //               }
-              //             }
-              //           ]
-              //         }
-              //       }
-              //     ]
-              //   }
-              // }
-              //
 
               // Setup a new combined filter that allows the asset to match
               // either a specific creation date or a period.
@@ -190,29 +137,25 @@ module.exports = function(parameters) {
             //      ^ ^
             //      A B
 
-            var queries = [];
+            const queries = [];
             // If the user has selected a lower bound
             if(range.gte) {
-              var tooOldQuery = {
-                range: {}
-              };
-              // It must be the case that the documents interval's to date is
-              // after the selected lower bound
-              tooOldQuery.range[filter.fields.to] = {
-                gte: range.gte
-              };
-              queries.push(tooOldQuery);
+              queries.push({
+                range: {
+                  [filter.fields.to]: {
+                    gte: range.gte,
+                  }
+                }
+              });
             }
             if(range.lt) {
-              var tooNewQuery = {
-                range: {}
-              };
-              // It must be the case that the documents interval's from date is
-              // before the selected upper bound
-              tooNewQuery.range[filter.fields.from] = {
-                lt: range.lt
-              };
-              queries.push(tooNewQuery);
+              queries.push({
+                range: {
+                  [filter.fields.from]: {
+                    lt: range.lt,
+                  }
+                }
+              });
             }
             return {
               bool: {
