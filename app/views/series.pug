@@ -8,7 +8,9 @@ prepend header
   +meta(`${series.title} - Billedserie`, series.description)
 
 block content
-  .document-content.document-content--black
+  .document-content.document-content--black(
+      data-id=series.url
+    )
     .container-fluid.document
       .row
         .document-content__preview.col-xs-12.col-md-7.col-md-push-5
@@ -38,6 +40,8 @@ block content
               each tag in series.tags
                 .btn-group
                   +tag(tag)
+    .hidden-xs.hidden-sm
+      include includes/navigator
   .let-it-grow.is-list-view#start-of-content
     include includes/filterbar
     section.search-results

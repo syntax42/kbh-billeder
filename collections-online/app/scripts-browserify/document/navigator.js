@@ -32,21 +32,32 @@ const KEYCODES = {
 const urls = {}
 
 const navigator = {
-  save: (state) => {
+  save: (state, isSeries) => {
     if(window.sessionStorage) {
       const searchString = JSON.stringify(state);
-      window.sessionStorage.setItem('search', searchString);
+      if(!isSeries) {
+        window.sessionStorage.setItem('search', searchString);
+      } else {
+        window.sessionStorage.setItem('seriesSearch', searchString);
+      }
     } else {
       console.warn('Cannot save search state: sessionStorage is not supported');
     }
   },
-  load: () => {
+  load: (isSeries) => {
+    if(isSeries) {
+      const seriesSearchString = window.sessionStorage.getItem('seriesSearch');
+      return seriesSearchString ? JSON.parse(seriesSearchString) : {};
+    }
     const searchString = window.sessionStorage.getItem('search');
     return searchString ? JSON.parse(searchString) : {};
   },
   initializeArrow: (direction, hit) => {
     const $arrow = ARROWS[direction];
-    const url = helpers.getDocumentURL(hit.metadata);
+    let url = helpers.getDocumentURL(hit.metadata);
+    if(hit.metadata.isSeries) {
+      url += "?is-series=true";
+    }
     // Save this url such that the swipe listener can change location
     urls[direction] = url;
     const $preview = $arrow.find('.document__navigator-preview');
@@ -108,17 +119,35 @@ $('.document__player').each((i, doc) => {
 
 // Check if the session storage is available
 if(window.sessionStorage) {
-  const currentId = $('.document').data('id');
-  const {resultsLoaded, queryBody} = navigator.load();
+  let currentId = $('.document').data('id');
+  //Check if the id is for a series url instead
+  if(typeof currentId == "undefined") {
+    currentId = $('.document-content').data('id');
+  }
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+
+  let savedSearchResult = {};
+  if(params.get("is-series")) {
+    savedSearchResult = navigator.load(true);
+  } else {
+    savedSearchResult = navigator.load();
+  }
+  const { resultsLoaded, queryBody } = savedSearchResult;
 
   if(currentId && resultsLoaded && queryBody) {
     let resultsDesired = resultsLoaded.length;
 
     // Locate the current assets index in the last search result
     const currentIndex = resultsLoaded.findIndex(hit => {
+      //If id is undefined, this might be a series instead of an asset
+      if(typeof hit.metadata.id == "undefined") {
+        return currentId == hit.metadata.url;
+      }
       // The non-typed equal comparison is on purpose
       return currentId == hit.metadata.id;
     });
+
     const previousIndex = currentIndex - 1;
     const nextIndex = currentIndex + 1;
 
