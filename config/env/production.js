@@ -30,7 +30,7 @@ const production = _.merge({}, base, {
     analyticsPropertyID: 'UA-78446616-1'
   },
   host: 'kbhbilleder.dk',
-  reindexAccessKey: process.env.REINDEX_ACCESS_KEY_PROD,
+  // reindexAccessKey: process.env.REINDEX_ACCESS_KEY_PROD,
   enforceHttps: true,
   ip: null,
   port: null,
