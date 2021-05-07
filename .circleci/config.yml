@@ -45,6 +45,7 @@ jobs:
           if [ "$CIRCLE_BRANCH" = "master" ]; then
             echo "NODE_ENV=beta" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_BETA}" >> .env
+            echo "REINDEX_ACCESS_KEY_BETA=${REINDEX_ACCESS_KEY_BETA}" >> .env
           elif [ "$CIRCLE_BRANCH" = "production" ]; then
             echo "NODE_ENV=production" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_PRODUCTION}" >> .env
