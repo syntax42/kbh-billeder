@@ -160,7 +160,7 @@ let config = {
   },
   port: process.env.PORT || 9000,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
-  reindexAccessKey: process.env.REINDEX_ACCESS_KEY || 'adelgade',
+  reindexAccessKey: process.env.KBH_ACCESS_KEY || 'adelgade',
   search: {
     baseQuery: {
       'bool': {
