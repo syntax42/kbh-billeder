@@ -24,7 +24,7 @@ const beta = _.merge({}, base, {
     sitewidePassword: true,
     users: true
   },
-  reindexAccessKey: process.env.KBH_ACCESS_KEY,
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   host: 'beta.kbhbilleder.dk',
   enforceHttps: true,
   ip: null,
