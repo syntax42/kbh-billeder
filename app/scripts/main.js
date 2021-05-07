@@ -42,11 +42,16 @@ function flipAsset() {
   var backside = document.getElementsByClassName('asset__image--backside')[0];
   image.classList.toggle('asset__image--hide');
   backside.classList.toggle('asset__image--hide');
-  // Button toggle.
-  var backsideText = document.getElementsByClassName('document__player-controls__rotate--backside')[0];
-  var frontText = document.getElementsByClassName('document__player-controls__rotate--front')[0];
-  backsideText.classList.toggle('document__player-controls__rotate--item--active');
-  frontText.classList.toggle('document__player-controls__rotate--item--active');
+  //TODO : cleanup classes that are used to show and rotate player buttons!
+  var backsideText = document.querySelectorAll('.document__player-controls__rotate--backside');
+  backsideText.forEach((prop) => {
+    prop.classList.toggle('document__player-controls__rotate--item--active');
+  })
+
+  var frontText = document.querySelectorAll('.document__player-controls__rotate--front');
+  frontText.forEach((prop) => {
+    prop.classList.toggle('document__player-controls__rotate--item--active');
+  })
   return false;
 }
 
