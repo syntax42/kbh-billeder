@@ -170,7 +170,6 @@ function deleteAsset(catalogAlias, assetId) {
 }
 
 module.exports.asset = function(req, res, next) {
-  console.log("#######body", req.body);
   if(req.body.apiKey !== config.kbhAccessKey) {
     return res.sendStatus(401);
   }
