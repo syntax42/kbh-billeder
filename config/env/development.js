@@ -16,7 +16,7 @@ const development = _.merge({}, base, {
       logRequests: true
     }
   },
-  reindexAccessKey: process.env.REINDEX_ACCESS_KEY_DEVELOPMENT,
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
   es: {

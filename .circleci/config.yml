@@ -45,10 +45,11 @@ jobs:
           if [ "$CIRCLE_BRANCH" = "master" ]; then
             echo "NODE_ENV=beta" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_BETA}" >> .env
-            echo "REINDEX_ACCESS_KEY_BETA=${REINDEX_ACCESS_KEY_BETA}" >> .env
+            echo "KBH_ACCESS_KEY=${KBH_ACCESS_KEY}" >> .env
           elif [ "$CIRCLE_BRANCH" = "production" ]; then
             echo "NODE_ENV=production" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_PRODUCTION}" >> .env
+            echo "KBH_ACCESS_KEY=${KBH_ACCESS_KEY}" >> .env
           else
             echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
           fi
