@@ -53,7 +53,7 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: process.env.CUMULUSAPI_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder/',
+      endpoint: process.env.CUMULUS_API_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder/',
       authMechanism: 'http-basic',
       username: process.env.CIP_USERNAME,
       password: process.env.CIP_PASSWORD,
