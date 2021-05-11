@@ -12,7 +12,9 @@ const beta = _.merge({}, base, {
     acceptTermsText: base.auth0TermsText,
   },
   cip: {
+    baseURL: process.env.CUMULUS_API_URL_BETA, //'https://www.neaonline.dk:8443/CIP-kbh-billeder' <-- not trailing slash here,
     client: {
+      endpoint: process.env.CUMULUS_API_URL_BETA, //'https://www.neaonline.dk:8443/CIP-kbh-billeder/ <--- Remember the trailing slash',
       logRequests: true
     }
   },
@@ -24,6 +26,7 @@ const beta = _.merge({}, base, {
     sitewidePassword: true,
     users: true
   },
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   host: 'beta.kbhbilleder.dk',
   enforceHttps: true,
   ip: null,

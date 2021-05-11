@@ -37,7 +37,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL: process.env.CUMULUSAPI_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder',
+    baseURL: process.env.CUMULUS_API_URL, //'https://www.neaonline.dk:8443/CIP-kbh-billeder' <-- not trailing slash here,
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxy: {
@@ -53,7 +53,7 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: process.env.CUMULUSAPI_URL || 'https://www.neaonline.dk:8443/CIP-kbh-billeder/',
+      endpoint: process.env.CUMULUS_API_URL, //'https://www.neaonline.dk:8443/CIP-kbh-billeder/ <--- Remember the trailing slash',
       authMechanism: 'http-basic',
       username: process.env.CIP_USERNAME,
       password: process.env.CIP_PASSWORD,
@@ -160,7 +160,7 @@ let config = {
   },
   port: process.env.PORT || 9000,
   projectOxfordAPIKey: process.env.PROJECT_OXFORD_API_KEY,
-  reindexAccessKey: process.env.REINDEX_ACCESS_KEY || 'adelgade',
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   search: {
     baseQuery: {
       'bool': {

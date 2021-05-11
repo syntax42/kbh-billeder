@@ -6,7 +6,7 @@ module.exports = {
   module: indexing,
   registerRoutes: app => {
     app.get('/index/recent', (req, res) => {
-      if (config.reindexAccessKey && req.query.accesskey !== config.reindexAccessKey) {
+      if (config.kbhAccessKey && req.query.accesskey !== config.kbhAccessKey) {
         res.status(401);
         return res.send('Accesskey required.');
       }
@@ -19,7 +19,7 @@ module.exports = {
       return res.send('Indexing of recent assets started.');
     });
     app.get('/index/all', (req, res) => {
-      if (config.reindexAccessKey && req.query.accesskey !== config.reindexAccessKey) {
+      if (config.kbhAccessKey && req.query.accesskey !== config.kbhAccessKey) {
         res.status(401);
         return res.send('Accesskey required.');
       }

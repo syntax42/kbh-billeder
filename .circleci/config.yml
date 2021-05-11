@@ -45,9 +45,13 @@ jobs:
           if [ "$CIRCLE_BRANCH" = "master" ]; then
             echo "NODE_ENV=beta" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_BETA}" >> .env
+            echo "KBH_ACCESS_KEY=${KBH_ACCESS_KEY}" >> .env
+            echo "CUMULUS_API_URL_BETA=${CUMULUS_API_URL_BETA}" >> .env
           elif [ "$CIRCLE_BRANCH" = "production" ]; then
             echo "NODE_ENV=production" >> .env
             echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET_PRODUCTION}" >> .env
+            echo "KBH_ACCESS_KEY=${KBH_ACCESS_KEY}" >> .env
+            echo "CUMULUS_API_URL=${CUMULUS_API_URL}" >> .env
           else
             echo "Unexpected branch ($CIRCLE_BRANCH), could not determine NODE_ENV" && exit 1;
           fi

@@ -45,15 +45,9 @@ cipClient.getRecentAssets = function(cipClient, catalog, fromDate) {
 };
 
 cipClient.setFieldValues = function(catalogAlias, id, values) {
-  var operation = [
-    'metadata',
-    'setfieldvalues',
-    catalogAlias
-  ].join('/');
-
   values.id = parseInt(id);
 
-  return this.request(operation, {}, {
+  return this.request(`/metadata/setfieldvalues/${catalogAlias}`, {}, {
     items: [values]
   });
 };

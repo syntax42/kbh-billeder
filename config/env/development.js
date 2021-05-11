@@ -16,6 +16,7 @@ const development = _.merge({}, base, {
       logRequests: true
     }
   },
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
   es: {

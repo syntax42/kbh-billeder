@@ -170,6 +170,10 @@ function deleteAsset(catalogAlias, assetId) {
 }
 
 module.exports.asset = function(req, res, next) {
+  //TODO: Uncomment after moving to new servers
+  // if(req.body.apiKey !== config.kbhAccessKey) {
+  //   return res.sendStatus(401);
+  // }
   const action = req.body.action || null;
   const catalogName = req.body.collection || null;
   let id = req.body.id || '';

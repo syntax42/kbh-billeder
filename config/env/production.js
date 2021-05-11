@@ -30,6 +30,7 @@ const production = _.merge({}, base, {
     analyticsPropertyID: 'UA-78446616-1'
   },
   host: 'kbhbilleder.dk',
+  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   enforceHttps: true,
   ip: null,
   port: null,
