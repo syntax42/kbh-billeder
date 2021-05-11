@@ -19,13 +19,14 @@ function AssetIndexingError(catalogAlias, assetId, innerError) {
 const processAsset = require('./asset');
 
 function saveChangesToCIP(catalogAlias, items) {
-  const operation = [
-    'metadata',
-    'setfieldvalues',
-    catalogAlias
-  ].join('/');
+  //TODO: test and remove if successful
+  // const operation = [
+  //   '/metadata',
+  //   'setfieldvalues',
+  //   catalogAlias
+  // ].join('/');
   // Call the CIP
-  return cip.request(operation, {}, {
+  return cip.request(`/metadata/setfieldvalues/${catalogAlias}`, {}, {
     items
   });
 }
