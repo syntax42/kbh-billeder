@@ -37,7 +37,7 @@ let config = {
   },
   categoryBlacklist: require('../category-blacklist.js'),
   cip: {
-    baseURL: process.env.CUMULUS_API_URL, //'https://www.neaonline.dk:8443/CIP-kbh-billeder' <-- not trailing slash here,
+    baseURL: process.env.CUMULUS_API_URL,
     username: process.env.CIP_USERNAME,
     password: process.env.CIP_PASSWORD,
     proxy: {
@@ -53,7 +53,7 @@ let config = {
     },
     catalogs: cipCatalogs,
     client: {
-      endpoint: process.env.CUMULUS_API_URL, //'https://www.neaonline.dk:8443/CIP-kbh-billeder/ <--- Remember the trailing slash',
+      endpoint: process.env.CUMULUS_API_URL,
       authMechanism: 'http-basic',
       username: process.env.CIP_USERNAME,
       password: process.env.CIP_PASSWORD,
