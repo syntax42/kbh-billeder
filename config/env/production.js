@@ -12,7 +12,9 @@ const production = _.merge({}, base, {
     acceptTermsText: base.auth0TermsText,
   },
   cip: {
+    baseURL: process.env.CUMULUS_API_URL,
     client: {
+      endpoint: process.env.CUMULUS_API_URL,
       logRequests: true
     }
   },
