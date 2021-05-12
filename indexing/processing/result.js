@@ -25,12 +25,7 @@ function saveChangesToCIP(catalogAlias, items) {
 }
 
 async function getResultPage(query, catalog, index, pageSize) {
-  const operation = [
-    'metadata',
-    'search',
-    catalog,
-    config.cip.client.constants.layoutAlias,
-  ];
+  const operation = `/metadata/search/${catalog}/${config.cip.client.constants.layoutAlias}`;
 
   const options = {
     querystring: query,
