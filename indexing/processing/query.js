@@ -14,11 +14,7 @@ const DEFAULT_PAGE_SIZE = 100;
 function processQuery(state, query) {
   console.log('Processing query “' + query.query + '” in', query.catalogAlias);
   // Initiate the search via the CIP
-  return cip.request([
-    'metadata',
-    'search',
-    query.catalogAlias,
-  ], {
+  return cip.request(`/metadata/search/${query.catalogAlias}`, {
     querystring: query.query
   }).then(result => {
     const { totalcount } = result.body;
