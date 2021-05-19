@@ -21,13 +21,13 @@ objects:
             - name: JOB_NAME1
               value: "Incremental"
             - name: JOB_COMMAND1
-              value: "curl 'https://$(FRONTEND_PUBLIC_HOSTNAME)/index/recent?timeframe=70m&accesskey=adelgade'"
+              value: "curl 'https://$(FRONTEND_PUBLIC_HOSTNAME)/index/recent?timeframe=70m&accesskey=$(KBH_ACCESS_KEY)'"
             - name: JOB_TIME1
               value: "$(INCREMENTAL_TIMING)"
             - name: JOB_NAME2
               value: "Full"
             - name: JOB_COMMAND2
-              value: "curl 'https://$(FRONTEND_PUBLIC_HOSTNAME)/index/all?accesskey=adelgade'"
+              value: "curl 'https://$(FRONTEND_PUBLIC_HOSTNAME)/index/all?accesskey=$(KBH_ACCESS_KEY)'"
             - name: JOB_TIME2
               value: "$(FULL_TIMING)"
 parameters:
