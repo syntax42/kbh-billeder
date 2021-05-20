@@ -295,16 +295,25 @@ function initialize() {
       // prevent scrollposition to be overwritten when returning from
       // an asset page.
       if(window.scrollY != 0) {
-        sessionStorage.setItem('lastScrollPosition', window.scrollY);
+        sessionStorage.setItem('lastScrollPositionForSeries', window.scrollY);
       }
     }
   };
 
   function resetScrollPosition() {
     if(window.sessionStorage) {
-      sessionStorage.setItem('lastScrollPosition', 0);
+      sessionStorage.setItem('lastScrollPositionForSeries', 0);
     }
   }
+
+  function returnToPreviousScrollPosition() {
+    if(window.sessionStorage) {
+      let lastScrollPosition = sessionStorage.getItem('lastScrollPositionForSeries');
+      if(lastScrollPosition) {
+        window.scrollTo(0, lastScrollPosition);
+      }
+    }
+  };
 
   const searchControllerCallbacks = {
     // Allow the caller to refresh the current search-results.
@@ -489,9 +498,17 @@ function initialize() {
     $('.let-it-grow').trigger('search:viewModeChanged', ['map']);
   }
   else {
-    // No relevant url-parameter and no relevant state, just do a cold update.
-    resetScrollPosition();
-    update(false, true, searchParams);
+    // Examine the history - if we have a state, load results from it.
+    if (history.state) {
+      inflateHistoryState(history.state);
+      // Return to the scroll position when going back from an asset site.
+      returnToPreviousScrollPosition();
+    }
+    else {
+      // No relevant url-parameter and no relevant state, just do a cold update.
+      resetScrollPosition();
+      update(false, true, searchParams);
+    }
   }
 
   function reset() {

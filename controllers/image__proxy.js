@@ -39,7 +39,7 @@ function proxy(url, includeJSessionId = false, headers = []) {
             url.substring(queryStringStart);
     }
   }
-
+  console.log("config.cip.timeout", config.cip.timeout)
   console.log('CIP proxy is requesting', url);
 
   const { username, password } = config.cip

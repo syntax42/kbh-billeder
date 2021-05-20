@@ -48,12 +48,11 @@ function getFilterEntry(fieldName, fieldValue, operator) {
  * Create a bool filter entry for a period bucket.
  */
 function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
-  let entry = {
-    'bool': {
-      'should': []
+  const entry = {
+    bool: {
+      must: []
     }
   };
-
 
   // Period falls in to the bucket if it overlaps. That is.
   // Period: 1000-1100
@@ -62,31 +61,11 @@ function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
   // But not: 1100-1200 (as our periods share start/end and we only want it
   // to fall in to one of the two).
   if (bucketTo) {
-    // We have a bucket with an end, it should match periods that.
-    entry.bool.should.push({
-      'bool': {
-        'must' : [
-          // Starts before the end of the bucket
-          getFilterEntry(periodFrom, bucketTo, 'lte'),
-          // And ends after the bucket.
-          getFilterEntry(periodTo, bucketTo, 'gte')
-        ]
-      }
-    });
+    entry.bool.must.push(getFilterEntry(periodTo, bucketTo, 'lte'));
   }
 
   if (bucketFrom) {
-    entry.bool.should.push({
-      // We have a bucket with an start, it should match periods that.
-      'bool': {
-        'must' : [
-          // Starts after the beginning of the bucket.
-          getFilterEntry(periodTo, bucketFrom, 'gte'),
-          // And ends before the bucket ends.
-          getFilterEntry(periodFrom, bucketFrom, 'lte')
-        ]
-      }
-    });
+    entry.bool.must.push(getFilterEntry(periodFrom, bucketFrom, 'gte'));
   }
 
   return entry;
@@ -96,9 +75,9 @@ function getPeriodFilterEntry (periodFrom, bucketFrom, periodTo,  bucketTo) {
  * Create a bool filter entry for a single creation-date bucket.
  */
 function getSingleFilterEntry (creationYear, bucketFrom, bucketTo) {
-  let entry = {
-    'bool': {
-      'must': []
+  const entry = {
+    bool: {
+      must: []
     }
   };
 

@@ -44,6 +44,7 @@ exports.stream = function (req, res, next) {
       if (response.statusCode === 200 || response.statusCode === 206) {
         proxyRequest.pipe(res);
       } else {
+        console.error("failed to download image ", response);
         res.status(500).send('Error occured while processing request.');
       }
     });
