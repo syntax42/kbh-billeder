@@ -66,7 +66,7 @@ let config = {
       trustSelfSigned: true
     },
     sessionRenewalRate: 30 * 60 * 1000, // Once every 30 minutes
-    timeout: 55000
+    timeout: 300000
   },
   email: {
     baseUrl: '@api.eu.mailgun.net/v3/mg.kbhbilleder.dk',

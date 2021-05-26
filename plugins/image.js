@@ -11,7 +11,6 @@ module.exports = {
       return cip.initSession().then(() => {
         // TODO: Consider creating the structure of categories (used for the menu)
         // from another API than the CIP
-        // return require('./cip-categories').initialize(app)
       }).then(() => {
         setInterval(() => {
           // Consider calling close session ..
