@@ -254,6 +254,13 @@ function initialize() {
           resultsLoaded, queryBody
         }, true);
 
+        if(history.replaceState) {
+          history.replaceState({
+            resultsLoaded,
+            resultsTotal
+          }, null, null);
+        }
+
         // Show some text if we don't have any results
         if (resultsTotal === 0) {
           $noResultsText.removeClass('hidden');
@@ -518,6 +525,39 @@ function initialize() {
     $(window).off('scroll');
     $loadMoreBtn.addClass('invisible');
   }
+
+  function inflateHistoryState(state) {
+    // Render results from the state
+    if(state.resultsLoaded) {
+      reset();
+      // Remove all the search result items right away
+      $results.find('.search-results-item, .search-results-first-series').remove();
+
+      // Append rendered markup, once per asset loaded from the state.
+      resultsLoaded = state.resultsLoaded;
+      resultsDesired = resultsLoaded.length;
+      resultsLoaded.forEach(function(item, i) {
+        if(i === 0 && item.type === 'series') {
+          var markup = templates.searchResultFirstSeries(item);
+          $results.append(markup);
+          return;
+        }
+        var markup = templates.searchResultItem(item);
+        $results.append(markup);
+      });
+
+      // Replace the resultsTotal from the state
+      resultsTotal = state.resultsTotal;
+
+      // Using the updateWidgets=true, updates the header as well
+      // Using the indicateLoading=false makes sure the UI doesn't blink
+      update(true, true, searchParams);
+    }
+  }
+
+  window.addEventListener('popstate', function(event) {
+    inflateHistoryState(event.state);
+  }, false);
 }
 
 // If we know of series assets, load 'er up
