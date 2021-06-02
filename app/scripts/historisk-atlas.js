@@ -29,7 +29,7 @@ function _prepareMapOptions(options) {
   }
 
   if (!options.timeWarpMapId) {
-    options.timeWarpMapId = 85;
+    options.timeWarpMapId = 239;
   }
 
   if (!options.clusterAtZoomLevel) {
@@ -46,7 +46,7 @@ function _prepareMapOptions(options) {
 
   if (!options.maps) {
     options.maps = [
-      { id: 85, title: 'Luftfoto', year: '2016' },
+      { id: 239, title: 'Luftfoto', year: '2019' },
       { id: 39, title: '4 cm kort', year: '1977-85' },
       { id: 38, title: '4 cm kort', year: '1953-76' },
       { id: 228, title: 'K\u00F8benhavn', year: '1860' },
@@ -75,7 +75,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   mapState.mapElement = mapElement;
 
   //check that timeWarpMapId reference an existing map
-  var newTimeWarpMapId = 85;
+  var newTimeWarpMapId = 239;
   for (var i = 0; i < maps.length; i++)
     if (maps[i].id == timeWarpMapId)
       newTimeWarpMapId = timeWarpMapId;
