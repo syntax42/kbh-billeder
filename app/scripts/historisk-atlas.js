@@ -219,7 +219,7 @@ function _prepareMap(mapElement, center, offset, zoomLevel, timeWarpShown, timeW
   *   Url template for maps with id "id".
   */
   mapState.getMapUrl = function (id) {
-    return 'https://tile.historiskatlas.dk/tile/a2JoYmlsbG/' + id + '/{z}/{x}/{y}.jpg';
+    return `https://haapi.historiskatlas.dk/cache/tile_normal/${id}/{z}/{x}/{y}.jpg?key=f92f73160d844ba2a91f6386804bb129`;
   }
 
   // Create OpenLayers vector source (main source for assets)
