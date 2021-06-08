@@ -77,16 +77,16 @@ module.exports = (state) => {
   function getAssetMapping() {
     let fields = config.types.asset.mapping || {};
     //Add id field so we can query it
-    fields.id = {
-      'type': 'string',
-      'analyzer': 'english',
-      'fields': {
-        'raw': {
-          'type': 'string',
-          'index': 'not_analyzed'
-        }
-      }
-    };
+    // fields.id = {
+    //   'type': 'string',
+    //   'analyzer': 'english',
+    //   'fields': {
+    //     'raw': {
+    //       'type': 'string',
+    //       'index': 'not_analyzed'
+    //     }
+    //   }
+    // };
     // Get all fields that needs a raw value included in the index
     config.types.asset.fields.filter((field) => {
       return field.includeRaw;
