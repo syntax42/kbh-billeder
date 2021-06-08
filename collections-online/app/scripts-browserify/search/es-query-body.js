@@ -181,7 +181,6 @@ module.exports = function(parameters) {
                 'short_title^5',
                 'description',
                 'previewAssets.short_title^3',
-                '_id',
                 'id',
                 'previewAssets.description',
                 'previewAssets.tags',
