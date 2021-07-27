@@ -3,6 +3,12 @@
 var _ = require('lodash');
 var base = require('./base');
 
+let enforceHttps = true;
+
+if (process.env.ENFORCE_HTTPS === 'false') {
+  enforceHttps = false;
+}
+
 const beta = _.merge({}, base, {
   allowRobots: false,
   auth0: {
@@ -28,7 +34,7 @@ const beta = _.merge({}, base, {
   },
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
   host: 'beta.kbhbilleder.dk',
-  enforceHttps: true,
+  enforceHttps,
   ip: null,
   port: null,
   siteTitle: 'kbhbilleder.dk (beta)',
