@@ -3,6 +3,12 @@
 var _ = require('lodash');
 var base = require('./base');
 
+let enforceHttps = true;
+
+if (process.env.ENFORCE_HTTPS === 'false') {
+  enforceHttps = false;
+}
+
 const production = _.merge({}, base, {
   allowRobots: true,
   auth0: {
@@ -33,7 +39,7 @@ const production = _.merge({}, base, {
   },
   host: 'kbhbilleder.dk',
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
-  enforceHttps: true,
+  enforceHttps,
   ip: null,
   port: null,
   socketPath: '/tmp/kbh-billeder.sock'
