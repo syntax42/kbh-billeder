@@ -1,0 +1,24 @@
+include ../mixins/loader
+
+.geo-tagging
+  .geo-tagging__player.document__player
+    include ./player
+  .geo-tagging__map
+    - // TODO: Refactor geotagging.js such that elementsById is no longer needed
+    - var geotagging_description = "Søg efter adresse"
+    .geo-tagging__map-element
+    input.geo-tagging__input.controls(
+      type="text",
+      placeholder=geotagging_description,
+      aria-label=geotagging_description
+    )
+    .geo-tagging__map-buttons
+      button.btn.btn-primary(data-action='geo-tagging:stop' type='button')
+        | Annuller
+      button.btn.btn-primary(data-action='save-geo-tag' type='button')= "Gem placering"
+      button.btn.btn-primary(data-action='back-to-map' type='button')
+        | Tilbage til kortvisning
+    .geo-tagging__overlay
+      block geo-tagging__overlay
+      .btn.btn-primary(data-action='close-overlay' type='button')
+        | Videre

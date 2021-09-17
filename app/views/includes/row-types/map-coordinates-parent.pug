@@ -1,0 +1,52 @@
+include ../../mixins/icon
+
+- // Doing a conditional on metadata, makes sure that this section is shown
+if Object.keys(metadata).length > 0 && config.features.geoTagging
+  - const latitude = helpers.getFirst(metadata, row.fields.latitude);
+  - const longitude = helpers.getFirst(metadata, row.fields.longitude);
+  - const heading = helpers.getFirst(metadata, row.fields.heading);
+  - const headingText = helpers.headingToText(heading);
+  - const approximate = helpers.getFirst(metadata, row.fields.approximate);
+  - const geotaggable = helpers.geoTagging.enabled(metadata);
+
+  - const details = approximate ? ' (anslået)' : '';
+
+  if latitude && longitude
+    block map-coordinates__map
+      .map
+        .geo-tagging-mini-map(
+          data-latitude=latitude,
+          data-longitude=longitude,
+          data-heading=heading,
+          data-approximate=approximate ? 'true' : 'false'
+        )
+        h2.mini-map__title Sted
+    .map-data
+      block map-coordinates__map--info
+        tr
+          th(scope='row') #{row.title}:
+          td= latitude.toFixed(5) + ', ' + longitude.toFixed(5) + details
+          // Display heading if the asset contains one.
+          if row.titleHeading && heading
+            tr
+              th(scope='row') #{row.titleHeading}:
+              td= headingText + ' (' + heading.toFixed(0) + '°' + ')'
+      if geotaggable
+        - let extraClasses = approximate ? 'btn-primary' : 'btn-primary btn-sm';
+          block map-coordinates__map--edit-coordinates
+            tr
+              td(colspan='2')
+                button.btn.btn-block(data-action='geo-tagging:start', class=extraClasses)
+                  block map-coordinates__edit-coordinates-text
+  else
+    .map-data
+      tr
+        th #{row.title}:
+        td
+          block map-coordinates__missing-coordinates-text
+      if geotaggable
+      block map-coordinates__geotaggable
+        tr
+          td(colspan='2')
+            button.btn.btn-primary.btn-sm(data-action='geo-tagging:start')
+              block map-coordinates__add-coordinates-text

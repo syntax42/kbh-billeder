@@ -1,0 +1,29 @@
+include ../mixins/icon
+
+nav
+  ul(role='menu').nav.sidebar-menu
+    if menus && menus.main
+      block before
+      each parent in menus.main
+        if parent.children.length > 0
+          li.sidebar-menu__children.sidebar-menu__children--inactive(aria-expanded='false')
+            a(data-action='toggle-sidebar-submenu-item', tabindex='0', href='#')= parent.title
+              .icon
+                +icon('chevron-up')
+            ul.children.hidden
+              each childPage in parent.children
+                li
+                  a(href=childPage.url)= childPage.title
+        else
+          li
+            a(href=parent.url)= parent.title
+    if config.features.users
+      if user
+        li
+          a(href='/min-side')= (user.name.givenName || user.nickname)
+        li
+          a(href='/logout') Log ud
+      else
+        li
+          a(data-action='login', href="#") Log ind
+.gray-overlay
