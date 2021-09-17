@@ -9,7 +9,7 @@ const gulp = require('gulp');
 // Get the gulp content from the main
 // ------------------------------------------
 
-require('./collections-online/build/gulp')(gulp, __dirname);
+require('./build/gulp')(gulp, __dirname);
 
 // ------------------------------------------
 // Combining tasks

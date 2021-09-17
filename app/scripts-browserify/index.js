@@ -2,7 +2,7 @@ const config = require('../../collections-online/shared/config');
 // Always include collections-online's base
 // FIXME: For some reason require currently does not accept "base" as the
 // module. To address this we have to provide a full path to the file.
-require('../../collections-online/app/scripts-browserify/base')({
+require('./base')({
   helpers: require('../../shared/helpers')
 });
 

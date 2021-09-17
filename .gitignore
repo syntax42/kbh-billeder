@@ -44,3 +44,23 @@ data
 
 # Visual Studio files
 /.vs
+
+# Old collections online from here
+/npm-debug.log
+/app/styles/main.css
+node_modules
+public
+.tmp
+.sass-cache
+bower_components
+heroku
+/views
+dist
+elasticsearch
+.DS_Store
+
+# Atom build settings
+.atom-build.json
+
+# Environment variables
+.env
