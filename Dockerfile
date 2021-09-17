@@ -31,4 +31,4 @@ COPY . .
 # --unsafe-perm is needed for the lifecycle scripts to run
 RUN npm install --no-color --no-spin --unsafe-perm
 
-CMD ["/usr/bin/supervisord", "-n", "-c", "/tmp/configurations/supervisord.conf"]
+CMD ["node server.js"]
