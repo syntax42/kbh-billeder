@@ -1,10 +1,9 @@
-const users = require('../collections-online/lib/controllers/users');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const config = require('../collections-online/shared/config');
 const _ = require('lodash');
 const helpers = require('../shared/helpers');
 
-users.renderProfile = async (req, res) => {
+exports.renderProfile = async (req, res) => {
   // Redirect to front-page if the user is not authorized.
   if (!req.user) {
     res.redirect('/');
@@ -25,7 +24,7 @@ users.renderProfile = async (req, res) => {
   res.render('profile' + (config.features.oldProfilePage ? '' : '2'), {points, stats, user});
 };
 
-users.renderEditProfile = async (req, res) => {
+exports.renderEditProfile = async (req, res) => {
   const {user} = req;
   let auth0User = user.provider === 'auth0';
   res.render('edit-profile', {user, auth0User, error: req.session.error, status: req.session.status});
@@ -37,7 +36,7 @@ users.renderEditProfile = async (req, res) => {
 /**
  * Callback for fetching user contributions.
  */
-users.fetchUserContributions = async (req, res, next) => {
+exports.fetchUserContributions = async (req, res, next) => {
   // We have to require the document service late as it is loaded later than
   // the controller.
   const ds = require('../collections-online/lib/services/documents');
@@ -102,5 +101,3 @@ users.fetchUserContributions = async (req, res, next) => {
     next(new Error('Error occured while fetching contributions'));
   }
 };
-
-module.exports = users;
