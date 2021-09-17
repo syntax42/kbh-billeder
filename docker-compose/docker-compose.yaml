@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+  elasticsearch:
+    image: elasticsearch:5.6.4
+    volumes:
+      - 'esdata:/usr/share/elasticsearch/data'
+    ports:
+      - 9200:9200
+
+  mongo:
+    image: mongo:3.5.6
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - 27017:27017
+
+  node:
+    build:
+      context: ..
+    command: npm run start:dev
+    ports:
+      - 9000:9000
+      - 9229:9229
+    volumes:
+      - ..:/home/node/kbh-billeder
+    depends_on:
+      - elasticsearch
+      - mongo
+    links:
+      - mongo
+      - elasticsearch
+    environment:
+      NODE_ENV: development
+
+volumes:
+  esdata:
+    driver: local
+  mongodata:
