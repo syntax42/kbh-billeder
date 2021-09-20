@@ -4,7 +4,7 @@ const config = require('../collections-online/lib/config');
 
 module.exports.register = () => {
   plugins.register(require('./users'));
-  require('../collections-online').registerPlugins();
+  require('../collections-online/server').registerPlugins();
   plugins.register(require('./image'));
   plugins.register(require('./motif-tagging'));
   plugins.register(require('./geo-tagging'));
