@@ -1,5 +1,5 @@
 'use strict';
-const plugins = require('../collections-online/plugins');
+const plugins = require('../collections-online/pluginController');
 const config = require('../collections-online/lib/config');
 
 module.exports.register = () => {

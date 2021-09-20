@@ -1,4 +1,4 @@
-const plugins = require('../../plugins');
+const plugins = require('../../pluginController');
 
 const documentsService = plugins.getFirst('document-service');
 if(!documentsService) {
