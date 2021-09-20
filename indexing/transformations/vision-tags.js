@@ -6,7 +6,7 @@ const config = require('../../collections-online/lib/config');
 const cip = require('../../services/cip');
 const helpers = require('../../collections-online/shared/helpers');
 
-const plugins = require('../../collections-online/pluginController');
+const plugins = require('../../pluginController');
 const motifTagController = plugins.getFirst('motif-tag-controller');
 if (!motifTagController) {
   throw new Error('Expected at least one image controller!');

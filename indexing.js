@@ -5,7 +5,7 @@ co.config(__dirname);
 // Register collections-online plugins
 require('./plugins').register();
 
-const collectionsOnlinePlugins = require('./collections-online/pluginController');
+const collectionsOnlinePlugins = require('./pluginController');
 
 function run(state) {
   // Run the indexing with the first available indexing-engine

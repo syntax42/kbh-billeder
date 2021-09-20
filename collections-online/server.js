@@ -1,6 +1,6 @@
 'use strict';
 
-const plugins = require('./pluginController');
+const plugins = require('../pluginController');
 const config = require('./lib/config');
 const promiseRetry = require('promise-retry');
 

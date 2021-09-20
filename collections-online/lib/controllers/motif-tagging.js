@@ -28,7 +28,7 @@ if (config.features.enableGoogleTranslate) {
   translate = google.translate;
 }
 
-const plugins = require('../../pluginController');
+const plugins = require('../../../pluginController');
 const motifTagController = plugins.getFirst('motif-tag-controller');
 if(!motifTagController) {
   throw new Error('Missing a motif-tag-controller plugin!');
