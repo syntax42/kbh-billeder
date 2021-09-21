@@ -30,7 +30,8 @@ COPY indexing indexing
 COPY updates updates
 COPY routes routes
 
-COPY .env . ## TODO - dont inject env during build time
+# TODO - dont inject env during build time
+COPY .env .
 
 ENV NODE_ENV=production
 
