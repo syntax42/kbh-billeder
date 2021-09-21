@@ -2,12 +2,12 @@
 
 // collections-online server.js
 const plugins = require('./pluginController');
-const config = require('./collections-online/lib/config');
+const config = require('./lib/config');
 const promiseRetry = require('promise-retry');
 
 const co = {
   config: (customizationPath) => {
-    require('./collections-online/lib/config').setCustomizationPath(customizationPath);
+    require('./lib/config').setCustomizationPath(customizationPath);
   },
   initialize: (app) => {
     if(!app) {
@@ -19,17 +19,17 @@ const co = {
 
     // After all plugins have initialized, the main server should start
     return plugins.initialize(app).then(() => {
-      require('./collections-online/lib/express')(app);
+      require('./lib/express')(app);
 
-      const ds = require('./collections-online/lib/services/documents');
+      const ds = require('./lib/services/documents');
 
       app.locals.config = config;
-      const helpers = require('./collections-online/lib/helpers');
+      const helpers = require('./lib/helpers');
       helpers.checkRequiredHelpers();
       app.locals.helpers = helpers;
 
       // Injects an SVG sprite
-      app.use(require('./collections-online/lib/middleware/svg-sprite'));
+      app.use(require('./lib/middleware/svg-sprite'));
 
       // Trust the X-Forwarded-* headers from the Nginx reverse proxy infront of
       // the app (See http://expressjs.com/api.html#app.set)
@@ -80,11 +80,11 @@ const co = {
   registerRoutes: app => {
     // Ask plugins to register their routes
     plugins.registerRoutes(app);
-    // Register the core collections-online routes
-    require('./collections-online/lib/routes')(app);
+    // Register the core routes
+    require('./lib/routes')(app);
   },
   registerErrors: (app) => {
-    require('./collections-online/lib/errors')(app);
+    require('./lib/errors')(app);
   }
 };
 

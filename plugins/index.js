@@ -1,18 +1,18 @@
 'use strict';
 const plugins = require('../pluginController');
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 
 module.exports.register = () => {
   plugins.register(require('./users'));
 
   if(config.es) {
-    plugins.register(require('../collections-online/plugins/elasticsearch'));
+    plugins.register(require('../plugins/elasticsearch'));
   }
   if(config.features.keystone) {
-    plugins.register(require('../collections-online/plugins/keystone'));
+    plugins.register(require('./keystone'));
   }
   if(config.features.users) {
-    plugins.register(require('../collections-online/plugins/auth'));
+    plugins.register(require('../plugins/auth'));
   }
 
   plugins.register(require('./image'));

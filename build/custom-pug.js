@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  let pug = require('../collections-online/lib/pug')(config);
+  let pug = require('../lib/pug')(config);
   let prefix = `
     const config = require('@shared/config');
   `;

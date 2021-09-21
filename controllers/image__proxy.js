@@ -1,5 +1,5 @@
 const assert = require('assert');
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const cip = require('../services/cip');
 
 assert.ok(config.cip.proxy, 'Missing a config.cip.proxy object');

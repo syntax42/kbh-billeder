@@ -1,4 +1,4 @@
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 if(process.browser) {
   /* global clientSideConfig */
   if(clientSideConfig) {

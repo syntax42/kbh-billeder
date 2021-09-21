@@ -19,7 +19,7 @@ const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
 module.exports = (gulp, customizationPath) => {
-  const config = require('../collections-online/lib/config');
+  const config = require('../lib/config');
   config.setCustomizationPath(customizationPath);
 
   const customPug = CustomPug(config);

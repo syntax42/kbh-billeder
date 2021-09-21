@@ -39,7 +39,7 @@ exports.renderEditProfile = async (req, res) => {
 exports.fetchUserContributions = async (req, res, next) => {
   // We have to require the document service late as it is loaded later than
   // the controller.
-  const ds = require('../collections-online/lib/services/documents');
+  const ds = require('../lib/services/documents');
 
   // Only process requests from logged in users.
   if (!req.user) {

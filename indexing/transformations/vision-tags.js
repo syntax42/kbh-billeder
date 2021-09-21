@@ -37,7 +37,7 @@ module.exports = (metadata, context) => {
     let url = cip.generateURL(path);
 
     // Loading here to prevent circular dependency.
-    var motif = require('../../collections-online/lib/controllers/motif-tagging');
+    var motif = require('../../lib/controllers/motif-tagging');
 
     return motif.fetchSuggestions(url)
     .then(tags => {
