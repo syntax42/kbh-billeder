@@ -35,8 +35,6 @@ const beta = _.merge({}, base, {
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
   host: 'beta.kbhbilleder.dk',
   enforceHttps,
-  ip: null,
-  port: null,
   siteTitle: 'kbhbilleder.dk (beta)',
 });
 
