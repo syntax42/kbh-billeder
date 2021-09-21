@@ -1,8 +1,8 @@
 'use strict';
-// Requiring collections-online and loading configuration
+
 const co = require('./server');
 co.config(__dirname);
-// Register collections-online plugins
+
 require('./plugins').register();
 
 const collectionsOnlinePlugins = require('./pluginController');
