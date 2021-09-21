@@ -38,7 +38,6 @@ const beta = _.merge({}, base, {
   ip: null,
   port: null,
   siteTitle: 'kbhbilleder.dk (beta)',
-  socketPath: '/tmp/kbh-billeder.sock'
 });
 
 module.exports = beta;
