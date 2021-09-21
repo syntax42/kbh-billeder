@@ -22,7 +22,7 @@ services:
       - 9000:9000
       - 9229:9229
     volumes:
-      - ..:/home/node/kbh-billeder
+      - ../.env:/app/.env
     depends_on:
       - elasticsearch
       - mongo
