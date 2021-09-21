@@ -86,9 +86,13 @@ exports.download = function (req, res) {
     }
     res._writeHead(statusCode, reasonPhrase, headers);
   };
-
+  let responded = false;
   proxyRequest
     .on('error', err => {
+      if(responded) {
+        return;
+      }// TODO : make it nice; check request library and see if it fails several times
+      responded = true;
       try {
         if (err.message === 'ESOCKETTIMEDOUT' && config.imageTimeoutRedirect) {
           // This is a timeout that occurs often when the original file is to large.
@@ -107,6 +111,11 @@ exports.download = function (req, res) {
 
     })
     .on('response', function (response) {
+      if(responded) {
+        return;
+      }
+      responded = true;
+
       if (response.statusCode === 200) {
         proxyRequest.pipe(res);
       } else {
