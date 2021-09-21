@@ -67,7 +67,7 @@ helpers.getDocumentURL = (metadata) => {
 };
 
 helpers.getIsSeries = (metadata) => {
-  if(typeof metadata.isSeries == "undefined") {
+  if(typeof metadata.isSeries == 'undefined') {
     return false;
   }
   return true;
@@ -204,10 +204,10 @@ helpers.translate = key => {
 
 helpers.hasRelations = metadata => {
   return metadata && metadata.related && Object.keys(metadata.related)
-  .reduce((result, type) => {
-    const relatedOfType = metadata.related[type];
-    return result + relatedOfType.length;
-  }, 0) > 0;
+    .reduce((result, type) => {
+      const relatedOfType = metadata.related[type];
+      return result + relatedOfType.length;
+    }, 0) > 0;
 };
 
 /**
@@ -251,7 +251,7 @@ helpers.getAny = (object, path) => {
   }
 };
 
- /**
+/**
   * Use this method to get all values at the "end of a path" in an object,
   * you have multiple such paths and you want a flat array of values.
   * It traverses the object along each of the paths and returns a flattened
@@ -274,7 +274,7 @@ helpers.getAnyFlat = (object, paths) => {
   return _.flattenDeep(values);
 };
 
- /**
+/**
   * Determine what media types a particular document "consists of".
   * The helper is currently used when determining icons on search result items.
   *
@@ -533,38 +533,39 @@ if(config.downloadOptions) {
   // Loop though the download options defined in the configuration and make them
   // available as an iteratable array of 3-method objects
   const AVAILABLE_DOWNLOAD_OPTIONS = Object.keys(config.downloadOptions)
-  .map(optionKey => {
-    const option = config.downloadOptions[optionKey];
-    if(option.size) {
-      return generateSizeDownloadOption(optionKey, option);
-    } else if(optionKey === 'original-jpeg') {
-      return {
-        label: metadata => {
-          let label = option.labelPrefix;
-          return label + ' (' + getFileDimensionsString(metadata) + ') JPEG';
-        },
-        filter: metadata => {
-          return metadata.file_format !== 'JPEG Image';
-        },
-        url: metadata => helpers.getDownloadURL(metadata, optionKey),
-      };
-    } else if(optionKey === 'original') {
-      return {
-        label: metadata => {
-          const type = metadata.file_format;
-          // TODO: Consider translating the file_format
-          const label = option.labelPrefix;
-          return label + ' (' + getFileDimensionsString(metadata) + ') ' + type;
-        },
-        filter: metadata => {
-          return true; // Let's always allow download of the original
-        },
-        url: metadata => helpers.getDownloadURL(metadata),
-      };
-    } else {
-      throw new Error('Expected "orignal", "original-jpeg" or a size field');
-    }
-  });
+    .map(optionKey => {
+      const option = config.downloadOptions[optionKey];
+      if(option.size) {
+        return generateSizeDownloadOption(optionKey, option);
+      } else if(optionKey === 'original-jpeg') {
+        return {
+          label: metadata => {
+            let label = option.labelPrefix;
+            return label + ' (' + getFileDimensionsString(metadata) + ') JPEG';
+          },
+          filter: metadata => {
+            return metadata.file_format !== 'JPEG Image';
+          },
+          url: metadata => helpers.getDownloadURL(metadata, optionKey),
+        };
+      }
+      else if(optionKey === 'original') {
+        return {
+          label: metadata => {
+            const type = metadata.file_format;
+            // TODO: Consider translating the file_format
+            const label = option.labelPrefix;
+            return label + ' (' + getFileDimensionsString(metadata) + ') ' + type;
+          },
+          filter: metadata => {
+            return true; // Let's always allow download of the original
+          },
+          url: metadata => helpers.getDownloadURL(metadata),
+        };
+      } else {
+        throw new Error('Expected "orignal", "original-jpeg" or a size field');
+      }
+    });
 
   helpers.getDownloadOptions = (metadata) => {
     let derived = {
@@ -650,9 +651,9 @@ helpers.motifTagging = {
   getVisionTags: metadata => metadata.tags_vision || [],
 
   hasTags: metadata => {
-    const { getTags, getVerifiedTags } = helpers.motifTagging;
+    const {getTags, getVerifiedTags} = helpers.motifTagging;
 
-    return getTags(metadata).length > 0 || getVerifiedTags(metadata).length > 0
+    return getTags(metadata).length > 0 || getVerifiedTags(metadata).length > 0;
   },
 
   addTag: (metadata, tag) => {
@@ -691,7 +692,7 @@ helpers.formatDate = function(date) {
   if(typeof(date) === 'number' || typeof(date) === 'string') {
     date = new Date(date);
     if(isNaN(date)) {
-      throw Error("Could not parse date " + date);
+      throw Error('Could not parse date ' + date);
     }
 
     date = {
@@ -724,7 +725,7 @@ helpers.geoTagging = {
       longitude: metadata.longitude,
       heading: parseFloat(metadata.heading, 10),
       isApproximate: metadata.location_is_approximate
-    }
+    };
   },
   getAddress: metadata => {
     return helpers.geoTagging.getAddressRaw(metadata).filter(s => s).join(', ');
