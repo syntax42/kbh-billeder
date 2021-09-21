@@ -40,8 +40,6 @@ const production = _.merge({}, base, {
   host: 'kbhbilleder.dk',
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
   enforceHttps,
-  ip: null,
-  port: null,
 });
 
 module.exports = production;
