@@ -1,11 +1,11 @@
 'use strict';
 
-const co = require('./server');
-co.config(__dirname);
-
-require('./plugins').register();
-
+const config = require('./lib/config');
+const plugins = require('./plugins');
 const collectionsOnlinePlugins = require('./pluginController');
+
+config.setCustomizationPath(__dirname);
+plugins.register();
 
 function run(state) {
   // Run the indexing with the first available indexing-engine
