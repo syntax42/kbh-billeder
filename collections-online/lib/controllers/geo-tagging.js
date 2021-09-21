@@ -1,13 +1,11 @@
 'use strict';
 
-var request = require('request');
-var Q = require('q');
 var config = require('../config');
 const ds = require('../services/documents');
 const errorReporter = require('../services/error-reporter');
 const _ = require('lodash');
 
-const plugins = require('../../plugins');
+const plugins = require('../../../pluginController');
 const geoTagController = plugins.getFirst('geo-tag-controller');
 if(!geoTagController) {
   throw new Error('Missing a geo-tag-controller plugin!');

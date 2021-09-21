@@ -9,18 +9,6 @@ const co = {
   config: (customizationPath) => {
     require('./collections-online/lib/config').setCustomizationPath(customizationPath);
   },
-  registerPlugins: () => {
-    // Register the default fallback plugins
-    if(config.es) {
-      plugins.register(require('./collections-online/plugins/elasticsearch'));
-    }
-    if(config.features.keystone) {
-      plugins.register(require('./collections-online/plugins/keystone'));
-    }
-    if(config.features.users) {
-      plugins.register(require('./collections-online/plugins/auth'));
-    }
-  },
   initialize: (app) => {
     if(!app) {
       throw new Error('Needed an Express app when initializing');
@@ -106,6 +94,7 @@ module.exports = co;
 
 // kbhbilleder server.js
 co.config(__dirname);
+
 // Register collections-online plugins
 require('./plugins').register();
 

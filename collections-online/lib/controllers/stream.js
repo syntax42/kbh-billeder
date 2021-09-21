@@ -1,6 +1,6 @@
 'use strict';
 const assert = require('assert');
-const plugins = require('../../plugins');
+const plugins = require('../../../pluginController');
 const config = require('../config');
 const fs = require('fs');
 const path = require('path');
