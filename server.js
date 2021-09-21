@@ -9,7 +9,6 @@ require('./plugins').register();
 const express = require('express');
 const app = express();
 
-app.use(express.static('generated'));
 
 co.initialize(app).then(() => {
   require('./routes')(app);
