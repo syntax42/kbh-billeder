@@ -22,7 +22,7 @@ services:
       - 9000:9000
       - 9229:9229
     volumes:
-      - ../.env:/app/.env
+      - ..:/app
     depends_on:
       - elasticsearch
       - mongo
