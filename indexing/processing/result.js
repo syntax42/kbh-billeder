@@ -68,12 +68,19 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
   const progress = '[' + (pageIndex + 1) + '/' + totalPages + ']';
   console.log(progress + ' Queuing page');
 
-
   return getResultPage(query, collection, pageIndex * pageSize, pageSize)
   .then(assets => {
     console.log(progress + ' Received metadata');
     // Perform a processing of all the assets on the page
-    const assetPromises = assets.map(asset => {
+    const assetPromises = assets
+    .filter((asset) => {
+      if(!asset.id) {
+        console.warn("Skipping asset that does not look right (has no ID)", asset);
+        return false;
+      }
+      return true;
+    })
+    .map(asset => {
       const assetSeries = parseAssetSeries(asset);
       // Clone the context for every asset
       const clonedContext = _.cloneDeep(context);
@@ -94,7 +101,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
       };
       // Process each asset
       return processAsset(asset, assetSeries, clonedContext)
-      .then(null, err => {
+      .catch((err) => {
         const msg = 'ERROR processing ' + collection + '-' + asset.id;
         console.error(msg + (err.message && ': ' + err.message));
         return new AssetIndexingError(collection, asset.id, err);
@@ -105,7 +112,6 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
     // 1. changes are saved to Cumulus
     // 2. metedata is indexed in elasticsearch
     // in two bulk calls
-
 
     return Q.all(assetPromises)
     .then((assets) => {
