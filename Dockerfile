@@ -33,8 +33,6 @@ COPY routes routes
 # TODO - dont inject env during build time
 COPY .env .
 
-ENV NODE_ENV=production
-
 EXPOSE 9000
 
 CMD node server.js
