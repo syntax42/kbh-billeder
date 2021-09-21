@@ -1,14 +1,10 @@
 'use strict';
 
-// collections-online server.js
 const plugins = require('./pluginController');
 const config = require('./lib/config');
 const promiseRetry = require('promise-retry');
 
 const co = {
-  config: (customizationPath) => {
-    require('./lib/config').setCustomizationPath(customizationPath);
-  },
   initialize: (app) => {
     if(!app) {
       throw new Error('Needed an Express app when initializing');
@@ -89,11 +85,3 @@ const co = {
 };
 
 module.exports = co;
-
-
-
-// kbhbilleder server.js
-co.config(__dirname);
-
-// Register collections-online plugins
-require('./plugins').register();
