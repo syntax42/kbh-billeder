@@ -1,9 +1,4 @@
-/**
- * collections-online helpers.js
- */
-
 const _ = require('lodash');
-
 const config = require('./config');
 
 let helpers = {};
@@ -50,20 +45,6 @@ helpers.generateSearchTitle = filters => {
   } else {
     return 'Søgning';
   }
-};
-
-helpers.getDocumentURL = (metadata) => {
-  //Detect and handle series
-  if(!metadata.collection && metadata.url) {
-    return `/${metadata.url}`;
-  }
-
-  let path = [metadata.collection];
-  if(Object.keys(config.types).length > 1) {
-    path.push(metadata.type);
-  }
-  path.push(metadata.id);
-  return '/' + path.join('/');
 };
 
 helpers.getIsSeries = (metadata) => {
@@ -202,14 +183,6 @@ helpers.translate = key => {
   }
 };
 
-helpers.hasRelations = metadata => {
-  return metadata && metadata.related && Object.keys(metadata.related)
-    .reduce((result, type) => {
-      const relatedOfType = metadata.related[type];
-      return result + relatedOfType.length;
-    }, 0) > 0;
-};
-
 /**
  * Use this method to get all values at the "end of a path" in an object.
  * It traverses the object along the path, if an array is found along the way
@@ -324,12 +297,6 @@ helpers.isMobile = function($) {
   return $(window).width() < config.styling.mobileWidthBreakpoint;
 };
 
-
-
-/**
- * kbhbilleder shared/helpers.js
- */
-
 // Remove brackets ({}) from the cumulus key to check the asset has the correct relation (backside).
 const backsideAssetCumulusKey = helpers.getAssetField('backside').cumulusKey.slice(1, -1);
 
@@ -359,7 +326,7 @@ helpers.getBacksideAssets = (metadata) => {
   return [];
 };
 
-// TODO: Delete this when metadata.catalog has transitioned to .collection
+// TODO: Update this when metadata.catalog has transitioned to .collection
 helpers.getDocumentURL = (metadata) => {
   //Detect and handle series
   if(!metadata.collection && metadata.url) {
