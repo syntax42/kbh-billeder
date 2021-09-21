@@ -1,6 +1,6 @@
 'use strict';
 const request = require('request');
-const config = require('../collections-online/shared/config');
+const config = require('../shared/config');
 const assert = require('assert');
 const mailgun = require('../collections-online/lib/services/mailgun');
 const _ = require('lodash');

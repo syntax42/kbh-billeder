@@ -1,4 +1,4 @@
-const config = require('../../../collections-online/shared/config');
+const config = require('../../../shared/config');
 
 /**
  * This module generates queries that can be sent to elastic search to get the

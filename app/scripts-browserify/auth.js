@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../collections-online/shared/config');
+const config = require('../../shared/config');
 const helpers = require('../../shared/helpers');
 
 const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';

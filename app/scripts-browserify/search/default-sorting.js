@@ -1,4 +1,4 @@
-const config = require('../../../collections-online/shared/config');
+const config = require('../../../shared/config');
 
 /**
  * This module gets the default search field from the configuration.

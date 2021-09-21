@@ -1,5 +1,5 @@
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-const config = require('../collections-online/shared/config');
+const config = require('../shared/config');
 const _ = require('lodash');
 const helpers = require('../shared/helpers');
 

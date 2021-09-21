@@ -1,7 +1,7 @@
 module.exports = function(config) {
   let pug = require('../collections-online/lib/pug')(config);
   let prefix = `
-    const config = require('@collections-online/shared/config');
+    const config = require('@shared/config');
   `;
   let postfix = '\nmodule.exports = template;';
 

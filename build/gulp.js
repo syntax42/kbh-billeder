@@ -151,7 +151,7 @@ module.exports = (gulp, customizationPath) => {
       plugins: [
         [ require.resolve("babel-plugin-module-resolver"), {
           "alias": {
-            "@collections-online": "./collections-online",
+            "@shared": "./shared",
           }
         } ],
       ],

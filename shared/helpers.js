@@ -4,7 +4,7 @@
 
 const _ = require('lodash');
 
-const config = require('../collections-online/shared/config');
+const config = require('./config');
 
 let helpers = {};
 
