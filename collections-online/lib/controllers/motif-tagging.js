@@ -9,7 +9,7 @@ const request = require('request');
 
 const config = require('../config');
 const ds = require('../services/documents');
-const helpers = require('../../shared/helpers');
+const helpers = require('../../../shared/helpers');
 const errorReporter = require('../services/error-reporter');
 
 let google;

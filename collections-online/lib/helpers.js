@@ -278,7 +278,7 @@ const appDirHelpersPath = config.customizationPath + '/shared/helpers.js';
 if(fs.existsSync(appDirHelpersPath)) {
   helpers = _.merge(helpers, require(appDirHelpersPath));
 } else {
-  helpers = _.merge(helpers, require('../shared/helpers'));
+  helpers = _.merge(helpers, require('../../shared/helpers'));
 }
 
 module.exports = helpers;

@@ -1,6 +1,6 @@
 
 const passport = require('passport');
-const helpers = require('../shared/helpers');
+const helpers = require('../../shared/helpers');
 const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
 const plugins = require('../../pluginController');
