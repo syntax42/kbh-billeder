@@ -42,7 +42,6 @@ const production = _.merge({}, base, {
   enforceHttps,
   ip: null,
   port: null,
-  socketPath: '/tmp/kbh-billeder.sock'
 });
 
 module.exports = production;
