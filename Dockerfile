@@ -9,10 +9,26 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --unsafe-perm
+RUN npm install
 
-COPY . .
+# build frontend bundle
+COPY gulpfile.js .
+COPY collections-online collections-online
+COPY config config
+COPY config.js .
+COPY app app
+COPY shared shared
 
+RUN node node_modules/.bin/gulp build
+
+# copy in server files
+COPY server.js .
+COPY plugins plugins
+COPY controllers controllers
+COPY services services
+COPY indexing indexing
+COPY updates updates
+COPY routes routes
 
 ENV NODE_ENV=production
 
