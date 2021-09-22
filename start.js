@@ -8,8 +8,4 @@ const express = require('express');
 const app = express();
 
 co.initialize(app)
-  .then(() => {
-    co.registerRoutes(app);
-    co.registerErrors(app);
-  })
   .catch(console.error);

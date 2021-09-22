@@ -48,6 +48,17 @@ const co = {
       process.exit(1);
     }
 
+    // Register routes for kbhbilleder
+    registerRoutesFromIndex(app);
+
+    // Ask plugins to register their routes
+    pluginController.registerRoutes(app);
+
+    // Register the core routes (used to be collections-online routes)
+    registerRoutes(app);
+
+    registerErrorHandlers(app);
+
     console.log('Starting up the server');
 
     // Start server
@@ -63,17 +74,6 @@ const co = {
       throw new Error('Could not start server, needed "port" and "ip" or "socketPath" in the configuration.');
     }
   },
-  registerRoutes: app => {
-    registerRoutesFromIndex(app);
-
-    // Ask plugins to register their routes
-    pluginController.registerRoutes(app);
-    // Register the core routes
-    registerRoutes(app);
-  },
-  registerErrors: (app) => {
-    registerErrorHandlers(app);
-  }
 };
 
 async function ensureElasticSearchConnection(ds, config, indices, retries, backoff) {
