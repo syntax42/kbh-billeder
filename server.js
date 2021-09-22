@@ -9,6 +9,10 @@ require('./plugins').register();
 const express = require('express');
 const app = express();
 
+app.use('/was',
+  (req, res) => res.redirect('https://www.was.digst.dk/kbhbilleder-dk')
+);
+
 co.initialize(app).then(() => {
   require('./routes')(app);
   co.registerRoutes(app);

@@ -28,7 +28,10 @@ function printAssetExceptions(state) {
       message += ') ---';
 
       console.error(message);
-      if(error.innerError) {
+      if(!error.catalogAlias || !error.assetId) {
+        console.error('Malformed error missing catalogAlias or assetId', error);
+      }
+      else if(error.innerError) {
         console.error(error.innerError.stack || error.innerError.message);
       }
       else {
