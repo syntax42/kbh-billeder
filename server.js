@@ -9,7 +9,7 @@ const registerRoutes = require('./lib/routes');
 const registerErrorHandlers = require('./lib/errors');
 const cip = require('./services/cip');
 
-const keystonePlugin = require('./plugins/keystone');
+const keystonePlugin = require('./keystone');
 const authPlugin = require('./auth');
 
 const co = {
