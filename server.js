@@ -6,13 +6,11 @@ const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
 const expressSetup = require('./lib/express');
 const helpers = require('./lib/helpers');
 const registerRoutes = require('./lib/routes');
-const registerRoutesFromIndex = require('./routes');
 const registerErrorHandlers = require('./lib/errors');
 
 const keystonePlugin = require('./plugins/keystone');
 const authPlugin = require('./plugins/auth');
 const imagePlugin = require('./plugins/image');
-const indexingPlugin = require('./plugins/indexing');
 
 const co = {
   initialize: async (app) => {
@@ -50,17 +48,7 @@ const co = {
       process.exit(1);
     }
 
-    // Register routes for kbhbilleder
-    registerRoutesFromIndex(app);
-
-    // Ask plugins to register their routes
-    keystonePlugin.registerRoutes(app);
-    authPlugin.registerRoutes(app);
-    indexingPlugin.registerRoutes(app);
-
-    // Register the core routes (used to be collections-online routes)
     registerRoutes(app);
-
     registerErrorHandlers(app);
 
     console.log('Starting up the server');
