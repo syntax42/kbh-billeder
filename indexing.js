@@ -4,8 +4,7 @@
 const config = require('./lib/config');
 config.setCustomizationPath(__dirname);
 
-const indexingEngine = require('./plugins/indexing').module;
-
+const indexingEngine = require('./indexing/run');
 
 function run(state) {
   return indexingEngine(state || {}).then(function() {

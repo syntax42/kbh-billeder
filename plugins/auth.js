@@ -3,12 +3,10 @@ const passport = require('passport');
 const helpers = require('../shared/helpers');
 const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
-const users = require('./users').module;
+const users = require('../controllers/users');
 const {check, validationResult, body} = require('express-validator/check');
 
 module.exports = {
-  type: 'authentication',
-  module: auth0,
   initialize: (app) => {
     passport.use(auth0.strategy);
 

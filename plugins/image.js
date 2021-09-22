@@ -1,11 +1,8 @@
 'use strict';
 const config = require('../lib/config');
 const cip = require('../services/cip');
-const imageController = require('../controllers/image');
 
 module.exports = {
-  type: 'image-controller',
-  module: imageController,
   initialize: () => {
     if(config.cip.client.authMechanism !== 'http-basic') {
       return cip.initSession().then(() => {

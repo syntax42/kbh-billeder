@@ -7,8 +7,6 @@ const middleware = require('./middleware');
 const csrf = require('csurf');
 
 module.exports = {
-  type: 'cms',
-  module: keystone,
   initialize: (app) => {
     if(!config.keystone) {
       throw new Error('Missing a keystone object in the configuration');

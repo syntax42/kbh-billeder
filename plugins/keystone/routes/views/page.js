@@ -1,5 +1,5 @@
 const keystone = require('keystone');
-const statsPreRenderer = require('../../../stats-pre-renderer').module;
+const statsPreRenderer = require('../../../../controllers/stats-pre-renderer');
 
 module.exports = function (req, res, next) {
   var locals = res.locals;

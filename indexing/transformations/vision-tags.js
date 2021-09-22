@@ -2,7 +2,7 @@
 
 const union = require('lodash/union');
 const cip = require('../../services/cip');
-const motifTagController = require('../../plugins/motif-tagging').module;
+const motifTagController = require('../../controllers/motif-tagging');
 
 module.exports = (metadata, context) => {
   // Let's save some cost and bandwidth and not analyze the asset unless

@@ -1,4 +1,4 @@
-const keystone = require('../plugins/keystone').module;
+const keystone = require('keystone');
 
 const Gallery = keystone.list('Gallery');
 const GalleryItem = keystone.list('Gallery item');

@@ -1,9 +1,6 @@
 const config = require('../lib/config');
-const indexing = require('../indexing/run');
 
 module.exports = {
-  type: 'indexing-engine',
-  module: indexing,
   registerRoutes: app => {
     app.get('/index/recent', (req, res) => {
       if (config.kbhAccessKey && req.query.accesskey !== config.kbhAccessKey) {

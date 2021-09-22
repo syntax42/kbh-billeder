@@ -1,5 +1,5 @@
 var Q = require('q');
-var keystone = require('../plugins/keystone').module;
+var keystone = require('keystone');
 
 var Gallery = keystone.list('Gallery');
 var GalleryItem = keystone.list('Gallery item');
