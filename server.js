@@ -9,17 +9,10 @@ const registerRoutes = require('./lib/routes');
 const registerRoutesFromIndex = require('./routes');
 const registerErrorHandlers = require('./lib/errors');
 
-const plugins = [
-  require('./plugins/elasticsearch'),
-  require('./plugins/users'),
-  require('./plugins/keystone'),
-  require('./plugins/auth'),
-  require('./plugins/image'),
-  require('./plugins/motif-tagging'),
-  require('./plugins/geo-tagging'),
-  require('./plugins/stats-pre-renderer'),
-  require('./plugins/indexing'),
-];
+const keystonePlugin = require('./plugins/keystone');
+const authPlugin = require('./plugins/auth');
+const imagePlugin = require('./plugins/image');
+const indexingPlugin = require('./plugins/indexing');
 
 const co = {
   initialize: async (app) => {
@@ -30,11 +23,9 @@ const co = {
     // TODO: Consider removing this
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-    for(const plugin of plugins) {
-      if(plugin.initialize) {
-        await plugin.initialize();
-      }
-    }
+    await keystonePlugin.initialize();
+    await authPlugin.initialize();
+    await imagePlugin.initialize();
 
     expressSetup(app);
 
@@ -63,11 +54,9 @@ const co = {
     registerRoutesFromIndex(app);
 
     // Ask plugins to register their routes
-    for(const plugin of plugins) {
-      if(plugin.registerRoutes) {
-        plugin.registerRoutes();
-      }
-    }
+    keystonePlugin.registerRoutes(app);
+    authPlugin.registerRoutes(app);
+    indexingPlugin.registerRoutes(app);
 
     // Register the core routes (used to be collections-online routes)
     registerRoutes(app);
