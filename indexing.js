@@ -1,11 +1,9 @@
 'use strict';
 
 const config = require('./lib/config');
-const plugins = require('./plugins');
 const indexingEngine = require('./plugins/indexing').module;
 
 config.setCustomizationPath(__dirname);
-plugins.register();
 
 function run(state) {
   return indexingEngine(state || {}).then(function() {
