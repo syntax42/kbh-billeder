@@ -3,6 +3,12 @@
 const plugins = require('./plugins');
 const pluginController = require('./pluginController');
 const config = require('./lib/config');
+const ds = require('./lib/services/documents');
+const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
+const expressSetup = require('./lib/express');
+const helpers = require('./lib/helpers');
+const registerRoutes = require('./lib/routes');
+const registerErrorHandlers = require('./lib/errors');
 
 const co = {
   initialize: async (app) => {
@@ -18,17 +24,14 @@ const co = {
     // After all plugins have initialized, the main server should start
     await pluginController.initialize(app);
 
-    require('./lib/express')(app);
-
-    const ds = require('./lib/services/documents');
+    expressSetup(app);
 
     app.locals.config = config;
-    const helpers = require('./lib/helpers');
     helpers.checkRequiredHelpers();
     app.locals.helpers = helpers;
 
     // Injects an SVG sprite
-    app.use(require('./lib/middleware/svg-sprite'));
+    app.use(svgSpriteMiddleware);
 
     // Trust the X-Forwarded-* headers from the Nginx reverse proxy infront of
     // the app (See http://expressjs.com/api.html#app.set)
@@ -63,10 +66,10 @@ const co = {
     // Ask plugins to register their routes
     pluginController.registerRoutes(app);
     // Register the core routes
-    require('./lib/routes')(app);
+    registerRoutes(app);
   },
   registerErrors: (app) => {
-    require('./lib/errors')(app);
+    registerErrorHandlers(app);
   }
 };
 
