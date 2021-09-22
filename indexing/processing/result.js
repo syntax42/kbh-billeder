@@ -58,7 +58,7 @@ async function requestWithRetries(operation, options, retries, backoff) {
     if(!errorsToRetry.includes(error.code)) {
       throw error;
     }
-    console.log("timeout on", error.code);
+
     await new Promise((resolve) => setTimeout(resolve, backoff*1000));
     return requestWithRetries(operation, options, retries - 1, backoff*backoff);
   }
