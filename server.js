@@ -7,10 +7,10 @@ const expressSetup = require('./lib/express');
 const helpers = require('./lib/helpers');
 const registerRoutes = require('./lib/routes');
 const registerErrorHandlers = require('./lib/errors');
+const cip = require('./services/cip');
 
 const keystonePlugin = require('./plugins/keystone');
 const authPlugin = require('./plugins/auth');
-const imagePlugin = require('./plugins/image');
 
 const co = {
   initialize: async (app) => {
@@ -23,7 +23,13 @@ const co = {
 
     await keystonePlugin.initialize(app);
     await authPlugin.initialize(app);
-    await imagePlugin.initialize();
+
+    if(config.cip.client.authMechanism !== 'http-basic') {
+      cip.initSession().then(() => {
+        setInterval(() => cip.sessionRenew(), config.cip.sessionRenewalRate || 60*60*1000);
+        console.log('CIP session initialized');
+      });
+    }
 
     expressSetup(app);
 
