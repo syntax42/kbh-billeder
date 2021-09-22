@@ -1,7 +1,0 @@
-include ../mixins/search-filter-section
-
-.search-filter-sidebar
-  include search-filter-chosen-filters
-  each filter, key in filterLabels
-    if filter.type !== 'querystring' && filter.type !== 'geobounds'
-      +filterSection(filter.singular, filter.plural, key, filter.type)

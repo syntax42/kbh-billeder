@@ -1,0 +1,6 @@
+mixin icon(id, classes, title)
+  svg(class=classes)
+    if title
+    title= title
+
+    use(href='#icon-'+id)

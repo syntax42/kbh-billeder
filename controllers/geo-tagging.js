@@ -3,7 +3,7 @@ const _ = require('lodash');
 const assert = require('assert');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const cip = require('../services/cip');
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const indexController = require('./indexing');
 
 if(config.features.geoTagging) {

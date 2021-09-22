@@ -1,0 +1,35 @@
+include ../mixins/date-interval-range-picker
+
+mixin filterSection(displayStringSingular, displayStringPlural, field, type)
+  - var dataId = field + '-filters'
+  p.search-filter-sidebar__heading(class='search-filter-sidebar__heading--' + dataId)
+    span(data-action='show-filters' data-id=field tabindex="0")= displayStringSingular
+
+  .search-filter-sidebar__filters(data-id=dataId, aria-expanded='false')
+    if type === 'date-interval-range'
+      +dateIntervalRangePicker(field)
+    else
+      if aggregations
+        - var outerAggregation = aggregations[field + '_independent']
+        - var aggregation = outerAggregation[field]
+        - var availableBuckets = 0
+        for bucket in aggregation.buckets
+          //- The user has not filtered this field or has not selected this value
+          if !filters[field] || filters[field].indexOf(bucket.key) === -1
+            - availableBuckets++;
+            button.btn.btn-default.btn-no-shadow.search-filter-sidebar__filter-btn(
+              type='button'
+              data-field=field,
+              data-value=bucket.key,
+              data-action='add-filter'
+            )
+              span.search-filter-sidebar__filter-btn-container
+                span.search-filter-sidebar__filter-btn-text
+                  +filterValue(field, bucket.key)
+                span.search-filter-sidebar__filter-btn-count= bucket.doc_count
+        if aggregation.sum_other_doc_count > 0
+          p.filter-text Resten (#{aggregation.sum_other_doc_count}) - søg efter #{displayStringSingular} i stedet.
+        if availableBuckets === 0
+          p.filter-text Der er ikke flere #{displayStringPlural}, der matcher din filtrering.
+      else
+        p.filter-text Henter værdier

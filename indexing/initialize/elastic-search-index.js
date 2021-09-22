@@ -6,8 +6,8 @@
  * @param {Object} state The state of which we are about to initialize.
  */
 
-const es = require('../../collections-online/lib/services/elasticsearch');
-const config = require('../../collections-online/lib/config');
+const es = require('../../lib/services/elasticsearch');
+const config = require('../../lib/config');
 
 module.exports = (state) => {
   // Save the index in the context

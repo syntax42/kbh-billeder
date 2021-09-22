@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 const assert = require('assert');
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const cip = require('../services/cip');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const indexController = require('./indexing');
@@ -62,7 +62,7 @@ const motifTagging = {
   },
   typeaheadSuggestions: text => {
     // The document service might be registered after this motif tagging service
-    const ds = require('../collections-online/lib/services/documents');
+    const ds = require('../lib/services/documents');
     // Search for distinct tags in all relevant fields
     return ds.search({
       size: 0,

@@ -1,4 +1,4 @@
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const indexing = require('../indexing/run');
 
 module.exports = {

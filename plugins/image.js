@@ -1,5 +1,5 @@
 'use strict';
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const cip = require('../services/cip');
 const imageController = require('../controllers/image');
 

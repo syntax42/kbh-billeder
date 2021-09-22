@@ -1,0 +1,6 @@
+if row.template && row.template.title && row.template.value
+  tr
+    th!= row.template.title(options, metadata)
+    td!= row.template.value(options, metadata)
+else
+  | Missing row.template.title or row.template.value

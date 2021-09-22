@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 
-const config = require('../collections-online/lib/config');
+const config = require('../lib/config');
 const proxy = require('./image__proxy');
 
 assert.ok(config.cip, 'Missing config.cip');
