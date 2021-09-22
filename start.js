@@ -7,11 +7,8 @@ const co = require('./server');
 const express = require('express');
 const app = express();
 
-
 co.initialize(app)
   .then(() => {
-    //TODO: inline routes, errors setup in co.initialize
-    require('./routes')(app);
     co.registerRoutes(app);
     co.registerErrors(app);
   })

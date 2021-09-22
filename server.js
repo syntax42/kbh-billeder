@@ -8,6 +8,7 @@ const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
 const expressSetup = require('./lib/express');
 const helpers = require('./lib/helpers');
 const registerRoutes = require('./lib/routes');
+const registerRoutesFromIndex = require('./routes');
 const registerErrorHandlers = require('./lib/errors');
 
 const co = {
@@ -63,6 +64,8 @@ const co = {
     }
   },
   registerRoutes: app => {
+    registerRoutesFromIndex(app);
+
     // Ask plugins to register their routes
     pluginController.registerRoutes(app);
     // Register the core routes
