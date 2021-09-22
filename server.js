@@ -1,6 +1,7 @@
 'use strict';
 
-const plugins = require('./pluginController');
+const plugins = require('./plugins');
+const pluginController = require('./pluginController');
 const config = require('./lib/config');
 const promiseRetry = require('promise-retry');
 
@@ -13,8 +14,10 @@ const co = {
     // TODO: Consider removing this
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+    plugins.register();
+
     // After all plugins have initialized, the main server should start
-    return plugins.initialize(app).then(() => {
+    return pluginController.initialize(app).then(() => {
       require('./lib/express')(app);
 
       const ds = require('./lib/services/documents');
@@ -75,7 +78,7 @@ const co = {
   },
   registerRoutes: app => {
     // Ask plugins to register their routes
-    plugins.registerRoutes(app);
+    pluginController.registerRoutes(app);
     // Register the core routes
     require('./lib/routes')(app);
   },

@@ -3,10 +3,8 @@ const co = require('./server');
 const config = require('./lib/config');
 const express = require('express');
 const app = express();
-const plugins = require('./plugins');
 
 config.setCustomizationPath(__dirname);
-plugins.register();
 
 co.initialize(app)
   .then(() => {
