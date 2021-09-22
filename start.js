@@ -2,9 +2,10 @@
 const config = require('./lib/config');
 config.setCustomizationPath(__dirname);
 
-// Creating an express app
 const co = require('./server');
 const express = require('express');
+
+// Creating an express app
 const app = express();
 
 co.initialize(app)
