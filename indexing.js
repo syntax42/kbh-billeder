@@ -2,14 +2,12 @@
 
 const config = require('./lib/config');
 const plugins = require('./plugins');
-const collectionsOnlinePlugins = require('./pluginController');
+const indexingEngine = require('./plugins/indexing').module;
 
 config.setCustomizationPath(__dirname);
 plugins.register();
 
 function run(state) {
-  // Run the indexing with the first available indexing-engine
-  var indexingEngine = collectionsOnlinePlugins.getFirst('indexing-engine');
   return indexingEngine(state || {}).then(function() {
     console.log('\nAll done - good bye!');
     process.exit(0);

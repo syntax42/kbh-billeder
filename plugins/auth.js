@@ -3,10 +3,8 @@ const passport = require('passport');
 const helpers = require('../shared/helpers');
 const auth0 = require('../lib/services/auth0');
 const Auth = auth0.Auth;
-const plugins = require('../pluginController');
-const users = plugins.getFirst('users-controller');
-const { check, validationResult, body } = require('express-validator/check');
-let currentUser;
+const users = require('./users').module;
+const {check, validationResult, body} = require('express-validator/check');
 
 module.exports = {
   type: 'authentication',
@@ -27,7 +25,6 @@ module.exports = {
 
     app.use(function(req, res, next) {
       res.locals.user = req.user;
-      currentUser = req.user;
       next();
     });
   },
