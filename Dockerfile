@@ -13,11 +13,14 @@ RUN npm install
 
 # build frontend bundle
 COPY gulpfile.js .
-COPY collections-online collections-online
 COPY config config
 COPY config.js .
 COPY app app
 COPY shared shared
+COPY build build
+COPY lib lib
+COPY bower.json .
+COPY bower_components bower_components
 
 RUN node node_modules/.bin/gulp build
 
@@ -35,4 +38,4 @@ COPY .env .
 
 EXPOSE 9000
 
-CMD node server.js
+CMD node start.js
