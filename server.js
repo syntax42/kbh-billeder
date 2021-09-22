@@ -1,6 +1,5 @@
 'use strict';
 
-const plugins = require('./plugins');
 const pluginController = require('./pluginController');
 const config = require('./lib/config');
 const ds = require('./lib/services/documents');
@@ -20,7 +19,15 @@ const co = {
     // TODO: Consider removing this
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-    plugins.register();
+    pluginController.register(require('./plugins/users'));
+    pluginController.register(require('./plugins/elasticsearch'));
+    pluginController.register(require('./plugins/keystone'));
+    pluginController.register(require('./plugins/auth'));
+    pluginController.register(require('./plugins/image'));
+    pluginController.register(require('./plugins/motif-tagging'));
+    pluginController.register(require('./plugins/geo-tagging'));
+    pluginController.register(require('./plugins/stats-pre-renderer'));
+    pluginController.register(require('./plugins/indexing'));
 
     // After all plugins have initialized, the main server should start
     await pluginController.initialize(app);
