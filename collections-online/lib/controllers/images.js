@@ -91,8 +91,9 @@ exports.download = function (req, res) {
     .on('error', err => {
       if(responded) {
         return;
-      }// TODO : make it nice; check request library and see if it fails several times
+      }
       responded = true;
+
       try {
         if (err.message === 'ESOCKETTIMEDOUT' && config.imageTimeoutRedirect) {
           // This is a timeout that occurs often when the original file is to large.
