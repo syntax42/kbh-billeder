@@ -25,6 +25,7 @@ COPY bower_components bower_components
 RUN node node_modules/.bin/gulp build
 
 # copy in server files
+COPY start.js .
 COPY server.js .
 COPY plugins plugins
 COPY controllers controllers
