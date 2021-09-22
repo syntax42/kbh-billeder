@@ -36,19 +36,7 @@ async function getResultPage(query, catalog, index, pageSize) {
   if(config.cip.indexing.additionalFields) {
     options.field = config.cip.indexing.additionalFields;
   }
-
-  let response;
-  try {
-    response = await cip.request(operation, options);
-  } catch(error) {
-    if(error.code === 'ECONNREFUSED') {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      response = await cip.request(operation, options);
-    }
-    else {
-      throw error;
-    }
-  }
+  const response = await requestWithRetries(operation, options, 4, 2);
 
   if (!response || !response.body || typeof(response.body.items) === 'undefined') {
     console.error('Unexpected response:', response);
@@ -58,6 +46,23 @@ async function getResultPage(query, catalog, index, pageSize) {
   }
 }
 
+const errorsToRetry = ['ECONNREFUSED', 'ESOCKETTIMEDOUT', 'ECONNRESET'];
+
+async function requestWithRetries(operation, options, retries, backoff) {
+  try {
+    return await cip.request(operation, options);
+  } catch(error) {
+    if(retries <= 1) {
+      throw error;
+    }
+    if(!errorsToRetry.includes(error.code)) {
+      throw error;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, backoff*1000));
+    return requestWithRetries(operation, options, retries - 1, backoff*backoff);
+  }
+}
 /**
  * Process a specific result page, with assets.
  */
