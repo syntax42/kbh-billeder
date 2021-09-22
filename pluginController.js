@@ -71,7 +71,12 @@ exports.initialize = (app, config) => {
     }
   });
   // Return a promise that gets resolved when all plugins have initialized
-  return Q.all(pluginPromises);
+  // Wrapping Q in native Promise, so we can use await on it
+  return new Promise((resolve, reject) => {
+    Q.all(pluginPromises)
+      .then(resolve)
+      .catch(reject);
+  });
 };
 
 exports.registerRoutes = app => {
