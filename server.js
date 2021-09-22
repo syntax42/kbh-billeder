@@ -23,8 +23,8 @@ const co = {
     // TODO: Consider removing this
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-    await keystonePlugin.initialize();
-    await authPlugin.initialize();
+    await keystonePlugin.initialize(app);
+    await authPlugin.initialize(app);
     await imagePlugin.initialize();
 
     expressSetup(app);
