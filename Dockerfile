@@ -27,6 +27,7 @@ RUN node node_modules/.bin/gulp build
 # copy in server files
 COPY start.js .
 COPY server.js .
+COPY pluginController.js .
 COPY plugins plugins
 COPY controllers controllers
 COPY services services
