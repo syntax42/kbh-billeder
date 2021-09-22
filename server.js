@@ -10,7 +10,7 @@ const registerErrorHandlers = require('./lib/errors');
 const cip = require('./services/cip');
 
 const keystonePlugin = require('./plugins/keystone');
-const authPlugin = require('./plugins/auth');
+const authPlugin = require('./auth');
 
 const co = {
   initialize: async (app) => {
