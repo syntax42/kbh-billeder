@@ -1,6 +1,5 @@
 'use strict';
 
-const pluginController = require('./pluginController');
 const config = require('./lib/config');
 const ds = require('./lib/services/documents');
 const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
@@ -9,6 +8,18 @@ const helpers = require('./lib/helpers');
 const registerRoutes = require('./lib/routes');
 const registerRoutesFromIndex = require('./routes');
 const registerErrorHandlers = require('./lib/errors');
+
+const plugins = [
+  require('./plugins/elasticsearch'),
+  require('./plugins/users'),
+  require('./plugins/keystone'),
+  require('./plugins/auth'),
+  require('./plugins/image'),
+  require('./plugins/motif-tagging'),
+  require('./plugins/geo-tagging'),
+  require('./plugins/stats-pre-renderer'),
+  require('./plugins/indexing'),
+];
 
 const co = {
   initialize: async (app) => {
@@ -19,18 +30,11 @@ const co = {
     // TODO: Consider removing this
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-    pluginController.register(require('./plugins/users'));
-    pluginController.register(require('./plugins/elasticsearch'));
-    pluginController.register(require('./plugins/keystone'));
-    pluginController.register(require('./plugins/auth'));
-    pluginController.register(require('./plugins/image'));
-    pluginController.register(require('./plugins/motif-tagging'));
-    pluginController.register(require('./plugins/geo-tagging'));
-    pluginController.register(require('./plugins/stats-pre-renderer'));
-    pluginController.register(require('./plugins/indexing'));
-
-    // After all plugins have initialized, the main server should start
-    await pluginController.initialize(app);
+    for(const plugin of plugins) {
+      if(plugin.initialize) {
+        await plugin.initialize();
+      }
+    }
 
     expressSetup(app);
 
@@ -59,7 +63,11 @@ const co = {
     registerRoutesFromIndex(app);
 
     // Ask plugins to register their routes
-    pluginController.registerRoutes(app);
+    for(const plugin of plugins) {
+      if(plugin.registerRoutes) {
+        plugin.registerRoutes();
+      }
+    }
 
     // Register the core routes (used to be collections-online routes)
     registerRoutes(app);
