@@ -5,3 +5,4 @@ Dockerfile
 deployment
 node_modules
 docker-compose
+.github
