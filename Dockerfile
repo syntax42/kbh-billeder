@@ -34,6 +34,8 @@ COPY services services
 COPY indexing indexing
 COPY updates updates
 COPY routes routes
+COPY indexing.js .
+COPY asset-mapping.js .
 
 # TODO - dont inject env during build time
 COPY .env .
