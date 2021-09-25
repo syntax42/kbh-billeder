@@ -134,28 +134,24 @@ module.exports = (gulp, customizationPath) => {
       }
     })
       .transform('babelify', {
-        // Mapping because of https://github.com/babel/gulp-babel/issues/93,
         'env': {
           'production': {
             'presets': [
               'babel-preset-latest',
               //'babel-preset-babili'
-            ].map(require.resolve)
+            ]
           },
           'beta': {
             'presets': [
               'babel-preset-latest',
               //'babel-preset-babili'
-            ].map(require.resolve)
+            ]
           }
         },
         plugins: [
           [
-            require.resolve('babel-plugin-module-resolver'), {
-              'alias': {
-                '@shared': './shared',
-              }
-            }
+            'babel-plugin-module-resolver',
+            {'alias': {'@shared': './shared'}}
           ],
         ],
         // Global is needed because JS in collections-online is considered global
