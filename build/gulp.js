@@ -23,7 +23,6 @@ module.exports = (gulp, config) => {
   // Directories - note that they are relative to the project specific gulpfile
   //------------------------------------------
   var DEST_DIR = './generated';
-  var SCRIPTS_ARRAY_CO = ['./app/scripts/*.js'];
   var SCRIPTS_DEST = DEST_DIR + '/scripts';
   var SVG_SRC = './app/images/icons/*.svg';
   var PUG_SRC = './app/views/**/*.pug';
@@ -45,13 +44,13 @@ module.exports = (gulp, config) => {
     return './bower_components' + script;
   });
 
-
-  SCRIPTS_ARRAY_CO = BOWER_SCRIPTS.concat(SCRIPTS_ARRAY_CO);
+  var SCRIPTS_ALL = [
+    ...BOWER_SCRIPTS,
+    './app/scripts/*.js'
+  ];
 
   // Add the runtime lib used to run pug templates
   var SCRIPTS_BROWSERIFY_DIR = './app/scripts-browserify';
-
-  var SCRIPTS_ALL = SCRIPTS_ARRAY_CO;
 
   gulp.task('reload-config', function(done) {
     config.reload();
@@ -145,9 +144,10 @@ module.exports = (gulp, config) => {
   }));
 
   gulp.task('js', gulp.series('js-browserify', () => {
-    var scriptPaths = SCRIPTS_ARRAY_CO.concat([
+    var scriptPaths = [
+      ...SCRIPTS_ALL,
       SCRIPTS_DEST + '/browserify-index.js'
-    ]);
+    ];
     return gulp.src(scriptPaths)
       .pipe(uniqueFiles())
       .pipe(concat('main.js'))
