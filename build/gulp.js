@@ -11,7 +11,6 @@ const pug = require('gulp-pug');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
 const source = require('vinyl-source-stream');
-const sourcemaps = require('gulp-sourcemaps');
 const svgmin = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
 const uglify = require('gulp-uglify');
@@ -68,17 +67,15 @@ module.exports = (gulp, config) => {
   });
 
   gulp.task('css', () => {
-    return gulp.src('./app/styles/main.scss')
+    return gulp.src('./app/styles/main.scss', {sourcemaps: true})
       .pipe(plumber())
-      .pipe(gulpif(isDevelopment, sourcemaps.init()))
       .pipe(sass().on('error', function(err) {
         console.error('\x07');
         sass.logError.bind(this)(err);
       }))
       .pipe(cleanCSS())
       .pipe(autoprefixer())
-      .pipe(gulpif(isDevelopment, sourcemaps.write()))
-      .pipe(gulp.dest(DEST_DIR + '/styles'));
+      .pipe(gulp.dest(DEST_DIR + '/styles', {sourcemaps: '.'}));
   });
 
   gulp.task('pug', () => {
