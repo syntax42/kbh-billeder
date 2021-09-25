@@ -6,7 +6,6 @@ const concat = require('gulp-concat');
 const CustomPug = require('./custom-pug.js');
 const del = require('del');
 const gulpif = require('gulp-if');
-const path = require('path');
 const plumber = require('gulp-plumber');
 const pug = require('gulp-pug');
 const rename = require('gulp-rename');
@@ -25,17 +24,10 @@ module.exports = (gulp, config) => {
   // Directories - note that they are relative to the project specific gulpfile
   //------------------------------------------
   var DEST_DIR = './generated';
-  var BOWER_COMPONENTS_CO = './bower_components';
-  var STYLES_SRC = './app/styles/main.scss';
-  var STYLES_ALL = './app/styles/**/*.scss';
-  var STYLES_DEST = DEST_DIR + '/styles';
   var SCRIPTS_ARRAY_CO = ['./app/scripts/*.js'];
   var SCRIPTS_DEST = DEST_DIR + '/scripts';
-  var SCRIPT_NAME = 'main.js';
   var SVG_SRC = './app/images/icons/*.svg';
-  var SVG_DEST = DEST_DIR + '/images';
   var PUG_SRC = './app/views/**/*.pug';
-  var PUG_DEST = DEST_DIR + '/views';
   var isDevelopment = process.env.NODE_ENV === 'development';
 
   // Add bower scripts
@@ -51,7 +43,7 @@ module.exports = (gulp, config) => {
     '/formatter.js/dist/jquery.formatter.min.js',
     '/auth0-lock/build/lock.min.js'
   ].map((script) => {
-    return BOWER_COMPONENTS_CO + script;
+    return './bower_components' + script;
   });
 
 
@@ -76,7 +68,7 @@ module.exports = (gulp, config) => {
   });
 
   gulp.task('css', () => {
-    return gulp.src(STYLES_SRC)
+    return gulp.src('./app/styles/main.scss')
       .pipe(plumber())
       .pipe(gulpif(isDevelopment, sourcemaps.init()))
       .pipe(sass().on('error', function(err) {
@@ -86,7 +78,7 @@ module.exports = (gulp, config) => {
       .pipe(cleanCSS())
       .pipe(autoprefixer())
       .pipe(gulpif(isDevelopment, sourcemaps.write()))
-      .pipe(gulp.dest(STYLES_DEST));
+      .pipe(gulp.dest(DEST_DIR + '/styles'));
   });
 
   gulp.task('pug', () => {
@@ -104,7 +96,7 @@ module.exports = (gulp, config) => {
         // we've emitted an "end" - but this is the best we can do for now.
         this.emit('end');
       })
-      .pipe(gulp.dest(PUG_DEST));
+      .pipe(gulp.dest(DEST_DIR + '/views'));
   });
 
   gulp.task('js-browserify', gulp.series('pug', () => {
@@ -163,7 +155,7 @@ module.exports = (gulp, config) => {
     ]);
     return gulp.src(scriptPaths)
       .pipe(uniqueFiles())
-      .pipe(concat(SCRIPT_NAME))
+      .pipe(concat('main.js'))
       .pipe(gulp.dest(SCRIPTS_DEST))
       .pipe(gulpif(!isDevelopment, uglify().on('error', console.error)))
       .pipe(gulp.dest(SCRIPTS_DEST))
@@ -178,11 +170,11 @@ module.exports = (gulp, config) => {
       .pipe(svgmin())
       .pipe(rename({prefix: 'icon-'}))
       .pipe(svgstore())
-      .pipe(gulp.dest(SVG_DEST));
+      .pipe(gulp.dest(DEST_DIR + '/images'));
   });
 
   gulp.task('watch', (done) => {
-    gulp.watch(STYLES_ALL, {interval: 500}, gulp.task('css'));
+    gulp.watch('./app/styles/**/*.scss', {interval: 500}, gulp.task('css'));
     gulp.watch(SVG_SRC, {interval: 500}, gulp.task('svg'));
     gulp.watch(PUG_SRC, {interval: 500}, gulp.task('js'));
     gulp.watch([
