@@ -133,38 +133,40 @@ module.exports = (gulp, customizationPath) => {
         }
       }
     })
-    .transform('babelify', {
-      // Mapping because of https://github.com/babel/gulp-babel/issues/93,
-      'env': {
-        'production': {
-          'presets': [
-            'babel-preset-latest',
-            //'babel-preset-babili'
-          ].map(require.resolve)
-        },
-        'beta': {
-          'presets': [
-            'babel-preset-latest',
-            //'babel-preset-babili'
-          ].map(require.resolve)
-        }
-      },
-      plugins: [
-        [ require.resolve("babel-plugin-module-resolver"), {
-          "alias": {
-            "@shared": "./shared",
+      .transform('babelify', {
+        // Mapping because of https://github.com/babel/gulp-babel/issues/93,
+        'env': {
+          'production': {
+            'presets': [
+              'babel-preset-latest',
+              //'babel-preset-babili'
+            ].map(require.resolve)
+          },
+          'beta': {
+            'presets': [
+              'babel-preset-latest',
+              //'babel-preset-babili'
+            ].map(require.resolve)
           }
-        } ],
-      ],
-      // Global is needed because JS in collections-online is considered global
-      global: !isDevelopment
-    })
-    .bundle()
-    .on('error', function(err){
-      console.log(err.stack);
-    })
-    .pipe(source('browserify-index.js'))
-    .pipe(gulp.dest(SCRIPTS_DEST));
+        },
+        plugins: [
+          [
+            require.resolve('babel-plugin-module-resolver'), {
+              'alias': {
+                '@shared': './shared',
+              }
+            }
+          ],
+        ],
+        // Global is needed because JS in collections-online is considered global
+        global: !isDevelopment
+      })
+      .bundle()
+      .on('error', function(err){
+        console.log(err.stack);
+      })
+      .pipe(source('browserify-index.js'))
+      .pipe(gulp.dest(SCRIPTS_DEST));
   }));
 
   gulp.task('js', gulp.series('js-browserify', () => {
