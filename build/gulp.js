@@ -135,8 +135,6 @@ module.exports = (gulp, config) => {
             }}
           ],
         ],
-        // Global is needed because JS in collections-online is considered global
-        global: !isDevelopment
       })
       .bundle()
       .on('error', function(err){
