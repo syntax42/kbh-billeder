@@ -29,10 +29,9 @@ const EDITING_CONTAINER_SELECTOR = '.motif-tagging__editing-container';
 
 const IS_EDITING_CLASS = 'motif-tagging__editing-container--editing';
 
-const motifTaggingTemplate = require('views/includes/motif-tagging');
-const tagTemplate = require('views/includes/motif-tagging/tags');
-const tagSuggestionsTemplate = require('views/includes/motif-tagging/tag-suggestions');
-const saveButtonTemplate = require('views/includes/motif-tagging/save-buttons');
+const tagTemplate = require('@views/includes/motif-tagging/tags');
+const tagSuggestionsTemplate = require('@views/includes/motif-tagging/tag-suggestions');
+const saveButtonTemplate = require('@views/includes/motif-tagging/save-buttons');
 
 const templates = {
   'tags': tagTemplate,

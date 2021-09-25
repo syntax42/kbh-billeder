@@ -1,7 +1,7 @@
-// ------------------------------------------
-// Require - sorted alphabetically after npm name
-// ------------------------------------------
+// TODO: Config must have customization set as very first because some modules depend on config being complete at require time (bad, shouldfix)
 require('dotenv').config({silent: true});
+const config = require('./lib/config');
+config.setCustomizationPath(__dirname);
 
 const gulp = require('gulp');
 
@@ -9,7 +9,7 @@ const gulp = require('gulp');
 // Get the gulp content from the main
 // ------------------------------------------
 
-require('./build/gulp')(gulp, __dirname);
+require('./build/gulp')(gulp, config);
 
 // ------------------------------------------
 // Combining tasks

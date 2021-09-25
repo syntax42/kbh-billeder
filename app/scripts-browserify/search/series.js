@@ -5,7 +5,7 @@
 const config = require('../../../shared/config');
 const helpers = require('../../../shared/helpers');
 
-const MapController = require('map-controller');
+const MapController = require('../map-controller');
 const _ = require('lodash');
 
 const elasticsearchQueryBody = require('./es-query-body');
@@ -16,7 +16,7 @@ const DEFAULT_SORTING = require('./default-sorting');
 const navigator = require('../document/navigator');
 
 const templates = {
-  searchResultItem: require('views/includes/search-results-item')
+  searchResultItem: require('@views/includes/search-results-item')
 };
 
 const searchParams = {

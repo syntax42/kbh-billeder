@@ -66,7 +66,7 @@ $(function ($) {
     controllerState.assetData = _extractAsset(mapElement);
 
     // Instantiate a map controller and load it up
-    const MapController = require('map-controller');
+    const MapController = require('../map-controller');
     const options = {
       mode: 'single',
       initialZoomLevel: 16,

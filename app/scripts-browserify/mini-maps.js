@@ -65,7 +65,7 @@ $(function ($) {
     let searchParams = data;
   
     // Instantiate a map controller and load it up
-    const MapController = require('map-controller');
+    const MapController = require('./map-controller');
     const options = {
       initialZoomLevel: data.zoom,
       initialCenter: [data.longitude, data.latitude],

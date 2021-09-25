@@ -28,7 +28,7 @@ function UserContributionsLoader({$sectionElement, fetchEndpoint}) {
 
   let lastSection = undefined;
   const templates = {
-    contributionSection: require('views/includes/profile/user-contributions-section')
+    contributionSection: require('@views/includes/profile/user-contributions-section')
   };
 
   function getContributionDate (timeString) {

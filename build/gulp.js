@@ -18,27 +18,23 @@ const svgstore = require('gulp-svgstore');
 const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
-module.exports = (gulp, customizationPath) => {
-  // TODO: Config must have customization set as very first because some modules depend on config being complete at require time (bad, shouldfix)
-  const config = require('../lib/config');
-  config.setCustomizationPath(customizationPath);
-
+module.exports = (gulp, config) => {
   const customPug = CustomPug(config);
 
   //------------------------------------------
   // Directories - note that they are relative to the project specific gulpfile
   //------------------------------------------
-  var DEST_DIR = path.join(customizationPath, 'generated');
-  var BOWER_COMPONENTS_CO = customizationPath + '/bower_components';
-  var STYLES_SRC = customizationPath + '/app/styles/main.scss';
-  var STYLES_ALL = customizationPath + '/app/styles/**/*.scss';
+  var DEST_DIR = './generated';
+  var BOWER_COMPONENTS_CO = './bower_components';
+  var STYLES_SRC = './app/styles/main.scss';
+  var STYLES_ALL = './app/styles/**/*.scss';
   var STYLES_DEST = DEST_DIR + '/styles';
-  var SCRIPTS_ARRAY_CO = [customizationPath + '/app/scripts/*.js'];
+  var SCRIPTS_ARRAY_CO = ['./app/scripts/*.js'];
   var SCRIPTS_DEST = DEST_DIR + '/scripts';
   var SCRIPT_NAME = 'main.js';
-  var SVG_SRC = customizationPath + '/app/images/icons/*.svg';
+  var SVG_SRC = './app/images/icons/*.svg';
   var SVG_DEST = DEST_DIR + '/images';
-  var PUG_SRC = customizationPath + '/app/views/**/*.pug';
+  var PUG_SRC = './app/views/**/*.pug';
   var PUG_DEST = DEST_DIR + '/views';
   var isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -62,7 +58,7 @@ module.exports = (gulp, customizationPath) => {
   SCRIPTS_ARRAY_CO = BOWER_SCRIPTS.concat(SCRIPTS_ARRAY_CO);
 
   // Add the runtime lib used to run pug templates
-  var SCRIPTS_BROWSERIFY_DIR = customizationPath + '/app/scripts-browserify';
+  var SCRIPTS_BROWSERIFY_DIR = './app/scripts-browserify';
 
   var SCRIPTS_ALL = SCRIPTS_ARRAY_CO;
 
@@ -76,7 +72,7 @@ module.exports = (gulp, customizationPath) => {
   // Individual tasks
   //------------------------------------------
   gulp.task('bower', () => {
-    return bower({cwd: customizationPath});
+    return bower();
   });
 
   gulp.task('css', () => {
@@ -117,9 +113,8 @@ module.exports = (gulp, customizationPath) => {
         SCRIPTS_BROWSERIFY_DIR,
         DEST_DIR
       ],
-      basedir: SCRIPTS_BROWSERIFY_DIR,
       debug: isDevelopment,
-      entries: './index.js',
+      entries: SCRIPTS_BROWSERIFY_DIR + '/index.js',
       insertGlobalVars: {
         clientSideConfig: function(file, dir) {
           const clientSideConfig = config.getClientSideConfig();
@@ -145,7 +140,10 @@ module.exports = (gulp, customizationPath) => {
         plugins: [
           [
             'babel-plugin-module-resolver',
-            {'alias': {'@shared': './shared'}}
+            {'alias': {
+              '@shared': './shared',
+              '@views': './generated/views',
+            }}
           ],
         ],
         // Global is needed because JS in collections-online is considered global
@@ -190,8 +188,8 @@ module.exports = (gulp, customizationPath) => {
     gulp.watch([
       ...SCRIPTS_ALL,
       SCRIPTS_BROWSERIFY_DIR + '/**/*.js',
-      customizationPath + '/config/**/*',
-      customizationPath + '/shared/*.js'
+      './config/**/*',
+      './shared/*.js'
     ], {interval: 500}, gulp.series('reload-config', 'js'));
 
     done();
