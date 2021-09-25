@@ -33,15 +33,11 @@ module.exports = (gulp, customizationPath) => {
   var STYLES_SRC = customizationPath + '/app/styles/main.scss';
   var STYLES_ALL = customizationPath + '/app/styles/**/*.scss';
   var STYLES_DEST = DEST_DIR + '/styles';
-  var SCRIPTS_FOLDER_CO = customizationPath + '/app/scripts';
-  var SCRIPTS_CO = SCRIPTS_FOLDER_CO + '/*.js';
-  var SCRIPTS_ARRAY_CO = [SCRIPTS_CO];
+  var SCRIPTS_ARRAY_CO = [customizationPath + '/app/scripts/*.js'];
   var SCRIPTS_DEST = DEST_DIR + '/scripts';
   var SCRIPT_NAME = 'main.js';
-  var SVG_SRC_CO = customizationPath + '/app/images/icons/*.svg';
   var SVG_SRC = customizationPath + '/app/images/icons/*.svg';
   var SVG_DEST = DEST_DIR + '/images';
-  var PUG_SRC_CO = customizationPath + '/app/views/**/*.pug';
   var PUG_SRC = customizationPath + '/app/views/**/*.pug';
   var PUG_DEST = DEST_DIR + '/views';
   var isDevelopment = process.env.NODE_ENV === 'development';
@@ -66,7 +62,6 @@ module.exports = (gulp, customizationPath) => {
   SCRIPTS_ARRAY_CO = BOWER_SCRIPTS.concat(SCRIPTS_ARRAY_CO);
 
   // Add the runtime lib used to run pug templates
-  var SCRIPTS_BROWSERIFY_DIR_CO = customizationPath + '/app/scripts-browserify';
   var SCRIPTS_BROWSERIFY_DIR = customizationPath + '/app/scripts-browserify';
 
   var SCRIPTS_ALL = SCRIPTS_ARRAY_CO;
@@ -99,7 +94,7 @@ module.exports = (gulp, customizationPath) => {
   });
 
   gulp.task('pug', () => {
-    return gulp.src([PUG_SRC_CO, PUG_SRC])
+    return gulp.src(PUG_SRC)
       .pipe(uniqueFiles())
       .pipe(pug({
         client: true,
@@ -120,7 +115,6 @@ module.exports = (gulp, customizationPath) => {
     return browserify({
       paths: [
         SCRIPTS_BROWSERIFY_DIR,
-        SCRIPTS_BROWSERIFY_DIR_CO,
         DEST_DIR
       ],
       basedir: SCRIPTS_BROWSERIFY_DIR,
@@ -181,7 +175,7 @@ module.exports = (gulp, customizationPath) => {
   }));
 
   gulp.task('svg', () => {
-    return gulp.src([SVG_SRC_CO, SVG_SRC])
+    return gulp.src(SVG_SRC)
       .pipe(uniqueFiles())
       .pipe(svgmin())
       .pipe(rename({prefix: 'icon-'}))
@@ -191,11 +185,10 @@ module.exports = (gulp, customizationPath) => {
 
   gulp.task('watch', (done) => {
     gulp.watch(STYLES_ALL, {interval: 500}, gulp.task('css'));
-    gulp.watch([SVG_SRC, SVG_SRC_CO], {interval: 500}, gulp.task('svg'));
-    gulp.watch([PUG_SRC_CO, PUG_SRC], {interval: 500}, gulp.task('js'));
+    gulp.watch(SVG_SRC, {interval: 500}, gulp.task('svg'));
+    gulp.watch(PUG_SRC, {interval: 500}, gulp.task('js'));
     gulp.watch([
       ...SCRIPTS_ALL,
-      SCRIPTS_BROWSERIFY_DIR_CO + '/**/*.js',
       SCRIPTS_BROWSERIFY_DIR + '/**/*.js',
       customizationPath + '/config/**/*',
       customizationPath + '/shared/*.js'
