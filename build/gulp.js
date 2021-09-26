@@ -36,7 +36,6 @@ module.exports = (gulp, config) => {
     '/jquery-infinite-scroll/jquery.infinitescroll.js',
     '/picturefill/dist/picturefill.js',
     '/typeahead.js/dist/typeahead.bundle.js',
-    '/scrollToTop/jquery.scrollToTop.js',
     '/slick-carousel/slick/slick.min.js',
     '/formatter.js/dist/jquery.formatter.min.js',
     '/auth0-lock/build/lock.min.js'
