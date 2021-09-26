@@ -1,13 +1,10 @@
-const autoprefixer = require('gulp-autoprefixer');
 const browserify = require('browserify');
-const cleanCSS = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const CustomPug = require('./custom-pug.js');
 const del = require('del');
 const gulpif = require('gulp-if');
 const pug = require('gulp-pug');
 const rename = require('gulp-rename');
-const sass = require('gulp-sass');
 const source = require('vinyl-source-stream');
 const svgmin = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
@@ -42,14 +39,6 @@ module.exports = (gulp, config, isDevelopment) => {
 
   // Add the runtime lib used to run pug templates
   var SCRIPTS_BROWSERIFY_DIR = './app/scripts-browserify';
-
-  gulp.task('css', () => {
-    return gulp.src('./app/styles/main.scss', {sourcemaps: true})
-      .pipe(sass().on('error', sass.logError))
-      .pipe(cleanCSS())
-      .pipe(autoprefixer())
-      .pipe(gulp.dest(DEST_DIR + '/styles', {sourcemaps: '.'}));
-  });
 
   gulp.task('pug', () => {
     return gulp.src(PUG_SRC)
