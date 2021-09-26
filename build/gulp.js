@@ -31,7 +31,6 @@ module.exports = (gulp, config) => {
   // Add bower scripts
   var BOWER_SCRIPTS = [
     '/jquery/dist/jquery.js',
-    '/picturefill/dist/picturefill.js',
     '/typeahead.js/dist/typeahead.bundle.js',
     '/slick-carousel/slick/slick.min.js',
     '/formatter.js/dist/jquery.formatter.min.js',
