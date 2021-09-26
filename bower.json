@@ -6,13 +6,5 @@
     "typeahead.js": "~0.11.1",
     "slick-carousel": "^1.5.9"
   },
-  "devDependencies": {},
-  "overrides": {
-    "outlayer": {
-      "main": [
-        "item.js",
-        "outlayer.js"
-      ]
-    }
-  }
+  "devDependencies": {}
 }
