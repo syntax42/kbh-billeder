@@ -6,7 +6,6 @@ const concat = require('gulp-concat');
 const CustomPug = require('./custom-pug.js');
 const del = require('del');
 const gulpif = require('gulp-if');
-const plumber = require('gulp-plumber');
 const pug = require('gulp-pug');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
@@ -61,11 +60,7 @@ module.exports = (gulp, config) => {
 
   gulp.task('css', () => {
     return gulp.src('./app/styles/main.scss', {sourcemaps: true})
-      .pipe(plumber())
-      .pipe(sass().on('error', function(err) {
-        console.error('\x07');
-        sass.logError.bind(this)(err);
-      }))
+      .pipe(sass().on('error', sass.logError))
       .pipe(cleanCSS())
       .pipe(autoprefixer())
       .pipe(gulp.dest(DEST_DIR + '/styles', {sourcemaps: '.'}));
