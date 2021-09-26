@@ -6,6 +6,19 @@ config.setCustomizationPath(__dirname);
 var isDevelopment = process.env.NODE_ENV === 'development';
 
 const gulp = require('gulp');
+const bower = require('gulp-bower');
+
+// ------------------------------------------
+// If possible, remove these tasks completely:
+// ------------------------------------------
+gulp.task('reload-config', function(done) {
+  config.reload();
+  done();
+});
+
+gulp.task('bower', () => {
+  return bower();
+});
 
 // ------------------------------------------
 // Get the gulp content from the main

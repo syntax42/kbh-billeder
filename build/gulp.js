@@ -1,5 +1,4 @@
 const autoprefixer = require('gulp-autoprefixer');
-const bower = require('gulp-bower');
 const browserify = require('browserify');
 const cleanCSS = require('gulp-clean-css');
 const concat = require('gulp-concat');
@@ -43,19 +42,6 @@ module.exports = (gulp, config, isDevelopment) => {
 
   // Add the runtime lib used to run pug templates
   var SCRIPTS_BROWSERIFY_DIR = './app/scripts-browserify';
-
-  gulp.task('reload-config', function(done) {
-    config.reload();
-    done();
-  });
-
-  // Return only
-  //------------------------------------------
-  // Individual tasks
-  //------------------------------------------
-  gulp.task('bower', () => {
-    return bower();
-  });
 
   gulp.task('css', () => {
     return gulp.src('./app/styles/main.scss', {sourcemaps: true})
