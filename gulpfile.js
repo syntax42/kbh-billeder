@@ -11,6 +11,7 @@ const del = require('del');
 const gulpCss = require('./build/gulp-css');
 const gulpPug = require('./build/gulp-pug');
 const gulpSvg = require('./build/gulp-svg');
+const gulpJs = require('./build/gulp-js');
 
 // ------------------------------------------
 // If possible, remove these tasks completely:
@@ -45,7 +46,7 @@ var SCRIPTS_ALL = [
 gulpCss(gulp);
 gulpPug(gulp, config, isDevelopment);
 gulpSvg(gulp);
-require('./build/gulp')(gulp, config, isDevelopment, SCRIPTS_ALL);
+gulpJs(gulp, config, isDevelopment, SCRIPTS_ALL);
 
 gulp.task('clean', () => {
   return del('./generated');

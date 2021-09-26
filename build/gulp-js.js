@@ -8,6 +8,8 @@ const uniqueFiles = require('gulp-unique-files');
 module.exports = (gulp, config, isDevelopment, SCRIPTS_ALL) => {
   var SCRIPTS_DEST = './generated/scripts';
 
+  //TODO: Can we avoid writing browserify to some destination then reading again in js step, and instead just returning a stream to continue work on?
+  //TODO: Everything is built into main.js which is the only script included anywhere...
   gulp.task('js-browserify', gulp.series('pug', () => {
     return browserify({
       debug: isDevelopment,
