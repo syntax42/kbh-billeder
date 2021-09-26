@@ -72,7 +72,7 @@ gulp.task('watch', (done) => {
 });
 
 gulp.task('default',
-  process.env.NODE_ENV === 'development' ?
+  isDevelopment ?
     gulp.series('build', 'watch') :
     gulp.task('build')
 );
