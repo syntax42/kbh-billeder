@@ -8,6 +8,7 @@ var isDevelopment = process.env.NODE_ENV === 'development';
 const gulp = require('gulp');
 const bower = require('gulp-bower');
 const gulpCss = require('./build/gulp-css');
+const gulpPug = require('./build/gulp-pug');
 
 // ------------------------------------------
 // If possible, remove these tasks completely:
@@ -26,6 +27,7 @@ gulp.task('bower', () => {
 // ------------------------------------------
 
 gulpCss(gulp);
+gulpPug(gulp, config, isDevelopment);
 require('./build/gulp')(gulp, config, isDevelopment);
 
 // ------------------------------------------

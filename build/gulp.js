@@ -1,9 +1,7 @@
 const browserify = require('browserify');
 const concat = require('gulp-concat');
-const CustomPug = require('./custom-pug.js');
 const del = require('del');
 const gulpif = require('gulp-if');
-const pug = require('gulp-pug');
 const rename = require('gulp-rename');
 const source = require('vinyl-source-stream');
 const svgmin = require('gulp-svgmin');
@@ -12,8 +10,6 @@ const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
 module.exports = (gulp, config, isDevelopment) => {
-  const customPug = CustomPug(config);
-
   //------------------------------------------
   // Directories - note that they are relative to the project specific gulpfile
   //------------------------------------------
@@ -39,17 +35,6 @@ module.exports = (gulp, config, isDevelopment) => {
 
   // Add the runtime lib used to run pug templates
   var SCRIPTS_BROWSERIFY_DIR = './app/scripts-browserify';
-
-  gulp.task('pug', () => {
-    return gulp.src(PUG_SRC)
-      .pipe(uniqueFiles())
-      .pipe(pug({
-        client: true,
-        compileDebug: isDevelopment,
-        pug: customPug
-      }))
-      .pipe(gulp.dest(DEST_DIR + '/views'));
-  });
 
   gulp.task('js-browserify', gulp.series('pug', () => {
     return browserify({
