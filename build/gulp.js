@@ -15,7 +15,7 @@ const svgstore = require('gulp-svgstore');
 const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
-module.exports = (gulp, config) => {
+module.exports = (gulp, config, isDevelopment) => {
   const customPug = CustomPug(config);
 
   //------------------------------------------
@@ -25,7 +25,6 @@ module.exports = (gulp, config) => {
   var SCRIPTS_DEST = DEST_DIR + '/scripts';
   var SVG_SRC = './app/images/icons/*.svg';
   var PUG_SRC = './app/views/**/*.pug';
-  var isDevelopment = process.env.NODE_ENV === 'development';
 
   // Add bower scripts
   var BOWER_SCRIPTS = [

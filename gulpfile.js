@@ -3,13 +3,15 @@ require('dotenv').config({silent: true});
 const config = require('./lib/config');
 config.setCustomizationPath(__dirname);
 
+var isDevelopment = process.env.NODE_ENV === 'development';
+
 const gulp = require('gulp');
 
 // ------------------------------------------
 // Get the gulp content from the main
 // ------------------------------------------
 
-require('./build/gulp')(gulp, config);
+require('./build/gulp')(gulp, config, isDevelopment);
 
 // ------------------------------------------
 // Combining tasks
