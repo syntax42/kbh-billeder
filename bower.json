@@ -2,7 +2,6 @@
   "name": "natmus-samlinger",
   "version": "0.0.1",
   "dependencies": {
-    "jquery-infinite-scroll": "~2.1.0",
     "jquery": "~2.2.1",
     "picturefill": "~3.0.2",
     "typeahead.js": "~0.11.1",
