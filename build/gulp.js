@@ -32,7 +32,6 @@ module.exports = (gulp, config) => {
   var BOWER_SCRIPTS = [
     '/jquery/dist/jquery.js',
     '/ev-emitter/ev-emitter.js',
-    '/imagesloaded/imagesloaded.js',
     '/jquery-infinite-scroll/jquery.infinitescroll.js',
     '/picturefill/dist/picturefill.js',
     '/typeahead.js/dist/typeahead.bundle.js',
