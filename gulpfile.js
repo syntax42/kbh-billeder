@@ -7,6 +7,7 @@ var isDevelopment = process.env.NODE_ENV === 'development';
 
 const gulp = require('gulp');
 const bower = require('gulp-bower');
+const del = require('del');
 const gulpCss = require('./build/gulp-css');
 const gulpPug = require('./build/gulp-pug');
 const gulpSvg = require('./build/gulp-svg');
@@ -26,24 +27,48 @@ gulp.task('bower', () => {
 // ------------------------------------------
 // Get the gulp content from the main
 // ------------------------------------------
+// Add bower scripts
+var BOWER_SCRIPTS = [
+  '/jquery/dist/jquery.js',
+  '/typeahead.js/dist/typeahead.bundle.js',
+  '/slick-carousel/slick/slick.min.js',
+  '/formatter.js/dist/jquery.formatter.min.js',
+].map((script) => {
+  return './bower_components' + script;
+});
+
+var SCRIPTS_ALL = [
+  ...BOWER_SCRIPTS,
+  './app/scripts/*.js'
+];
 
 gulpCss(gulp);
 gulpPug(gulp, config, isDevelopment);
 gulpSvg(gulp);
-require('./build/gulp')(gulp, config, isDevelopment);
+require('./build/gulp')(gulp, config, isDevelopment, SCRIPTS_ALL);
 
-// ------------------------------------------
-// Combining tasks
-// ------------------------------------------
+gulp.task('clean', () => {
+  return del('./generated');
+});
 
 gulp.task('build', gulp.series(
   gulp.parallel('clean', 'bower'),
   gulp.parallel('css', 'js', 'svg')
 ));
 
-// ------------------------------------------
-// Default task
-// ------------------------------------------
+gulp.task('watch', (done) => {
+  gulp.watch('./app/styles/**/*.scss', {interval: 500}, gulp.task('css'));
+  gulp.watch('./app/images/icons/*.svg', {interval: 500}, gulp.task('svg'));
+  gulp.watch('./app/views/**/*.pug', {interval: 500}, gulp.task('js'));
+  gulp.watch([
+    ...SCRIPTS_ALL,
+    './app/scripts-browserify/**/*.js',
+    './config/**/*',
+    './shared/*.js'
+  ], {interval: 500}, gulp.series('reload-config', 'js'));
+
+  done();
+});
 
 gulp.task('default',
   process.env.NODE_ENV === 'development' ?
