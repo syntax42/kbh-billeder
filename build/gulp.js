@@ -34,7 +34,6 @@ module.exports = (gulp, config) => {
     '/typeahead.js/dist/typeahead.bundle.js',
     '/slick-carousel/slick/slick.min.js',
     '/formatter.js/dist/jquery.formatter.min.js',
-    '/auth0-lock/build/lock.min.js'
   ].map((script) => {
     return './bower_components' + script;
   });

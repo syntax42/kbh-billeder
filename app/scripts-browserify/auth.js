@@ -7,7 +7,6 @@ const RESET_PASSWORD_SELECTOR = '[data-action="reset-password"]';
 const RESET_PASSWORD_SUCCESS_ELEMENT = '<p>Check din mail for videre instruktioner.</p>';
 const RESET_PASSWORD_FAILURE_ELEMENT = '<p>Der skete en fejl, prøv igen senere.</p>';
 const DELETE_ACCOUNT_SELECTOR = '[data-action="delete-account-verification"]';
-/* global Auth0Lock */
 
 $(function() {
   restrictActions({
