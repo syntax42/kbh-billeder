@@ -48,13 +48,6 @@ module.exports = (gulp, config, isDevelopment) => {
         compileDebug: isDevelopment,
         pug: customPug
       }))
-      .on('error', function (err) {
-        console.log('Error while compiling pug');
-        console.log(err.toString());
-        // This will thrown an error since we're going to write to files after
-        // we've emitted an "end" - but this is the best we can do for now.
-        this.emit('end');
-      })
       .pipe(gulp.dest(DEST_DIR + '/views'));
   });
 
