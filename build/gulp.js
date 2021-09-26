@@ -2,10 +2,7 @@ const browserify = require('browserify');
 const concat = require('gulp-concat');
 const del = require('del');
 const gulpif = require('gulp-if');
-const rename = require('gulp-rename');
 const source = require('vinyl-source-stream');
-const svgmin = require('gulp-svgmin');
-const svgstore = require('gulp-svgstore');
 const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
@@ -99,15 +96,6 @@ module.exports = (gulp, config, isDevelopment) => {
         console.log(err.stack);
       });
   }));
-
-  gulp.task('svg', () => {
-    return gulp.src(SVG_SRC)
-      .pipe(uniqueFiles())
-      .pipe(svgmin())
-      .pipe(rename({prefix: 'icon-'}))
-      .pipe(svgstore())
-      .pipe(gulp.dest(DEST_DIR + '/images'));
-  });
 
   gulp.task('watch', (done) => {
     gulp.watch('./app/styles/**/*.scss', {interval: 500}, gulp.task('css'));

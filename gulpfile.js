@@ -9,6 +9,7 @@ const gulp = require('gulp');
 const bower = require('gulp-bower');
 const gulpCss = require('./build/gulp-css');
 const gulpPug = require('./build/gulp-pug');
+const gulpSvg = require('./build/gulp-svg');
 
 // ------------------------------------------
 // If possible, remove these tasks completely:
@@ -28,6 +29,7 @@ gulp.task('bower', () => {
 
 gulpCss(gulp);
 gulpPug(gulp, config, isDevelopment);
+gulpSvg(gulp);
 require('./build/gulp')(gulp, config, isDevelopment);
 
 // ------------------------------------------
