@@ -1,14 +1,12 @@
 'use strict';
 
-const config = require('../../lib/config');
+const config = require('../lib/config');
 
 const keystone = require('keystone');
 const middleware = require('./middleware');
 const csrf = require('csurf');
 
 module.exports = {
-  type: 'cms',
-  module: keystone,
   initialize: (app) => {
     if(!config.keystone) {
       throw new Error('Missing a keystone object in the configuration');

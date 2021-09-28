@@ -2,12 +2,7 @@
 
 const union = require('lodash/union');
 const cip = require('../../services/cip');
-
-const plugins = require('../../pluginController');
-const motifTagController = plugins.getFirst('motif-tag-controller');
-if (!motifTagController) {
-  throw new Error('Expected at least one image controller!');
-}
+const motifTagController = require('../../controllers/motif-tagging');
 
 module.exports = (metadata, context) => {
   // Let's save some cost and bandwidth and not analyze the asset unless

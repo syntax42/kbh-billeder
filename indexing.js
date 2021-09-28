@@ -1,15 +1,12 @@
 'use strict';
 
+// TODO: Config must have customization set as very first because some modules depend on config being complete at require time (bad, shouldfix)
 const config = require('./lib/config');
-const plugins = require('./plugins');
-const collectionsOnlinePlugins = require('./pluginController');
-
 config.setCustomizationPath(__dirname);
-plugins.register();
+
+const indexingEngine = require('./indexing/run');
 
 function run(state) {
-  // Run the indexing with the first available indexing-engine
-  var indexingEngine = collectionsOnlinePlugins.getFirst('indexing-engine');
   return indexingEngine(state || {}).then(function() {
     console.log('\nAll done - good bye!');
     process.exit(0);

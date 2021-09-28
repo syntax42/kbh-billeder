@@ -19,6 +19,7 @@ const uglify = require('gulp-uglify');
 const uniqueFiles = require('gulp-unique-files');
 
 module.exports = (gulp, customizationPath) => {
+  // TODO: Config must have customization set as very first because some modules depend on config being complete at require time (bad, shouldfix)
   const config = require('../lib/config');
   config.setCustomizationPath(customizationPath);
 

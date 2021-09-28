@@ -62,7 +62,7 @@ const motifTagging = {
   },
   typeaheadSuggestions: text => {
     // The document service might be registered after this motif tagging service
-    const ds = require('../lib/services/documents');
+    const ds = require('../lib/services/elasticsearch');
     // Search for distinct tags in all relevant fields
     return ds.search({
       size: 0,

@@ -14,7 +14,7 @@
  * }
  */
 
-const ds = require('../lib/services/documents');
+const ds = require('../lib/services/elasticsearch');
 const config = require('../lib/config');
 const es = require('../lib/services/elasticsearch');
 

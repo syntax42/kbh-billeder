@@ -27,15 +27,14 @@ RUN node node_modules/.bin/gulp build
 # copy in server files
 COPY start.js .
 COPY server.js .
-COPY pluginController.js .
-COPY plugins plugins
 COPY controllers controllers
 COPY services services
 COPY indexing indexing
 COPY updates updates
-COPY routes routes
 COPY indexing.js .
 COPY asset-mapping.js .
+COPY auth.js .
+COPY keystone keystone
 
 # TODO - dont inject env during build time
 COPY .env .

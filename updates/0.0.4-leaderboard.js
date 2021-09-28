@@ -1,7 +1,7 @@
 'use strict';
 var Q = require('q');
 var _ = require('lodash');
-var keystone = require('../plugins/keystone').module;
+var keystone = require('keystone');
 
 var Page = keystone.list('Page');
 var MenuItem = keystone.list('Menu item');
