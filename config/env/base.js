@@ -11,8 +11,8 @@ var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH);
 tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm, '\n').split('\n');
 
 var cipCatalogs = require('../cip-catalogs.json');
-var generatedDir = path.join(__dirname, '..', '..', 'generated');
-var appDir = path.join(__dirname, '..', '..', 'app');
+var generatedDir = path.join(__dirname, '..', '..', 'assets-pipeline/generated');
+var appDir = path.join(__dirname, '..', '..', 'shared');
 
 let config = {
   allowRobots: true,

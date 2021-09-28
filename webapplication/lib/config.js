@@ -35,7 +35,7 @@ const defaults = {
       menus: ['menu-items'],
       frontpage: ['frontpage-items'],
       sections: ['galleries', 'gallery-items', 'jumbo-items', 'tag-clouds', 'map-views'],
-    }
+    },
   },
   root: rootPath,
   search: {
@@ -69,7 +69,7 @@ const defaults = {
 };
 
 function override(config) {
-  const defaultAppPath = path.normalize(path.join(__dirname, '..', 'app'));
+  const defaultAppPath = path.normalize(path.join(__dirname, '..', '..', 'assets-pipeline/app'));
   config.appPaths = _.concat(config.appPaths, defaultAppPath);
   if(config.features.keystone && config.siteTitle) {
     config.keystone.options.name = config.siteTitle;

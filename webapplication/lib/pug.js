@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 module.exports = function(config) {
   var pugResolvePlugin = require('./pug-resolve-plugin')(config);
-  var viewsPath = path.join(__dirname, '..', 'app', 'views', '*');
+  var viewsPath = path.join(__dirname, '..', '..', 'shared', 'views', '*');
 
   // Resolve non-absolute paths
   function replacePathMaybe(path) {
