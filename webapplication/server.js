@@ -1,12 +1,12 @@
 'use strict';
 
-const config = require('../lib/config');
-const ds = require('../lib/services/elasticsearch');
-const svgSpriteMiddleware = require('../lib/middleware/svg-sprite');
-const expressSetup = require('../lib/express');
-const helpers = require('../lib/helpers');
-const registerRoutes = require('../lib/routes');
-const registerErrorHandlers = require('../lib/errors');
+const config = require('./lib/config');
+const ds = require('./lib/services/elasticsearch');
+const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
+const expressSetup = require('./lib/express');
+const helpers = require('./lib/helpers');
+const registerRoutes = require('./lib/routes');
+const registerErrorHandlers = require('./lib/errors');
 const cip = require('./services/cip');
 
 const keystonePlugin = require('./keystone');
