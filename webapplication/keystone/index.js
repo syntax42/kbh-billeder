@@ -5,6 +5,7 @@ const config = require('../lib/config');
 const keystone = require('keystone');
 const middleware = require('./middleware');
 const csrf = require('csurf');
+const path = require('path');
 
 module.exports = {
   initialize: (app) => {
@@ -14,6 +15,8 @@ module.exports = {
 
     // Set up Keystone
     keystone.init(config.keystone.options);
+
+    keystone.set('updates', path.join(__dirname, 'updates'));
 
     if(config.cloudinaryUrl) {
       keystone.set('wysiwyg cloudinary images', true);
