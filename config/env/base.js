@@ -35,7 +35,7 @@ let config = {
   cache: {
     ttl: 60 * 5 // 5 minutes
   },
-  categoryBlacklist: require('../category-blacklist.js'),
+  categoryBlacklist: [],
   cip: {
     baseURL: process.env.CUMULUS_API_URL,
     username: process.env.CIP_USERNAME,
