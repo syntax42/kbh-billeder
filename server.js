@@ -47,7 +47,7 @@ const co = {
     const indices = Object.keys(config.types).map((type) => config.types[type].index);
 
     try {
-      await ensureElasticSearchConnection(ds, config, indices, 10, 1000);
+      await ensureElasticSearchConnection(ds, config, indices, 20, 2000);
     }
     catch(error) {
       console.log('Elasticsearch not found after several attempts.');
