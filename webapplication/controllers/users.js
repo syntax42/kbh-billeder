@@ -1,7 +1,7 @@
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
-const config = require('../shared/config');
+const config = require('../../shared/config');
 const _ = require('lodash');
-const helpers = require('../shared/helpers');
+const helpers = require('../../shared/helpers');
 
 exports.renderProfile = async (req, res) => {
   // Redirect to front-page if the user is not authorized.

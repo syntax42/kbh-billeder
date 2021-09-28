@@ -4,7 +4,7 @@ const config = require('../config');
 const fs = require('fs');
 const path = require('path');
 const waterStream = require('water-stream');
-const helpers = require('../../shared/helpers');
+const helpers = require('../../../shared/helpers');
 const imageController = require('../../controllers/image');
 const documentController = require('./document');
 

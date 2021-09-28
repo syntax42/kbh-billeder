@@ -6,7 +6,7 @@ const request = require('request');
 
 const config = require('../config');
 const ds = require('../services/elasticsearch');
-const helpers = require('../../shared/helpers');
+const helpers = require('../../../shared/helpers');
 const errorReporter = require('../services/error-reporter');
 const motifTagController = require('../../controllers/motif-tagging');
 

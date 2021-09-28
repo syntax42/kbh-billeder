@@ -1,4 +1,4 @@
-const config = require('../../shared/config');
+const config = require('../../../shared/config');
 const mailgun = require('../services/mailgun');
 
 exports.save = function save(req, res, next) {

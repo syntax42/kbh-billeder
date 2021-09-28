@@ -7,7 +7,7 @@
  */
 
 const Q = require('q');
-const es = require('../../../lib/services/elasticsearch');
+const es = require('../../lib/services/elasticsearch');
 const _ = require('lodash');
 
 module.exports = function(state) {

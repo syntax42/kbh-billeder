@@ -3,7 +3,7 @@
 const querystring = require('querystring');
 const ds = require('../services/elasticsearch');
 const config = require('../config');
-const helpers = require('../../shared/helpers');
+const helpers = require('../../../shared/helpers');
 
 const licenseMapping = require('../config').licenseMapping;
 

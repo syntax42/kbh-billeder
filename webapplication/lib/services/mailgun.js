@@ -1,4 +1,4 @@
-const config = require('../../shared/config');
+const config = require('../../../shared/config');
 const request = require('request');
 const assert = require('assert');
 

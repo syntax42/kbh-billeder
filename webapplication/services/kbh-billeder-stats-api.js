@@ -2,7 +2,7 @@
 const request = require('request');
 const config = require('../../shared/config');
 const assert = require('assert');
-const mailgun = require('../../lib/services/mailgun');
+const mailgun = require('../lib/services/mailgun');
 const _ = require('lodash');
 const NodeCache = require('node-cache');
 

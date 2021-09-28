@@ -1,5 +1,5 @@
 'use strict';
-const config = require('../../shared/config');
+const config = require('../../../shared/config');
 const assert = require('assert');
 const mailgun = require('./mailgun');
 

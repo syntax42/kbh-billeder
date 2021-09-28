@@ -6,8 +6,8 @@
 
 const _ = require('lodash');
 const cip = require('../../services/cip');
-const config = require('../../../lib/config');
-const es = require('../../../lib/services/elasticsearch');
+const config = require('../../lib/config');
+const es = require('../../lib/services/elasticsearch');
 const Q = require('q');
 
 function AssetIndexingError(catalogAlias, assetId, innerError) {

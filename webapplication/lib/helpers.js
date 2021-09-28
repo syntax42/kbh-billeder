@@ -2,7 +2,7 @@ const config = require('./config');
 const querystring = require('querystring');
 const _ = require('lodash');
 const moment = require('moment');
-const sharedHelpers = require('../shared/helpers');
+const sharedHelpers = require('../../shared/helpers');
 
 let helpers = {};
 

@@ -13,7 +13,7 @@ const config = require('./config');
 const indexing = require('../controllers/indexing');
 const users = require('../controllers/users');
 const keystonePlugin = require('../keystone');
-const authPlugin = require('../webapplication/auth');
+const authPlugin = require('../auth');
 
 /**
  * Application routes
