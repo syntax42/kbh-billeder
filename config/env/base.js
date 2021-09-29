@@ -12,14 +12,16 @@ tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm, '\n').split('
 
 var cipCatalogs = require('../cip-catalogs.json');
 var generatedDir = path.join(__dirname, '..', '..', 'assets-pipeline/generated');
-var appDir = path.join(__dirname, '..', '..', 'shared');
+var appDir = path.join(__dirname, '..', '..', 'assets-pipeline/app');
+var sharedDir = path.join(__dirname, '..', '..', 'shared');
 
 let config = {
   allowRobots: true,
   appDir: appDir,
   appPaths: [
     generatedDir,
-    appDir
+    appDir,
+    sharedDir,
   ],
   auth0: {
     domain: 'kbhbilleder.eu.auth0.com',
@@ -49,7 +51,7 @@ let config = {
       additionalFields: null, // Place additional fields to be indexed here ..
       restriction: null, // '{some-guid} is 3'
       inheritMetadata: false,
-      transformationsModule: path.join(__dirname, '..', '..', 'indexing', 'transformations')
+      transformationsModule: path.join(__dirname, '..', '..', 'webapplication/indexing/transformations'),
     },
     catalogs: cipCatalogs,
     client: {
