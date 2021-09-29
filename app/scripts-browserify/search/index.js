@@ -5,7 +5,7 @@
 const config = require('../../../shared/config');
 const helpers = require('../../../shared/helpers');
 
-const MapController = require('map-controller');
+const MapController = require('../map-controller');
 const _ = require('lodash');
 require('./search-freetext-form');
 
@@ -18,8 +18,8 @@ const sorting = require('./sorting');
 const navigator = require('../document/navigator');
 
 const templates = {
-  searchResultItem: require('views/includes/search-results-item'),
-  searchResultFirstSeries: require('views/includes/search-results-first-series'),
+  searchResultItem: require('@views/includes/search-results-item'),
+  searchResultFirstSeries: require('@views/includes/search-results-first-series'),f
 };
 
 // How many assets should be loaded at once?

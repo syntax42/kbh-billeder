@@ -6,8 +6,8 @@ const config = require('../../../shared/config');
  * This module handles the rendering of the search filter sidebar.
  */
 
-var template = require('views/includes/search-filter-sidebar');
-var chosenFilters = require('views/includes/search-filter-chosen-filters');
+var template = require('@views/includes/search-filter-sidebar');
+var chosenFilters = require('@views/includes/search-filter-chosen-filters');
 
 /**
  * Updates the search filter sidebar based on the selected and available filters

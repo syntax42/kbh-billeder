@@ -4,7 +4,7 @@ const config = require('../../../shared/config');
  * This module handles the rendering of the sorting
  */
 
-var template = require('views/includes/search-results-sorting');
+var template = require('@views/includes/search-results-sorting');
 
 /**
  * Updates the search filter sidebar based on the selected and available filters

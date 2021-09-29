@@ -4,7 +4,7 @@ const config = require('../../../shared/config');
  * This module handles the rendering of the results header
  */
 
-var template = require('views/includes/search-results-header');
+var template = require('@views/includes/search-results-header');
 
 /**
  * Updates the search filter sidebar based on the selected and available filters

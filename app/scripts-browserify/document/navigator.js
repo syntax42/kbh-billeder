@@ -8,7 +8,7 @@ const $left = $('a.document__navigator-arrow--left');
 const $right = $('a.document__navigator-arrow--right');
 const HIDDEN_CLASS = 'document__navigator-arrow--hidden';
 
-const navigatorPreview = require('views/includes/navigator-preview');
+const navigatorPreview = require('@views/includes/navigator-preview');
 
 const elasticsearch = require('elasticsearch');
 const es = new elasticsearch.Client({

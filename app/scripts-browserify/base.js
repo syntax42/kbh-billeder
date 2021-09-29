@@ -30,11 +30,6 @@ module.exports = options => {
     require('./document/motif-tagging');
   }
 
-  if(config.features.scrollToTop) {
-    require('./scroll-to-top');
-  }
-
-
   require('./sidebar-menu');
   require('./dropdown');
   require('./galleries');
