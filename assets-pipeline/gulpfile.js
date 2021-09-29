@@ -1,6 +1,6 @@
 // TODO: Config must have customization set as very first because some modules depend on config being complete at require time (bad, shouldfix)
 require('dotenv').config({silent: true});
-const config = require('../webapplication/lib/config');
+const config = require('../shared/config');
 config.setCustomizationPath(__dirname + '/..');
 
 var isDevelopment = process.env.NODE_ENV === 'development';

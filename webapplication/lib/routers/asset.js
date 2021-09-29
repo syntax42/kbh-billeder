@@ -1,6 +1,6 @@
 'use strict';
 var express = require('express');
-var config = require('../config');
+var config = require('../../../shared/config');
 var asset = require('../controllers/types/asset');
 var images = require('../controllers/images');
 var stream = require('../controllers/stream');

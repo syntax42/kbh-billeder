@@ -1,6 +1,6 @@
 'use strict';
 const assert = require('assert');
-const config = require('../config');
+const config = require('../../../shared/config');
 const fs = require('fs');
 const path = require('path');
 const waterStream = require('water-stream');

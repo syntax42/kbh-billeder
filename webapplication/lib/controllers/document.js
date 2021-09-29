@@ -1,7 +1,7 @@
 'use strict';
 
 const ds = require('../services/elasticsearch');
-const config = require('../config');
+const config = require('../../../shared/config');
 const helpers = require('../../../shared/helpers');
 const types = Object.keys(config.types);
 const _ = require('lodash');

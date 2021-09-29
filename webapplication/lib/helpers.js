@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('../../shared/config');
 const querystring = require('querystring');
 const _ = require('lodash');
 const moment = require('moment');

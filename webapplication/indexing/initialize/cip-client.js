@@ -1,7 +1,7 @@
 'use strict';
 
 const cip = require('../../services/cip');
-const config = require('../../../lib/config');
+const config = require('../../../shared/config');
 
 /**
  * This initializes the CIP client.

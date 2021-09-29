@@ -15,7 +15,7 @@
  */
 
 const ds = require('../lib/services/elasticsearch');
-const config = require('../lib/config');
+const config = require('../../shared/config');
 const es = require('../lib/services/elasticsearch');
 
 if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {

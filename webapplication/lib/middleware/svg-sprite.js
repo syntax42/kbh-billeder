@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const config = require('../config');
+const config = require('../../../shared/config');
 const SVG_SPRITE_PATH = path.join(
   config.generatedDir,
   'images',

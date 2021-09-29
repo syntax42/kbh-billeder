@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../lib/config');
+const config = require('../../../shared/config');
 
 /**
  * Running the indexing procedure in the catalog mode.

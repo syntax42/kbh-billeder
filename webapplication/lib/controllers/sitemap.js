@@ -2,10 +2,8 @@
 
 const querystring = require('querystring');
 const ds = require('../services/elasticsearch');
-const config = require('../config');
+const config = require('../../../shared/config');
 const helpers = require('../../../shared/helpers');
-
-const licenseMapping = require('../config').licenseMapping;
 
 const SITEMAP_ASSET_LIMIT = 1000;
 

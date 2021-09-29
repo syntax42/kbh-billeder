@@ -3,7 +3,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const config = require('./config');
+const config = require('../../shared/config');
 const pug = require('./pug')(config);
 
 const helpers = require('./helpers.js');

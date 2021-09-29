@@ -2,7 +2,7 @@
 
 var request = require('request');
 var querystring = require('querystring');
-var config = require('../config');
+var config = require('../../../shared/config');
 
 let defaultIndex;
 if(config.es && config.es.index) {

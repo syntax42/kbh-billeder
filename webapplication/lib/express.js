@@ -6,7 +6,7 @@ var compression = require('compression');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var cors = require('cors');
-var config = require('./config');
+var config = require('../../shared/config');
 var pug = require('./pug')(config);
 
 /**

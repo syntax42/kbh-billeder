@@ -6,7 +6,7 @@
 
 const _ = require('lodash');
 const cip = require('../../services/cip');
-const config = require('../../lib/config');
+const config = require('../../../shared/config');
 const es = require('../../lib/services/elasticsearch');
 const Q = require('q');
 

@@ -1,7 +1,7 @@
 const request = require('request');
-const helpers = require('../../../lib/helpers');
+const helpers = require('../../lib/helpers');
 
-const config = require('../../../lib/config');
+const config = require('../../../shared/config');
 const API_KEY = config.google.keys.unrestricted;
 
 const querystring = require('querystring');

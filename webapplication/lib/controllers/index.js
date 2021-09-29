@@ -2,7 +2,7 @@
 
 const keystone = require('keystone');
 const ds = require('../services/elasticsearch');
-const config = require('../config');
+const config = require('../../../shared/config');
 
 var helpers = {
   thousandsSeparator: function(number) {

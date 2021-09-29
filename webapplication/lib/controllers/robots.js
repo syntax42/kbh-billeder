@@ -1,6 +1,6 @@
 'use strict';
 
-var config = require('../config');
+var config = require('../../../shared/config');
 
 exports.robotsTxt = function(req, res) {
   res.type('text/plain');

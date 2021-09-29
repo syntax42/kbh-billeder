@@ -6,7 +6,7 @@
 
 const _ = require('lodash');
 const Q = require('q');
-const config = require('../../lib/config');
+const config = require('../../../shared/config');
 
 function transformMetadata(metadata, context, transformations) {
   return transformations.reduce((metadata, transformation) => {

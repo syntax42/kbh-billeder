@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../config');
+const config = require('../../../shared/config');
 const querystring = require('querystring');
 
 /**
