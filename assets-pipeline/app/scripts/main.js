@@ -1,15 +1,5 @@
 'use strict';
 
-function checkDateInput() {
-  var input = document.createElement('input');
-  input.setAttribute('type', 'date');
-
-  var notADateValue = 'not-a-date';
-  input.setAttribute('value', notADateValue);
-
-  return (input.value !== notADateValue);
-}
-
 function fbshareCurrentPage() {
   window.open('https://www.facebook.com/sharer/sharer.php?u=' + escape(window.location
     .href));
@@ -94,12 +84,6 @@ $(function() {
 
     return false;
   });
-
-  if (checkDateInput() === false) {
-    $('input[type="date"]').formatter({
-      'pattern': '{{99}}/{{99}}/{{9999}}'
-    });
-  }
 
   $('.asset[data-license-id=7] .image-wrap')
   .on('dragstart contextmenu', function(e) {

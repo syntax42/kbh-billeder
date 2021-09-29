@@ -19,3 +19,5 @@ if (!config.features.oldProfilePage ) {
 if(config.features.sitewidePassword) {
   require('./sitewide-password');
 }
+
+require('./formatter');
