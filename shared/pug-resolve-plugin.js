@@ -4,7 +4,7 @@ var pugLoad = require('pug-load');
 
 module.exports = function(config) {
   if(!config) {
-    config = require('../../shared/config');
+    config = require('./config');
   }
 
   var viewsPaths = config.appPaths.map((p) => {
