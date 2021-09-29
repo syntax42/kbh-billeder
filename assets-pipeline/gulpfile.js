@@ -33,7 +33,6 @@ var BOWER_SCRIPTS = [
   '/jquery/dist/jquery.js',
   '/typeahead.js/dist/typeahead.bundle.js',
   '/slick-carousel/slick/slick.min.js',
-  '/formatter.js/dist/jquery.formatter.min.js',
 ].map((script) => {
   return './bower_components' + script;
 });
