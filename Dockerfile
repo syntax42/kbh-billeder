@@ -17,12 +17,10 @@ COPY config.js .
 COPY shared shared
 COPY assets-pipeline assets-pipeline
 
-# Would prefer to not copy in webapplication before gulpfile run, but
-# webapplication/lib/config is used in assets-pipeline - should probably
-# be extracted to shared or something
-COPY webapplication webapplication
-
 RUN node node_modules/.bin/gulp build -f assets-pipeline/gulpfile.js
+
+# Copy in server files
+COPY webapplication webapplication
 
 # TODO - dont inject env during build time
 COPY .env .
