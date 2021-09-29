@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('./lib/config');
+const config = require('../shared/config');
 const ds = require('./lib/services/elasticsearch');
 const svgSpriteMiddleware = require('./lib/middleware/svg-sprite');
 const expressSetup = require('./lib/express');

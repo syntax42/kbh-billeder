@@ -1,6 +1,6 @@
 'use strict';
 
-var config = require('../config');
+var config = require('../../../shared/config');
 const ds = require('../services/elasticsearch');
 const errorReporter = require('../services/error-reporter');
 const _ = require('lodash');

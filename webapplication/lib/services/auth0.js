@@ -3,7 +3,7 @@ const AuthenticationClient = require('auth0').AuthenticationClient;
 const ManagementClient = require('auth0').ManagementClient;
 
 const assert = require('assert');
-const config = require('../config');
+const config = require('../../../shared/config');
 
 const schedule = require('node-schedule');
 const jwtDecode = require('jwt-decode');

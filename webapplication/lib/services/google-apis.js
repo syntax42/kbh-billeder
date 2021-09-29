@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const limiter = require('limiter');
 
-const config = require('../config');
+const config = require('../../../shared/config');
 const gcloudTranslate = require('@google-cloud/translate');
 const gcloudVision = require('@google-cloud/vision');
 

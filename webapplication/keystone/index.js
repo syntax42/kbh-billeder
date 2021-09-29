@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../lib/config');
+const config = require('../../shared/config');
 
 const keystone = require('keystone');
 const middleware = require('./middleware');

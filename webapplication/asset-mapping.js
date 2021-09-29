@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 
-const config = require('./lib/config');
+const config = require('../shared/config');
 
 var fields = config.types && config.types.asset && config.types.asset.fields;
 

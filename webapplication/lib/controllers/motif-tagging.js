@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Q = require('q');
 const request = require('request');
 
-const config = require('../config');
+const config = require('../../../shared/config');
 const ds = require('../services/elasticsearch');
 const helpers = require('../../../shared/helpers');
 const errorReporter = require('../services/error-reporter');

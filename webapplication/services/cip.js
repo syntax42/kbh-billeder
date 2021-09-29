@@ -4,7 +4,7 @@ var cip = require('cip-js');
 var Q = require('q');
 // Used to parse a UTF16-LE to UTF16-BE string.
 var Iconv  = require('iconv').Iconv;
-var config = require('../lib/config');
+var config = require('../../shared/config');
 var cipClient = new cip.CIPClient(config.cip.client);
 
 cipClient.initSession = function(forceInit) {

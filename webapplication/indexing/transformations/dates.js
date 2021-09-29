@@ -1,7 +1,7 @@
 'use strict';
 
 var DATA_REGEXP = new RegExp('\\d+');
-var config = require('../../../lib/config');
+var config = require('../../../shared/config');
 
 function zeroPad(num) {
   num = String(num);

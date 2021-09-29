@@ -1,5 +1,5 @@
 const es = require('../services/elasticsearch');
-const config = require('../config');
+const config = require('../../../shared/config');
 
 module.exports.get = (req, res, next) => {
   const {seriesUrl} = req.params;

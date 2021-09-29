@@ -7,7 +7,7 @@
  */
 
 const es = require('../../lib/services/elasticsearch');
-const config = require('../../lib/config');
+const config = require('../../../shared/config');
 
 module.exports = (state) => {
   // Save the index in the context

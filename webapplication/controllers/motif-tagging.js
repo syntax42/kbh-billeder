@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 const assert = require('assert');
-const config = require('../lib/config');
+const config = require('../../shared/config');
 const cip = require('../services/cip');
 const kbhStatsApi = require('../services/kbh-billeder-stats-api');
 const indexController = require('./indexing');
