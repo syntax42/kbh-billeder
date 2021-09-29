@@ -1,6 +1,6 @@
 'use strict';
 
-var assetMapping = require('../../../asset-mapping');
+var assetMapping = require('../../asset-mapping');
 
 module.exports = (metadata, context) => {
   var transformedMetadata = assetMapping.transform(metadata);

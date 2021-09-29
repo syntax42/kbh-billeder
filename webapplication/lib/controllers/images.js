@@ -25,7 +25,7 @@ Object.keys(config.watermarks || {}).forEach((catalog) => {
   WATERMARK_BUFFERS[catalog] = fs.readFileSync(path);
 });
 
-const IMAGES_PATH = path.join(config.customizationPath, 'app', 'images');
+const IMAGES_PATH = path.join(__dirname, '..', '..', '..', 'assets-pipeline/app/images');
 const SMALL_FALLBACK_PATH = path.join(IMAGES_PATH, 'fallback-small.png');
 const LARGE_FALLBACK_PATH = path.join(IMAGES_PATH, 'fallback-large.png');
 assert(fs.existsSync(SMALL_FALLBACK_PATH), 'Missing a small fallback image');
