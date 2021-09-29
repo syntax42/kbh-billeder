@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  let pug = require('../../webapplication/lib/pug')(config);
+  let pug = require('../../shared/pug')(config);
   let prefix = `
     const config = require('@shared/config');
   `;
