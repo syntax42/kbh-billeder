@@ -51,7 +51,7 @@ let config = {
       additionalFields: null, // Place additional fields to be indexed here ..
       restriction: null, // '{some-guid} is 3'
       inheritMetadata: false,
-      transformationsModule: path.join(__dirname, '..', '..', 'webapplication/indexing/transformations'),
+      transformationsModule: path.join(__dirname, '..', '..', '..', 'webapplication/indexing/transformations'),
     },
     catalogs: cipCatalogs,
     client: {
