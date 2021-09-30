@@ -3,6 +3,8 @@ Dockerfile
 .git
 .gitignore
 deployment
-node_modules
+*/node_modules
+assets-pipeline/generated
+assets-pipeline/bower_components
 docker-compose
 .github
