@@ -2,7 +2,7 @@
   "name": "webapplication",
   "scripts": {
     "start": "nodemon -w . -w ../shared start.js",
-    "index": "node ./webapplication/indexing.js"
+    "index": "node indexing.js"
   },
   "dependencies": {
     "q": "~1.5.1",
