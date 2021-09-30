@@ -17,10 +17,9 @@ services:
   node:
     build:
       context: ..
-    command: npm run start:dev
+    command: npm start
     ports:
       - 9000:9000
-      - 9229:9229
     volumes:
       - ..:/app
     depends_on:
