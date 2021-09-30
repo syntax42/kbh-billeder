@@ -102,7 +102,7 @@ config.reload = () => {
   if(!config.customizationPath) {
     throw new Error('Call setCustomizationPath before re-loading');
   }
-  let configPath = path.join(config.customizationPath, 'config.js');
+  let configPath = path.join(config.customizationPath, 'shared/env-config.js');
   if(!fs.existsSync(configPath)) {
     throw new Error('Expected a configuration here: ', configPath);
   }
