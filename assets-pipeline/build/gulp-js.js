@@ -26,13 +26,11 @@ module.exports = (gulp, config, isDevelopment, SCRIPTS_ALL) => {
           'production': {
             'presets': [
               'babel-preset-latest',
-              //'babel-preset-babili'
             ]
           },
           'beta': {
             'presets': [
               'babel-preset-latest',
-              //'babel-preset-babili'
             ]
           }
         },

@@ -11,9 +11,9 @@ var tagsBlacklist = fs.readFileSync(TAGS_BLACKLIST_PATH);
 tagsBlacklist = tagsBlacklist.toString().replace(/(\r\n|\n|\r)/gm, '\n').split('\n');
 
 var cipCatalogs = require('../cip-catalogs.json');
-var generatedDir = path.join(__dirname, '..', '..', 'assets-pipeline/generated');
-var appDir = path.join(__dirname, '..', '..', 'assets-pipeline/app');
-var sharedDir = path.join(__dirname, '..', '..', 'shared');
+var generatedDir = path.join(__dirname, '..', '..', '..', 'assets-pipeline/generated');
+var appDir = path.join(__dirname, '..', '..', '..', 'assets-pipeline/app');
+var sharedDir = path.join(__dirname, '..', '..');
 
 let config = {
   allowRobots: true,
@@ -51,7 +51,7 @@ let config = {
       additionalFields: null, // Place additional fields to be indexed here ..
       restriction: null, // '{some-guid} is 3'
       inheritMetadata: false,
-      transformationsModule: path.join(__dirname, '..', '..', 'webapplication/indexing/transformations'),
+      transformationsModule: path.join(__dirname, '..', '..', '..', 'webapplication/indexing/transformations'),
     },
     catalogs: cipCatalogs,
     client: {
