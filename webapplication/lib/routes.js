@@ -11,6 +11,7 @@ const doc = require('./controllers/document');
 const series = require('./controllers/series');
 const config = require('../../shared/config');
 const indexing = require('../controllers/indexing');
+const indexingEngine = require('../indexing/run');
 const users = require('../controllers/users');
 const keystonePlugin = require('../keystone');
 const authPlugin = require('../auth');
@@ -35,7 +36,7 @@ module.exports = function(app) {
       return res.send('Accesskey required.');
     }
 
-    indexing({
+    indexingEngine({
       mode: 'recent',
       reference: req.query.timeframe
     });
@@ -48,7 +49,7 @@ module.exports = function(app) {
       return res.send('Accesskey required.');
     }
 
-    indexing({mode: 'all'});
+    indexingEngine({mode: 'all'});
     return res.send('Full reindexing started.');
   });
 
