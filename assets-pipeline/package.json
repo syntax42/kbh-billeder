@@ -29,6 +29,8 @@
     "gulp-unique-files": "^0.2.0",
     "hammerjs": "^2.0.8",
     "pug": "^3.0.2",
+    "request": "^2.85.0",
+    "babel-preset-latest": "^6.16.0",
     "vinyl-source-stream": "^2.0.0"
   }
 }
