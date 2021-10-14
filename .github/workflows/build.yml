@@ -1,7 +1,9 @@
 name: Build and Deploy to GKE
 
 on:
-- push
+  push:
+    tags-ignore:
+    - *
 
 env:
   GKE_PROJECT: kbh-billeder
@@ -18,6 +20,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Setup gcloud
       uses: google-github-actions/setup-gcloud@v0.2.0
