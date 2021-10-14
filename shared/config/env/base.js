@@ -130,7 +130,7 @@ let config = {
   },
   feedback: {
     maxLength: 600,
-    recipients: 'kbhbilleder@kff.kk.dk',
+    recipients: 'kbhbilleder@kff.kk.dk, asbjoern@deranged.dk, BW2h@kk.dk',
     fromAddress: 'Feedback@kbhbilleder.dk'
   },
   generatedDir: generatedDir,
