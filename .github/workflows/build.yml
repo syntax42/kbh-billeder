@@ -38,12 +38,9 @@ jobs:
 
     - name: Build image
       run: |-
-        cat << EOF > .env
-        DISABLE_NOTIFIER="true"
-        NODE_ENV=beta
-        EOF
         docker build \
           --tag "$CONTAINER_REGISTRY/$GKE_PROJECT/$IMAGE:$GITHUB_SHA" \
+          --tag "$CONTAINER_REGISTRY/$GKE_PROJECT/$IMAGE:`git describe --always --tags --dirty`"
           --tag "$CONTAINER_REGISTRY/$GKE_PROJECT/$IMAGE:latest" \
           .
 
