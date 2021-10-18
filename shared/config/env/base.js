@@ -198,7 +198,8 @@ let config = {
     'kbh-museum': path.join(appDir, 'images', 'watermarks', 'kbh-museum.png'),
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
     'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png'),
-    'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png')
+    'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png'),
+    'danmark-paa-film': path.join(appDir, 'images', 'watermarks', 'danmark-paa-film.png'),
   },
   thumbnailSize: 500
 };
