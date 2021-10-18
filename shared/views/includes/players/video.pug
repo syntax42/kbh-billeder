@@ -1,7 +1,8 @@
 - let downloadURL = helpers.getStreamURL(metadata);
+- const baseCumulusVideoUrl = "https://cumulus.kbhbilleder.dk:8443/avm/embed";
 iframe(
   class="asset__video"
-  src=" http://demo.attention.dk/avm/embed/Demo/CBtTXJ3w"
+  src=baseCumulusVideoUrl + downloadURL
 )
   | Undskyld, din browser understøtter ikke dette videoformat du kan
   a(href=downloadURL) downloaded video
