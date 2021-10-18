@@ -219,5 +219,11 @@
   }, {
     "cumulusKey": "{0e31f299-49e8-4baa-a69c-a6a4f2054ce5}",
     "short": "zoom_tile_id"
+  }, {
+    "cumulusKey": "{8a7ffc91-2ad9-4ad6-a5a7-30dd56958ca6}",
+    "short": "instructor"
+  }, {
+    "cumulusKey": "{1b0bb233-0d9a-4656-acaf-0cf88a811001}",
+    "short": "producer"
   }
 ]

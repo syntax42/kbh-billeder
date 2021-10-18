@@ -203,6 +203,8 @@ module.exports = function(parameters) {
                 'street_number',
                 'tags',
                 'zipcode',
+                'producer',
+                'instructor'
               ],
             }
           });
