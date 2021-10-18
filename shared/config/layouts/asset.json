@@ -150,13 +150,22 @@
         {
           "title": "Art",
           "template": "= kind"
-        }, {
+        }, 
+        {
           "title": "Bygning opført",
           "type": "date-interval",
           "fields": {
             "from": "constructed_from",
             "to": "constructed_to"
           }
+        },
+        {
+          "title": "Instruktør",
+          "template": "= instructor"
+        },
+        {
+          "title": "Producent/Selskab",
+          "template": "= producer"
         }
       ]
     },
