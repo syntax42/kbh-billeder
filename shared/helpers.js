@@ -15,6 +15,8 @@ const REQUIRED_HELPERS = [
   'isWatermarkRequired'
 ];
 
+const UrlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/;
+
 helpers.capitalizeFirstLetter = string => {
   if(typeof(string) === 'string') {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -305,14 +307,37 @@ helpers.documentTitle = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(title);
 };
 
-helpers.documentDescription = (metadata, fallback) => {
-  let description = metadata.description || fallback || '';
-  return helpers.capitalizeFirstLetter(description);
-};
+function linkify(sentence, url) {
+  const splittedSentence = sentence.split(url);
+  const clickAbleLink = `<a href="${url}">${url}</a>`;
+  if(!splittedSentence[1]) {
+    return splittedSentence[0] + clickAbleLink;
+  }
+  return splittedSentence[0] + clickAbleLink + splittedSentence[1];
+}
 
-helpers.documentSecondaryDescription = (metadata, fallback) => {
-  let description = metadata.secondary_description || fallback || '';
-  return helpers.capitalizeFirstLetter(description);
+function descriptionWithLink(description) {
+  const sentenceArray = description.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+  const sentenceArrayWithLinks = sentenceArray.map((sentence) => {
+    const urlMatches = sentence.match(UrlRegex);
+    if(!urlMatches || urlMatches.length == 0) {
+      return sentence;
+    }
+    const url = urlMatches[0];
+    return linkify(sentence, url);
+  });
+  return sentenceArrayWithLinks.join(" ");
+}
+
+helpers.documentDescription = (description) => {
+  if(!description) {
+    return "";
+  }
+  const urlMatches = description.match(UrlRegex);
+  if(!urlMatches || urlMatches.length == 0) {
+    return helpers.capitalizeFirstLetter(description);
+  }
+  return helpers.capitalizeFirstLetter(descriptionWithLink(description));
 };
 
 helpers.documentLicense = (metadata) => {
@@ -386,7 +411,7 @@ helpers.determinePlayers = metadata => {
     type: 'image',
     thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
     title: helpers.documentTitle(metadata),
-    description: helpers.documentDescription(metadata),
+    description: helpers.documentDescription(metadata.description),
     tags: helpers.motifTagging.getTags(metadata)
   });
 
@@ -414,7 +439,7 @@ helpers.determinePlayers = metadata => {
 helpers.generateSitemapElements = (req, metadata) => {
   // Pull out the data we need for the _image_.
   const documentTitle = helpers.documentTitle(metadata);
-  const documentDescription = helpers.documentDescription(metadata);
+  const documentDescription = helpers.documentDescription(metadata.description);
   const relativeThumbnailUrl = helpers.getThumbnailURL(metadata, 2000, 'bottom-right');
   const thumbnailUrl = helpers.getAbsoluteURL(req, relativeThumbnailUrl);
   const license = helpers.licenseMapped(metadata);
