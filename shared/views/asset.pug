@@ -13,7 +13,7 @@ block document__section-1-metadata
       h1.document__title= documentTitle
     if(documentDescription)
       p.sr-only Beskrivelse
-      p.document__description= documentDescription
+      p.document__description!= documentDescription
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
