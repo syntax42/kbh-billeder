@@ -18,7 +18,7 @@ include ../mixins/tag
     a.u-row.search-results-first-series__title(href=documentURL, target=target)
       h2= helpers.documentTitle(metadata)
       .chip.chip--white-outline=`${metadata.assets.length} billeder`
-    a.search-results-first-series__description(href=documentURL, target=target)= helpers.documentDescription(metadata)
+    a.search-results-first-series__description(href=documentURL, target=target)= helpers.documentDescription(metadata.description)
     table
       tbody
         tr

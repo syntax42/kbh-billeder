@@ -6,4 +6,4 @@ a(href=documentURL target=target data-id=item.id).user-contributions__item.col-x
     .search-results-item__squared-container
         img(src=thumbnailURL, alt=altText).search-results-item__squared-image.object-fit
     h2.search-results-item__title= helpers.documentTitle(item)
-    p.search-results-item__description= helpers.documentDescription(item) || "\u00A0"
+    p.search-results-item__description= helpers.documentDescription(item.description) || "\u00A0"
