@@ -15,7 +15,7 @@ const REQUIRED_HELPERS = [
   'isWatermarkRequired'
 ];
 
-const UrlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/;
+const UrlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/g;
 
 helpers.capitalizeFirstLetter = string => {
   if(typeof(string) === 'string') {
@@ -307,26 +307,17 @@ helpers.documentTitle = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(title);
 };
 
-function linkify(sentence, url) {
-  const splittedSentence = sentence.split(url);
-  const clickAbleLink = `<a href="${url}">${url}</a>`;
-  if(!splittedSentence[1]) {
-    return splittedSentence[0] + clickAbleLink;
-  }
-  return splittedSentence[0] + clickAbleLink + splittedSentence[1];
-}
-
-function descriptionWithLink(description) {
-  const sentenceArray = description.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
-  const sentenceArrayWithLinks = sentenceArray.map((sentence) => {
-    const urlMatches = sentence.match(UrlRegex);
-    if(!urlMatches || urlMatches.length == 0) {
-      return sentence;
-    }
-    const url = urlMatches[0];
-    return linkify(sentence, url);
+function linkifyUrlsInDescription(description, urlMatches) {
+  const descriptionArray = [];
+  let cursor = 0;
+  urlMatches.forEach((url) => {
+    const indexOfUrl = description.indexOf(url);
+    const descriptionWihtOutUrl = description.substring(cursor, indexOfUrl);
+    descriptionArray.push(descriptionWihtOutUrl);
+    descriptionArray.push(`<a href="${url}">${url}</a>`)
+    cursor = indexOfUrl + url.length;
   });
-  return sentenceArrayWithLinks.join(" ");
+  return descriptionArray.join("");
 }
 
 helpers.documentDescription = (description) => {
@@ -337,7 +328,7 @@ helpers.documentDescription = (description) => {
   if(!urlMatches || urlMatches.length == 0) {
     return helpers.capitalizeFirstLetter(description);
   }
-  return helpers.capitalizeFirstLetter(descriptionWithLink(description));
+  return helpers.capitalizeFirstLetter(linkifyUrlsInDescription(description, urlMatches));
 };
 
 helpers.documentLicense = (metadata) => {
