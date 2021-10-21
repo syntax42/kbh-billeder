@@ -15,7 +15,7 @@ const REQUIRED_HELPERS = [
   'isWatermarkRequired'
 ];
 
-const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/g;
+const urlRegex = /(http|https):\/\/[^\s]+/g;
 
 helpers.capitalizeFirstLetter = string => {
   if(typeof(string) === 'string') {
@@ -307,7 +307,12 @@ helpers.documentTitle = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(title);
 };
 
-function linkifyUrlsInDescription(description, urlMatches) {
+function linkifyUrlsInDescription(description) {
+  const urlMatches = description.match(urlRegex);
+  if(!urlMatches || urlMatches.length == 0) {
+    return description;
+  }
+
   const descriptionArray = [];
   let cursor = 0;
   urlMatches.forEach((url) => {
@@ -324,11 +329,8 @@ helpers.documentDescription = (description) => {
   if(!description) {
     return "";
   }
-  const urlMatches = description.match(urlRegex);
-  if(!urlMatches || urlMatches.length == 0) {
-    return helpers.capitalizeFirstLetter(description);
-  }
-  return helpers.capitalizeFirstLetter(linkifyUrlsInDescription(description, urlMatches));
+
+  return helpers.capitalizeFirstLetter(linkifyUrlsInDescription(description));
 };
 
 helpers.documentLicense = (metadata) => {
