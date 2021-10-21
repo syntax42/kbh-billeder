@@ -15,7 +15,7 @@ const REQUIRED_HELPERS = [
   'isWatermarkRequired'
 ];
 
-const UrlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/g;
+const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/g;
 
 helpers.capitalizeFirstLetter = string => {
   if(typeof(string) === 'string') {
@@ -324,7 +324,7 @@ helpers.documentDescription = (description) => {
   if(!description) {
     return "";
   }
-  const urlMatches = description.match(UrlRegex);
+  const urlMatches = description.match(urlRegex);
   if(!urlMatches || urlMatches.length == 0) {
     return helpers.capitalizeFirstLetter(description);
   }
