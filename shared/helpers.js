@@ -307,22 +307,22 @@ helpers.documentTitle = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(title);
 };
 
-function linkifyUrlsInDescription(description) {
-  const urlMatches = description.match(urlRegex);
+function linkifyUrlsInText(text) {
+  const urlMatches = text.match(urlRegex);
   if(!urlMatches || urlMatches.length == 0) {
-    return description;
+    return text;
   }
 
-  const descriptionArray = [];
+  const textChunks = [];
   let cursor = 0;
   urlMatches.forEach((url) => {
-    const indexOfUrl = description.indexOf(url);
-    const descriptionWihtOutUrl = description.substring(cursor, indexOfUrl);
-    descriptionArray.push(descriptionWihtOutUrl);
-    descriptionArray.push(`<a href="${url}">${url}</a>`)
+    const indexOfUrl = text.indexOf(url);
+    const textBetweenUrls = text.substring(cursor, indexOfUrl);
+    textChunks.push(textBetweenUrls);
+    textChunks.push(`<a href="${url}">${url}</a>`)
     cursor = indexOfUrl + url.length;
   });
-  return descriptionArray.join("");
+  return textChunks.join("");
 }
 
 helpers.documentDescription = (description) => {
@@ -330,7 +330,7 @@ helpers.documentDescription = (description) => {
     return "";
   }
 
-  return helpers.capitalizeFirstLetter(linkifyUrlsInDescription(description));
+  return helpers.capitalizeFirstLetter(linkifyUrlsInText(description));
 };
 
 helpers.documentLicense = (metadata) => {
