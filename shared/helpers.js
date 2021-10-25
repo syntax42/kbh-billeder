@@ -15,6 +15,8 @@ const REQUIRED_HELPERS = [
   'isWatermarkRequired'
 ];
 
+const urlRegex = /(http|https):\/\/[^\s]+/g;
+
 helpers.capitalizeFirstLetter = string => {
   if(typeof(string) === 'string') {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -305,14 +307,30 @@ helpers.documentTitle = (metadata, fallback) => {
   return helpers.capitalizeFirstLetter(title);
 };
 
-helpers.documentDescription = (metadata, fallback) => {
-  let description = metadata.description || fallback || '';
-  return helpers.capitalizeFirstLetter(description);
-};
+function linkifyUrlsInText(text) {
+  const urlMatches = text.match(urlRegex);
+  if(!urlMatches || urlMatches.length == 0) {
+    return text;
+  }
 
-helpers.documentSecondaryDescription = (metadata, fallback) => {
-  let description = metadata.secondary_description || fallback || '';
-  return helpers.capitalizeFirstLetter(description);
+  const textChunks = [];
+  let cursor = 0;
+  urlMatches.forEach((url) => {
+    const indexOfUrl = text.indexOf(url);
+    const textBetweenUrls = text.substring(cursor, indexOfUrl);
+    textChunks.push(textBetweenUrls);
+    textChunks.push(`<a href="${url}">${url}</a>`)
+    cursor = indexOfUrl + url.length;
+  });
+  return textChunks.join("");
+}
+
+helpers.documentDescription = (description) => {
+  if(!description) {
+    return "";
+  }
+
+  return helpers.capitalizeFirstLetter(linkifyUrlsInText(description));
 };
 
 helpers.documentLicense = (metadata) => {
@@ -386,7 +404,7 @@ helpers.determinePlayers = metadata => {
     type: 'image',
     thumbnailUrl: helpers.getThumbnailURL(metadata, 2000, 'bottom-right'),
     title: helpers.documentTitle(metadata),
-    description: helpers.documentDescription(metadata),
+    description: helpers.documentDescription(metadata.description),
     tags: helpers.motifTagging.getTags(metadata)
   });
 
@@ -414,7 +432,7 @@ helpers.determinePlayers = metadata => {
 helpers.generateSitemapElements = (req, metadata) => {
   // Pull out the data we need for the _image_.
   const documentTitle = helpers.documentTitle(metadata);
-  const documentDescription = helpers.documentDescription(metadata);
+  const documentDescription = helpers.documentDescription(metadata.description);
   const relativeThumbnailUrl = helpers.getThumbnailURL(metadata, 2000, 'bottom-right');
   const thumbnailUrl = helpers.getAbsoluteURL(req, relativeThumbnailUrl);
   const license = helpers.licenseMapped(metadata);

@@ -18,5 +18,5 @@ a.search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1(href=isSeries
         if mediaType === 'video'
           +icon('play')
   h2.search-results-item__title= helpers.documentTitle(metadata)
-  p.search-results-item__description= helpers.documentDescription(metadata)
+  p.search-results-item__description= helpers.documentDescription(metadata.description)
   p.search-results-item__period= creationTime ? creationTime : creationPeriod

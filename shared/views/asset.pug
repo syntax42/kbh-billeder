@@ -2,8 +2,8 @@ extends assetParent
 
 block document__section-1-metadata
   - const documentTitle = helpers.documentTitle(metadata);
-  - const documentDescription = helpers.documentDescription(metadata);
-  - const secondaryDescription = helpers.documentSecondaryDescription(metadata);
+  - const documentDescription = helpers.documentDescription(metadata.description);
+  - const secondaryDescription = helpers.documentDescription(metadata.secondary_description);
   .document__section-1-metadata.col-xs-12.col-md-5.col-md-pull-7
     div.document__back-link
       a(onclick='window.history.back()')
@@ -13,7 +13,7 @@ block document__section-1-metadata
       h1.document__title= documentTitle
     if(documentDescription)
       p.sr-only Beskrivelse
-      p.document__description= documentDescription
+      p.document__description!= documentDescription
     if(secondaryDescription)
       p= secondaryDescription
     != assetSection('time', metadata)
