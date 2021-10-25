@@ -8,10 +8,11 @@ const config = require('../../../shared/config');
 
 module.exports.generateQueries = state => {
   return Object.keys(config.cip.catalogs)
-  .map(catalogAlias => {
-    return {
-      catalogAlias,
-      query: 'ID *'
-    };
-  });
+    .map(catalogAlias => {
+      console.log("catalogAlias", catalogAlias);
+      return {
+        catalogAlias,
+        query: 'ID *'
+      };
+    });
 };
