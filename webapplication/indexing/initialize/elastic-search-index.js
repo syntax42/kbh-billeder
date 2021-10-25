@@ -30,22 +30,22 @@ module.exports = (state) => {
     return es.indices.get({
       index: state.context.index
     })
-    .then((index) => {
-      if(!index[config.es.index].mappings.series) {
-        const seriesMapping = getSeriesMapping();
-        return es.indices.putMapping({
-          index: state.context.index,
-          type: 'series',
-          body: seriesMapping
-        })
-          .then(response => {
-            console.log("Series mapping successfully added to index", response);
-            return state;
+      .then((index) => {
+        if(!index[config.es.index].mappings.series) {
+          const seriesMapping = getSeriesMapping();
+          return es.indices.putMapping({
+            index: state.context.index,
+            type: 'series',
+            body: seriesMapping
           })
-          .catch(error => console.error("series error: ", error));
-      }
-      return state;
-    });
+            .then(response => {
+              console.log('Series mapping successfully added to index', response);
+              return state;
+            })
+            .catch(error => console.error("series error: ", error));
+        }
+        return state;
+      });
   }
 
   function createIndex() {
