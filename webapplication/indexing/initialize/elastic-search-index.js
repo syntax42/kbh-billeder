@@ -24,7 +24,7 @@ module.exports = (state) => {
       }
       //else we create the index
       return createIndex();
-    })
+    });
 
   function ensureMappingsExists() {
     return es.indices.get({
