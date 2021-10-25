@@ -25,10 +25,10 @@ RUN apt-get update && apt-get install -y \
     libgif-dev \
     && rm -rf /var/lib/apt/lists/* # Keeps the image size down
 
-# install dependencies
-COPY shared shared
-RUN npm install --prefix shared
+# copy shared including its depedendencies
+COPY --from=0 /build/shared /app/shared
 
+# install dependencies
 COPY webapplication webapplication
 RUN npm install --prefix webapplication
 
