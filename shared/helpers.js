@@ -107,6 +107,28 @@ helpers.getStreamURL = (metadata, size) => {
   return path.join('/');
 };
 
+helpers.getVideoUrl = (metadata) => {
+  // This function deals with the relatively dirty data we get from Cumulus,
+  // where the video_embed_url field contains just a string to be parsed.
+  // Additionally, the string (may?) contain http URLs that do not actually
+  // work as https is enforced, so we need to coerce them into https URLs.
+  // And, as a final thing, the URLs do not include the port number required
+  // (8443). It feels a bit bad to hardcode all this here now, but it will be
+  // good enough while we work on a better integration.
+
+  const videoData = metadata.video_embed_url;
+  if(videoData.includes('Direct Preview URL disabled')) {
+    return null;
+  }
+
+  const mp4Match = videoData.match(/^MP4[\-\s]*All:\s*https?:\/\/([^\/]+)([^\s]+)/i);
+  if(!mp4Match) {
+    return null;
+  }
+
+  return `https://${mp4Match[1]}:8443${mp4Match[2]}`;
+};
+
 helpers.getAudioURL = (metadata, size) => {
   let path = [
     helpers.getDocumentURL(metadata),

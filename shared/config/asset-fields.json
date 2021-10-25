@@ -225,5 +225,8 @@
   }, {
     "cumulusKey": "{1b0bb233-0d9a-4656-acaf-0cf88a811001}",
     "short": "producer"
+  }, {
+    "cumulusKey": "{20ffa187-20e6-4650-8b7b-b150fe64cd37}",
+    "short": "video_embed_url"
   }
 ]
