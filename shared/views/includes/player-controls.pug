@@ -5,6 +5,10 @@ block document__player-controls
   - const downloadText = isDownloadable ? 'Download' : 'Download ikke tilgængelig'
   - const hasBacksideAsset = helpers.hasBacksideAsset(metadata);
   - const getZoomTilesId = helpers.getZoomTilesId(metadata);
+  - const playerType = helpers.determinePlayers(metadata)[0].type;
+  - const playerWord = {'image': 'billede', 'video': 'video', 'audio': 'optagelse'}[playerType];
+  - const zoomInText = 'Forstør ' + playerWord;
+  - const zoomOutText = 'Formindsk ' + playerWord;
 
   if getZoomTilesId
     button(data-action='toggle-tiled-zoom').zoom-btn.btn.btn-transparent.btn-no-shadow.document__player-controls__rotate--item.document__player-controls__rotate--backside.document__player-controls__rotate--item--active
@@ -14,14 +18,14 @@ block document__player-controls
     button(data-action='toggle-expandable' type='button').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow.document__player-controls__rotate--item.document__player-controls__rotate--front
       +icon('zoom-in', 'zoom-in')
       +icon('zoom-out', 'zoom-out')
-      span.zoom-in Forstør billede
-      span.zoom-out Formindsk billede
+      span.zoom-in= zoomInText
+      span.zoom-out= zoomOutText
   else
     button(data-action='toggle-expandable' type='button').hidden-xs.hidden-sm.zoom-btn.btn.btn-transparent.btn-no-shadow
       +icon('zoom-in', 'zoom-in')
       +icon('zoom-out', 'zoom-out')
-      span.zoom-in Forstør billede
-      span.zoom-out Formindsk billede
+      span.zoom-in= zoomInText
+      span.zoom-out= zoomOutText
 
   button(data-action="download:show-overlay", aria-disabled= isDownloadable ? 'false' : 'true', class='document__player-controls__actions btn btn-transparent btn-no-shadow' type='button')
     +icon('download')
