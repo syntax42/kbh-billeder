@@ -186,14 +186,7 @@ module.exports.asset = function(req, res, next) {
   } else if(catalogName) {
     // No slash in the id - the catalog should be read from .collection
     catalogAlias = Object.keys(config.cip.catalogs)
-      .reduce(function(result, alias) {
-        const candidateCatalogName = config.cip.catalogs[alias];
-        if(candidateCatalogName === catalogName) {
-          return alias;
-        } else {
-          return result;
-        }
-      }, null);
+      .find((alias) => catalogName === config.cip.catalogs[alias]);
   }
 
   if (!catalogAlias) {

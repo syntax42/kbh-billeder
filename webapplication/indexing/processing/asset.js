@@ -35,13 +35,13 @@ function processAsset(metadata, assetSeries, context, transformations) {
   }
   // Perform transformations.
   return transformMetadata(metadata, context, transformations)
-  .then(metadata => {
-    return {
-      metadata,
-      assetSeries,
-      context
-    };
-  });
+    .then(metadata => {
+      return {
+        metadata,
+        assetSeries,
+        context
+      };
+    });
 }
 
 module.exports = processAsset;

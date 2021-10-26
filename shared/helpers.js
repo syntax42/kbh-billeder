@@ -99,7 +99,7 @@ helpers.getDownloadURL = (metadata, size) => {
   return path.join('/');
 };
 
-helpers.getStreamURL = (metadata, size) => {
+helpers.getStreamURL = (metadata) => {
   let path = [
     helpers.getDocumentURL(metadata),
     'stream'

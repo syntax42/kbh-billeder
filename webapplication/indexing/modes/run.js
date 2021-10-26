@@ -32,11 +32,11 @@ module.exports = state => {
       // Process the query, hang onto the indexed asset ids and exceptions
       // and return the state
       return processQuery(state, query)
-      .then(({ indexedIds, errors }) => {
-        query.indexedIds = indexedIds;
-        query.errors = errors;
-        return state;
-      });
+        .then(({indexedIds, errors}) => {
+          query.indexedIds = indexedIds;
+          query.errors = errors;
+          return state;
+        });
     });
   }, new Q(state)).then((state) => {
     console.log('Finished processing!');
