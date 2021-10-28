@@ -9,7 +9,10 @@
     "postinstall": "npm run install:shared; npm run install:assets-pipeline; npm run install:webapplication",
     "install:shared": "npm i --prefix shared",
     "install:assets-pipeline": "npm i --prefix assets-pipeline",
-    "install:webapplication": "npm i --prefix webapplication"
+    "install:webapplication": "npm i --prefix webapplication",
+
+    "docker-compose:exec": "docker-compose -f docker-compose/docker-compose.yaml exec node",
+    "docker-compose:index:all": "npm run docker-compose:exec -- node webapplication/indexing all"
   },
   "repository": {
     "type": "git",
