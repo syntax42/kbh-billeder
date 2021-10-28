@@ -1,0 +1,75 @@
+extends frontpageParent
+include mixins/meta
+include mixins/search-freetext-form
+  
+block content-top
+  // No content-top use
+
+block content-bottom
+  .frontpage-galleries
+    - var gridGalleryCount = 0
+    each item, i in frontpageItems
+      - gridGalleryCount += 1
+      - var evenOrOdd = (gridGalleryCount % 2 == 0 ? 'even' : 'odd')
+      //- Could probably be simplified as all types have the same scaffolding:
+      -if(item.jumbo)
+        - gridGalleryCount -= 1
+        section.jumbo
+          if item.jumbo.image.url
+            .jumbo__image(style="background-image: url('" + item.jumbo._.image.src() + "');")
+          else
+            .jumbo__image
+          .container-fluid
+            .jumbo__inner
+              .col-xs-12.col-sm-8.col-md-8
+                .jumbo__teaser
+                  h1.jumbo__teaser-text= item.jumbo.description1 + ' ' + totalAssets + ' ' + item.jumbo.description2
+              .col-xs-12.col-sm-8.col-md-8.clear
+                .jumbo__search
+                  +searchFreetextForm('Søg efter billeder', 'jumbo')
+              .col-xs-12
+                .jumbo__logos
+                  a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
+                    +icon('kbh-museum', '', 'Københavns museum')
+                  a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
+                    +icon('kbh-arkiv', '', 'Københavns stadsarkiv')
+                  a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
+                    +icon('frb-arkiv', '', 'Frederiksberg stadsarkiv')
+                  if config.features.magasinMuseum
+                    a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
+                      +icon('magasin-museum', '', 'Magasain du nord museum')
+      -if(item.gallery)
+        -if(item.gallery.appearance === 'grid')
+          section.gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +gridGallery(item.gallery, i, evenOrOdd)
+        -if(item.gallery.appearance === 'carousel')
+          section.gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +carouselGallery(item.gallery, evenOrOdd)
+        -if(item.gallery.appearance === 'block')
+          section.gallery__container(class="gallery--" + evenOrOdd)
+            .container-fluid
+              +blockGallery(item.gallery, evenOrOdd)
+      -if(item.map)
+        section.gallery__container(class="gallery--" + evenOrOdd)
+          .container-fluid
+            +mapGallery(item.map, evenOrOdd, frontpageItems[i - 1] && frontpageItems[i - 1].jumbo)
+      -if(item.tagCloud)
+        section.gallery__container(class="gallery--" + evenOrOdd)
+          .container-fluid
+            +tagGallery(item.tagCloud, evenOrOdd)
+
+append javascript
+  - baseURL = 'http://' + (req.get('x-forwarded-host') || req.get('host')) + '/'
+  script(type='application/ld+json').
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "#{baseURL}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "#{baseURL}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }

@@ -1,0 +1,11 @@
+- let videoUrl = helpers.getVideoUrl(metadata);
+iframe(
+  class="asset__video"
+  src=videoUrl
+  frameborder="0"
+  allow="fullscreen; picture-in-picture"
+  allowfullscreen
+)
+  | Beklager, din browser understøtter ikke dette videoformat du kan
+  a(href=videoUrl) downloade videoen
+  | i stedet.

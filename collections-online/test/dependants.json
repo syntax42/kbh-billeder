@@ -1,9 +1,0 @@
-[
-  {
-    "ci": "circleci",
-    "type": "github",
-    "username": "CopenhagenCityArchives",
-    "project": "kbh-billeder",
-    "branch": "master"
-  }
-]

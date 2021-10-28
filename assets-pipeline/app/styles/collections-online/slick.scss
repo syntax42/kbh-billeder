@@ -1,0 +1,77 @@
+// We need .scss because there is also a css file in the folder
+@import '../../bower_components/slick-carousel/slick/slick.scss';
+@import '../../bower_components/slick-carousel/slick/slick-theme.scss';
+
+$slider-padding: 15px;
+
+.slider {
+  margin-top: .5rem;
+
+  img {
+    width: 100%;
+  }
+}
+
+.slick-initialized {
+  visibility: visible;
+}
+
+.slick-next {
+  right: 0;
+
+  &::before {
+    content: '>';
+  }
+}
+
+.slick-prev {
+  left: 0;
+
+  &::before {
+    content: '<';
+  }
+}
+
+.slick-next,
+.slick-prev {
+  background-color: $black;
+  bottom: -40px;
+  height: 30px;
+  opacity: .8;
+  top: inherit;
+  width: 45px;
+  z-index: 100;
+
+  &:hover {
+    background-color: $black;
+    color: $white;
+    opacity: 1;
+  }
+
+  &::before {
+    font-family: FFUnitWebLight;
+    font-size: 20px;
+    opacity: 1;
+  }
+}
+
+.slick-dots li button {
+  &::before {
+    font-family: FFUnitWebLight;
+    font-size: 30px;
+  }
+}
+
+.slick-disabled {
+  visibility: hidden;
+}
+
+.slick-list {
+  margin-left : -$slider-padding;
+  margin-right: -$slider-padding;
+}
+
+.slick-slide {
+  padding-left : $slider-padding;
+  padding-right: $slider-padding;
+}

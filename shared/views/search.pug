@@ -1,0 +1,43 @@
+extends index
+include mixins/meta
+include mixins/loader
+
+append header
+  - title = helpers.generateSearchTitle(filters);
+  +meta(title, description, image)
+
+block content
+
+  block before-results
+
+  main.let-it-grow.is-list-view#start-of-content
+    if config.features.filterSidebar
+      include includes/filterbar
+      section.search-results
+        .map-view
+          include includes/map
+        .list-view.container
+            #filters
+              include includes/search-filter-chosen-filters
+            #results-header
+              block results-header
+            include includes/no-results-text
+            #results.row(aria-busy=true)
+              block results
+              .centered-loader
+                +loader("Henter poster...")
+            block after-results
+              button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn(type='button')= "Vis flere"
+    else
+      section.container-fluid
+        .search-results
+          #results-header
+            block results-header
+          include includes/no-results-text
+          #results.row(aria-busy=true)
+            block results
+            .centered-loader
+              +loader("Henter poster...")
+          block after-results
+            button.btn.btn-primary.btn-lg.invisible.load-more#load-more-btn(type='button')= "Vis flere"
+  .clearfix

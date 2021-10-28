@@ -1,0 +1,118 @@
+extends assetParent
+
+block document__section-1-metadata
+  - const documentTitle = helpers.documentTitle(metadata);
+  - const documentDescription = helpers.documentDescription(metadata.description);
+  - const secondaryDescription = helpers.documentDescription(metadata.secondary_description);
+  .document__section-1-metadata.col-xs-12.col-md-5.col-md-pull-7
+    div.document__back-link
+      a(onclick='window.history.back()')
+        +icon('arrow-thin-left')
+        | Tilbage til søgningen
+    if(documentTitle)
+      h1.document__title= documentTitle
+    if(documentDescription)
+      p.sr-only Beskrivelse
+      p.document__description!= documentDescription
+    if(secondaryDescription)
+      p= secondaryDescription
+    != assetSection('time', metadata)
+
+    if config.features.motifTagging
+      .motif-tagging
+        include ./includes/motif-tagging
+
+block document__section-2
+  - const location = helpers.geoTagging.getLocation(metadata);
+  - const hasLocation = location.longitude && location.latitude
+  - const geotagable = helpers.geoTagging.enabled(metadata);
+
+    if !hasLocation
+      section.document__section-2.document__section-2--no-location
+        .container-fluid
+          .row
+            .col-sm-7
+              != assetSection('place', metadata)
+            .col-sm-5
+              .no-location--text
+                h2.no-location--text__header Ved du hvor billedet er taget?
+                p Eller hvilket sted billedets motiv viser? Så tilføj lokationen på et kort.
+                button.btn.btn-primary(data-action='geo-tagging:init')
+                  | Placer billede på kort
+                  +icon('pencil')
+
+    section.document__section-2--map(class=(hasLocation ? 'has-location' : 'hidden'))
+      .geo-tagging-mini-map(
+        data-has-location=(hasLocation) ? 'true' : 'false'
+        data-latitude=location.latitude,
+        data-longitude=location.longitude,
+        data-heading=location.heading,
+        data-approximate=location.isApproximate ? 'true' : 'false'
+      )
+      .place-overlay
+        .place-overlay__inner
+          != assetSection('place', metadata)
+          if geotagable
+            table
+              tbody
+                tr
+                  td(colspan=2, class='map-coordinates__map--edit')
+                    button.btn.btn-primary.btn-block(data-action='geo-tagging:start' type='button' aria-label="rediger lokation")
+                      | Rediger
+                      +icon('pencil')
+                    button.btn.btn-primary.hidden(data-action='geo-tagging:add-direction' type='button')
+                      | Tilføj retning
+                    button.btn.btn-primary.hidden(data-action='save-geo-tag' type='button')
+                      | Gem placering
+                    button.btn.btn-default.hidden(data-action='geo-tagging:stop' type='button')
+                      | Annuller
+
+
+block document__section-3
+  section.document__section-3
+    .container-fluid
+      .row
+        .col-sm-7
+          != assetSection('additional-information', metadata)
+        .col-sm-5
+          != assetSection('technical-information', metadata)
+
+prepend document__section-5
+  each series, index in assetSeries
+    - var even = index % 2 == 0;
+    .document-content(class=even ? 'document-content--black' : 'document-content--dark-grey')
+      .container-fluid
+        .row
+          if !even
+            .document-content__preview.col-xs-12.col-sm-6.col-sm-push-6
+              .photo-stack.photo-stack--asset-page.u-ml-2--sm
+                each previewAsset in series.previewAssets
+                  img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))
+
+          .document-content__metadata.col-xs-12.col-sm-6(class=even ? 'col-sm-push-6 u-pl-2--sm' : 'col-sm-pull-6 u-pr-2--sm')
+            .u-type-heading="En del af serien"
+            .u-row.document-content__title
+              h1.document__title=series.title
+              .chip.chip--white-outline=`${series.assets.length} billeder`
+            .document-content__description=series.description
+
+            table
+              tbody
+                tr
+                  th.row="Periode"
+                  td=`${series.dateFrom.year} – ${series.dateTo.year}`
+
+            .motif-tagging
+              .motif-tagging__tags
+                each tag in series.tags
+                  .btn-group
+                    +tag(tag)
+
+            div(style='height:1.5em;')
+            a.btn.btn-primary(href=`/${series.url}`)="Se billedserie"
+
+          if even
+            .document-content__preview.col-xs-12.col-sm-6.col-sm-pull-6
+              .photo-stack.photo-stack--asset-page.u-mr-2--sm
+                each previewAsset in series.previewAssets
+                  img.photo-stack__photo(src=helpers.getThumbnailURL(previewAsset, 2000, 'bottom-right'))

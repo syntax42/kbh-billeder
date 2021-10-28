@@ -1,7 +1,5 @@
 # Kbh-billeder
 
-[![CircleCI](https://circleci.com/gh/CopenhagenCityArchives/kbh-billeder.svg?style=svg)](https://circleci.com/gh/CopenhagenCityArchives/kbh-billeder)
-
 This is the configuration/setup for the kbhbilleder.dk webapp built on top of
 the Canto Cumulus webservice, Canto Integration Platform.
 

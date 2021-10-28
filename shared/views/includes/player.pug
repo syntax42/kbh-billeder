@@ -1,0 +1,17 @@
+extends playerParent
+
+block document__player
+  - let hasBackside = helpers.hasBacksideAsset(metadata);
+  - let players = helpers.determinePlayers(metadata);
+    if (hasBackside)
+      each player in players
+        if (player.type === 'backside')
+          include ./players/backside
+    else
+      each player in players
+        if (player.type === 'image')
+          include ./players/image
+        else if (player.type === 'video')
+          include ./players/video
+        else if (player.type === 'audio')
+          include ./players/audio

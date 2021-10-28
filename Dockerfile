@@ -1,34 +1,41 @@
-FROM node:14.16
-EXPOSE 9000
+FROM node:14.17.6
 
-# Dependencies needed for and the node-canvas to install correctly and
-# supervisor + nginx for deployment
+WORKDIR /build
+
+# install dependencies
+COPY shared shared
+RUN npm install --prefix shared
+
+COPY assets-pipeline/package*.json assets-pipeline/
+RUN npm install --prefix assets-pipeline
+
+# build assets
+COPY assets-pipeline assets-pipeline
+RUN npm run build --prefix assets-pipeline
+
+
+FROM node:14.17.6
+
+WORKDIR /app
+
+# install non-node dependencies
 RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     libpango1.0-dev \
     libgif-dev \
-    build-essential \
-    g++ \
-    supervisor \
-    curl \
-    gnupg2 \
-    ca-certificates \
-    lsb-release \
-&& rm -rf /var/lib/apt/lists/* # Keeps the image size down
+    && rm -rf /var/lib/apt/lists/* # Keeps the image size down
 
-RUN echo "deb http://nginx.org/packages/debian `lsb_release -cs` nginx" \ | tee /etc/apt/sources.list.d/nginx.list
-RUN curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+# copy shared including its depedendencies
+COPY --from=0 /build/shared /app/shared
 
-RUN apt-get update && apt-get install -y \
-    nginx \
-&& rm -rf /var/lib/apt/lists/* # Keeps the image size down
+# install dependencies
+COPY webapplication webapplication
+RUN npm install --prefix webapplication
 
-WORKDIR /tmp/
-COPY . .
+# copy in built bundle and assets
+COPY assets-pipeline assets-pipeline
+COPY --from=0 /build/assets-pipeline/generated /app/assets-pipeline/generated
 
-# --no-color is needed to prevent strange chars in the CI logs
-# --no-spin is needed to prevent duplicated lines in the CI logs
-# --unsafe-perm is needed for the lifecycle scripts to run
-RUN npm install --no-color --no-spin --unsafe-perm
+EXPOSE 9000
 
-CMD ["/usr/bin/supervisord", "-n", "-c", "/tmp/configurations/supervisord.conf"]
+CMD node webapplication/start.js

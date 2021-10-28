@@ -1,0 +1,8 @@
+extends relationsParent
+
+block relatedassets
+  .slider
+    each doc in docs
+      if !doc.isAssetBackside
+        a(href=helpers.getDocumentURL(doc))
+          img(data-lazy=helpers.getThumbnailURL(doc))

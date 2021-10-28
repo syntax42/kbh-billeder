@@ -1,0 +1,22 @@
+include ../mixins/icon
+
+- const documentURL = helpers.getDocumentURL(metadata);
+- const thumbnailURL = helpers.getThumbnailURL(metadata);
+- const mediaType = helpers.determineMediaTypes(metadata);
+- const target = config.features.preferTargetBlank ? '_blank' : '_self';
+- const tagString = metadata.tags && metadata.tags.join(', ');
+- const altText = helpers.documentTitle(metadata) + (tagString ? ': ' + tagString : '');
+- const creationPeriod = helpers.getCreationPeriod(metadata);
+- const creationTime = helpers.getCreationTime(metadata);
+- const isSeries = helpers.getIsSeries(metadata);
+
+a.search-results-item.col-xs-6.col-sm-6.col-md-3.col-lg-2.col-xl-1(href=isSeries ? `${documentURL}?is-series=true` : documentURL, target=target, class=type === 'series' ? 'search-results-item--black' : '')
+  .search-results-item__squared-container
+    img(src=thumbnailURL alt=altText).search-results-item__squared-image.object-fit
+    if mediaType === 'video'
+      .search-results-item__overlay
+        if mediaType === 'video'
+          +icon('play')
+  h2.search-results-item__title= helpers.documentTitle(metadata)
+  p.search-results-item__description= helpers.documentDescription(metadata.description)
+  p.search-results-item__period= creationTime ? creationTime : creationPeriod
