@@ -19,6 +19,14 @@
 .asset__video {
   width: 100%;
   height: 400px;
+
+  @media (max-width: $medium-size) {
+    height: 65vw;
+  }
+
+  .document__expandable--expanded & {
+    height: 55vw;
+  }
 }
 
 @media print {
