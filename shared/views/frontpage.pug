@@ -29,16 +29,16 @@ block content-bottom
                   +searchFreetextForm('Søg efter billeder', 'jumbo')
               .col-xs-12
                 .jumbo__logos
-                  a.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
+                  a.jumbo__logo.kbh-museum-logo(href="/søg?institution=Københavns+Museum")
                     +icon('kbh-museum', '', 'Københavns museum')
-                  a.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
+                  a.jumbo__logo.kbh-arkiv-logo(href="/søg?institution=Københavns+Stadsarkiv")
                     +icon('kbh-arkiv', '', 'Københavns stadsarkiv')
-                  a.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
+                  a.jumbo__logo.frederiksberg-logo(href="/søg?institution=Frederiksberg+Stadsarkiv")
                     +icon('frb-arkiv', '', 'Frederiksberg stadsarkiv')
-                  a.danmark-paa-film-logo(href="/søg?institution=Danmark+på+film")
+                  a.jumbo__logo.danmark-paa-film-logo(href="/søg?institution=Danmark+på+film")
                     +icon('danmark-paa-film', '', 'Danmark på film')
                   if config.features.magasinMuseum
-                    a.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
+                    a.jumbo__logo.magasin-logo(href="/søg?institution=Magasin+du+Nord+Museum")
                       +icon('magasin-museum', '', 'Magasain du nord museum')
       -if(item.gallery)
         -if(item.gallery.appearance === 'grid')
