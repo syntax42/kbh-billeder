@@ -1,7 +1,7 @@
 .jumbo {
   background-color: $jumbo-bg;
   height: calc(85vh + 300px);
-  min-height: calc(33rem + 300px);
+  min-height: calc(37rem + 300px);
   position: relative;
   align-items: center;
   margin-bottom: -300px;
@@ -53,6 +53,7 @@
     display: flex;
     justify-content: left;
     padding-top: 1rem;
+    padding-bottom: 4rem;
     z-index: 1;
     flex-direction: row;
     flex-wrap: wrap;
@@ -127,6 +128,7 @@
     letter-spacing: -.01em;
     line-height: 1.2;
     margin-bottom: 40px;
+    margin-top: 4rem;
     text-shadow:
       0 0 1px rgba($jumbo-text-shadow, .6),
       0 0 4px rgba($jumbo-text-shadow, .2);
@@ -195,8 +197,9 @@
   }
 
   &__inner {
-    bottom: calc(8rem + 300px);
+    bottom: calc(4rem + 300px);
     position: absolute;
+    width: 100%;
   }
 
   &:after {
