@@ -73,3 +73,13 @@ append javascript
         "query-input": "required name=search_term_string"
       }
     }
+  // Survey Xact survey:
+  script(type='application/javascript')
+    | window.xact_width=400;
+    | window.xact_height=400;
+    | window.xact_surveyURL='https://www.survey-xact.dk/LinkCollector?key=PQ7EFAUWU532';
+    | window.xact_surveyKey='PQ7EFAUWU532';
+    | window.xact_probability = 1;
+    | window.xact_baseURL = 'https://www.survey-xact.dk';
+    | window.xact_language = "da";
+    | xact_startPopIn();
