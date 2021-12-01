@@ -12,6 +12,7 @@
   background: $brand-primary;
   padding: 0 0.25rem;
   margin: 0 0.25rem;
+  white-space: nowrap;
 }
 
 .site-wide-message__title {
@@ -21,6 +22,7 @@
 .site-wide-message__description {
   margin: 0;
   text-align: center;
+  line-height: 1.5rem;
 }
 
 .site-wide-message__close {
