@@ -13,6 +13,10 @@
   padding: 0 0.25rem;
   margin: 0 0.25rem;
   white-space: nowrap;
+
+  &:hover {
+    color: white;
+  }
 }
 
 .site-wide-message__title {
