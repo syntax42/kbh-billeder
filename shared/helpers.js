@@ -126,7 +126,7 @@ helpers.getVideoUrl = (metadata) => {
     return null;
   }
 
-  return `https://${mp4Match[1]}:8443${mp4Match[2]}`;
+  return `https://${mp4Match[1]}${mp4Match[2]}`;
 };
 
 helpers.getAudioURL = (metadata, size) => {
