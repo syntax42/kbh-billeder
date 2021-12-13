@@ -199,7 +199,7 @@ let config = {
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
     'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png'),
     'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png'),
-    'danmark-paa-film': path.join(appDir, 'images', 'watermarks', 'danmark-paa-film.png'),
+    'det-danske-filminstitut': path.join(appDir, 'images', 'watermarks', 'det-danske-filminstitut.png'),
   },
   thumbnailSize: 500
 };
