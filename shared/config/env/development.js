@@ -6,7 +6,7 @@ var base = require('./base');
 const development = _.merge({}, base, {
   env: 'development',
   auth0: {
-    callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://kbhbilleder.docker/auth/callback',
+    callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:9000/auth/callback',
     clientID: process.env.AUTH0_CLIENT_ID || 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu',
     // Enable required acceptance of terms and services.
     acceptTermsText: base.auth0TermsText,
