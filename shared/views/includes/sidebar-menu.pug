@@ -20,7 +20,7 @@ nav
     if config.features.users
       if user
         li
-          a(href='/min-side')= (user.name.givenName || user.nickname)
+          a(href='/min-side')= (user.name.givenName || user._json.username || user.nickname)
         li
           a(href='/logout') Log ud
       else

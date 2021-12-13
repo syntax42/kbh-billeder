@@ -3,14 +3,14 @@ include mixins/meta
 include mixins/search-freetext-form
 
 append header
-  +meta(user.nickname + ' profil')
+  +meta((user._json.username || user.nickname) + ' profil')
 
 block content
   main.let-it-grow.page-wrap#start-of-content
     .container-fluid
       img.img-responsive(src=user.picture)
       h3(data-user-id=user.id)
-        = 'Hej ' + user.nickname
+        = 'Hej ' + (user._json.username || user.nickname)
       p= 'Email: ' + user.emails[0].value
       p= `Du har placeret ${stats.geolocations.geolocations} billeder på kort og tilføjet ${stats.tags.tags} emneord på ${stats.tags.assets} billeder.`
       p= `Du har ${points} point.`

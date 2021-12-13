@@ -22,6 +22,9 @@ module.exports = {
     app.use(passport.session());
 
     app.use(function(req, res, next) {
+      if (req.user && !req.user._json) {
+        req.user._json = {};
+      }
       res.locals.user = req.user;
       next();
     });

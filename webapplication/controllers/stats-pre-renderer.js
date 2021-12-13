@@ -52,7 +52,7 @@ const renderer = {
 
         if (!user) {
           console.warn(`Unable to find user with id ${item.user_id}`);
-          return {};
+          return {_json: {}};
         } else {
           return user;
         }
@@ -71,13 +71,16 @@ const renderer = {
             if (loadedUser.name) {
               // We have a name, so far so good.
               // In situations where Auth0 don't really have the name they fall
-              // back to the email.  In that situation the "nickname" field might
-              // give us a better name.
-              if (loadedUser.name === loadedUser.email && loadedUser.nickname) {
-                scoreEntry.name = loadedUser.nickname;
+              // back to the email.  In that situation the "user" field might
+              // give us a better name, and maybe nickname.
+              if (loadedUser.name === loadedUser.email) {
+                scoreEntry.name = loadedUser.username || loadedUser.nickname || loadedUser.name;
               } else {
                 scoreEntry.name = loadedUser.name;
               }
+            } else if (loadedUser.username) {
+              // Prefer username above nickname
+              scoreEntry.name = loadedUser.username;
             } else if (loadedUser.nickname) {
               // If we don't have a name but do have nickname, use it.
               scoreEntry.name = loadedUser.nickname;
