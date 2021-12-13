@@ -30,7 +30,6 @@ exports.renderEditProfile = async (req, res) => {
   res.render('edit-profile', {user, auth0User, error: req.session.error, status: req.session.status});
   delete req.session.error;
   delete req.session.status;
-  res.render('profile' + (config.features.oldProfilePage ? '' : '2'), {user});
 };
 
 /**
