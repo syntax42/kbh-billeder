@@ -201,6 +201,10 @@
     position: absolute;
     width: 100%;
     left: 0;
+
+    @media (min-width: $small-size) and (orientation: landscape) {
+      left: auto;
+    }
   }
 
   &:after {
