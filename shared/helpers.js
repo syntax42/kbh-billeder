@@ -381,6 +381,8 @@ helpers.getDocumentURL = (metadata) => {
   return '/' + path.join('/');
 };
 
+const movieTypes = ['MPEG-4 Video', 'QuickTime Movie'];
+
 /**
  * Determine which players are available for a given asset.
  *
@@ -407,7 +409,7 @@ helpers.determinePlayers = metadata => {
   } 
 
   // Is this a video?
-  if (metadata.file_format && metadata.file_format === 'MPEG-4 Video') {
+  if (metadata.file_format && movieTypes.includes(metadata.file_format)) {
     const license = helpers.licenseMapped(metadata);
     const licenseUrl = license ? license.url : null;
     players.push({
