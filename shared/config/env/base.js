@@ -55,7 +55,7 @@ let config = {
       authMechanism: 'http-basic',
       username: process.env.CIP_USERNAME,
       password: process.env.CIP_PASSWORD,
-      logRequests: false,
+      logRequests: true,
       constants: {
         catchAllAlias: "alle",
         layoutAlias: "stadsarkivet"

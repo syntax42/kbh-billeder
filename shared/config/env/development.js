@@ -9,11 +9,6 @@ const development = _.merge({}, base, {
     callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:9000/auth/callback',
     clientID: process.env.AUTH0_CLIENT_ID || 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu',
   },
-  cip: {
-    client: {
-      logRequests: true
-    }
-  },
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
   siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
