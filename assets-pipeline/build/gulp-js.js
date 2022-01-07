@@ -24,15 +24,11 @@ module.exports = (gulp, config, isDevelopment, SCRIPTS_ALL) => {
       .transform('babelify', {
         'env': {
           'production': {
-            'presets': [
-              'babel-preset-latest',
-            ]
+            'presets': ['latest'],
           },
           'beta': {
-            'presets': [
-              'babel-preset-latest',
-            ]
-          }
+            'presets': ['latest'],
+          },
         },
         plugins: [
           [
