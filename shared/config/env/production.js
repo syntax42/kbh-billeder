@@ -25,14 +25,6 @@ const production = _.merge({}, base, {
     }
   },
   env: 'production',
-  features: {
-    feedback: true,
-    requireEmailVerification: true,
-    sitewidePassword: false,
-    users: true,
-    magasinMuseum: true,
-    oldProfilePage: false
-  },
   google: {
     analyticsPropertyID: 'UA-78446616-1'
   },

@@ -26,11 +26,7 @@ const beta = _.merge({}, base, {
   },
   env: 'beta',
   features: {
-    feedback: true,
-    motifTagging: true,
-    requireEmailVerification: true,
     sitewidePassword: true,
-    users: true
   },
   kbhAccessKey: process.env.KBH_ACCESS_KEY,
   host: 'beta.kbhbilleder.dk',
