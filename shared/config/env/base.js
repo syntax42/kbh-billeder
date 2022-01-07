@@ -28,12 +28,8 @@ let config = {
     // Pr. default we allow the user to sign up without accepting terms. If you
     // want to require acceptance, set this key to the text that should be
     // displayed to the user in the signup box.
-    acceptTermsText: false,
+    acceptTermsText: 'Jeg accepterer <a href="/regler-og-vilkar-for-deltagelse" target="_new">Regler og vilkår</a> for deltagelse på kbhbilleder.dk',
   },
-  // Text to be used if we require accept of terms of services. The
-  // functionality is enabled by settings auth0.acceptTermsText. eg
-  // config.auth0.acceptTermsText = config.auth0TermsText;
-  auth0TermsText: 'Jeg accepterer <a href="/regler-og-vilkar-for-deltagelse" target="_new">Regler og vilkår</a> for deltagelse på kbhbilleder.dk',
   cache: {
     ttl: 60 * 5 // 5 minutes
   },

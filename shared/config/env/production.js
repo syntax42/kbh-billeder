@@ -10,12 +10,9 @@ if (process.env.ENFORCE_HTTPS === 'false') {
 }
 
 const production = _.merge({}, base, {
-  allowRobots: true,
   auth0: {
     callbackURL:  process.env.AUTH0_CALLBACK_URL || 'https://kbhbilleder.dk/auth/callback',
     clientID: process.env.AUTH0_CLIENT_ID || 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP',
-    // Enable required acceptance of terms and services.
-    acceptTermsText: base.auth0TermsText,
   },
   cip: {
     baseURL: process.env.CUMULUS_API_URL,
