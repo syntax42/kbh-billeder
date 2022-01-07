@@ -3,6 +3,7 @@
 const union = require('lodash/union');
 const cip = require('../../services/cip');
 const motifTagController = require('../../controllers/motif-tagging');
+const motif = require('../../lib/controllers/motif-tagging');
 
 module.exports = (metadata, context) => {
   // Let's save some cost and bandwidth and not analyze the asset unless
@@ -27,9 +28,6 @@ module.exports = (metadata, context) => {
     // Still here. Let's grab the image directly from Cumulus.
     let path = 'preview/thumbnail/' + metadata.collection + '/' + metadata.id;
     let url = cip.generateURL(path);
-
-    // Loading here to prevent circular dependency.
-    var motif = require('../../lib/controllers/motif-tagging');
 
     return motif.fetchSuggestions(url)
     .then(tags => {
