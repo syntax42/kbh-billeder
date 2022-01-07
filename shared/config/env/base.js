@@ -127,7 +127,7 @@ let config = {
     magasinMuseum: true,
     users: true,
     oldProfilePage: false,
-    sitewidePassword: false,
+    sitewidePassword: ['beta.kbhbilleder.dk'],
   },
   feedback: {
     maxLength: 600,
