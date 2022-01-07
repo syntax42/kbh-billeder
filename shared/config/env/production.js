@@ -14,13 +14,6 @@ const production = _.merge({}, base, {
     callbackURL:  process.env.AUTH0_CALLBACK_URL || 'https://kbhbilleder.dk/auth/callback',
     clientID: process.env.AUTH0_CLIENT_ID || 'TwmSafM2Tz7YB5ARDA9MmyFh3DKb95cP',
   },
-  cip: {
-    baseURL: process.env.CUMULUS_API_URL,
-    client: {
-      endpoint: process.env.CUMULUS_API_URL,
-      logRequests: true
-    }
-  },
   env: 'production',
   google: {
     analyticsPropertyID: 'UA-78446616-1'

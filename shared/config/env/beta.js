@@ -19,7 +19,6 @@ const beta = _.merge({}, base, {
     baseURL: process.env.CUMULUS_API_URL_BETA,
     client: {
       endpoint: process.env.CUMULUS_API_URL_BETA,
-      logRequests: true
     }
   },
   env: 'beta',
