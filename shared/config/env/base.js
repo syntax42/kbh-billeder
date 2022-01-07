@@ -113,7 +113,7 @@ let config = {
     'kbh-museum': process.env.FACEBOOK_APP_ID_KBH_MUSEUM || 116055131754566
   },
   features: {
-    feedback: false,
+    feedback: true,
     motifTagging: true,
     filterSidebar: true,
     geoTagging: 'override',
@@ -121,12 +121,14 @@ let config = {
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true,
-    // Whether to require users to verify their email before they can contribute.
-    requireEmailVerification: false,
+    requireEmailVerification: true,
     preferTargetBlank: false,
     enableVisionTagSuggestions: false,
     enableGoogleTranslate: false,
-    magasinMuseum: true
+    magasinMuseum: true,
+    users: true,
+    oldProfilePage: false,
+    sitewidePassword: false,
   },
   feedback: {
     maxLength: 600,

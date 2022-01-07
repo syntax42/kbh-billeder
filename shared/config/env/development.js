@@ -22,11 +22,6 @@ const development = _.merge({}, base, {
   es: {
     log: 'error' //use 'trace' for verbose mode
   },
-  features: {
-    feedback: true,
-    requireEmailVerification: true,
-    users: true
-  }
 });
 
 module.exports = development;
