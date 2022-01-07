@@ -22,7 +22,6 @@ const beta = _.merge({}, base, {
     }
   },
   env: 'beta',
-  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   enforceHttps,
   siteTitle: 'kbhbilleder.dk (beta)',
 });

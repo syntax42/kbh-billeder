@@ -18,7 +18,6 @@ const production = _.merge({}, base, {
   google: {
     analyticsPropertyID: 'UA-78446616-1'
   },
-  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   enforceHttps,
 });
 

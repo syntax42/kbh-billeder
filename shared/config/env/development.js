@@ -9,7 +9,6 @@ const development = _.merge({}, base, {
     clientID: process.env.AUTH0_CLIENT_ID || 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu',
   },
   env: 'development',
-  kbhAccessKey: process.env.KBH_ACCESS_KEY,
   siteTitle: 'kbhbilleder.dk (dev)',
   allowRobots: true,
   es: {
