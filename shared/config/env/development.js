@@ -8,8 +8,6 @@ const development = _.merge({}, base, {
   auth0: {
     callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:9000/auth/callback',
     clientID: process.env.AUTH0_CLIENT_ID || 'uyTltKDRg1BKu3nzDu6sLpHS44sInwOu',
-    // Enable required acceptance of terms and services.
-    acceptTermsText: base.auth0TermsText,
   },
   cip: {
     client: {
