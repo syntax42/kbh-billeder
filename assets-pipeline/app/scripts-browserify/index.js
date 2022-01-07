@@ -16,8 +16,5 @@ if (!config.features.oldProfilePage ) {
   require('./profile/index');
 }
 
-if(config.features.sitewidePassword) {
-  require('./sitewide-password');
-}
-
+require('./sitewide-password')(config.features.sitewidePassword);
 require('./formatter');
