@@ -121,7 +121,6 @@ let config = {
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true,
-    requireEmailVerification: true,
     preferTargetBlank: false,
     enableVisionTagSuggestions: false,
     enableGoogleTranslate: false,

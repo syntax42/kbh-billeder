@@ -68,9 +68,10 @@ $(function() {
 
       // If the user is authenticated but not verified, show the verification
       // overlay if it is required.
-      if (config.features.requireEmailVerification &&
+      if (
         authenticated === 'true' &&
-        requirement === 'verified' && verified !== 'true') {
+        requirement === 'verified' && verified !== 'true'
+      ) {
         e.stopPropagation();
         verify();
       }
