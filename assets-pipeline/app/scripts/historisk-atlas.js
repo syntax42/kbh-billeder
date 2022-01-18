@@ -56,8 +56,9 @@ function _prepareMapOptions(options) {
       { id: 154, title: 'Geddes kort', year: '1761' }
     ];
 
-    if (options.mode == 'single')
+    if (options.mode == 'single'){
       options.maps.unshift({ id: 161, title: 'Standard', year: '2018' });
+    }
   }
 
   return options;
