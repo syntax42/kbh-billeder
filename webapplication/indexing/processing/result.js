@@ -285,17 +285,18 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
     }).then(({assets, assetSeries, errors}) => {
       // Create a list of items for a bulk call, for assets that are not errors.
       const items = [];
-      assets.filter(asset => !(asset instanceof AssetIndexingError))
-      .forEach(({metadata, context}) => {
-        items.push({
-          'index' : {
-            '_index': context.index,
-            '_type': 'asset',
-            '_id': metadata.collection + '-' + metadata.id
-          }
+      assets
+        .filter(asset => !(asset instanceof AssetIndexingError))
+        .forEach(({metadata, context}) => {
+          items.push({
+            'index' : {
+              '_index': context.index,
+              '_type': 'asset',
+              '_id': metadata.collection + '-' + metadata.id,
+            }
+          });
+          items.push(metadata);
         });
-        items.push(metadata);
-      });
 
       assetSeries.forEach((series) => {
         if(series.assets.length > 0) {
