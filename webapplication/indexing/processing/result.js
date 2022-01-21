@@ -219,6 +219,10 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
     })
     .then(({assets, errors, seriesLookup}) => {
       assets.forEach(({ metadata, assetSeries }) => {
+        // Make series ids attached to assets so we can look it up
+        metadata.series_ids = assetSeries.map((series) => series._id);
+
+        // Set up series
         assetSeries.forEach((as) => {
           const series = seriesLookup[as._id];
           if(typeof series.assets == "undefined") {
