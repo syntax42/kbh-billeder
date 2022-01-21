@@ -4,7 +4,7 @@ include ./mixins/meta
 include ./mixins/loader
 
 prepend header
-  script!=`window.__seriesAssets = JSON.parse('${JSON.stringify(series.assets)}');`
+  script!=`window.__seriesId = '${series.id}';`
   +meta(`${series.title} - Billedserie`, series.description)
 
 block content

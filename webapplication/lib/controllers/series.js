@@ -12,7 +12,10 @@ module.exports.get = (req, res, next) => {
     .then((seriesDoc) => {
       res.render('series.pug', {
         req,
-        series: seriesDoc._source,
+        series: {
+          id: seriesDoc._id.slice('series/'.length),
+          ...seriesDoc._source,
+        },
       });
     })
     .catch((error) => {

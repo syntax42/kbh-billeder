@@ -46,22 +46,7 @@ let es = new elasticsearch.Client({
 let seriesAssetsFilter;
 
 function initialize() {
-  // Prepare series assets filter for this series, used to limit queries
-  // If there are a lot of assets in the query, elasticsearch breaks if
-  // they are in a single list -- so we chunk them.
-  if(window.__seriesAssets.length < 15) {
-    seriesAssetsFilter = {terms: {_id: window.__seriesAssets}};
-  }
-  else {
-    seriesAssetsFilter = {
-      bool: {
-        should: _.chunk(window.__seriesAssets, 15)
-          .map((chunk) => {
-            return {terms: {_id: chunk}};
-          }),
-      },
-    };
-  }
+  seriesAssetsFilter = {term: {series_ids: window.__seriesId}};
 
   const $results = $('#results');
   // Button shown at the end of the list search result that triggers the load
@@ -562,7 +547,7 @@ function initialize() {
 
 // If we know of series assets, load 'er up
 $(() => {
-  if(window.__seriesAssets) {
+  if(window.__seriesId) {
     initialize();
   }
 });
