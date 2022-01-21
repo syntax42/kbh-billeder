@@ -372,15 +372,20 @@ function getAssetSeries(asset) {
 }
 
 function formatSeries(assetSeries) {
+  let tags = [];
+  if(assetSeries.tags) {
+    tags = assetSeries.tags
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag);
+  }
+
   const formattedSeries = {
     url: assetSeries.url,
     _id: "series/" + assetSeries.url,
     title: assetSeries.title,
     description: assetSeries.description,
-    tags: assetSeries.tags
-      .split(",")
-      .map((tag) => tag.trim().toLowerCase())
-      .filter((tag) => tag)
+    tags,
   }
   if(assetSeries.dateFrom.year > assetSeries.dateTo.year) {
     formattedSeries.dateFrom = formatDate(assetSeries.dateTo);
