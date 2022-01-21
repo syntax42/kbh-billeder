@@ -104,8 +104,10 @@ function initialize() {
     $searchInput.val(searchParams.filters.q);
 
     // Update the page title
+    const existingTitleParts = $('head title').text().split(' - ');
+    const siteTitle = existingTitleParts[existingTitleParts.length - 1];
     const title = helpers.generateSearchTitle(searchParams.filters);
-    $('head title').text(title + ' - ' + config.siteTitle);
+    $('head title').text(title + ' - ' + siteTitle);
     loadingResults = true;
 
     // A fresh update is the first of potentially many updates with the same
