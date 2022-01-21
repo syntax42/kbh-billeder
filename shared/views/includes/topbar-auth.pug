@@ -4,7 +4,7 @@ include ../mixins/icon
   if user
     .dropdown
       a.dropdown__selected.topbar__items-link.topbar__name.dropdown__button(aria-label='åbn bruger menu' tabindex='0')
-        = (user.name.givenName || user.nickname)
+        = (user.name.givenName || user._json.username || user.nickname)
         span.icon
           +icon('chevron-up')
       .dropdown__options

@@ -2,6 +2,8 @@ FROM node:14.17.6
 
 WORKDIR /build
 
+ARG NODE_ENV=production
+
 # install dependencies
 COPY shared shared
 RUN npm install --prefix shared

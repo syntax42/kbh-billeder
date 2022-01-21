@@ -15,7 +15,7 @@ block document__section-1-metadata
       p.sr-only Beskrivelse
       p.document__description!= documentDescription
     if(secondaryDescription)
-      p= secondaryDescription
+      p!= secondaryDescription
     != assetSection('time', metadata)
 
     if config.features.motifTagging

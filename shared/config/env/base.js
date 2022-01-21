@@ -28,12 +28,8 @@ let config = {
     // Pr. default we allow the user to sign up without accepting terms. If you
     // want to require acceptance, set this key to the text that should be
     // displayed to the user in the signup box.
-    acceptTermsText: false,
+    acceptTermsText: 'Jeg accepterer <a href="/regler-og-vilkar-for-deltagelse" target="_new">Regler og vilkår</a> for deltagelse på kbhbilleder.dk',
   },
-  // Text to be used if we require accept of terms of services. The
-  // functionality is enabled by settings auth0.acceptTermsText. eg
-  // config.auth0.acceptTermsText = config.auth0TermsText;
-  auth0TermsText: 'Jeg accepterer <a href="/regler-og-vilkar-for-deltagelse" target="_new">Regler og vilkår</a> for deltagelse på kbhbilleder.dk',
   cache: {
     ttl: 60 * 5 // 5 minutes
   },
@@ -59,7 +55,7 @@ let config = {
       authMechanism: 'http-basic',
       username: process.env.CIP_USERNAME,
       password: process.env.CIP_PASSWORD,
-      logRequests: false,
+      logRequests: true,
       constants: {
         catchAllAlias: "alle",
         layoutAlias: "stadsarkivet"
@@ -113,7 +109,7 @@ let config = {
     'kbh-museum': process.env.FACEBOOK_APP_ID_KBH_MUSEUM || 116055131754566
   },
   features: {
-    feedback: false,
+    feedback: true,
     motifTagging: true,
     filterSidebar: true,
     geoTagging: 'override',
@@ -121,12 +117,13 @@ let config = {
     lazyLoadExpandedAssets: false,
     rotationalImages: false,
     watermarks: true,
-    // Whether to require users to verify their email before they can contribute.
-    requireEmailVerification: false,
     preferTargetBlank: false,
     enableVisionTagSuggestions: false,
     enableGoogleTranslate: false,
-    magasinMuseum: true
+    magasinMuseum: true,
+    users: true,
+    oldProfilePage: false,
+    sitewidePassword: ['beta.kbhbilleder.dk'],
   },
   feedback: {
     maxLength: 600,
@@ -198,7 +195,8 @@ let config = {
     'kbh-museum': path.join(appDir, 'images', 'watermarks', 'kbh-museum.png'),
     'kbh-arkiv': path.join(appDir, 'images', 'watermarks', 'kbh-arkiv.png'),
     'frb-arkiv': path.join(appDir, 'images', 'watermarks', 'frb-arkiv.png'),
-    'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png')
+    'magasin-museum': path.join(appDir, 'images', 'watermarks', 'magasin-museum.png'),
+    'det-danske-filminstitut': path.join(appDir, 'images', 'watermarks', 'det-danske-filminstitut.png'),
   },
   thumbnailSize: 500
 };
