@@ -1,7 +1,12 @@
 var REDIRECTION_URL = 'http://www.kbharkiv.dk/';
 var LOCALSTORAGE_FIELD = 'password';
 
+module.exports = (protectedHosts) => {
 function isValidPassword() {
+  // If we dont need to protect this host, the password is always valid
+  if(!protectedHosts.includes(location.host)) {
+    return true;
+  }
   return localStorage.getItem(LOCALSTORAGE_FIELD) === 'edagleda';
 }
 
@@ -23,3 +28,4 @@ if (typeof(Storage) !== 'undefined') {
   alert(msg.join(' '));
   location.href = REDIRECTION_URL;
 }
+};

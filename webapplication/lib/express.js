@@ -59,14 +59,6 @@ module.exports = function(app) {
       console.log('Http was requested, enforcing https');
     }
 
-    // disabled since application shouldnt care about the domain its served from
-
-    // if (config.host && config.host !== hostAndPort) {
-    //   redirectHostAndPort = config.host;
-    //   doRedirect = true;
-    //   console.log(`Redirecting due to hostname mismatch incoming ${hostAndPort} != ${config.host}`);
-    // }
-
     if (doRedirect) {
       const redirectUrl = redirectProto + '://' + redirectHostAndPort + req.originalUrl;
       console.log(`Redirecting to ${redirectUrl}`);
