@@ -2,6 +2,7 @@
 
 const documentController = require('../document');
 const es = require('../../services/elasticsearch');
+const config = require('../../../../shared/config');
 
 const layouts = require('../../layouts');
 const assetSection = layouts.section('asset');

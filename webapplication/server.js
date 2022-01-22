@@ -79,9 +79,7 @@ async function ensureElasticSearchConnection(ds, config, indices, retries, backo
   try {
     response = await ds.count({
       index: indices,
-      body: {
-        query: config.search.baseQuery
-      }
+      body: {query: config.search.baseQuery},
     });
   }
   catch(error) {

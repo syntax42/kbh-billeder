@@ -38,15 +38,13 @@ module.exports = function(state) {
       .reduce((a, b) => a.concat(b), []);
 
     deletedAssetIdsPromise = es.scrollSearch({
-      'query': {
-        'bool': {
-          'must_not': {
-            'ids': {
-              'values': indexedIds
-            }
-          }
-        }
-      }
+      query: {
+        bool: {
+          must_not: {
+            ids: {values: indexedIds},
+          },
+        },
+      },
     }, function(deletedEntry) {
       deletedAssetIds.push(deletedEntry._id);
     }).then(function() {
@@ -63,16 +61,16 @@ module.exports = function(state) {
         }
         // Scroll search for all assets in the catalog that was not indexed.
         return es.scrollSearch({
-          'query': {
-            'bool': {
-              'must': {
-                'match': {
+          query: {
+            bool: {
+              must: {
+                match: {
                   'catalog.raw': query.catalogAlias
                 }
               },
-              'must_not': {
-                'ids': {
-                  'values': query.indexedIds.filter((id) => !id.startsWith('series/')),
+              must_not: {
+                ids: {
+                  values: query.indexedIds.filter((id) => !id.startsWith('series/')),
                 }
               }
             }

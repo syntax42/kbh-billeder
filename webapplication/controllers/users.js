@@ -75,9 +75,7 @@ exports.fetchUserContributions = async (req, res, next) => {
       index: config.es.index,
       type: 'asset',
       _source: ['collection', 'id', 'short_title', 'type', 'description'],
-      body: {
-        ids: ids
-      }
+      body: {ids},
     };
     const loadedContributions = await ds.mget(queryObject).then(response => {
       // Extract the metadata for all related docs that was found

@@ -5,20 +5,18 @@ const config = require('../../../shared/config');
 
 // Autosuggest for search field
 exports.suggest = function suggest(req, res, next) {
-  var text = req.query.text;
-  var query = {
+  const text = req.query.text;
+  const query = {
     index: config.es.index,
-    'body': {
-      'suggest': {
-        'text': text,
-        'completion': {
-          'field': 'suggest',
-          'fuzzy': {
-            'fuzziness': 1
-          }
-        }
-      }
-    }
+    body: {
+      suggest: {
+        text,
+        completion: {
+          field: 'suggest',
+          fuzzy: {fuzziness: 1},
+        },
+      },
+    },
   };
 
   ds.suggest(query).then(function(resp) {

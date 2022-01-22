@@ -14,24 +14,24 @@ exports.index = function(req, res, next) {
   // Count the number of items in each of our collections.
   ds.search({
     index: config.es.index,
-    'size':0,
-    'body': {
-      'aggs': {
-        'searchable': {
-          'filter': config.search.baseQuery || {},
-          'aggs': {
-            'collection': {
-              'terms': {'field': 'collection.keyword'},
-              'aggs': {
-                'maximalId': {
-                  'max': {'field': 'id'}
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    size: 0,
+    body: {
+      aggs: {
+        searchable: {
+          filter: config.search.baseQuery || {},
+          aggs: {
+            collection: {
+              terms: {field: 'collection.keyword'},
+              aggs: {
+                maximalId: {
+                  max: {field: 'id'}
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   }).then(function(response) {
     // Break each collection up into SITEMAP_ASSET_LIMIT sized chuncks and
     // produce an url for our /catalog endpoint that will produce the actual
@@ -69,28 +69,23 @@ exports.catalog = function(req, res, next) {
   }
 
   // Get a list of assets in the range and render them out as sitemaps.
-  var parameters = {
-    'body': {
-      'size': SITEMAP_ASSET_LIMIT,
-      'query': {
-        'bool': {
-          'must': [
+  const parameters = {
+    index: config.es.index,
+    body: {
+      size: SITEMAP_ASSET_LIMIT,
+      query: {
+        bool: {
+          must: [
             {
-              'range': {
-                'id': {
-                  'gte': fromId,
-                  'lt': toId
-                }
-              }
-            }, {
-              'match': {
-                'collection': collection
-              }
-            }
-          ]
-        }
-      }
-    }
+              range: {
+                id: {gte: fromId, lt: toId},
+              },
+            },
+            {match: {collection}},
+          ],
+        },
+      },
+    },
   };
 
   if(config.search && config.search.baseQuery) {
