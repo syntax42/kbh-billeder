@@ -326,10 +326,14 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
             indexedIds.push(item.index._id);
           } else {
             // TODO: Consider using the AssetIndexingError instead
-            errors.push(new Error('Failed index ' + item.index._id));
+            errors.push({
+              trace: new Error('Failed index ' + item.index._id),
+              item,
+            });
           }
         });
         console.log(progress + ' Indexed', indexedIds.length, 'assets and series in ES');
+        console.dir(errors, {depth: 10});
         // Return the result
         return { errors, indexedIds };
       });
