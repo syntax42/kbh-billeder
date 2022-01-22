@@ -5,11 +5,12 @@
  */
 
 const es = require('../../lib/services/elasticsearch');
+const config = require('../../../shared/config');
 
 module.exports = function(state) {
   if (state.mode === 'clear') {
     return es.indices.delete({
-      index: state.context.index
+      index: [config.es.assetIndex, config.es.seriesIndex]
     }).then(function() {
       console.log('Index cleared.');
       return state;

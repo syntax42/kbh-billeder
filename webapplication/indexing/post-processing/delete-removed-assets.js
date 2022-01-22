@@ -9,6 +9,7 @@
 const Q = require('q');
 const es = require('../../lib/services/elasticsearch');
 const _ = require('lodash');
+const config = require('../../../shared/config');
 
 module.exports = function(state) {
   var activity = 'Post-processing to delete removed assets';
@@ -103,13 +104,12 @@ module.exports = function(state) {
     console.log('Deleting', deletedAssetIds.length, 'asset(s)');
     var actions = deletedAssetIds.map(deletedAssetId => {
       if(deletedAssetId.startsWith('series/')) {
-        return {delete: {_type: 'series', _id: deletedAssetId}};
+        return {delete: {_index: config.es.seriesIndex, _id: deletedAssetId}};
       }
-      return {delete: {_type: 'asset', _id: deletedAssetId}};
+      return {delete: {_index: config.es.assetIndex, _id: deletedAssetId}};
     });
     if (actions.length > 0) {
       return es.bulk({
-        index: state.context.index,
         body: actions
       }).then(({body: response}) => response);
     }
