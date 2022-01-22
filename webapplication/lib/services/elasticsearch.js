@@ -19,21 +19,6 @@ const indecies = Object.keys(config.types).map((type) => {
   return config.types[type].index;
 });
 
-function injectIndex(originalMethod) {
-  const originalBoundMethod = originalMethod.bind(es);
-  return function(body) {
-    if(!body.index && config.es && config.es.index) {
-      body.index = config.es.index;
-    }
-    return originalBoundMethod(body);
-  };
-}
-
-es.count = injectIndex(es.count);
-es.getSource = injectIndex(es.getSource);
-es.mget = injectIndex(es.mget);
-es.search = injectIndex(es.search);
-
 es.scrollSearch = function(body, hitCallback) {
   return this.search({
     index: indecies,
