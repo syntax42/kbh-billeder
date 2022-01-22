@@ -69,8 +69,7 @@ exports.save = function(req, res, next) {
 
   // Report if an error occured, and attempt to give the browser a usable reply.
   Promise.all([cipSave, indexUpdate])
-    .catch(
-      (error) => {
+    .catch((error) => {
         console.warn(`Parallel update of ${assetIdentifier} in ES and CIP failed`);
         console.warn(error);
 
