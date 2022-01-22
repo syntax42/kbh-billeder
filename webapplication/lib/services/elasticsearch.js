@@ -1,18 +1,13 @@
 'use strict';
 
-var elasticsearch = require('elasticsearch');
-var config = require('../../../shared/config');
-var Q = require('q');
-var Agent = require('agentkeepalive');
+const elasticsearch = require('@elastic/elasticsearch');
+const config = require('../../../shared/config');
+const Q = require('q');
+const Agent = require('agentkeepalive');
 
-// TODO: Consider injecting the index: config.es.index on every call
-
-var es = new elasticsearch.Client({
-  host: config.es.host,
-  apiVersion: '5.6',
-  createNodeAgent(connection, config) {
-    return new Agent(connection.makeAgentConfig(config));
-  }
+const es = new elasticsearch.Client({
+  node: `http://${config.es.host}`,
+  agent: (options) => new Agent(options),
 });
 
 const indecies = Object.keys(config.types).map((type) => {
