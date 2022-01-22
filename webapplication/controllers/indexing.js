@@ -23,12 +23,6 @@ if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
 
 const indexing = require('../indexing/modes/run');
 
-var helpers = {
-  thousandsSeparator: function(number) {
-    return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-  }
-};
-
 function createAsset(catalogAlias, assetId) {
   var state = {
     context: {
