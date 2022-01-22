@@ -1,11 +1,13 @@
 version: '3.5'
 services:
   elasticsearch:
-    image: elasticsearch:5.6.4
+    image: elasticsearch:7.16.3
     volumes:
       - 'esdata:/usr/share/elasticsearch/data'
     ports:
       - 9200:9200
+    environment:
+      - discovery.type=single-node
 
   mongo:
     image: mongo:3.5.6
