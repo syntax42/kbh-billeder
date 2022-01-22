@@ -173,7 +173,7 @@ function parseBinaryList(buf) {
 // Parse binary field value (64 encoded string) to object.
 cipClient.binaryToObject = function(binaryBase64Encoded) {
   if (binaryBase64Encoded) {
-    var buf = new Buffer(binaryBase64Encoded, 'base64');
+    var buf = Buffer.from(binaryBase64Encoded, 'base64');
     // We expect that we start with a list.
     var type = buf.slice(0, 4).toString('utf8');
     var elementBuffer = buf.slice(4);

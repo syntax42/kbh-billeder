@@ -83,7 +83,7 @@ async function ensureElasticSearchConnection(ds, config, indices, retries, backo
     });
   }
   catch(error) {
-    console.error('Could not connect to the Elasticsearch:', 'Is the elasticsearch service started?');
+    console.error('Could not connect to the Elasticsearch:', 'Is the elasticsearch service started?', error);
     console.error('Retrying elasticsearch');
 
     if(retries < 1) {

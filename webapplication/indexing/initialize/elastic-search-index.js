@@ -116,9 +116,8 @@ module.exports = (state) => {
       }
     };
     // Get all fields that needs a raw value included in the index
-    config.types.asset.fields.filter((field) => {
-      return field.includeRaw;
-    })
+    config.types.asset.fields
+      .filter((field) => field.includeRaw)
       .forEach((field) => {
         var fieldName = field.short;
         fields[fieldName] = {
@@ -134,25 +133,21 @@ module.exports = (state) => {
       });
     // Derive mappings from the asset field types
     // First the fields with date types
-    config.types.asset.fields.filter((field) => {
-      return field.type === 'date';
-    })
+    config.types.asset.fields
+      .filter((field) => field.type === 'date')
       .forEach((field) => {
-        var fieldName = field.short;
-        fields[fieldName] = {
+        fields[field.short] = {
           type: 'object',
           properties: {
-            timestamp: {type: 'date'}
-          }
+            timestamp: {type: 'date'},
+          },
         };
       });
     // Enumurations should not have their displaystring tokenized
-    config.types.asset.fields.filter((field) => {
-      return field.type === 'enum';
-    })
+    config.types.asset.fields
+      .filter((field) => field.type === 'enum')
       .forEach((field) => {
-        var fieldName = field.short;
-        fields[fieldName] = {
+        fields[field.short] = {
           type: 'object',
           properties: {
             displaystring: {
