@@ -16,7 +16,6 @@
 
 const ds = require('../lib/services/elasticsearch');
 const config = require('../../shared/config');
-const es = require('../lib/services/elasticsearch');
 
 if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
   throw new Error('Need exactly one index for Cumulus triggers to work.');
@@ -90,7 +89,7 @@ function updateAssetsFromData(partials) {
     body: items
   };
 
-  return es.bulk(query).then(response => {
+  return ds.bulk(query).then(response => {
     const indexedIds = [];
     let errors = [];
     // Go through the items in the response and replace failures with errors
