@@ -4,16 +4,7 @@ var request = require('request');
 var querystring = require('querystring');
 var config = require('../../../shared/config');
 
-let defaultIndex;
-if(config.es && config.es.index) {
-  if(typeof(config.es.index) === 'string') {
-    defaultIndex = config.es.index;
-  } else if(Array.isArray(config.es.index)) {
-    defaultIndex = config.es.index.join(',');
-  } else {
-    throw new Error('es.index must be a string or an array');
-  }
-}
+const defaultIndex = [config.es.assetIndex, config.es.seriesIndex].join(',');
 
 function validateRequest(req) {
   if (req.method === 'GET' || req.method === 'POST') {

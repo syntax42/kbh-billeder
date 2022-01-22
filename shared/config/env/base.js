@@ -99,7 +99,8 @@ let config = {
   cloudinaryUrl: process.env.CLOUDINARY_URL || false,
   downloadOptions: require('../download-options'),
   es: {
-    index: 'kbh-billeder-assets',
+    assetIndex: 'kbh-billeder__assets',
+    seriesIndex: 'kbh-billeder__series',
     host: process.env.ES_HOST || 'localhost:9200',
     log: 'error'
   },

@@ -17,16 +17,12 @@
 const ds = require('../lib/services/elasticsearch');
 const config = require('../../shared/config');
 
-if(!config.es || !config.es.index || typeof(config.es.index) !== 'string') {
-  throw new Error('Need exactly one index for Cumulus triggers to work.');
-}
-
 const indexing = require('../indexing/modes/run');
 
 function createAsset(catalogAlias, assetId) {
   var state = {
     context: {
-      index: config.es.index,
+      index: config.es.assetIndex,
       geocoding: {
         enabled: true
       },
@@ -44,7 +40,7 @@ function createAsset(catalogAlias, assetId) {
 function updateAsset(catalogAlias, assetId) {
   var state = {
     context: {
-      index: config.es.index,
+      index: config.es.assetIndex,
       geocoding: {
         enabled: true
       }
@@ -68,8 +64,7 @@ function updateAssetsFromData(partials) {
   partials.forEach((partial) => {
     const updateAction = {
       'update': {
-        _index: config.es.index,
-        _type: 'asset',
+        _index: config.es.assetIndex,
         '_id': partial.collection + '-' + partial.id
       }
     };
@@ -78,7 +73,6 @@ function updateAssetsFromData(partials) {
   });
 
   const query = {
-    index: config.es.index,
     body: items,
   };
 
@@ -106,7 +100,7 @@ function deleteAsset(catalogAlias, assetId) {
 
   // First, find all referencing series
   return ds.search({
-    index: config.es.index,
+    index: config.es.seriesIndex,
     body: {
       query: {
         match: {
@@ -138,25 +132,22 @@ function deleteAsset(catalogAlias, assetId) {
           // If at least one asset remains in series, update it
           bulkOperations.push({
             'index' : {
-              '_type': 'series',
+              '_index': config.es.seriesIndex,
               '_id': seriesId
             }
           });
 
-          bulkOperations.push({
-            ...series
-          });
+          bulkOperations.push({...series});
         }
         else {
           // If the serie is now empty, delete it
-          bulkOperations.push({delete: {_type: 'series', _id: seriesId}});
+          bulkOperations.push({delete: {_index: config.es.seriesIndex, _id: seriesId}});
         }
       });
 
-      bulkOperations.push({delete: {_type: 'asset', _id: id}});
+      bulkOperations.push({delete: {_index: config.es.assetIndex, _id: id}});
 
       return ds.bulk({
-        index: config.es.index,
         body: bulkOperations,
       });
     });

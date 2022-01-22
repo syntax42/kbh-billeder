@@ -65,7 +65,7 @@ const motifTagging = {
     const ds = require('../lib/services/elasticsearch');
     // Search for distinct tags in all relevant fields
     return ds.search({
-      index: config.es.index,
+      index: config.es.assetIndex,
       size: 0,
       body: {
         aggs: {

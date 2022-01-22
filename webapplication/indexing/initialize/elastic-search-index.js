@@ -15,11 +15,11 @@ const seriesMapping = {
       type: 'keyword'
     },
     title: {
-      type: 'string',
-      analyzer: 'english',
+      type: 'text',
     },
     description: {type: 'text'},
     tags: {type: 'text'},
+    assets: {type: 'keyword'},
     dateFrom: {
       type: 'object',
       properties: {
@@ -41,54 +41,51 @@ const seriesMapping = {
 
 module.exports = (state) => {
   // Save the index in the context
-  state.context.index = config.es.index;
+  state.context.index = config.es.assetIndex; //TODO: replace all through with both indexes -- or remove use altogether seeing as index is from config
   console.log('Initializing the Elastic Search index: ' + state.context.index);
 
-  return es.indices.exists({
-    index: state.context.index
-  })
-    .then((exists) => {
-      if(exists) {
-        //If index exists check that it has the mappings we need
-        return ensureMappingsExists();
+  return Promise.all([
+    es.indices.exists({index: config.es.assetIndex}),
+    es.indices.exists({index: config.es.seriesIndex}),
+  ])
+    .then(([{body: assetIndexExists}, {body: seriesIndexExists}]) => {
+      const indicesToCreate = [];
+      if(!assetIndexExists) {
+        indicesToCreate.push({
+          index: config.es.assetIndex,
+          mappings: getAssetMapping(),
+        });
       }
-      //else we create the index
-      return createIndex();
+
+      if(!seriesIndexExists) {
+        indicesToCreate.push({
+          index: config.es.seriesIndex,
+          mappings: seriesMapping,
+        });
+      }
+
+      if(indicesToCreate.length < 1) {
+        return state;
+      }
+
+      return Promise.all(indicesToCreate.map((def) => createIndex(def)))
+        .then(() => {
+          console.log('Indices created:', indicesToCreate);
+          return state;
+        });
     });
 
-  function ensureMappingsExists() {
-    return es.indices.get({
-      index: state.context.index
-    })
-      .then((index) => {
-        if(!index[config.es.index].mappings.series) {
-          return es.indices.putMapping({
-            index: state.context.index,
-            type: 'series',
-            body: seriesMapping
-          })
-            .then(response => {
-              console.log('Series mapping successfully added to index', response);
-              return state;
-            })
-            .catch(error => console.error("series error: ", error));
-        }
-        return state;
-      });
-  }
+  //TODO: move createIndex and getAssetMapping top level
 
-  function createIndex() {
+  function createIndex({index, mappings}) {
     return es.indices.create({
-      index: state.context.index,
+      index,
       body: {
-        'index': {
-          'max_result_window': 100000 // So sitemaps can access all assets
+        settings: {
+          max_result_window: 100000 // So sitemaps can access all assets
         },
-        'mappings': {
-          asset: getAssetMapping(),
-          series: seriesMapping,
-        }
-      }
+        mappings,
+      },
     })
       .then(function() {
         console.log('Index created.');
@@ -106,31 +103,34 @@ module.exports = (state) => {
   function getAssetMapping() {
     let fields = config.types.asset.mapping || {};
     fields.id = {
-      'type': 'string',
-      'analyzer': 'english',
-      'fields': {
-        'raw': {
-          'type': 'string',
-          'index': 'not_analyzed'
-        }
-      }
+      type: 'keyword',
+      fields: {
+        raw: {
+          type: 'text',
+          index: false,
+        },
+      },
     };
+
+    fields.series_ids = {
+      type: 'keyword',
+    };
+
     // Get all fields that needs a raw value included in the index
     config.types.asset.fields
       .filter((field) => field.includeRaw)
       .forEach((field) => {
-        var fieldName = field.short;
-        fields[fieldName] = {
-          'type': 'string',
-          'analyzer': 'english',
-          'fields': {
-            'raw': {
-              'type': 'string',
-              'index': 'not_analyzed'
-            }
-          }
+        fields[field.short] = {
+          type: 'keyword',
+          fields: {
+            raw: {
+              type: 'text',
+              index: false,
+            },
+          },
         };
       });
+
     // Derive mappings from the asset field types
     // First the fields with date types
     config.types.asset.fields
@@ -151,17 +151,13 @@ module.exports = (state) => {
           type: 'object',
           properties: {
             displaystring: {
-              'type': 'string',
-              'index': 'not_analyzed'
+              type: 'text',
+              index: false,
             }
           }
         };
       });
 
-    return {
-      asset: {
-        properties: fields
-      }
-    };
+    return {properties: fields};
   }
 };

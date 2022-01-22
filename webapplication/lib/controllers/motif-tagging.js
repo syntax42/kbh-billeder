@@ -215,8 +215,7 @@ exports.save = function(req, res, next) {
 
         // Attempt to fetch document again an pass the original metadata back.
         ds.getSource({
-          index: config.es.index,
-          type: 'asset',
+          index: config.es.assetIndex,
           id: assetIdentifier
         }).then(
           (metadata) => {

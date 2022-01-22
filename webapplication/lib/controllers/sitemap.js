@@ -13,7 +13,7 @@ exports.index = function(req, res, next) {
 
   // Count the number of items in each of our collections.
   ds.search({
-    index: config.es.index,
+    index: config.es.assetIndex,
     size: 0,
     body: {
       aggs: {
@@ -70,7 +70,7 @@ exports.catalog = function(req, res, next) {
 
   // Get a list of assets in the range and render them out as sitemaps.
   const parameters = {
-    index: config.es.index,
+    index: config.es.assetIndex,
     body: {
       size: SITEMAP_ASSET_LIMIT,
       query: {

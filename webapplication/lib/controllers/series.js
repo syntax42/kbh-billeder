@@ -5,8 +5,7 @@ module.exports.get = (req, res, next) => {
   const {seriesUrl} = req.params;
 
   es.get({
-    index: config.es.index,
-    type: 'series',
+    index: config.es.seriesIndex,
     id: `series/${seriesUrl}`
   })
     .then((seriesDoc) => {

@@ -149,8 +149,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
         const assetIds = _.uniq(assets.map(({metadata}) => `${metadata.collection}-${metadata.id}`));
 
         return es.search({
-          index: config.es.index,
-          type: 'series',
+          index: config.es.seriesIndex,
           body: {
             query: {
               bool: {
@@ -291,9 +290,8 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
         .forEach(({metadata, context}) => {
           items.push({
             'index' : {
-              '_index': context.index,
-              '_type': 'asset',
-              '_id': metadata.collection + '-' + metadata.id,
+              '_index': config.es.assetIndex,
+              '_id': metadata.collection + '-' + metadata.id
             }
           });
           items.push(metadata);
@@ -303,8 +301,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
         if(series.assets.length > 0) {
           items.push({
             'index' : {
-              '_index': context.index,
-              '_type': 'series',
+              '_index': config.es.seriesIndex,
               '_id': series._id
             }
           });
@@ -316,8 +313,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
         } else {
           items.push({
             'delete' : {
-              '_index': context.index,
-              '_type': 'series',
+              '_index': config.es.seriesIndex,
               '_id': series._id
             }
           });

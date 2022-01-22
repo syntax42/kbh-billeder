@@ -15,13 +15,16 @@ if(types.length < 0) {
  * the type of then document.
  */
 exports.get = (req, type) => {
-  var collection = req.params.collection;
-  var id = req.params.id;
+  const index = {
+    'asset': config.es.assetIndex,
+    'series': config.es.seriesIndex,
+  }[type];
+
+  const {collection, id} = req.params;
   return ds.getSource({
-    index: config.es.index,
-    type: type,
+    index,
     id: collection + '-' + id
-  });
+  }).then(({body: response}) => response);
 };
 
 exports.getRelatedMetadata = (metadata) => {

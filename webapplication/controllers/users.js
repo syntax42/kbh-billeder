@@ -72,8 +72,7 @@ exports.fetchUserContributions = async (req, res, next) => {
     // Extract the ids of the assets and fetch the data we need from ES.
     const ids = contributions.map(contribution => contribution.asset_id);
     const queryObject = {
-      index: config.es.index,
-      type: 'asset',
+      index: config.es.assetIndex,
       _source: ['collection', 'id', 'short_title', 'type', 'description'],
       body: {ids},
     };

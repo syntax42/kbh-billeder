@@ -7,7 +7,7 @@ const config = require('../../../shared/config');
 exports.suggest = function suggest(req, res, next) {
   const text = req.query.text;
   const query = {
-    index: config.es.index,
+    index: [config.es.assetIndex, config.es.seriesIndex],
     body: {
       suggest: {
         text,
