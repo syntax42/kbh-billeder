@@ -9,6 +9,36 @@
 const es = require('../../lib/services/elasticsearch');
 const config = require('../../../shared/config');
 
+const seriesMapping = {
+  properties: {
+    url: {
+      type: 'keyword'
+    },
+    title: {
+      type: 'string',
+      analyzer: 'english',
+    },
+    description: {type: 'text'},
+    tags: {type: 'text'},
+    dateFrom: {
+      type: 'object',
+      properties: {
+        timestamp: {
+          type: 'date'
+        }
+      }
+    },
+    dateTo: {
+      type: 'object',
+      properties: {
+        timestamp: {
+          type: 'date'
+        }
+      }
+    }
+  }
+};
+
 module.exports = (state) => {
   // Save the index in the context
   state.context.index = config.es.index;
@@ -32,7 +62,6 @@ module.exports = (state) => {
     })
       .then((index) => {
         if(!index[config.es.index].mappings.series) {
-          const seriesMapping = getSeriesMapping();
           return es.indices.putMapping({
             index: state.context.index,
             type: 'series',
@@ -57,7 +86,7 @@ module.exports = (state) => {
         },
         'mappings': {
           asset: getAssetMapping(),
-          series: getSeriesMapping()
+          series: seriesMapping,
         }
       }
     })
@@ -137,38 +166,6 @@ module.exports = (state) => {
     return {
       asset: {
         properties: fields
-      }
-    };
-  }
-
-  function getSeriesMapping() {
-    return {
-      properties: {
-        url: {
-          type: 'keyword'
-        },
-        title: {
-          type: 'string',
-          analyzer: 'english',
-        },
-        description: {type: 'text'},
-        tags: {type: 'text'},
-        dateFrom: {
-          type: 'object',
-          properties: {
-            timestamp: {
-              type: 'date'
-            }
-          }
-        },
-        dateTo: {
-          type: 'object',
-          properties: {
-            timestamp: {
-              type: 'date'
-            }
-          }
-        }
       }
     };
   }
