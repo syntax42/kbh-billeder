@@ -76,7 +76,7 @@ function updateAssetsFromData(partials) {
     body: items,
   };
 
-  return ds.bulk(query).then(response => {
+  return ds.bulk(query).then(({ body: response }) => {
     const indexedIds = [];
     let errors = [];
     // Go through the items in the response and replace failures with errors
@@ -113,7 +113,7 @@ function deleteAsset(catalogAlias, assetId) {
       }
     }
   })
-    .then((response) => {
+    .then(({body: response}) => {
       const bulkOperations = [];
 
       response.hits.hits.forEach(({ _id: seriesId, _source: series }) => {
@@ -149,7 +149,7 @@ function deleteAsset(catalogAlias, assetId) {
 
       return ds.bulk({
         body: bulkOperations,
-      });
+      }).then(({body: response}) => response);
     });
 }
 

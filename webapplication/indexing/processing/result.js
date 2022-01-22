@@ -173,7 +173,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
             }
           }
         })
-          .then((response) => {
+          .then(({body: response}) => {
             const seriesLookup = {};
             response.hits.hits.forEach((elasticSearchSeries) => {
               const series = {
@@ -323,7 +323,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
       // Perform the bulk operation
       return es.bulk({
         body: items
-      }).then(response => {
+      }).then(({body: response}) => {
         const indexedIds = [];
         // Go through the items in the response and replace failures with errors
         // in the assets

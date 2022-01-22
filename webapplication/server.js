@@ -93,7 +93,7 @@ async function ensureElasticSearchConnection(ds, config, indices, retries, backo
     return ensureElasticSearchConnection(ds, config, indices, retries - 1, backoff + backoff);
   }
 
-  console.log('Index exists and has', response.count, 'documents.');
+  console.log('Index exists and has', response.body.count, 'documents.');
 }
 
 module.exports = co;

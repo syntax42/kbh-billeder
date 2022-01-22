@@ -76,7 +76,7 @@ exports.fetchUserContributions = async (req, res, next) => {
       _source: ['collection', 'id', 'short_title', 'type', 'description'],
       body: {ids},
     };
-    const loadedContributions = await ds.mget(queryObject).then(response => {
+    const loadedContributions = await ds.mget(queryObject).then(({body: response}) => {
       // Extract the metadata for all related docs that was found
       return response.docs
       // Only show documents we could actually look up.

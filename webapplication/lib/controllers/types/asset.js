@@ -34,7 +34,7 @@ exports.index = function(req, res, next) {
           }
         }
       })
-        .then((seriesSearchResult) => {
+        .then(({body: seriesSearchResult}) => {
           const assetSeries = seriesSearchResult.hits.hits
             .map((seriesDoc) => seriesDoc._source);
 

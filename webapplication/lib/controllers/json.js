@@ -19,7 +19,8 @@ exports.suggest = function suggest(req, res, next) {
     },
   };
 
-  ds.suggest(query).then(function(resp) {
+  //TODO: suggest does not exist in most recent elasticsearch - where's it gone mate?
+  ds.suggest(query).then(function({body: resp}) {
     res.header('Content-type', 'application/json; charset=utf-8');
     if (resp.suggest && resp.suggest.length >= 1) {
       var suggestions = resp.suggest[0].options;

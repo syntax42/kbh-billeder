@@ -33,7 +33,7 @@ exports.frontpage = function(req, res, next) {
           body: {
             query: config.search.baseQuery
           }
-        }).then(function(response) {
+        }).then(function({body: response}) {
           res.render('frontpage', {
             frontpageItems,
             frontpage: true,

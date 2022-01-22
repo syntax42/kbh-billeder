@@ -78,11 +78,8 @@ exports.save = function(req, res, next) {
         ds.getSource({
           index: config.es.assetIndex,
           id: assetIdentifier
-        }).then(
-          (metadata) => {
+        }).then(({body: metadata}) => {
             res.json(_.pick(metadata, ['collection', 'id', 'latitude', 'longitude', 'heading', 'userId']));
-          }
-        );
-      }
-    );
+        });
+    });
 };

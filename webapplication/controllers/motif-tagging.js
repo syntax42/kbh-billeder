@@ -83,7 +83,7 @@ const motifTagging = {
           }
         }
       }
-    }).then(response => {
+    }).then(({body: response}) => {
       // Concatenate all the aggregated tags
       let tags = _.concat(
         response.aggregations.tags.buckets,

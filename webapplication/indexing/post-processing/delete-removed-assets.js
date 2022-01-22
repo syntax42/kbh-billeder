@@ -111,7 +111,7 @@ module.exports = function(state) {
       return es.bulk({
         index: state.context.index,
         body: actions
-      });
+      }).then(({body: response}) => response);
     }
   }).then(function() {
     return state;

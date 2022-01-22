@@ -20,7 +20,7 @@ es.scrollSearch = function(body, hitCallback) {
     scroll: '30s', // Set to 30 seconds because we are calling right back
     size: 1000,
     body
-  }).then(function getMoreUntilDone(response) {
+  }).then(function getMoreUntilDone({body: response}) {
     // If we are still getting hits - let's iterate over them.
     if (response.hits.hits.length > 0) {
       return response.hits.hits.map(hitCallback).reduce(Q.when, null)

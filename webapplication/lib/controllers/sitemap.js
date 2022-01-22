@@ -32,7 +32,7 @@ exports.index = function(req, res, next) {
         },
       },
     },
-  }).then(function(response) {
+  }).then(function({body: response}) {
     // Break each collection up into SITEMAP_ASSET_LIMIT sized chuncks and
     // produce an url for our /catalog endpoint that will produce the actual
     // sitemap.
@@ -92,7 +92,7 @@ exports.catalog = function(req, res, next) {
     parameters.body.query.bool.must.push(config.search.baseQuery);
   }
 
-  ds.search(parameters).then(function(result) {
+  ds.search(parameters).then(function({body: result}) {
     var urls = [];
     for (var i=0; i < result.hits.hits.length; ++i) {
       const metadata = result.hits.hits[i]._source;

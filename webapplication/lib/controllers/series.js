@@ -8,7 +8,7 @@ module.exports.get = (req, res, next) => {
     index: config.es.seriesIndex,
     id: `series/${seriesUrl}`
   })
-    .then((seriesDoc) => {
+    .then(({body: seriesDoc}) => {
       res.render('series.pug', {
         req,
         series: {
