@@ -87,16 +87,11 @@ module.exports = (state) => {
         mappings,
       },
     })
-      .then(function() {
-        console.log('Index created.');
-        return state;
-      }, function(err) {
-        // TODO: Add a recursive check for this message.
-        if (err.message === 'No Living connections') {
-          throw new Error('Is the Elasticsearch server running?');
-        } else {
-          throw err;
-        }
+      .catch((error) => {
+        console.error('Error while creating index', index);
+        console.dir(mappings, {depth: 10});
+        console.dir(error, {depth:10});
+        throw error;
       });
   }
 
