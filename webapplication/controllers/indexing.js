@@ -78,7 +78,8 @@ function updateAssetsFromData(partials) {
   });
 
   const query = {
-    body: items
+    index: config.es.index,
+    body: items,
   };
 
   return ds.bulk(query).then(response => {
@@ -105,6 +106,7 @@ function deleteAsset(catalogAlias, assetId) {
 
   // First, find all referencing series
   return ds.search({
+    index: config.es.index,
     body: {
       query: {
         match: {

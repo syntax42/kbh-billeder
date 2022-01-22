@@ -29,6 +29,7 @@ exports.frontpage = function(req, res, next) {
     .exec(function(err, frontpageItems) {
       if(!err) {
         ds.count({
+          index: config.es.index,
           body: {
             query: config.search.baseQuery
           }

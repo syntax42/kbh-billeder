@@ -13,6 +13,7 @@ exports.index = function(req, res, next) {
 
   // Count the number of items in each of our collections.
   ds.search({
+    index: config.es.index,
     'size':0,
     'body': {
       'aggs': {

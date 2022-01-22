@@ -20,6 +20,7 @@ exports.index = function(req, res, next) {
   })
     .then(function(metadata) {
       return es.search({
+        index: config.es.index,
         type: 'series',
         body: {
           query: {

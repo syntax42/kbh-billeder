@@ -18,6 +18,7 @@ exports.get = (req, type) => {
   var collection = req.params.collection;
   var id = req.params.id;
   return ds.getSource({
+    index: config.es.index,
     type: type,
     id: collection + '-' + id
   });

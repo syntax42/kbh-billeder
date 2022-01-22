@@ -1,11 +1,13 @@
 'use strict';
 
-var ds = require('../services/elasticsearch');
+const ds = require('../services/elasticsearch');
+const config = require('../../../shared/config');
 
 // Autosuggest for search field
 exports.suggest = function suggest(req, res, next) {
   var text = req.query.text;
   var query = {
+    index: config.es.index,
     'body': {
       'suggest': {
         'text': text,

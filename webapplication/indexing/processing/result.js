@@ -149,6 +149,7 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
         const assetIds = _.uniq(assets.map(({metadata}) => `${metadata.collection}-${metadata.id}`));
 
         return es.search({
+          index: config.es.index,
           type: 'series',
           body: {
             query: {
