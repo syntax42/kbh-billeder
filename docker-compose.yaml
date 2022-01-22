@@ -19,7 +19,7 @@ services:
   node:
     build:
       context: .
-    command: npm start
+    command: npm run install-and-start
     ports:
       - 9000:9000
     volumes:
