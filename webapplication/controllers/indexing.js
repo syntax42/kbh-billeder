@@ -34,7 +34,6 @@ function createAsset(catalogAlias, assetId) {
         enabled: true
       }
     },
-    es: ds,
     mode: 'single',
     reference: catalogAlias + '/' + assetId
   };
@@ -50,7 +49,6 @@ function updateAsset(catalogAlias, assetId) {
         enabled: true
       }
     },
-    es: ds,
     mode: 'single',
     reference: catalogAlias + '/' + assetId
   };
