@@ -174,7 +174,7 @@ function initialize() {
 
       es.search(searchObject)
         .then(function (response) {
-          resultsTotal = response.hits.total;
+          resultsTotal = response.hits.total.value;
           loadingResults = false;
           mapController.onResults(response, searchParams);
         }, function (error) {
@@ -222,7 +222,7 @@ function initialize() {
           // Remove all search result items from $results, that might be there
           $results.find('.search-results-item').remove();
         }
-        resultsTotal = response.hits.total;
+        resultsTotal = response.hits.total.value;
         loadingResults = false;
 
         response.hits.hits.forEach(function(hit, i) {

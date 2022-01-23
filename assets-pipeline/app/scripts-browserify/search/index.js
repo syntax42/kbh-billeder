@@ -194,7 +194,7 @@ function initialize() {
       persistChangedParams(searchParams, true);
 
       es.search(searchObject).then(function (response) {
-        resultsTotal = response.hits.total;
+        resultsTotal = response.hits.total.value;
         loadingResults = false;
         mapController.onResults(response, searchParams);
       }, function (error) {
@@ -252,7 +252,7 @@ function initialize() {
           response.hits.hits.splice(firstSeriesIndex, 1);
         }
       }
-      resultsTotal = response.hits.total;
+      resultsTotal = response.hits.total.value;
       loadingResults = false;
 
       response.hits.hits.forEach(function(hit, i) {
