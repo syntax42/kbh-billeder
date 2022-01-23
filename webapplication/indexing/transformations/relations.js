@@ -1,5 +1,4 @@
 'use strict';
-const _ = require('lodash');
 const cip = require('../../services/cip');
 
 function relatedFilenameComparison(assetA, assetB) {
@@ -33,10 +32,10 @@ module.exports = metadata => {
   subAssets.sort(relatedFilenameComparison);
   subAssets.forEach(asset => asset.direction = 'child');
 
-  metadata.related.assets = _.concat(
-    masterAssets,
-    subAssets
-  );
+  metadata.related.assets = [
+    ...masterAssets,
+    ...subAssets,
+  ];
   metadata.related.assets.forEach(asset => {
     // Prepend the collection on the related asset id
     if(typeof(asset.id) === 'number') {
