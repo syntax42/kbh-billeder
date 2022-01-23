@@ -4,10 +4,7 @@ const config = require('../../../shared/config');
 const helpers = require('../../../shared/helpers');
 const elasticsearchQueryBody = require('./search/es-query-body');
 
-const elasticsearch = require('elasticsearch');
-const es = new elasticsearch.Client({
-  host: location.origin + '/api'
-});
+const es = require('./es');
 
 /**
  * Injects a map view into each .mini-map-with-query div.
@@ -97,19 +94,21 @@ $(function ($) {
 
           const searchObject = {
             body: queryBody,
-            // We only want the aggregation so we don't care about the hits.
-            size: searchParams.geohash ? 0 : config.search.maxAssetMarkers,
-            _source: [
-              'location',
-              'longitude',
-              'latitude',
-              'collection',
-              'id',
-              'short_title',
-              'type',
-              'heading',
-              'description'
-            ],
+            query: {
+              // We only want the aggregation so we don't care about the hits.
+              size: searchParams.geohash ? 0 : config.search.maxAssetMarkers,
+              _source: [
+                'location',
+                'longitude',
+                'latitude',
+                'collection',
+                'id',
+                'short_title',
+                'type',
+                'heading',
+                'description'
+              ].join(','),
+            },
           };
     
           es.search(searchObject).then(function (response) {

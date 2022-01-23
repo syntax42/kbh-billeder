@@ -10,10 +10,7 @@ const HIDDEN_CLASS = 'document__navigator-arrow--hidden';
 
 const navigatorPreview = require('@views/includes/navigator-preview');
 
-const elasticsearch = require('elasticsearch');
-const es = new elasticsearch.Client({
-  host: location.origin + '/api'
-});
+const es = require('../es');
 
 const ARROWS = {
   'right': $right,
@@ -165,8 +162,10 @@ if(window.sessionStorage) {
         resultsDesired += PAGE_SIZE;
         es.search({
           body: queryBody,
-          from: resultsLoaded.length,
-          size: resultsDesired - resultsLoaded.length
+          query: {
+            from: resultsLoaded.length,
+            size: resultsDesired - resultsLoaded.length,
+          },
         }).then((response) => {
           response.hits.hits.forEach((hit) => {
             const item = {

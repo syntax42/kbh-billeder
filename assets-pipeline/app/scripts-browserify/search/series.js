@@ -38,10 +38,7 @@ let loadingResults = false;
 // Controls whether we should fetch search-results for a map or a list.
 let viewMode = 'list';
 
-let elasticsearch = require('elasticsearch');
-let es = new elasticsearch.Client({
-  host: location.origin + '/api'
-});
+const es = require('../es');
 
 let seriesAssetsFilter;
 
@@ -102,7 +99,7 @@ function initialize() {
         // Get aggragations for the sidebar
         es.search({
           body: queryBody,
-          size: 0
+          query: {size: 0},
         })
           .then(function (response) {
             sidebar.update(clonedSearchParams.filters, response.aggregations);
@@ -150,25 +147,27 @@ function initialize() {
       // We've configured our search, now setup the query and execute it.
       const searchObject = {
         body: queryBody,
-        // We only want the aggregation so we don't care about the hits.
-        size: searchParams.geohash ? 0 : maxAssets,
-        _source: [
-          'location',
-          'longitude',
-          'latitude',
-          'collection',
-          'id',
-          'short_title',
-          'type',
-          'heading',
-          'description',
-          'tags',
-          'creation_time',
-          'creation_time_estimated',
-          'creation_time_from',
-          'creation_time_to',
-          'file_format'
-        ],
+        query: {
+          // We only want the aggregation so we don't care about the hits.
+          size: searchParams.geohash ? 0 : maxAssets,
+          _source: [
+            'location',
+            'longitude',
+            'latitude',
+            'collection',
+            'id',
+            'short_title',
+            'type',
+            'heading',
+            'description',
+            'tags',
+            'creation_time',
+            'creation_time_estimated',
+            'creation_time_from',
+            'creation_time_to',
+            'file_format'
+          ].join(','),
+        },
       };
 
       reset();
@@ -208,9 +207,11 @@ function initialize() {
 
     const searchObject = {
       body: queryBody,
-      from: resultsLoaded.length,
-      _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format'],
-      size: resultsDesired - resultsLoaded.length
+      query: {
+        from: resultsLoaded.length,
+        _source: ['collection', 'id', 'short_title', 'type', 'description', 'tags', 'creation_time', 'creation_time_estimated', 'creation_time_from', 'creation_time_to', 'file_format'].join(','),
+        size: resultsDesired - resultsLoaded.length,
+      },
     };
 
     // Pull in the search results.
