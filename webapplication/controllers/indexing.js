@@ -86,7 +86,10 @@ function updateAssetsFromData(partials) {
         indexedIds.push(item.update._id);
       } else {
         // TODO: Consider using the AssetIndexingError instead
-        errors.push(new Error('Failed update ' + item.update._id));
+        errors.push({
+          trace: new Error('Failed update ' + item.update._id),
+          item,
+        });
       }
     });
     console.log('Updated ', indexedIds.length, 'assets in ES');
