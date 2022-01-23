@@ -227,7 +227,10 @@ function initialize() {
 
         response.hits.hits.forEach(function(hit, i) {
           const item = {
-            type: hit._type,
+            type: {
+              [config.es.assetIndex]: 'asset',
+              [config.es.seriesIndex]: 'series',
+            }[hit._index],
             metadata: hit._source
           };
           item.metadata.isSeries = true;

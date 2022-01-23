@@ -9,6 +9,7 @@ const $right = $('a.document__navigator-arrow--right');
 const HIDDEN_CLASS = 'document__navigator-arrow--hidden';
 
 const navigatorPreview = require('@views/includes/navigator-preview');
+const config = require('../../../../shared/config');
 
 const es = require('../es');
 
@@ -169,7 +170,10 @@ if(window.sessionStorage) {
         }).then((response) => {
           response.hits.hits.forEach((hit) => {
             const item = {
-              type: hit._type,
+              type: {
+                [config.es.assetIndex]: 'asset',
+                [config.es.seriesIndex]: 'series',
+              }[hit._index],
               metadata: hit._source
             };
             resultsLoaded.push(item);

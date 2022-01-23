@@ -237,11 +237,14 @@ function initialize() {
         // Remove all search result items from $results, that might be there
         $results.find('.search-results-item, .search-results-first-series').remove();
 
-        const firstSeriesIndex = response.hits.hits.findIndex((hit) => hit._type === 'series');
+        const firstSeriesIndex = response.hits.hits.findIndex((hit) => hit._index === config.es.seriesIndex);
         if(firstSeriesIndex !== -1) {
           const hit = response.hits.hits[firstSeriesIndex];
           const item = {
-            type: hit._type,
+            type: {
+              [config.es.assetIndex]: 'asset',
+              [config.es.seriesIndex]: 'series',
+            }[hit._index],
             metadata: hit._source
           };
           const markup = templates.searchResultFirstSeries(item);
@@ -257,7 +260,10 @@ function initialize() {
 
       response.hits.hits.forEach(function(hit, i) {
         const item = {
-          type: hit._type,
+          type: {
+            [config.es.assetIndex]: 'asset',
+            [config.es.seriesIndex]: 'series',
+          }[hit._index],
           metadata: hit._source
         };
         const markup = templates.searchResultItem(item);
