@@ -2,7 +2,6 @@
 
 const search = require('./controllers/search');
 const api = require('./controllers/api');
-const json = require('./controllers/json');
 const sitemap = require('./controllers/sitemap');
 const robots = require('./controllers/robots');
 const motifTagging = require('./controllers/motif-tagging');
@@ -58,7 +57,6 @@ module.exports = function(app) {
   );
 
   // Static urls
-  app.route('/suggest.json').get(json.suggest);
   app.route('/robots.txt').get(robots.robotsTxt);
   app.route('/sitemap.xml').get(sitemap.index);
 
