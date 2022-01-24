@@ -70,15 +70,15 @@ exports.save = function(req, res, next) {
   // Report if an error occured, and attempt to give the browser a usable reply.
   Promise.all([cipSave, indexUpdate])
     .catch((error) => {
-        console.warn(`Parallel update of ${assetIdentifier} in ES and CIP failed`);
-        console.warn(error);
+      console.warn(`Parallel update of ${assetIdentifier} in ES and CIP failed`);
+      console.warn(error);
 
-        // Attempt to fetch document again an pass the original metadata back.
-        ds.getSource({
-          index: config.es.assetIndex,
-          id: assetIdentifier
-        }).then(({body: metadata}) => {
-            res.json(_.pick(metadata, ['collection', 'id', 'latitude', 'longitude', 'heading', 'userId']));
-        });
+      // Attempt to fetch document again an pass the original metadata back.
+      ds.getSource({
+        index: config.es.assetIndex,
+        id: assetIdentifier
+      }).then(({body: metadata}) => {
+        res.json(_.pick(metadata, ['collection', 'id', 'latitude', 'longitude', 'heading', 'userId']));
+      });
     });
 };
