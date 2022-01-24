@@ -98,7 +98,7 @@ module.exports = (state) => {
   function getAssetMapping() {
     let fields = config.types.asset.mapping || {};
     fields.id = {
-      type: 'keyword',
+      type: 'long',
       fields: {
         raw: {
           type: 'text',
@@ -116,7 +116,7 @@ module.exports = (state) => {
       .filter((field) => field.includeRaw)
       .forEach((field) => {
         fields[field.short] = {
-          type: 'keyword',
+          type: 'text',
           fields: {
             raw: {
               type: 'text',
