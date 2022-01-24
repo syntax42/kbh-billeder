@@ -219,6 +219,10 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
     })
     .then(({assets, errors, seriesLookup}) => {
       assets.forEach(({ metadata, assetSeries }) => {
+        // Make series ids attached to assets so we can look it up
+        metadata.series_ids = assetSeries.map((series) => series._id);
+
+        // Set up series
         assetSeries.forEach((as) => {
           const series = seriesLookup[as._id];
           if(typeof series.assets == "undefined") {
@@ -281,17 +285,18 @@ function processResultPage(totalcount, context, seriesLookup, mode, pageIndex) {
     }).then(({assets, assetSeries, errors}) => {
       // Create a list of items for a bulk call, for assets that are not errors.
       const items = [];
-      assets.filter(asset => !(asset instanceof AssetIndexingError))
-      .forEach(({metadata, context}) => {
-        items.push({
-          'index' : {
-            '_index': context.index,
-            '_type': 'asset',
-            '_id': metadata.collection + '-' + metadata.id
-          }
+      assets
+        .filter(asset => !(asset instanceof AssetIndexingError))
+        .forEach(({metadata, context}) => {
+          items.push({
+            'index' : {
+              '_index': context.index,
+              '_type': 'asset',
+              '_id': metadata.collection + '-' + metadata.id,
+            }
+          });
+          items.push(metadata);
         });
-        items.push(metadata);
-      });
 
       assetSeries.forEach((series) => {
         if(series.assets.length > 0) {
