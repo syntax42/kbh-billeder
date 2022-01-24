@@ -29,6 +29,7 @@ module.exports.PAGE_SIZE = PAGE_SIZE;
 let resultsDesired = PAGE_SIZE;
 let resultsLoaded = [];
 let resultsTotal = Number.MAX_SAFE_INTEGER;
+let resultsTotalImprecise = false;
 let loadingResults = false;
 
 // Controls whether we should fetch search-results for a map or a list.
@@ -53,6 +54,7 @@ function initialize() {
   function reset() {
     resultsLoaded = [];
     resultsTotal = Number.MAX_SAFE_INTEGER;
+    resultsTotalImprecise = false;
     resultsDesired = PAGE_SIZE;
     $(window).off('scroll');
     $loadMoreBtn.addClass('invisible');
@@ -130,10 +132,10 @@ function initialize() {
       }
     }
 
-    let resultCallback = function (resultsTotal) {
+    let resultCallback = function (resultsTotal, resultsTotalImprecise) {
       // Update the results header with the result
       if(updateWidgets) {
-        resultsHeader.update(searchParams, resultsTotal);
+        resultsHeader.update(searchParams, resultsTotal, resultsTotalImprecise);
       }
       $('.search-results').removeClass('search-results--loading');
       $results.removeAttr('aria-busy');
@@ -195,6 +197,7 @@ function initialize() {
 
       es.search(searchObject).then(function (response) {
         resultsTotal = response.hits.total.value;
+        resultsTotalImprecise = response.hits.total.relation !== 'eq';
         loadingResults = false;
         mapController.onResults(response, searchParams);
       }, function (error) {
@@ -253,6 +256,7 @@ function initialize() {
         }
       }
       resultsTotal = response.hits.total.value;
+      resultsTotalImprecise = response.hits.total.relation !== 'eq';
       loadingResults = false;
 
       response.hits.hits.forEach(function(hit, i) {
@@ -278,7 +282,8 @@ function initialize() {
       if(history.replaceState) {
         history.replaceState({
           resultsLoaded,
-          resultsTotal
+          resultsTotal,
+          resultsTotalImprecise,
         }, null, null);
       }
 
@@ -296,7 +301,7 @@ function initialize() {
         $loadMoreBtn.addClass('invisible');
       }
 
-      resultCallback(resultsTotal);
+      resultCallback(resultsTotal, resultsTotalImprecise);
     }, function (error) {
       console.trace(error.message);
     });
@@ -402,6 +407,7 @@ function initialize() {
 
       // Replace the resultsTotal from the state
       resultsTotal = state.resultsTotal;
+      resultsTotalImprecise = state.resultsTotalImprecise;
 
       // Using the updateWidgets=true, updates the header as well
       // Using the indicateLoading=false makes sure the UI doesn't blink

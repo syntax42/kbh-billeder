@@ -9,13 +9,14 @@ var template = require('@views/includes/search-results-header');
 /**
  * Updates the search filter sidebar based on the selected and available filters
  */
-exports.update = function(searchParams, totalCount) {
+exports.update = function(searchParams, totalCount, totalCountImprecise) {
   const $resultsHeader = $('#results-header');
   // Render the markup
   const markup = template({
     isFiltered: Object.keys(searchParams.filters).length > 0,
     result: {
-      totalCount
+      totalCount,
+      totalCountImprecise,
     },
     sorting: searchParams.sorting,
     sortOptions: config.sortOptions

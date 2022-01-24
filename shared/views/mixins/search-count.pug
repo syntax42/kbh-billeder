@@ -1,4 +1,5 @@
 mixin searchCount
   - const count = result && result.totalCount ? result.totalCount : 0;
+  - const impreciseMaybe = result && result.totalCountImprecise ? 'flere end ' : '';
   - const pluralMaybe = count === 1 ? '' : 'er';
-  span.search-count &nbsp;#{count ? count.toLocaleString() : '0'} post#{pluralMaybe}
+  span.search-count &nbsp;#{impreciseMaybe}#{count ? count.toLocaleString() : '0'} post#{pluralMaybe}
