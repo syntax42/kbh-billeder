@@ -10,7 +10,7 @@ function printAssetExceptions(state) {
 
     errors.forEach((error, errorIndex) => {
       console.error(`Error ${errorIndex}/${errors.length}`);
-      console.util(error, {depth: 10});
+      console.dir(error, {depth: 10});
     });
   }
 
