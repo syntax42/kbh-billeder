@@ -10,7 +10,7 @@ const cip = require('../../services/cip');
 
 module.exports = state => {
   console.log('Closing CIP session', cip.jsessionid);
-  return cip.sessionClose().then(() => {
+  return cip.request('/session/close').then(() => {
     return state;
   });
 };
