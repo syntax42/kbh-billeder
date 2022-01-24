@@ -56,11 +56,11 @@ exports.getRelatedMetadata = (metadata) => {
       });
       // Request all related documents of the particular type
       return ds.mget({
-        type,
+        index: config.es.assetIndex,
         body: {
           ids: relatedDocuments.map(doc => doc.cleanedId)
         }
-      }).then(response => {
+      }).then(({body: response}) => {
         // Extract the metadata for all related docs that was found
         let docs = response.docs
           .filter(doc => doc.found)
@@ -90,7 +90,7 @@ exports.json = (req, type) => {
   var collection = req.params.collection;
   var id = req.params.id;
   return ds.getSource({
-    type: type,
+    index: config.es.assetIndex,
     id: collection + '-' + id
-  });
+  }).then(({body}) => body);
 };
