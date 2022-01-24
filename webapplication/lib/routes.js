@@ -73,9 +73,6 @@ module.exports = function(app) {
 
   app.route('/:catalog/sitemap.xml').get(sitemap.catalog);
 
-  // Add a router for series
-  app.get('/:seriesUrl', series.get);
-
   // Register a router for every type
   const types = Object.keys(config.types);
   types.forEach((type) => {
@@ -100,4 +97,7 @@ module.exports = function(app) {
   if(config.features.motifTagging) {
     app.route('/motif-tag-suggestions').get(motifTagging.typeaheadSuggestions);
   }
+
+  // Add a router for series
+  app.get('/:seriesUrl', series.get);
 };
