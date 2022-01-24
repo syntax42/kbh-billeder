@@ -241,10 +241,7 @@ function initialize() {
         if(firstSeriesIndex !== -1) {
           const hit = response.hits.hits[firstSeriesIndex];
           const item = {
-            type: {
-              [config.es.assetIndex]: 'asset',
-              [config.es.seriesIndex]: 'series',
-            }[hit._index],
+            type: 'series',
             metadata: hit._source
           };
           const markup = templates.searchResultFirstSeries(item);
