@@ -9,36 +9,6 @@
 const es = require('../../lib/services/elasticsearch');
 const config = require('../../../shared/config');
 
-const seriesMapping = {
-  properties: {
-    url: {
-      type: 'keyword'
-    },
-    title: {
-      type: 'text',
-    },
-    description: {type: 'text'},
-    tags: {type: 'text'},
-    assets: {type: 'keyword'},
-    dateFrom: {
-      type: 'object',
-      properties: {
-        timestamp: {
-          type: 'date'
-        }
-      }
-    },
-    dateTo: {
-      type: 'object',
-      properties: {
-        timestamp: {
-          type: 'date'
-        }
-      }
-    }
-  }
-};
-
 module.exports = (state) => {
   // Save the index in the context
   state.context.index = config.es.assetIndex; //TODO: replace all through with both indexes -- or remove use altogether seeing as index is from config
@@ -50,17 +20,18 @@ module.exports = (state) => {
   ])
     .then(([{body: assetIndexExists}, {body: seriesIndexExists}]) => {
       const indicesToCreate = [];
+      const assetMapping = getAssetMapping();
       if(!assetIndexExists) {
         indicesToCreate.push({
           index: config.es.assetIndex,
-          mappings: getAssetMapping(),
+          mappings: assetMapping,
         });
       }
 
       if(!seriesIndexExists) {
         indicesToCreate.push({
           index: config.es.seriesIndex,
-          mappings: seriesMapping,
+          mappings: getSeriesMapping(assetMapping),
         });
       }
 
@@ -154,5 +125,38 @@ module.exports = (state) => {
       });
 
     return {properties: fields};
+  }
+
+  function getSeriesMapping(assetMapping) {
+    return {
+      properties: {
+        url: {
+          type: 'keyword'
+        },
+        title: {
+          type: 'text',
+        },
+        description: {type: 'text'},
+        tags: {type: 'text'},
+        assets: {type: 'keyword'},
+        previewAssets: assetMapping,
+        dateFrom: {
+          type: 'object',
+          properties: {
+            timestamp: {
+              type: 'date'
+            }
+          }
+        },
+        dateTo: {
+          type: 'object',
+          properties: {
+            timestamp: {
+              type: 'date'
+            }
+          }
+        }
+      }
+    };
   }
 };
