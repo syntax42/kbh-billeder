@@ -92,10 +92,12 @@
     "short": "creation_time_estimated"
   }, {
     "cumulusKey": "{af4b2e12-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "height_in"
+    "short": "height_in",
+    "type": "float"
   }, {
     "cumulusKey": "{af4b2e11-5f6a-11d2-8f20-0000c0e166dc}",
-    "short": "width_in"
+    "short": "width_in",
+    "type": "float"
   }, {
     "cumulusKey": "{1af283a9-bcc7-44a1-bdd8-b65557017a52}",
     "short": "google_maps_coordinates_crowd"
@@ -107,7 +109,8 @@
     "short": "google_maps_coordinates"
   }, {
     "cumulusKey": "{7c7dc8e3-9e71-4d5b-ad8e-e13c3629e54f}",
-    "short": "heading"
+    "short": "heading",
+    "type": "float"
   }, {
     "cumulusKey": "{38664623-b081-4251-8c1c-383ef57ac54d}",
     "short": "locationnote"

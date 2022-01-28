@@ -82,8 +82,18 @@ module.exports = (state) => {
       type: 'keyword',
     };
 
+    const fieldDefinitions = [
+      ...config.types.asset.fields,
+
+      // Generated fields that are not indexed from cumulus
+      {short: 'height_cm', type: 'float'},
+      {short: 'width_cm', type: 'float'},
+      {short: 'height_px', type: 'float'},
+      {short: 'width_px', type: 'float'},
+    ];
+
     // Get all fields that needs a raw value included in the index
-    config.types.asset.fields
+    fieldDefinitions
       .filter((field) => field.includeRaw)
       .forEach((field) => {
         fields[field.short] = {
@@ -99,7 +109,7 @@ module.exports = (state) => {
 
     // Derive mappings from the asset field types
     // First the fields with date types
-    config.types.asset.fields
+    fieldDefinitions
       .filter((field) => field.type === 'date')
       .forEach((field) => {
         fields[field.short] = {
@@ -109,8 +119,9 @@ module.exports = (state) => {
           },
         };
       });
+
     // Enumurations should not have their displaystring tokenized
-    config.types.asset.fields
+    fieldDefinitions
       .filter((field) => field.type === 'enum')
       .forEach((field) => {
         fields[field.short] = {
@@ -123,6 +134,11 @@ module.exports = (state) => {
           }
         };
       });
+
+    // Other fields with type
+    fieldDefinitions
+      .filter(({includeRaw, type}) => type && !includeRaw && !['date','enum'].includes(type))
+      .forEach(({short, type}) => fields[short] = {type});
 
     return {properties: fields};
   }
