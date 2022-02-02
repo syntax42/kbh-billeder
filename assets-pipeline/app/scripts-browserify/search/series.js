@@ -44,7 +44,7 @@ const es = require('../es');
 let seriesAssetsFilter;
 
 function initialize() {
-  seriesAssetsFilter = {term: {series_ids: window.__seriesId}};
+  seriesAssetsFilter = {term: {series_ids: `series/${window.__seriesId}`}};
 
   const $results = $('#results');
   // Button shown at the end of the list search result that triggers the load
