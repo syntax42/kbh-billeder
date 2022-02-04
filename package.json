@@ -1,6 +1,6 @@
 {
   "name": "kbh-billeder",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "Configuration/setup for the kbhbilleder.dk webapp built on top of Collections Online",
   "scripts": {
     "install-and-start": "npm install; npm start",
