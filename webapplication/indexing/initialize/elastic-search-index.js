@@ -100,8 +100,8 @@ module.exports = (state) => {
           type: 'text',
           fields: {
             raw: {
-              type: 'text',
-              index: false,
+              type: 'keyword',
+              index: true,
             },
           },
         };
@@ -128,8 +128,8 @@ module.exports = (state) => {
           type: 'object',
           properties: {
             displaystring: {
-              type: 'text',
-              index: false,
+              type: 'keyword',
+              index: true,
             }
           }
         };
@@ -153,7 +153,7 @@ module.exports = (state) => {
           type: 'text',
         },
         description: {type: 'text'},
-        tags: {type: 'text'},
+        tags: {type: 'keyword'},
         assets: {type: 'keyword'},
         previewAssets: assetMapping,
         dateFrom: {
